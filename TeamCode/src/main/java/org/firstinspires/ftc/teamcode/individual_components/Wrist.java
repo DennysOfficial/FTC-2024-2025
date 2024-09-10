@@ -60,7 +60,7 @@ public class Wrist {
         }
     }
 
-    public void servo1ManualMove(double deltaTime) {
+    public void servo1directControl(double deltaTime) {
         wristServo1.setAngle(wristServo1.getAngle() + settings.getWrist1Stick() * settings.wrist1Sensitivity * deltaTime);
 
         if(debugMode){
@@ -68,7 +68,7 @@ public class Wrist {
         }
     }
 
-    public void servo2ManualMove(double deltaTime) {
+    public void servo2directControl(double deltaTime) {
         wristServo2.setAngle(wristServo2.getAngle() + settings.getWrist2Stick() * settings.wrist2Sensitivity * deltaTime);
         if(debugMode){
             opMode.telemetry.addData("Wrist servo 2",wristServo2.getAngle());

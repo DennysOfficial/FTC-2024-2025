@@ -81,7 +81,7 @@ public class PivotMisalignmentCalibration extends LinearOpMode {
 
             pivot.misalignment = testValue;
 
-            pivot.manualMove(deltaTime);
+            pivot.directControl(deltaTime);
 
 
             // Show the elapsed game time and wheel power.

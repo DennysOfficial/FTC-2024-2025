@@ -178,7 +178,7 @@ public class Trajectory1 extends BasicMecanumOpMode{
                 deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
                 telemetry.addData("deltaTime ", deltaTime);
                 frameTimer.reset();
-                lift.updateLift(deltaTime);
+                lift.runLiftPID(deltaTime);
                 telemetryTfod();
 
                 // Push telemetry to the Driver Station.

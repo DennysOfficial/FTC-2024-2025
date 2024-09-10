@@ -133,25 +133,25 @@ public class NateManualControlOpMode extends LinearOpMode {
 
             activeDriveMode.updateWheels();
 
-            grabber.manualMove();
+            grabber.directControl();
 
 
 
-            //wrist.servo1ManualMove(deltaTime);
+            //wrist.servo1directControl(deltaTime);
             motionControl.hingeWristAuto(deltaTime);
-            //wrist.servo2ManualMove(deltaTime);
+            //wrist.servo2directControl(deltaTime);
             //wrist.wristServo2.setAngle(30 * activeSettings.getWrist2Stick());
 
             intake.updateIntake(deltaTime);
 
-            lift.updateLift(deltaTime);
+            lift.runLiftPID(deltaTime);
 
             if (!motionControl.liftBusy()) {
-                lift.manualMove(deltaTime);
+                lift.directControl(deltaTime);
             }
 
             if (!motionControl.pivotBusy()) {
-                pivot.manualMove(deltaTime);
+                pivot.directControl(deltaTime);
             }
 
 

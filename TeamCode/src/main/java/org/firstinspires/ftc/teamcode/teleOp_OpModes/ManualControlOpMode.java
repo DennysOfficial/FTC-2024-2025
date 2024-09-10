@@ -123,14 +123,14 @@ public class ManualControlOpMode extends LinearOpMode {
 
             activeDriveMode.updateWheels();
 
-            grabber.manualMove();
+            grabber.directControl();
 
-            lift.manualMove(deltaTime);
+            lift.directControl(deltaTime);
 
-            pivot.manualMove(deltaTime);
+            pivot.directControl(deltaTime);
 
-            wrist.servo1ManualMove(deltaTime);
-            wrist.servo2ManualMove(deltaTime);
+            wrist.servo1directControl(deltaTime);
+            wrist.servo2directControl(deltaTime);
 
 
             // Show the elapsed game time and wheel power.

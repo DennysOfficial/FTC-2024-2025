@@ -29,7 +29,7 @@ public class Grabber {
 
     boolean grabber1PreviousState = false;
     boolean grabber2PreviousState = false;
-    public void manualMove(){
+    public void directControl(){
 
         if(!grabber1PreviousState && settings.getGrabber1()){  // if the button was previously not pressed and is now pressed
 

@@ -37,7 +37,7 @@ public class Pivot {
         rightServo = opMode.hardwareMap.get(Servo.class, "Pivot-1");
     }
 
-    public void manualMove(double deltaTime) {
+    public void directControl(double deltaTime) {
         setTargetPositionDeg(getTargetPositionDeg() + settings.getPivotStick() * settings.pivotSensitivity * deltaTime * 360);
 
         if (debugModeEnabled) {

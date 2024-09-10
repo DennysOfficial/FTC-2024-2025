@@ -61,13 +61,13 @@ public class Lift {
      *
      * @param deltaTime the change in time (seconds) since the method was last called
      */
-    public void manualMove(double deltaTime) {
+    public void directControl(double deltaTime) {
         targetPosition -= settings.getLiftStick() * settings.liftSensitivity * deltaTime;
 
         //targetPosition = Math.max(targetPosition, actualPosition - clampRange);
         //targetPosition = Math.min(targetPosition, actualPosition + clampRange); // need work, meant to reduce overshoot but currently limits top speed of the lift and messes with nate's stuff
 
-        updateLift(deltaTime);
+        runLiftPID(deltaTime);
     }
 
     public void updatePIDF_Coefficient() {
@@ -82,7 +82,7 @@ public class Lift {
      *
      * @param deltaTime the change in time (seconds) since the method was last called
      */
-    public void updateLift(double deltaTime) {
+    public void runLiftPID(double deltaTime) {
 
         liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

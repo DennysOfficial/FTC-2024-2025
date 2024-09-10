@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
 public class VelocityControlDrive {
 
 
-    public PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // needs to be adjusted askdjfkjasdfja;sldjf***********************************************************
+    public PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     LinearOpMode opMode;
     Settings settings;
     DcMotorEx frontLeftDrive;

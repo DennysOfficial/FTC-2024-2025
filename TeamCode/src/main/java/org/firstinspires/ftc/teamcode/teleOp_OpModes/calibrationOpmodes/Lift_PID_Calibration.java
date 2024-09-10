@@ -100,7 +100,7 @@ public class Lift_PID_Calibration extends LinearOpMode {
             frameTimer.reset();
 
             lift.updatePIDF_Coefficient();
-            lift.manualMove(deltaTime);
+            lift.directControl(deltaTime);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "deltaTime: " + deltaTime);
