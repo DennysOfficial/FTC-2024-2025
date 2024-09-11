@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import androidx.annotation.NonNull;
+
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.control.PIDCoefficients;
@@ -128,17 +130,29 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        imu = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(IMU.class, "imu");
+        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        //        DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+        //imu.initialize(parameters);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        DcMotor FLWheel;
+        FLWheel = hardwareMap.get(DcMotor.class, "FLWheel"); //this needs to be changed to match the robot's motor configuration
+        DcMotor FRWheel;
+        FRWheel = hardwareMap.get(DcMotor.class, "FRWheel");
+        DcMotor BRWheel;
+        BRWheel = hardwareMap.get(DcMotor.class, "BRWheel");
+        DcMotor BLWheel;
+        BLWheel = hardwareMap.get(DcMotor.class, "BLWheel");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        FLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        FRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        BRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        BLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        FLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FRWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BRWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -150,7 +164,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
@@ -266,6 +280,8 @@ public class SampleMecanumDrive extends MecanumDrive {
             motor.setPIDFCoefficients(runMode, compensatedCoefficients);
         }
     }
+
+
 
     public void setWeightedDrivePower(Pose2d drivePower) {
         Pose2d vel = drivePower;
