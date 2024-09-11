@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.autonomous.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
