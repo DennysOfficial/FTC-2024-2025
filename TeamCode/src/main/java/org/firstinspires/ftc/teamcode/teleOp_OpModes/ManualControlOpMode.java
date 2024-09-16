@@ -82,10 +82,7 @@ public class ManualControlOpMode extends LinearOpMode {
     // Declare OpMode members for each of the 4 motors.
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
-    private final DcMotorEx leftFrontDrive = null;
-    private final DcMotorEx leftBackDrive = null;
-    private final DcMotorEx rightFrontDrive = null;
-    private final DcMotorEx rightBackDrive = null;
+
 
 
     @Override
@@ -96,16 +93,6 @@ public class ManualControlOpMode extends LinearOpMode {
 
         VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeSettings);
 
-        Grabber grabber = new Grabber(this, activeSettings);
-
-        Lift lift = new Lift(this, activeSettings);
-        lift.debugModeActive = true;
-
-        Pivot pivot = new Pivot(this, activeSettings);
-        pivot.debugModeEnabled = true;
-
-        Wrist wrist = new Wrist(this,activeSettings);
-        wrist.debugMode = true;
 
 
         waitForStart();
@@ -122,16 +109,6 @@ public class ManualControlOpMode extends LinearOpMode {
             frameTimer.reset();
 
             activeDriveMode.updateWheels();
-
-            grabber.directControl();
-
-            lift.directControl(deltaTime);
-
-            pivot.directControl(deltaTime);
-
-            wrist.servo1directControl(deltaTime);
-            wrist.servo2directControl(deltaTime);
-
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
