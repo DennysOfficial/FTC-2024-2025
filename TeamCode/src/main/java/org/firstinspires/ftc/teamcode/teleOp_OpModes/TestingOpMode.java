@@ -104,7 +104,7 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            //activeDriveMode.updateWheels();
+            activeDriveMode.updateWheels();
 
             //lift.directControlNoPID();
             spinyBit.directControlNoPID();

@@ -7,6 +7,20 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RobotConfig {
 
     LinearOpMode opMode;
+    
+    public static class MotorNames{
+        public String frontRightDrive = "FR";
+        public String frontLeftDrive = "FL";
+        public String backRightDrive = "BR";
+        public String backLeftDrive = "BL";
+        
+        public String rightPivotMotor = "PivotR";
+        public String leftPivotMotor = "PivotL";
+
+        public String rightLiftMotor = "LiftR";
+        public String leftLiftMotor = "LiftL";
+
+    }
 
     public RobotConfig(LinearOpMode opModeTemp) {
         opMode = opModeTemp;

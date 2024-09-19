@@ -20,8 +20,8 @@ public class Lift {
     LinearOpMode opMode;
     RobotConfig config;
     private double targetPosition = 0;
-    private DcMotorEx liftMotor1 = null;
-    private DcMotorEx liftMotor2 = null;
+    private final DcMotorEx liftMotor1;
+    private final DcMotorEx liftMotor2;
 
     public Lift(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;

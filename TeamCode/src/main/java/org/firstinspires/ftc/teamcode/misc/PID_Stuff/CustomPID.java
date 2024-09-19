@@ -16,17 +16,16 @@ public class CustomPID {
 
     public double previousActualPosition = 0;
     LinearOpMode opMode;
-    Settings settings;
 
 
-    public CustomPID(LinearOpMode opMode, Settings settings) {
+
+    public CustomPID(LinearOpMode opMode) {
         this.opMode = opMode;
-        this.settings = settings;
+
     }
 
-    public CustomPID(LinearOpMode opMode, Settings settings, double P, double kI, double kD) {
+    public CustomPID(LinearOpMode opMode, double P, double kI, double kD) {
         this.opMode = opMode;
-        this.settings = settings;
         this.kP = P;
         this.kI = kI;
         this.kD = kD;
