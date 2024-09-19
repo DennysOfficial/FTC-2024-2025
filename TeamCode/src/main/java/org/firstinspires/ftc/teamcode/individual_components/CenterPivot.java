@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.core.math.MathUtils;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -65,8 +67,15 @@ public class CenterPivot {
 
         targetAngle += opMode.gamepad2.left_stick_x * maxRate * deltaTime;
 
+        targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
+
         pivotMotorR.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
         pivotMotorL.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
+
+        if (debugModeActive){
+            opMode.telemetry.addData("target Angle = ",targetAngle);
+            opMode.telemetry.addData("actual Angle = ",getAngle());
+        }
     }
 
     /**
@@ -75,6 +84,10 @@ public class CenterPivot {
     public void directControlNoPID() {
 
         double targetPower = opMode.gamepad2.left_stick_x;
+
+        if (debugModeActive){
+            opMode.telemetry.addData("motor power = ",targetPower);
+        }
 
         pivotMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pivotMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
