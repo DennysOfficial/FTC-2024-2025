@@ -62,12 +62,20 @@ public class Lift {
      * @param deltaTime the change in time (seconds) since the method was last called
      */
     public void directControl(double deltaTime) {
-        targetPosition -= settings.getLiftStick() * settings.liftSensitivity * deltaTime;
+        targetPosition -= opMode.gamepad2.left_stick_y * settings.liftSensitivity * deltaTime;
 
         //targetPosition = Math.max(targetPosition, actualPosition - clampRange);
         //targetPosition = Math.min(targetPosition, actualPosition + clampRange); // need work, meant to reduce overshoot but currently limits top speed of the lift and messes with nate's stuff
 
         runLiftPID(deltaTime);
+    }
+
+    public void directControlNoPID() {
+
+        double targetPower = opMode.gamepad2.left_stick_y;
+
+        liftMotor2.setPower(targetPower);
+        liftMotor1.setPower(targetPower);
     }
 
     public void updatePIDF_Coefficient() {

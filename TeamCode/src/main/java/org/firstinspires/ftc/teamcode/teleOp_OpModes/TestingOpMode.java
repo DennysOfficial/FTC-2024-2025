@@ -31,14 +31,11 @@ package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.Grabber;
+import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Wrist;
 import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Profiles;
 import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
 
@@ -72,18 +69,17 @@ import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
  */
 
 
-@TeleOp(name = "Basic: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
 //@Disabled
-public class ManualControlOpMode extends LinearOpMode {
+public class TestingOpMode extends LinearOpMode {
 
 
-
-
-    // Declare OpMode members for each of the 4 motors.
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
 
+    //Lift lift;
+    CenterPivot spinnyBit;
 
     @Override
     public void runOpMode() {
@@ -91,8 +87,10 @@ public class ManualControlOpMode extends LinearOpMode {
 
         Settings activeSettings = new Profiles(this).defaultProfile; // selects the active setting that will be used in the rest of the code
 
-        VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeSettings);
+        //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeSettings);
 
+        //lift = new Lift(this,activeSettings);
+        spinnyBit = new CenterPivot(this,activeSettings);
 
 
         waitForStart();
@@ -108,7 +106,10 @@ public class ManualControlOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            activeDriveMode.updateWheels();
+            //activeDriveMode.updateWheels();
+
+            //lift.directControlNoPID();
+            spinnyBit.directControlNoPID();
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
