@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive
 public class TestingOpMode extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+    private                                       final                                                 ElapsedTime                                   runtime                                   =                                 new                                        ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
 
