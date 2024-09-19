@@ -46,5 +46,5 @@ public class RobotConfig {
                    {return opMode.gamepad1.right_bumper;}      public       boolean
                      getIntakeOutButton() {return opMode.gamepad1.left_bumper;}
 
-    // i don't know how this works but it does
+    //i don't know how this works but it does
 }
