@@ -57,7 +57,7 @@ public class TestingOpMode extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
+        //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
 
         //lift = new Lift(this,activeSettings);
         spinyBit = new CenterPivot(this,activeConfig);
@@ -76,10 +76,10 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            activeDriveMode.updateWheels();
+            //activeDriveMode.updateWheels();
 
             //lift.directControlNoPID();
-            spinyBit.directControlNoPID();
+            spinyBit.directControl(deltaTime);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

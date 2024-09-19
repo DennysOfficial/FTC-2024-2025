@@ -50,6 +50,9 @@ public class CenterPivot {
         pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        pivotMotorR.setPower(maxPIDPower);
+        pivotMotorL.setPower(maxPIDPower);
+
     }
 
     /**
@@ -58,12 +61,6 @@ public class CenterPivot {
      * @param deltaTime the change in time (seconds) since the method was last called
      */
     public void directControl(double deltaTime) {
-
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        pivotMotorR.setPower(maxPIDPower);
-        pivotMotorL.setPower(maxPIDPower);
 
         targetAngle += config.getPivotStick() * config.getPivotRate() * deltaTime;
 

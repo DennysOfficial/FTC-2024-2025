@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-import org.firstinspires.ftc.teamcode.misc.PID_Stuff.CustomPID;
 
 public class Lift {
 

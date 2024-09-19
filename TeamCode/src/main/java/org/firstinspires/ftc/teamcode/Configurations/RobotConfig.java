@@ -7,44 +7,68 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class RobotConfig {
 
     LinearOpMode opMode;
-    
-    public static class MotorNames{
-        public String frontRightDrive = "FR";
-        public String frontLeftDrive = "FL";
-        public String backRightDrive = "BR";
-        public String backLeftDrive = "BL";
-        
-        public String rightPivotMotor = "PivotR";
-        public String leftPivotMotor = "PivotL";
 
-        public String rightLiftMotor = "LiftR";
-        public String leftLiftMotor = "LiftL";
-
-    }
 
     public RobotConfig(LinearOpMode opModeTemp) {
         opMode = opModeTemp;
     }
 
-    // GAZE INTO THE EYE OF WISDOM AND ALL YOUR CODE WILL WORK
+    public static float driveSensitivity = 1;
+    public float getDriveSensitivity() {
+        return driveSensitivity;
+    }
 
-                              static float driveSensitivity = 1;
-                public float getDriveSensitivity() {return driveSensitivity;}
-          static  float                                       forwardSensitivity = 1;
-      public float getForwardSensitivity()                       {return forwardSensitivity;}
-     static float turningSensitivity = 1;                         public float getTurningSensitivity()
-    {return turningSensitivity;}                      /**/          static float strafingSensitivity=1;
-    public float getStrafingSensitivity()             /**/             {return strafingSensitivity;}
-    static float liftRate=3;public float             /*[]*/            getLiftRate() {return liftRate;}
-    static     float    pivotRate = 20;              /*[]*/             public float    getPivotRate()
-    {return pivotRate;} public    double             /*[]*/              getForwardStick()
-    {return -1*opMode.gamepad1.left_stick_y;}         /**/              public double getStrafeStick()
-       {return opMode.gamepad1.left_stick_x;}         /**/             public double getTurnStick()
-        {return opMode.gamepad1.right_stick_x;}                     public double getLiftStick()
-         {return opMode.gamepad2.left_stick_y;}                  public double getPivotStick()
-            {return opMode.gamepad2.left_stick_x;}      public boolean getIntakeInButton()
-                   {return opMode.gamepad1.right_bumper;}      public       boolean
-                     getIntakeOutButton() {return opMode.gamepad1.left_bumper;}
+    public static float forwardSensitivity = 1; // basic driving sensitivities only relative to each other
+    public float getForwardSensitivity(){
+        return forwardSensitivity;
+    }
 
-    //i don't know how this works but it does
+    public static float turningSensitivity = 1;
+    public float getTurningSensitivity(){
+        return turningSensitivity;
+    }
+
+    public static float strafingSensitivity = 1;
+    public float getStrafingSensitivity(){
+        return strafingSensitivity;
+    }
+
+    public static float liftRate = 3; // inches per second
+    public float getLiftRate() {
+        return liftRate;
+    }
+
+    public static float pivotRate = 20; //degrees per second
+    public float getPivotRate(){
+        return pivotRate;
+    }
+
+    public double getForwardStick() {
+        return -1 * opMode.gamepad1.left_stick_y;
+    } // button mapping
+
+    public double getStrafeStick() {
+        return opMode.gamepad1.left_stick_x;
+    }
+
+    public double getTurnStick() {
+        return opMode.gamepad1.right_stick_x;
+    }
+
+    public double getLiftStick() {
+        return opMode.gamepad2.left_stick_y;
+    }
+
+    public double getPivotStick() {
+        return opMode.gamepad2.left_stick_x;
+    }
+
+    public boolean getIntakeInButton() {
+        return opMode.gamepad1.right_bumper;
+    }
+
+    public boolean getIntakeOutButton() {
+        return opMode.gamepad1.left_bumper;
+    }
+
 }
