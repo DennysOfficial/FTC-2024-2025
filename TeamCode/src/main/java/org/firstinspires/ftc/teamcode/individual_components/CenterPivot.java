@@ -35,13 +35,13 @@ public class CenterPivot {
         pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class,  "PivotL");
         pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class,  "PivotR");
 
-        pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); // this makes the motor run in reverse
+        pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
         //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
 
         pivotMotorL.setMotorEnable();
         pivotMotorR.setMotorEnable();
 
-        pivotMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // this resets the encoder
+        pivotMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //this resets the encoder
         pivotMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         pivotMotorR.setTargetPosition(0);

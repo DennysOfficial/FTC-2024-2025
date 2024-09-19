@@ -37,7 +37,7 @@ public class VelocityControlDrive {
         frontLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         backLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         frontRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        backRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients); // motor go vroom
+        backRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients); //motor go vroom
 
     }
 
@@ -49,7 +49,7 @@ public class VelocityControlDrive {
     }
 
     public void updateWheels() {
-        double forwardBackward = -1 * config.getForwardStick() * config.getForwardSensitivity();  // Note: pushing stick forward gives negative value
+        double forwardBackward = -1 * config.getForwardStick() * config.getForwardSensitivity();  //Note: pushing stick forward gives negative value
         double strafe = -1 * config.getStrafeStick() * config.getStrafingSensitivity();
         double yaw = -1 * config.getTurnStick() * config.getTurningSensitivity();
 

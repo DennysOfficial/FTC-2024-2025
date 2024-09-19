@@ -36,7 +36,7 @@ public class Lift {
         liftMotor1.setMotorEnable();
         liftMotor2.setMotorEnable();
 
-        liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // this resets the encoder
+        liftMotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //this resets the encoder
         liftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         liftMotor2.setTargetPosition(0);
@@ -58,7 +58,7 @@ public class Lift {
     }
 
     public void updatePosition() {
-        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // this means the lift motors use encoders
+        liftMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //this means the lift motors use encoders
         liftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         targetPosition = MathUtils.clamp(targetPosition, MinRangeInch, MaxRangeInch);
