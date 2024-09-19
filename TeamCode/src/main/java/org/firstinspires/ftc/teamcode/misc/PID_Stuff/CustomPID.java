@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.misc.PID_Stuff;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
-
 public class CustomPID {
 
     public boolean debugMode = false;

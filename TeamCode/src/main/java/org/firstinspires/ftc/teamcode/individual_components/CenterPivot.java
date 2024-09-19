@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
+import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 
 public class CenterPivot {
 
@@ -23,14 +23,14 @@ public class CenterPivot {
     final double maxPIDPower = 0.5f;
     public boolean debugModeActive = false;
     LinearOpMode opMode;
-    Settings settings;
+    RobotConfig config;
     private double targetAngle = 0;
     private DcMotorEx pivotMotorL = null;
     private DcMotorEx pivotMotorR = null;
 
-    public CenterPivot(LinearOpMode opMode, Settings settings) {
+    public CenterPivot(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
-        this.settings = settings;
+        this.config = config;
 
         pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, "PivotL");
         pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, "PivotR");
@@ -53,7 +53,7 @@ public class CenterPivot {
     }
 
     /**
-     * moves the lift based on the sick input and sensitivity defined by {@link Settings#getLiftStick()} and {@link Settings#liftSensitivity}
+     * moves the lift based on the sick input and sensitivity defined by the config
      *
      * @param deltaTime the change in time (seconds) since the method was last called
      */
@@ -65,7 +65,7 @@ public class CenterPivot {
         pivotMotorR.setPower(maxPIDPower);
         pivotMotorL.setPower(maxPIDPower);
 
-        targetAngle += opMode.gamepad2.left_stick_x * maxRate * deltaTime;
+        targetAngle += config.getPivotStick() * config.getPivotRate() * deltaTime;
 
         targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
 
@@ -83,7 +83,7 @@ public class CenterPivot {
      */
     public void directControlNoPID() {
 
-        double targetPower = opMode.gamepad2.left_stick_x;
+        double targetPower = config.getPivotStick();
 
         if (debugModeActive){
             opMode.telemetry.addData("motor power = ",targetPower);

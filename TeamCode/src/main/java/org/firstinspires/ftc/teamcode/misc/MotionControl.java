@@ -5,14 +5,7 @@ import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.Grabber;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.individual_components.Wrist;
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MotionControl {
 

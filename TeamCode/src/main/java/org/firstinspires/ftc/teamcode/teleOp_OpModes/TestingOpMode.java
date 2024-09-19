@@ -34,10 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Profiles;
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
+import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 
 
 /*
@@ -79,18 +76,18 @@ public class TestingOpMode extends LinearOpMode {
 
 
     //Lift lift;
-    CenterPivot spinnyBit;
+    CenterPivot spinyBit;
 
     @Override
     public void runOpMode() {
 
 
-        Settings activeSettings = new Profiles(this).defaultProfile; // selects the active setting that will be used in the rest of the code
+        RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
         //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeSettings);
 
         //lift = new Lift(this,activeSettings);
-        spinnyBit = new CenterPivot(this,activeSettings);
+        spinyBit = new CenterPivot(this,activeConfig);
 
 
         waitForStart();
@@ -109,7 +106,7 @@ public class TestingOpMode extends LinearOpMode {
             //activeDriveMode.updateWheels();
 
             //lift.directControlNoPID();
-            spinnyBit.directControlNoPID();
+            spinyBit.directControlNoPID();
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

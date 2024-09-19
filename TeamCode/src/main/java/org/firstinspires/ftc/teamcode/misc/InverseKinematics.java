@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.misc;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.misc.PID_Stuff.CustomPID;
-import org.firstinspires.ftc.teamcode.profiles_and_base_settings.Settings;
 
 /**
  * look for the picture kinematics.jpg in the misc folder for reference
