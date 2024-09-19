@@ -5,21 +5,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
+import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+
 public class VelocityControlDrive {
 
 
     public PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     LinearOpMode opMode;
-    Settings settings;
+    RobotConfig config;
     DcMotorEx frontLeftDrive;
     DcMotorEx backLeftDrive;
     DcMotorEx frontRightDrive;
     DcMotorEx backRightDrive;
     double[] motorPowers = new double[4];
 
-    public VelocityControlDrive(LinearOpMode opMode, Settings settings) {
+    public VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
-        this.settings = settings;
+        this.config = config;
 
 
         frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, "FL");
@@ -27,10 +29,10 @@ public class VelocityControlDrive {
         backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "BR");
         frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "FR");
 
-        frontLeftDrive.setDirection(settings.leftFrontDriveDir);
-        backLeftDrive.setDirection(settings.leftBackDriveDir);
-        frontRightDrive.setDirection(settings.rightFrontDriveDir);
-        backRightDrive.setDirection(settings.rightBackDriveDir);
+        //frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        //backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
+        //frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         backLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
@@ -47,9 +49,9 @@ public class VelocityControlDrive {
     }
 
     public void updateWheels() {
-        double forwardBackward = -1 * settings.getForwardStick() * settings.forwardSensitivity;  // Note: pushing stick forward gives negative value
-        double strafe = -1 * settings.getStrafeStick() * settings.strafingSensitivity;
-        double yaw = -1 * settings.getTurnStick() * settings.turningSensitivity;
+        double forwardBackward = -1 * config.getForwardStick() * config.getForwardSensitivity();  // Note: pushing stick forward gives negative value
+        double strafe = -1 * config.getStrafeStick() * config.getStrafingSensitivity();
+        double yaw = -1 * config.getTurnStick() * config.getTurningSensitivity();
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -62,10 +64,10 @@ public class VelocityControlDrive {
 
 
         // Send calculated power to wheels
-        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * settings.driveSensitivity);
-        frontRightDrive.setVelocity(motorPowers[1] * 2000 * settings.driveSensitivity);
-        backLeftDrive.setVelocity(motorPowers[2] * 2000 * settings.driveSensitivity);
-        backRightDrive.setVelocity(motorPowers[3] * 2000 * settings.driveSensitivity);
+        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.getDriveSensitivity());
+        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.getDriveSensitivity());
+        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.getDriveSensitivity());
+        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.getDriveSensitivity());
 
         //frontRightDrive.setPower(1);
 

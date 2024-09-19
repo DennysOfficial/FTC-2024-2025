@@ -32,10 +32,9 @@ public class RobotConfig {
         return strafingSensitivity;
     }
 
-    static float liftSensitivity = 1000;
-
-    public static float getLiftSensitivity() {
-        return liftSensitivity;
+    static float liftRate = 3; // inches per second
+    public float getLiftRate() {
+        return liftRate;
     }
 
     static float pivotRate = 20; //degrees per second

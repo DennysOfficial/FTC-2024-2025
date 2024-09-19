@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
 
 
 /*
@@ -84,7 +85,7 @@ public class TestingOpMode extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeSettings);
+        VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
 
         //lift = new Lift(this,activeSettings);
         spinyBit = new CenterPivot(this,activeConfig);
