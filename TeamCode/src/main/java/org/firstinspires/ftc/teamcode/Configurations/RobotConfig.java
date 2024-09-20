@@ -8,6 +8,7 @@ public class RobotConfig {
 
     LinearOpMode opMode;
 
+    public DeviceNames deviceNames = new DeviceNames();
 
     public RobotConfig(LinearOpMode opModeTemp) {
         opMode = opModeTemp;
@@ -38,7 +39,7 @@ public class RobotConfig {
         return liftRate;
     }
 
-    public static float pivotRate = 20; //degrees per second
+    public static float pivotRate = 50; //degrees per second
     public float getPivotRate(){
         return pivotRate;
     }

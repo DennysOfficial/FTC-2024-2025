@@ -32,8 +32,9 @@ public class CenterPivot {
         this.opMode = opMode;
         this.config = config;
 
-        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class,  "PivotL");
-        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class,  "PivotR");
+
+        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getLeftPivot());
+        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getRightPivot());
 
         pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
         //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
@@ -56,14 +57,18 @@ public class CenterPivot {
     }
 
     /**
-     * moves the lift based on the sick input and sensitivity defined by the config
+     * moves the pivot based on stick input
      *
      * @param deltaTime the change in time (seconds) since the method was last called
      */
     public void directControl(double deltaTime) {
 
         targetAngle += config.getPivotStick() * config.getPivotRate() * deltaTime;
+        updatePosition();
 
+    }
+
+    public void updatePosition(){
         targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
 
         pivotMotorR.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
@@ -76,7 +81,7 @@ public class CenterPivot {
     }
 
     /**
-     * sets to motor powers equal to the stick
+     * sets to motor powers equal to the stick position
      */
     public void directControlNoPID() {
 
@@ -106,9 +111,9 @@ public class CenterPivot {
     }
 
     /**
-     * gets the current extension of the lift
+     * gets the current angle of the pivot
      *
-     * @return inches from the bottom of the lift's travel
+     * @return degrees from the vertical: forward is positive
      */
     public double getAngle() {
         return getRawEncoder() / encoderCountsPerDeg;
@@ -121,12 +126,13 @@ public class CenterPivot {
      */
     public void setAngle(double angle) {
         targetAngle = angle;
+        updatePosition();
     }
 
     /**
-     * gets the current targeted extension of the lift
+     * gets the current targeted Angle of the lift
      *
-     * @return encoder counts from the bottom of the lift's travel
+     * @return degrees from the vertical: forward is positive
      */
     public double getTargetAngle(){
         return targetAngle;

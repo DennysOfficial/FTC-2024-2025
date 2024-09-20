@@ -38,13 +38,12 @@ import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
 
 
-
 @TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
 //@Disabled
 public class TestingOpMode extends LinearOpMode {
 
 
-    private                                       final                                                 ElapsedTime                                   runtime                                   =                                 new                                        ElapsedTime(); // don't worry it still works
+    private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
 
@@ -60,8 +59,7 @@ public class TestingOpMode extends LinearOpMode {
         //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
 
         //lift = new Lift(this,activeSettings);
-        spinyBit = new CenterPivot(this,activeConfig);
-
+        spinyBit = new CenterPivot(this, activeConfig);
 
         waitForStart();
         runtime.reset();
