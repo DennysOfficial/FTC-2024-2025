@@ -24,6 +24,10 @@ public class CenterPivot {
     public boolean debugModeActive = false;
     LinearOpMode opMode;
     RobotConfig config;
+
+    /**
+     * degrees from vertical: forward is positive
+     */
     private double targetAngle = 0;
     private DcMotorEx pivotMotorL = null;
     private DcMotorEx pivotMotorR = null;
@@ -77,6 +81,7 @@ public class CenterPivot {
         if (debugModeActive){
             opMode.telemetry.addData("target Angle = ",targetAngle);
             opMode.telemetry.addData("actual Angle = ",getAngle());
+            opMode.telemetry.addData("error = ",getAngle() - targetAngle);
         }
     }
 
