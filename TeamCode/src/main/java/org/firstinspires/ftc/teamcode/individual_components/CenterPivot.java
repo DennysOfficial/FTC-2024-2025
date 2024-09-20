@@ -18,9 +18,7 @@ public class CenterPivot {
     static double minAngle = -90; // measured from vertical forward is positive
     static double maxAngle = 100;
 
-    static float maxRate = 20; // degrees per second
-
-    final double maxPIDPower = 0.5f;
+    final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
     public boolean debugModeActive = false;
     LinearOpMode opMode;
     RobotConfig config;
