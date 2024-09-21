@@ -29,14 +29,16 @@
 
 package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
-
 
 
 @TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
@@ -44,8 +46,9 @@ import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive
 public class TestingOpMode extends LinearOpMode {
 
 
-    private                                       final                                                 ElapsedTime                                   runtime                                   =                                 new                                        ElapsedTime(); // don't worry it still works
+    private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
+
 
 
     //Lift lift;
@@ -54,14 +57,14 @@ public class TestingOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
+        //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
 
         //lift = new Lift(this,activeSettings);
-        spinyBit = new CenterPivot(this,activeConfig);
-
+        spinyBit = new CenterPivot(this, activeConfig);
 
         waitForStart();
         runtime.reset();
@@ -76,13 +79,13 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            activeDriveMode.updateWheels();
+            //activeDriveMode.updateWheels();
 
             //lift.directControlNoPID();
-            spinyBit.directControlNoPID();
+            spinyBit.directControl(deltaTime);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
     }

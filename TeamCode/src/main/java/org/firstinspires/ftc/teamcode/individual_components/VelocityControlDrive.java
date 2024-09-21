@@ -1,16 +1,17 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-
+@Config
 public class VelocityControlDrive {
 
 
-    public PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
+    public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     LinearOpMode opMode;
     RobotConfig config;
     DcMotorEx frontLeftDrive;
@@ -24,10 +25,10 @@ public class VelocityControlDrive {
         this.config = config;
 
 
-        frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, "FL");
-        backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, "BL");
-        backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "BR");
-        frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, "FR");
+        frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getFrontLeftDrive());
+        backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getBackLeftDrive());
+        backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getBackRightDrive());
+        frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getFrontRightDrive());
 
         //frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         //backLeftDrive.setDirection(DcMotor.Direction.REVERSE);

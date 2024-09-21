@@ -18,12 +18,14 @@ public class CenterPivot {
     static double minAngle = -90; // measured from vertical forward is positive
     static double maxAngle = 100;
 
-    static float maxRate = 20; // degrees per second
-
-    final double maxPIDPower = 0.5f;
+    final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
     public boolean debugModeActive = false;
     LinearOpMode opMode;
     RobotConfig config;
+
+    /**
+     * degrees from vertical: forward is positive
+     */
     private double targetAngle = 0;
     private DcMotorEx pivotMotorL = null;
     private DcMotorEx pivotMotorR = null;
@@ -32,8 +34,9 @@ public class CenterPivot {
         this.opMode = opMode;
         this.config = config;
 
-        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class,  "PivotL");
-        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class,  "PivotR");
+
+        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getLeftPivot());
+        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getRightPivot());
 
         pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
         //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
@@ -50,23 +53,24 @@ public class CenterPivot {
         pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        pivotMotorR.setPower(maxPIDPower);
+        pivotMotorL.setPower(maxPIDPower);
+
     }
 
     /**
-     * moves the lift based on the sick input and sensitivity defined by the config
+     * moves the pivot based on stick input
      *
      * @param deltaTime the change in time (seconds) since the method was last called
      */
     public void directControl(double deltaTime) {
 
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        pivotMotorR.setPower(maxPIDPower);
-        pivotMotorL.setPower(maxPIDPower);
-
         targetAngle += config.getPivotStick() * config.getPivotRate() * deltaTime;
+        updatePosition();
 
+    }
+
+    public void updatePosition(){
         targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
 
         pivotMotorR.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
@@ -75,11 +79,12 @@ public class CenterPivot {
         if (debugModeActive){
             opMode.telemetry.addData("target Angle = ",targetAngle);
             opMode.telemetry.addData("actual Angle = ",getAngle());
+            opMode.telemetry.addData("error = ",getAngle() - targetAngle);
         }
     }
 
     /**
-     * sets to motor powers equal to the stick
+     * sets to motor powers equal to the stick position
      */
     public void directControlNoPID() {
 
@@ -109,9 +114,9 @@ public class CenterPivot {
     }
 
     /**
-     * gets the current extension of the lift
+     * gets the current angle of the pivot
      *
-     * @return inches from the bottom of the lift's travel
+     * @return degrees from the vertical: forward is positive
      */
     public double getAngle() {
         return getRawEncoder() / encoderCountsPerDeg;
@@ -124,12 +129,13 @@ public class CenterPivot {
      */
     public void setAngle(double angle) {
         targetAngle = angle;
+        updatePosition();
     }
 
     /**
-     * gets the current targeted extension of the lift
+     * gets the current targeted Angle of the lift
      *
-     * @return encoder counts from the bottom of the lift's travel
+     * @return degrees from the vertical: forward is positive
      */
     public double getTargetAngle(){
         return targetAngle;
