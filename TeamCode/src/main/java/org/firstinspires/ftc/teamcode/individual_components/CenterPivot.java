@@ -35,8 +35,8 @@ public class CenterPivot {
         this.config = config;
 
 
-        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getLeftPivot());
-        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getRightPivot());
+        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftPivot);
+        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightPivot);
 
         pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
         //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);

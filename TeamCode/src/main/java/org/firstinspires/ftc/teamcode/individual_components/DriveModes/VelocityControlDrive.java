@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.individual_components;
+package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,38 +8,17 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 @Config
-public class VelocityControlDrive {
+public class VelocityControlDrive extends DriveModeBase{
 
 
     public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
-    LinearOpMode opMode;
-    RobotConfig config;
-    DcMotorEx frontLeftDrive;
-    DcMotorEx backLeftDrive;
-    DcMotorEx frontRightDrive;
-    DcMotorEx backRightDrive;
     double[] motorPowers = new double[4];
 
     public VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
-        this.opMode = opMode;
-        this.config = config;
 
+        super(opMode,config);
 
-        frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getFrontLeftDrive());
-        backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getBackLeftDrive());
-        backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getBackRightDrive());
-        frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceNames.getFrontRightDrive());
-
-        //frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        //backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
-        //frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        //backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        frontLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        backLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        frontRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        backRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients); //motor go vroom
-
+        updatePIDCoefficients();
     }
 
     public void updatePIDCoefficients() {
@@ -49,7 +28,8 @@ public class VelocityControlDrive {
         backRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
     }
 
-    public void updateWheels() {
+    @Override
+    public void updateDrive() {
         double forwardBackward = -1 * config.getForwardStick() * config.getForwardSensitivity();  //Note: pushing stick forward gives negative value
         double strafe = -1 * config.getStrafeStick() * config.getStrafingSensitivity();
         double yaw = -1 * config.getTurnStick() * config.getTurningSensitivity();

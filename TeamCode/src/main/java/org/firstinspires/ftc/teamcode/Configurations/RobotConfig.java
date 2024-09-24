@@ -8,7 +8,7 @@ public class RobotConfig {
 
     LinearOpMode opMode;
 
-    public DeviceNames deviceNames = new DeviceNames();
+    public DeviceConfig deviceConfig = new DeviceConfig();
 
     public RobotConfig(LinearOpMode opModeTemp) {
         opMode = opModeTemp;

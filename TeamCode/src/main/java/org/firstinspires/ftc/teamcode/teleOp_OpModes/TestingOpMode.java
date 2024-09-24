@@ -35,10 +35,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.VelocityControlDrive;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.individual_components.Lift;
 
 
 @TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
@@ -50,10 +51,6 @@ public class TestingOpMode extends LinearOpMode {
     private final ElapsedTime frameTimer = new ElapsedTime();
 
 
-
-    //Lift lift;
-    CenterPivot spinyBit;
-
     @Override
     public void runOpMode() {
 
@@ -61,10 +58,13 @@ public class TestingOpMode extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        //VelocityControlDrive activeDriveMode = new VelocityControlDrive(this,activeConfig);
 
-        //lift = new Lift(this,activeSettings);
-        spinyBit = new CenterPivot(this, activeConfig);
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+
+        Lift lift = new Lift(this, activeConfig);
+
+        CenterPivot spinyBit = new CenterPivot(this, activeConfig);
+
 
         waitForStart();
         runtime.reset();
@@ -79,9 +79,11 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            //activeDriveMode.updateWheels();
+            activeDriveMode.updateDrive();
 
-            //lift.directControlNoPID();
+
+            lift.directControlNoPID();
+
             spinyBit.directControl(deltaTime);
 
             // Show the elapsed game time and wheel power.

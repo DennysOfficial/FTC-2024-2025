@@ -26,8 +26,8 @@ public class Lift {
         this.opMode = opMode;
         this.config = config;
 
-        liftMotorR = opMode.hardwareMap.get(DcMotorEx.class, "1-Lift");
-        liftMotorL = opMode.hardwareMap.get(DcMotorEx.class, "2-Lift");
+        liftMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightLift);
+        liftMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftLift);
 
         liftMotorR.setDirection(DcMotorEx.Direction.REVERSE);
         //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
