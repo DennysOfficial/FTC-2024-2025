@@ -76,8 +76,9 @@ public class BasicMechanumDrive extends DriveModeBase {
         max = Math.max(max, Math.abs(inputArray[2]));
         max = Math.max(max, Math.abs(inputArray[3]));
 
-        for (int i = 0; i < inputArray.length; i++)
-            inputArray[i] /= max;
+        if(max > 1)
+            for (int i = 0; i < inputArray.length; i++)
+                inputArray[i] /= max;
 
         return inputArray;
     }
