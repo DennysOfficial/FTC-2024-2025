@@ -10,8 +10,8 @@ public class RobotConfig {
 
     public DeviceConfig deviceConfig = new DeviceConfig();
 
-    public RobotConfig(LinearOpMode opModeTemp) {
-        opMode = opModeTemp;
+    public RobotConfig(LinearOpMode opMode) {
+        this.opMode = opMode;
     }
 
     public static float driveSensitivity = 1;

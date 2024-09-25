@@ -18,7 +18,7 @@ public class DriveModeBase {
         this.opMode = opMode;
         this.config = config;
 
-        initMotors(opMode,config);
+        initMotors(opMode, config);
     }
 
     public void initMotors(LinearOpMode opMode, RobotConfig config) {
@@ -34,5 +34,10 @@ public class DriveModeBase {
         frontRightDrive.setDirection(config.deviceConfig.frontRightDriveDir);
     }
 
-    public void updateDrive(){}
+    void updateDrive() {
+    }
+
+    public void updateDrive(double deltaTime) {
+        updateDrive();
+    }
 }
