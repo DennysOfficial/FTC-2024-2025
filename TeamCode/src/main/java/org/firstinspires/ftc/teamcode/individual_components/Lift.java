@@ -13,7 +13,7 @@ public class Lift {
     public final double MinRangeInch = 0.1;
     public final double MaxRangeInch = 420;
     final double encoderCountsPerInch = 4300.0 / 27.0;
-    final double maxPower = 1;
+    final double maxPower = 0.5;
 
     public boolean debugModeActive = false;
     LinearOpMode opMode;
@@ -29,8 +29,8 @@ public class Lift {
         liftMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightLift);
         liftMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftLift);
 
-        liftMotorR.setDirection(DcMotorEx.Direction.REVERSE);
-        //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        //liftMotorR.setDirection(DcMotorEx.Direction.REVERSE);
+        liftMotorL.setDirection(DcMotorEx.Direction.REVERSE);
 
         liftMotorR.setMotorEnable();
         liftMotorL.setMotorEnable();
@@ -43,6 +43,8 @@ public class Lift {
 
         liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        liftMotorR.setMotorDisable();
     }
 
     /**
@@ -57,8 +59,11 @@ public class Lift {
     }
 
     public void updatePosition() {
-        liftMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //this means the lift motors use encoders
-        liftMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION); //this means the lift motors use encoders
+        liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        liftMotorL.setPower(maxPower);
+        liftMotorR.setPower(maxPower);
 
         targetPosition = MathUtils.clamp(targetPosition, MinRangeInch, MaxRangeInch);
 
@@ -68,10 +73,15 @@ public class Lift {
         if (debugModeActive) {
             opMode.telemetry.addLine();
             opMode.telemetry.addData("Lift: ", "target position %4.2f, actual position %4.2f", targetPosition, getPositionInch());
+            opMode.telemetry.addData("targetPositionRaw: ", (int) (targetPosition * encoderCountsPerInch));
+            opMode.telemetry.addData("actualPositionRaw: ", getRawPosition());
         }
     }
 
     public void directControlNoPID() {
+
+        liftMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double targetPower = opMode.gamepad2.left_stick_y;
 
@@ -86,7 +96,14 @@ public class Lift {
      * @return encoder counts from the bottom of the lift's travel
      */
     public double getRawPosition() {
-        return (liftMotorL.getCurrentPosition() + liftMotorR.getCurrentPosition()) * 0.5;
+        if (liftMotorR.isMotorEnabled() && liftMotorL.isMotorEnabled())
+            return (liftMotorL.getCurrentPosition() + liftMotorR.getCurrentPosition()) * 0.5;
+
+        if (liftMotorR.isMotorEnabled())
+            return liftMotorR.getCurrentPosition();
+
+        return liftMotorL.getCurrentPosition();
+
     }
 
     /**

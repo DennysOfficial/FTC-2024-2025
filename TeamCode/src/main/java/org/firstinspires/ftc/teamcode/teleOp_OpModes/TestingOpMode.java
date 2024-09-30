@@ -63,9 +63,11 @@ public class TestingOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-        //Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig);
 
         CenterPivot spinyBit = new CenterPivot(this, activeConfig);
+
+        lift.debugModeActive = true;
 
 
         waitForStart();
@@ -84,7 +86,7 @@ public class TestingOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
 
 
-            //lift.directControlNoPID();
+            lift.directControl(deltaTime);
 
             spinyBit.directControl(deltaTime);
 
