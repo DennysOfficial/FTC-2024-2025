@@ -31,16 +31,22 @@ package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Configurations.ModifiedConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.individual_components.grabbers.Pincher;
 
 
 @TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
@@ -51,7 +57,11 @@ public class TestingOpMode extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    public static double Kp = 0;
 
+    public static double Ki;
+    public static double Kd;
+    public static double Kf;
     @Override
     public void runOpMode() {
 
@@ -66,8 +76,20 @@ public class TestingOpMode extends LinearOpMode {
         Lift lift = new Lift(this, activeConfig);
 
         CenterPivot spinyBit = new CenterPivot(this, activeConfig);
+        CenterPivot.debugModeActive = true;
 
         lift.debugModeActive = true;
+
+        //Pincher pincher = new Pincher(this,activeConfig);
+
+        ActiveIntake intake = new ActiveIntake(this,activeConfig);
+
+        spinyBit.initHoming();
+
+        //SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,)
+
+
+
 
 
         waitForStart();
@@ -79,16 +101,21 @@ public class TestingOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
+            //spinyBit.homingRoutine();
+
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
             activeDriveMode.updateDrive(deltaTime);
 
-
             lift.directControl(deltaTime);
 
             spinyBit.directControl(deltaTime);
+
+            //pincher.directControl(deltaTime);
+
+            intake.directControl();
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Run Time: ", runtime.toString());

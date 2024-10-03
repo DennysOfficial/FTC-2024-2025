@@ -34,7 +34,7 @@ public class RobotConfig {
         return strafingSensitivity;
     }
 
-    public static float liftRate = 3; // inches per second
+    public static float liftRate = 10; // inches per second
     public float getLiftRate() {
         return liftRate;
     }
@@ -71,5 +71,13 @@ public class RobotConfig {
     public boolean getIntakeOutButton() {
         return opMode.gamepad1.left_bumper;
     }
+
+    public boolean getPinchButton(){return opMode.gamepad2.right_bumper;}
+
+    public boolean getIntakeButton(){return opMode.gamepad2.right_bumper;}
+
+    public boolean getOuttakeButton(){return opMode.gamepad2.left_bumper;}
+
+
 
 }

@@ -2,24 +2,28 @@ package org.firstinspires.ftc.teamcode.individual_components;
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-
-public class CenterPivot {
+@Config
+public class CenterPivot{
 
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1./200.; // rotations of final over rotations of motor
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor/finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal/360;
 
-    static double minAngle = -90; // measured from vertical forward is positive
-    static double maxAngle = 100;
+    static double minAngle = -87; // measured from vertical forward is positive
+    static double maxAngle = 90;
 
     final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
-    public boolean debugModeActive = false;
+    public static   boolean debugModeActive = false;
     LinearOpMode opMode;
     RobotConfig config;
 
@@ -29,6 +33,51 @@ public class CenterPivot {
     private double targetAngle = 0;
     private DcMotorEx pivotMotorL = null;
     private DcMotorEx pivotMotorR = null;
+
+    ColorRangeSensor colorSens;
+
+    public enum HomingStatus{
+        notHomed,
+        roughHoming,
+        fineHoming,
+        homed
+    }
+    private HomingStatus homingStatus = HomingStatus.notHomed;
+
+    final int red = 650;
+    final int grey = 510;
+    final int threshold = (red+grey)/2;
+
+
+
+    public static double roughHomingSpeed = 30;
+    boolean lastHomingSensorReading;
+
+    public boolean homingSensorTriggered(){
+        opMode.telemetry.addData("red",(colorSens.red() > threshold));
+        return (colorSens.red() > threshold);
+    }
+
+    public void initHoming(){
+        homingStatus = HomingStatus.roughHoming;
+        lastHomingSensorReading = homingSensorTriggered();
+    }
+
+
+    public void homingRoutine(){
+        switch (homingStatus){
+            case homed:
+                return;
+            case roughHoming:
+                if(homingSensorTriggered())
+                    setVelocity(roughHomingSpeed);
+                else
+                    setVelocity(-roughHomingSpeed);
+                //if(lastHomingSensorReading != homingSensorTriggered()){
+                  //  homingStatus = HomingStatus.fineHoming;
+                //}
+        }
+    }
 
     public CenterPivot(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -56,6 +105,8 @@ public class CenterPivot {
         pivotMotorR.setPower(maxPIDPower);
         pivotMotorL.setPower(maxPIDPower);
 
+        colorSens = opMode.hardwareMap.get(ColorRangeSensor.class,"ColorSense");
+
     }
 
     /**
@@ -71,15 +122,17 @@ public class CenterPivot {
     }
 
     public void updatePosition(){
+        //if (homingStatus != HomingStatus.homed)
+         //   return;
+
         targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
 
-        pivotMotorR.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
-        pivotMotorL.setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
+        setPosition((int)(targetAngle*encoderCountsPerDeg));
 
         if (debugModeActive){
-            opMode.telemetry.addData("target Angle = ",targetAngle);
-            opMode.telemetry.addData("actual Angle = ",getAngle());
-            opMode.telemetry.addData("error = ",getAngle() - targetAngle);
+            opMode.telemetry.addData("PivotTarget",targetAngle);
+            opMode.telemetry.addData("PivotActual",getAngle());
+            opMode.telemetry.addData("PivotError = ",getAngle() - targetAngle);
         }
     }
 
@@ -87,19 +140,42 @@ public class CenterPivot {
      * sets to motor powers equal to the stick position
      */
     public void directControlNoPID() {
-
         double targetPower = config.getPivotStick();
 
         if (debugModeActive){
             opMode.telemetry.addData("motor power = ",targetPower);
         }
 
+        setPower(targetPower);
+    }
+
+    public void setPower(double targetPower){
         pivotMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pivotMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         pivotMotorR.setPower(targetPower);
         pivotMotorL.setPower(targetPower);
     }
+
+    public void setPosition(int targetPosition){
+        pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        pivotMotorR.setPower(maxPIDPower);
+        pivotMotorL.setPower(maxPIDPower);
+
+        pivotMotorR.setTargetPosition(targetPosition);
+        pivotMotorL.setTargetPosition(targetPosition);
+    }
+
+    public void setVelocity(double targetVelocity){
+        pivotMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pivotMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        pivotMotorR.setVelocity(-targetVelocity, AngleUnit.DEGREES);
+        pivotMotorL.setVelocity(-targetVelocity, AngleUnit.DEGREES);
+    }
+
     public void directControlNoPID(double delaTime) {
         directControlNoPID();
     }
