@@ -124,8 +124,26 @@ public class PivotBasic {
         pivotMotorL.setVelocity(-targetVelocity, AngleUnit.DEGREES);
     }
 
-    public void GetVelocity(double targetVelocity){
+    /**
+     * @return velocity in ticks per second
+     */
+    public double getVelocityTPS(){
+        if (pivotMotorL.isMotorEnabled() && pivotMotorR.isMotorEnabled())
+            return (pivotMotorR.getVelocity() + pivotMotorL.getVelocity())/2f;
 
+        if (pivotMotorL.isMotorEnabled())
+            return pivotMotorL.getVelocity();
+
+        if (pivotMotorR.isMotorEnabled())
+            return pivotMotorR.getVelocity();
+        return 0;
+    }
+
+    /**
+     * @return velocity in degrees per second
+     */
+    public double getVelocityDPS(){
+       return getVelocityTPS()/encoderCountsPerDeg;
     }
 
     public void directControlNoPID(double delaTime) {
