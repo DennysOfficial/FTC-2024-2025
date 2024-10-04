@@ -26,14 +26,12 @@ public class PivotAdvanced extends PivotBasic {
         super(opMode, config);
     }
 
-    PIDFCoefficients pidfCoefficients = new PIDFCoefficients();
-
     public void directControlFancy(double liftExtension) {
         setTorqueFeedforwardCompensated(config.getPivotStick(),liftExtension);
     }
 
     @Override
-    public void setTargetVelocity(double targetVelocity) {
+    public void setTargetVelocity(double targetVelocity) { //TODO
 
     }
 

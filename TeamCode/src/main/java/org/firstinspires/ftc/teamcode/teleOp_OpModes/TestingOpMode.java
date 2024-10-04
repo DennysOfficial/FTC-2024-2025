@@ -45,7 +45,7 @@ import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 
 
-@TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Test: OpMode", group = "Linear OpMode")
 //@Disabled
 public class TestingOpMode extends LinearOpMode {
 
