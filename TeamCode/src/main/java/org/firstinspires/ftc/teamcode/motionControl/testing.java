@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 
 public class testing {
 
@@ -12,7 +12,7 @@ public class testing {
     ElapsedTime runtime;
     RobotConfig config;
 
-    CenterPivot spinyBoi;
+    PivotBasic spinyBoi;
 
     motionState Status = motionState.DirectControl;
 
@@ -21,7 +21,7 @@ public class testing {
         this.runtime = runtime;
         this.config = config;
 
-        spinyBoi = new CenterPivot(opMode, config);
+        spinyBoi = new PivotBasic(opMode, config);
     }
 
     public enum motionState {
@@ -36,7 +36,7 @@ public class testing {
 
         switch (Status){
             case DirectControl:
-                spinyBoi.directControl(deltaTime);
+                spinyBoi.directControlStockPID(deltaTime);
                 break;
 
             case Moving:

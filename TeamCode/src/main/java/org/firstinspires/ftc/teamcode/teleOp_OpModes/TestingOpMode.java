@@ -34,19 +34,14 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Configurations.ModifiedConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.CenterPivot;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.individual_components.grabbers.Pincher;
 
 
 @TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
@@ -75,8 +70,8 @@ public class TestingOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        CenterPivot spinyBit = new CenterPivot(this, activeConfig);
-        CenterPivot.debugModeActive = true;
+        PivotBasic spinyBit = new PivotBasic(this, activeConfig);
+        PivotBasic.debugModeActive = true;
 
         lift.debugModeActive = true;
 
@@ -84,11 +79,12 @@ public class TestingOpMode extends LinearOpMode {
 
         ActiveIntake intake = new ActiveIntake(this,activeConfig);
 
-        spinyBit.initHoming();
+        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
 
-        //SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,)
+        opticalTracker.begin();
 
-
+        if(!opticalTracker.calibrateImu())
+            telemetry.addLine("SparkFunOTOS imu calibration failed");
 
 
 
@@ -101,8 +97,6 @@ public class TestingOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            //spinyBit.homingRoutine();
-
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
@@ -111,13 +105,13 @@ public class TestingOpMode extends LinearOpMode {
 
             lift.directControl(deltaTime);
 
-            spinyBit.directControl(deltaTime);
+            spinyBit.directControlStockPID(deltaTime);
 
             //pincher.directControl(deltaTime);
 
             intake.directControl();
 
-            // Show the elapsed game time and wheel power.
+
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
