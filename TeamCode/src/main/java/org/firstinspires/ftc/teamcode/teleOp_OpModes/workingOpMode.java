@@ -36,18 +36,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 
 
-@TeleOp(name = "Basic/Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "should work", group = "Linear OpMode")
 //@Disabled
-public class TestingOpMode extends LinearOpMode {
+public class workingOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -71,20 +70,14 @@ public class TestingOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
+        PivotBasic spinyBit = new PivotBasic(this, activeConfig);
+        PivotBasic.debugModeActive = true;
 
         lift.debugModeActive = true;
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
         ActiveIntake intake = new ActiveIntake(this,activeConfig);
-//
-//        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
-//
-//        opticalTracker.begin();
-//
-//        if(!opticalTracker.calibrateImu())
-//            telemetry.addLine("SparkFunOTOS imu calibration failed");
 
 
 
@@ -105,7 +98,7 @@ public class TestingOpMode extends LinearOpMode {
 
             lift.directControl(deltaTime);
 
-            spinyBit.directControlFancy(lift.getPositionInch());
+            spinyBit.directControlStockPID(deltaTime);
 
             //pincher.directControl(deltaTime);
 
