@@ -10,11 +10,10 @@ import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 public class PivotAdvanced extends PivotBasic {
 
 
-
     public static double staticThresholdDPS = 10;
 
     @Config
-    public static class coefficients{
+    public static class coefficients {
         public static double staticFrictionTorque = 0;
         public static double kinematicFrictionTorque = 0;
         public static double gravityCoefficient = 1;
@@ -46,7 +45,7 @@ public class PivotAdvanced extends PivotBasic {
     }
 
     public void directControlFancy(double liftExtension) {
-        setTorque(calculateNetTorque(config.getPivotStick(), liftExtension) - calculateDragTorque(getVelocityDPS(),coefficients.directControlDamping));
+        setTorque(calculateNetTorque(config.getPivotStick(), liftExtension) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
     }
 
     @Override
@@ -55,15 +54,27 @@ public class PivotAdvanced extends PivotBasic {
     }
 
     public void setTorque(double targetTorque) {
+
         double motorSpeedRPM = getVelocityTPS() / encoderCountsPerRevMotor;
-        double motorPower = targetTorque + motorSpeedRPM / motorProperties.maxSpeedRPM;
+
+        double backEMF = motorSpeedRPM / motorProperties.maxSpeedRPM * 12.0; //calculates the voltage that the motor is generating from spinning
+
+        double batteryVoltage = opMode.hardwareMap.voltageSensor.get("Motor Controller 1").getVoltage();
+
+        double targetNetVoltage = targetTorque * 12.0;
+
+        double voltage = targetNetVoltage + backEMF;
+
+        double power = voltage/(batteryVoltage);
+
+        setPower(power);
 
         if (advancedDebugEnabled) {
             opMode.telemetry.addData("targetTorque", targetTorque);
             opMode.telemetry.addData("motorCurrent", getCurrentAmp());
+            opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
+            opMode.telemetry.addData("motorPower", motorSpeedRPM);
         }
-
-        setPower(motorPower);
     }
 
     public double calculateNetTorque(double targetNetTorque, double liftExtension) {
@@ -71,7 +82,7 @@ public class PivotAdvanced extends PivotBasic {
         double gravityTorque = calculateTorqueGravity(liftProperties.CGRadiusRetracted + liftExtension * liftProperties.movingMassProportion, getAngle(), liftProperties.mass);
         double frictionTorque = calculateTorqueFriction(targetNetTorque, getVelocityDPS(), coefficients.staticFrictionTorque, coefficients.kinematicFrictionTorque, staticThresholdDPS);
 
-        double outputTorque = targetNetTorque - gravityTorque -frictionTorque;
+        double outputTorque = targetNetTorque - gravityTorque - frictionTorque;
 
         if (advancedDebugEnabled) {
             opMode.telemetry.addData("gravityTorque", gravityTorque);
