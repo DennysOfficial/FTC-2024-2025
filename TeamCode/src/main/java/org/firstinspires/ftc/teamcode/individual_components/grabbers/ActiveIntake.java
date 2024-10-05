@@ -13,21 +13,23 @@ public class ActiveIntake {
 
     Servo spinnyServo;
 
-    float intakeSpeed = 1;
-    float outtakeSpeed = 0;
+    float intakeSpeed = 0;
+    float outtakeSpeed = 1;
 
 
     public ActiveIntake(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
-        spinnyServo = opMode.hardwareMap.get(Servo.class, "Pinch");
+        spinnyServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.grabberServo);
     }
 
 
     public void directControl() {
         spinnyServo.setPosition(0.5f);
+
         if(config.getIntakeButton())
             spinnyServo.setPosition(intakeSpeed);
+
         else if(config.getOuttakeButton())
             spinnyServo.setPosition(outtakeSpeed);
     }

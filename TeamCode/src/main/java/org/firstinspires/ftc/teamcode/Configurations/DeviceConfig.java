@@ -32,5 +32,7 @@ public class DeviceConfig {
 
     public final String rightLift = "LiftR";
 
+    public final String grabberServo = "Pinch";
+
 
 }

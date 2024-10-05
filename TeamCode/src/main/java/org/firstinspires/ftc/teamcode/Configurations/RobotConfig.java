@@ -45,11 +45,11 @@ public class RobotConfig {
     }
 
     public double getForwardStick() {
-        return -1 * opMode.gamepad1.left_stick_y;
+        return opMode.gamepad1.left_stick_y;
     } // button mapping
 
     public double getStrafeStick() {
-        return opMode.gamepad1.left_stick_x;
+        return -opMode.gamepad1.left_stick_x;
     }
 
     public double getTurnStick() {

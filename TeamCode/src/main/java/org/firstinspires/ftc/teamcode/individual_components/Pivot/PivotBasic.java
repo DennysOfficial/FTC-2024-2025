@@ -29,8 +29,8 @@ public class PivotBasic {
      * degrees from vertical: forward is positive
      */
     private double targetAngle = 0;
-    private DcMotorEx pivotMotorL = null;
-    private DcMotorEx pivotMotorR = null;
+    protected DcMotorEx pivotMotorL = null;
+    protected DcMotorEx pivotMotorR = null;
 
 
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {

@@ -23,7 +23,7 @@ public class Pincher {
     public Pincher(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
-        pinchServo = opMode.hardwareMap.get(Servo.class, "Pinch");
+        pinchServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.grabberServo);
         wristServo = opMode.hardwareMap.get(Servo.class, "GrabWrist");
     }
 
