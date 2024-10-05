@@ -36,8 +36,7 @@ public class PivotAdvanced extends PivotBasic {
     public static boolean advancedDebugEnabled = false;
 
     public enum controlMode {
-        positionControl,
-        velocityControl,
+        positionControl, velocityControl,
     }
 
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
@@ -57,23 +56,16 @@ public class PivotAdvanced extends PivotBasic {
 
         double motorSpeedRPM = getVelocityTPS() / encoderCountsPerRevMotor;
 
-        double backEMF = motorSpeedRPM / motorProperties.maxSpeedRPM * 12.0; //calculates the voltage that the motor is generating from spinning
+        double battery = opMode.hardwareMap.voltageSensor.get("Motor Controller 1").getVoltage() / 12.0;
 
-        double batteryVoltage = opMode.hardwareMap.voltageSensor.get("Motor Controller 1").getVoltage();
-
-        double targetNetVoltage = targetTorque * 12.0;
-
-        double voltage = targetNetVoltage + backEMF;
-
-        double power = voltage/(batteryVoltage);
-
-        setPower(power);
+        setPower((targetTorque + motorSpeedRPM / motorProperties.maxSpeedRPM) / battery);
 
         if (advancedDebugEnabled) {
             opMode.telemetry.addData("targetTorque", targetTorque);
             opMode.telemetry.addData("motorCurrent", getCurrentAmp());
             opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
-            opMode.telemetry.addData("motorPower", motorSpeedRPM);
+            opMode.telemetry.addData("motorPower", pivotMotorR.getPower());
+            opMode.telemetry.addData("batteryVoltage", battery * 12.0);
         }
     }
 

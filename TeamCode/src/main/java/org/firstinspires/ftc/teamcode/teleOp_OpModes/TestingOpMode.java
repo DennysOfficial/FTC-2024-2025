@@ -58,6 +58,7 @@ public class TestingOpMode extends LinearOpMode {
     public static double Ki;
     public static double Kd;
     public static double Kf;
+
     @Override
     public void runOpMode() {
 
@@ -77,7 +78,7 @@ public class TestingOpMode extends LinearOpMode {
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
-        ActiveIntake intake = new ActiveIntake(this,activeConfig);
+        ActiveIntake intake = new ActiveIntake(this, activeConfig);
 //
 //        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
 //
@@ -85,7 +86,6 @@ public class TestingOpMode extends LinearOpMode {
 //
 //        if(!opticalTracker.calibrateImu())
 //            telemetry.addLine("SparkFunOTOS imu calibration failed");
-
 
 
         waitForStart();
@@ -105,7 +105,8 @@ public class TestingOpMode extends LinearOpMode {
 
             lift.directControl(deltaTime);
 
-            spinyBit.directControlFancy(lift.getPositionInch());
+            //spinyBit.directControlFancy(lift.getPositionInch());
+            spinyBit.setTorque(gamepad2.right_stick_y);
 
             //pincher.directControl(deltaTime);
 
