@@ -27,9 +27,11 @@ public class JayenMode extends LinearOpMode {
         DcMotor BLWheel;
         BLWheel = hardwareMap.get(DcMotor.class, "BLWheel");
 
-        FLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        FLWheel.setDirection(DcMotorSimple.Direction.FORWARD);
         FRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
-        BRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        BRWheel.setDirection(DcMotorSimple.Direction.REVERSE);
         BLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
         FLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

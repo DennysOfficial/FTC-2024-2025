@@ -130,10 +130,10 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: adjust the names of the following hardware devices to match your configuration
-        //imu = hardwareMap.get(IMU.class, "imu");
-        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-        //        DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
-        //imu.initialize(parameters);
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
+        imu.initialize(parameters);
 
         DcMotor FLWheel;
         FLWheel = hardwareMap.get(DcMotor.class, "FLWheel"); //this needs to be changed to match the robot's motor configuration
@@ -144,9 +144,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         DcMotor BLWheel;
         BLWheel = hardwareMap.get(DcMotor.class, "BLWheel");
 
-        FLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        FLWheel.setDirection(DcMotorSimple.Direction.FORWARD);
         FRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
-        BRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
+        BRWheel.setDirection(DcMotorSimple.Direction.REVERSE);
         BLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
 
         FLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -170,7 +170,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
         }
 
-        // TODO: reverse any motors using DcMotor.setDirection()
+
 
         List<Integer> lastTrackingEncPositions = new ArrayList<>();
         List<Integer> lastTrackingEncVels = new ArrayList<>();
