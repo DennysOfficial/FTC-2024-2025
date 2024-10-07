@@ -53,11 +53,6 @@ public class TestingOpMode extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    public static double Kp = 0;
-
-    public static double Ki;
-    public static double Kd;
-    public static double Kf;
 
     @Override
     public void runOpMode() {
@@ -105,8 +100,8 @@ public class TestingOpMode extends LinearOpMode {
 
             lift.directControl(deltaTime);
 
-            //spinyBit.directControlFancy(lift.getPositionInch());
-            spinyBit.setTorque(gamepad2.right_stick_y);
+            spinyBit.directControlFancy(lift.getPositionInch());
+            //spinyBit.setTorque(gamepad2.right_stick_y);
 
             //pincher.directControl(deltaTime);
 

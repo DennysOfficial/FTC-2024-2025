@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
@@ -18,6 +19,7 @@ public class PivotAdvanced extends PivotBasic {
         public static double kinematicFrictionTorque = 0;
         public static double gravityCoefficient = 1;
         public static double directControlDamping = 0;
+        public static double beans = 1.0;
     }
 
     @Config
@@ -35,16 +37,13 @@ public class PivotAdvanced extends PivotBasic {
 
     public static boolean advancedDebugEnabled = false;
 
-    public enum controlMode {
-        positionControl, velocityControl,
-    }
-
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
+        batteryVoltageSensor = getBatteryVoltageSensor();
     }
 
     public void directControlFancy(double liftExtension) {
-        setTorque(calculateNetTorque(config.getPivotStick(), liftExtension) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
+        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtension) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
     }
 
     @Override
@@ -52,11 +51,21 @@ public class PivotAdvanced extends PivotBasic {
 
     }
 
+    public VoltageSensor getBatteryVoltageSensor() {
+        for (VoltageSensor sensor : opMode.hardwareMap.voltageSensor) {
+            if (sensor.getVoltage() > 0)
+                return sensor;
+        }
+        return null;
+    }
+
+    VoltageSensor batteryVoltageSensor;
+
     public void setTorque(double targetTorque) {
 
         double motorSpeedRPM = getVelocityTPS() / encoderCountsPerRevMotor;
 
-        double battery = opMode.hardwareMap.voltageSensor.get("Motor Controller 1").getVoltage() / 12.0;
+        double battery = batteryVoltageSensor.getVoltage() / 12.0;
 
         setPower((targetTorque + motorSpeedRPM / motorProperties.maxSpeedRPM) / battery);
 
@@ -65,7 +74,7 @@ public class PivotAdvanced extends PivotBasic {
             opMode.telemetry.addData("motorCurrent", getCurrentAmp());
             opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
             opMode.telemetry.addData("motorPower", pivotMotorR.getPower());
-            opMode.telemetry.addData("batteryVoltage", battery * 12.0);
+            opMode.telemetry.addData("batteryVoltage", batteryVoltageSensor.getVoltage());
         }
     }
 
