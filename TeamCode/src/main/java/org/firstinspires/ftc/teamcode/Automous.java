@@ -58,7 +58,7 @@ import org.firstinspires.ftc.teamcode.util.RegressionUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Automous extends JayenMode {
+public class Automous extends LinearOpMode {
     @Override
     public void runOpMode() {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
