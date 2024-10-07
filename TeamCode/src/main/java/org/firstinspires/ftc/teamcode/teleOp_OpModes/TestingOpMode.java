@@ -74,13 +74,13 @@ public class TestingOpMode extends LinearOpMode {
         //Pincher pincher = new Pincher(this,activeConfig);
 
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
-//
-//        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
-//
-//        opticalTracker.begin();
-//
-//        if(!opticalTracker.calibrateImu())
-//            telemetry.addLine("SparkFunOTOS imu calibration failed");
+
+        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
+
+        opticalTracker.begin();
+
+        if(!opticalTracker.calibrateImu())
+            telemetry.addLine("SparkFunOTOS imu calibration failed");
 
 
         waitForStart();
@@ -108,8 +108,13 @@ public class TestingOpMode extends LinearOpMode {
             intake.directControl();
 
 
+
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
+    }
+
+    public void telemetryOTOS(){
+
     }
 }

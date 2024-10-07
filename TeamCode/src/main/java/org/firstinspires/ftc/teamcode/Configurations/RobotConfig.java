@@ -49,8 +49,7 @@ public class RobotConfig {
     public float getPivotRate() {
         return pivotRate;
     }
-
-    public static float pivotSensitivity = 1; //degrees per second
+    public static float pivotSensitivity = 0.5f; //degrees per second
 
     public float getPivotSensitivity() {
         return pivotSensitivity;
