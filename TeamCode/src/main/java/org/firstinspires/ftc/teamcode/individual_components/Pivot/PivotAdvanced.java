@@ -6,12 +6,14 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 
 @Config
 public class PivotAdvanced extends PivotBasic {
 
 
     public static double staticThresholdDPS = 10;
+
 
     @Config
     public static class coefficients {
@@ -22,33 +24,48 @@ public class PivotAdvanced extends PivotBasic {
         public static double beans = 1.0;
     }
 
-    @Config
+    //@Config
     public static class liftProperties {
         public static double CGRadiusRetracted = 5;
         public static double movingMassProportion = 0.35f;
         public static double mass = 0.004;
     }
 
-    @Config
+    //@Config
     public static class motorProperties {
         public static double maxSpeedRPM = 6000;
         public static double stallAmps;
     }
+    @Config
+    public static class pivotPIDCon {
+        public static double kP = 0.08;
+        public static double kI = 0.0001;
+        public static double kD = 0.003;
+    }
 
-    public static boolean advancedDebugEnabled = false;
+    public static boolean advancedDebugEnabled = true;
+
+    CustomPID pivotPID;
 
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
         batteryVoltageSensor = getBatteryVoltageSensor();
+        pivotPID = new CustomPID(opMode, config);
+        pivotPID.debugEnabled = true;
     }
 
-    public void directControlFancy(double liftExtension) {
-        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtension) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
+    public void directControlFancy(double liftExtensionInch) {
+        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
+    }
+
+    public void update(double deltaTime,double liftExtensionInch){
+        pivotPID.setCoefficients(pivotPIDCon.kP,pivotPIDCon.kI,pivotPIDCon.kD);
+        setTorque(calculateNetTorque(pivotPID.runPID(targetAngle,getAngle(),deltaTime),liftExtensionInch));
     }
 
     @Override
-    public void setTargetVelocity(double targetVelocity) { //TODO
-
+    public void setTargetAngle(double targetAngle) { //TODO
+        this.targetAngle = targetAngle;
     }
 
     public VoltageSensor getBatteryVoltageSensor() {
@@ -70,11 +87,12 @@ public class PivotAdvanced extends PivotBasic {
         setPower((targetTorque + motorSpeedRPM / motorProperties.maxSpeedRPM) / battery);
 
         if (advancedDebugEnabled) {
-            opMode.telemetry.addData("targetTorque", targetTorque);
-            opMode.telemetry.addData("motorCurrent", getCurrentAmp());
-            opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
+            opMode.telemetry.addData("pivotAngle", getAngle());
+            //opMode.telemetry.addData("targetTorque", targetTorque);
+            //opMode.telemetry.addData("motorCurrent", getCurrentAmp());
+            //opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
             opMode.telemetry.addData("motorPower", pivotMotorR.getPower());
-            opMode.telemetry.addData("batteryVoltage", batteryVoltageSensor.getVoltage());
+            //opMode.telemetry.addData("batteryVoltage", batteryVoltageSensor.getVoltage());
         }
     }
 

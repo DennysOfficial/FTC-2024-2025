@@ -28,10 +28,9 @@ public class PivotBasic {
     /**
      * degrees from vertical: forward is positive
      */
-    private double targetAngle = 0;
+    protected double targetAngle = 0;
     protected DcMotorEx pivotMotorL = null;
     protected DcMotorEx pivotMotorR = null;
-
 
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -41,8 +40,8 @@ public class PivotBasic {
         pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftPivot);
         pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightPivot);
 
-        pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
-        //liftMotorLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        //pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
+        pivotMotorR.setDirection(DcMotorEx.Direction.REVERSE);
 
         pivotMotorL.setMotorEnable();
         pivotMotorR.setMotorEnable();

@@ -6,17 +6,17 @@ import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 
 public class CustomPID {
 
-    public boolean debugMode = false;
+    public boolean debugEnabled = false;
 
-    public double kP = 1;
-    public double kI = 1;
-    public double kD = 1;
+    double kP = 1;
+    double kI = 1;
+    double kD = 1;
 
-    public double P = 0;
-    public double I = 0;
-    public double D = 0;
+    double P = 0;
+    double I = 0;
+    double D = 0;
 
-    public double previousActualPosition = 0;
+    double previousActualPosition = 0;
     LinearOpMode opMode;
     RobotConfig config;
 
@@ -46,19 +46,24 @@ public class CustomPID {
 
     public double runPID(double targetPosition, double actualPosition, double deltaTime) {
 
+        return runPID(targetPosition, actualPosition, deltaTime, (previousActualPosition - (previousActualPosition = actualPosition)) / deltaTime);
+    }
+
+    public double runPID(double targetPosition, double actualPosition, double deltaTime, double velocity) {
+
         final double error = targetPosition - actualPosition;
 
         P = kP * error; // proportional
 
         I += kI * error * deltaTime; // integral
 
-        D = kD * (previousActualPosition - actualPosition) / deltaTime;
+        D = kD * velocity;
 
-        previousActualPosition = actualPosition;
-
-        if(debugMode){
+        if (debugEnabled) {
             opMode.telemetry.addData("error", error);
-            opMode.telemetry.addData( "Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
+            opMode.telemetry.addData("position", actualPosition);
+            opMode.telemetry.addData("targetPosition", targetPosition);
+            opMode.telemetry.addData("Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
         }
 
         return P + I + D;

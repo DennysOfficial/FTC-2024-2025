@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
-@Config
+//@Config
 public class VelocityControlDrive extends DriveModeBase{
 
 

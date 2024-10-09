@@ -49,6 +49,7 @@ public class RobotConfig {
     public float getPivotRate() {
         return pivotRate;
     }
+
     public static float pivotSensitivity = 0.5f; //degrees per second
 
     public float getPivotSensitivity() {
@@ -60,7 +61,7 @@ public class RobotConfig {
     } // button mapping
 
     public double getStrafeStick() {
-        return -opMode.gamepad1.left_stick_x;
+        return -1 * opMode.gamepad1.left_stick_x;
     }
 
     public double getTurnStick() {
@@ -72,7 +73,7 @@ public class RobotConfig {
     }
 
     public double getPivotStick() {
-        return opMode.gamepad2.right_stick_y;
+        return -1 * opMode.gamepad2.right_stick_y;
     }
 
     public boolean getIntakeInButton() {

@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -46,13 +47,13 @@ import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntak
 
 
 @TeleOp(name = "Test: OpMode", group = "Linear OpMode")
+@Config
 //@Disabled
 public class TestingOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
-
 
     @Override
     public void runOpMode() {
@@ -100,8 +101,8 @@ public class TestingOpMode extends LinearOpMode {
 
             lift.directControl(deltaTime);
 
-            spinyBit.directControlFancy(lift.getPositionInch());
-            //spinyBit.setTorque(gamepad2.right_stick_y);
+            spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.getPivotStick()*activeConfig.getPivotRate()*deltaTime);
+            spinyBit.update(deltaTime,lift.getPositionInch());
 
             //pincher.directControl(deltaTime);
 
