@@ -44,6 +44,10 @@ public class CustomPID {
         previousActualPosition = actualPosition;
     }
 
+    public void setPreviousActualPosition(double previousActualPosition){
+        this.previousActualPosition = previousActualPosition;
+    }
+
     public double runPID(double targetPosition, double actualPosition, double deltaTime) {
 
         return runPID(targetPosition, actualPosition, deltaTime, (previousActualPosition - (previousActualPosition = actualPosition)) / deltaTime);

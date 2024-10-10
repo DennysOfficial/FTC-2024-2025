@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
@@ -38,12 +39,19 @@ public class PivotAdvanced extends PivotBasic {
     }
     @Config
     public static class pivotPIDCon {
-        public static double kP = 0.08;
-        public static double kI = 0.0001;
-        public static double kD = 0.003;
+        public static double kP = 0.05;
+        public static double kI = 0;
+        public static double kD = 0.002;
     }
 
     public static boolean advancedDebugEnabled = true;
+
+    public enum ControlSate {
+        directControl,
+        PIDControl
+    }
+
+    public ControlSate controlSate = ControlSate.directControl;
 
     CustomPID pivotPID;
 
@@ -59,8 +67,17 @@ public class PivotAdvanced extends PivotBasic {
     }
 
     public void update(double deltaTime,double liftExtensionInch){
-        pivotPID.setCoefficients(pivotPIDCon.kP,pivotPIDCon.kI,pivotPIDCon.kD);
-        setTorque(calculateNetTorque(pivotPID.runPID(targetAngle,getAngle(),deltaTime),liftExtensionInch));
+        switch (controlSate){
+            case directControl:
+                directControlFancy(liftExtensionInch);
+                break;
+            case PIDControl:
+                pivotPID.setCoefficients(pivotPIDCon.kP,pivotPIDCon.kI,pivotPIDCon.kD);
+                setTorque(calculateNetTorque(pivotPID.runPID(targetAngle,getAngle(),deltaTime),liftExtensionInch));
+                break;
+        }
+
+        pivotPID.setPreviousActualPosition(getAngle());
     }
 
     @Override

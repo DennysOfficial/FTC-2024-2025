@@ -37,20 +37,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
 
 
-@TeleOp(name = "Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "pivot PID test", group = "Linear OpMode")
 @Config
 //@Disabled
-public class TestingOpMode extends LinearOpMode {
+public class pivotPIDTest extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -75,16 +74,14 @@ public class TestingOpMode extends LinearOpMode {
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
-
-        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class, "OTOS");
+        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class,"OTOS");
 
         opticalTracker.begin();
 
-        if (!opticalTracker.calibrateImu())
+        if(!opticalTracker.calibrateImu())
             telemetry.addLine("SparkFunOTOS imu calibration failed");
 
-        MotionControl pivotControl = new MotionControl(runtime, this, activeConfig);
+        MotionControl pivotControl = new MotionControl(runtime,this,activeConfig);
 
         waitForStart();
         runtime.reset();
@@ -99,25 +96,15 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            if (gamepad2.a) {
-                pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
-            }
-
-            if (pivotControl.isActive()) {
-                spinyBit.controlSate = PivotAdvanced.ControlSate.PIDControl;
-                spinyBit.setTargetAngle(pivotControl.update());
-            } else
-                spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;
-
-            spinyBit.update(deltaTime, lift.getPositionInch());
-
+            spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.getPivotRate()*activeConfig.getPivotStick()*deltaTime);
+            spinyBit.update(lift.getPositionInch(), deltaTime);
 
             activeDriveMode.updateDrive(deltaTime);
 
             lift.directControl(deltaTime);
+
             //pincher.directControl(deltaTime);
 
-            intake.directControl();
 
 
             telemetry.addData("Run Time: ", runtime.toString());
@@ -125,7 +112,7 @@ public class TestingOpMode extends LinearOpMode {
         }
     }
 
-    public void telemetryOTOS() {
+    public void telemetryOTOS(){
 
     }
 }
