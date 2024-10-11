@@ -39,7 +39,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
@@ -99,11 +98,11 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            if (!pivotControl.isActive() && gamepad2.a) {
+            if (!pivotControl.isBusy() && gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
             }
 
-            if (pivotControl.isActive()) {
+            if (pivotControl.isBusy()) {
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
                 spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;

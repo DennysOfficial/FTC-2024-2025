@@ -102,7 +102,7 @@ public class OtherTestingOpMode extends LinearOpMode {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
             }
 
-            if (pivotControl.isActive()) {
+            if (pivotControl.isBusy()) {
                 spinyBit.controlSate = PivotAdvanced.ControlSate.PIDControl;
                 spinyBit.setTargetAngle(pivotControl.update());
             } else

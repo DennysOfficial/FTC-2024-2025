@@ -5,8 +5,10 @@ import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
 
 public class Lift {
 
@@ -22,9 +24,19 @@ public class Lift {
     private final DcMotorEx liftMotorR;
     private final DcMotorEx liftMotorL;
 
+    final MultiMotor motors;
+
+    DcMotor.RunMode runMode;
+
     public Lift(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
+
+        motors = new MultiMotor(opMode.hardwareMap);
+        motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
+
+        motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         liftMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightLift);
         liftMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftLift);
@@ -35,14 +47,14 @@ public class Lift {
         liftMotorR.setMotorEnable();
         liftMotorL.setMotorEnable();
 
+
         liftMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //this resets the encoder
         liftMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         liftMotorL.setTargetPosition(0);
         liftMotorR.setTargetPosition(0);
 
-        liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        forceUpdateRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         liftMotorR.setMotorDisable();
     }
@@ -55,10 +67,10 @@ public class Lift {
     public void directControl(double deltaTime) {
         targetPosition -= opMode.gamepad2.left_stick_y * config.getLiftRate() * deltaTime;
 
-        updatePosition();
+        update();
     }
 
-    public void updatePosition() {
+    public void update() {
         liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION); //this means the lift motors use encoders
         liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -78,15 +90,23 @@ public class Lift {
         }
     }
 
-    public void directControlNoPID() {
+    void setRunMode(DcMotor.RunMode runMode) {
+        if (this.runMode == runMode)
+            return;
 
-        liftMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.runMode = runMode;
+        liftMotorR.setMode(runMode);
+        liftMotorL.setMode(runMode);
+    }
 
-        double targetPower = opMode.gamepad2.left_stick_y;
+    void forceUpdateRunMode(DcMotor.RunMode runMode) {
+        this.runMode = runMode;
+        liftMotorR.setMode(runMode);
+        liftMotorL.setMode(runMode);
+    }
 
-        liftMotorL.setPower(targetPower);
-        liftMotorR.setPower(targetPower);
+    public void directControlBasic() {
+        motors.setPower(opMode.gamepad2.left_stick_y);
     }
 
 
@@ -95,16 +115,6 @@ public class Lift {
      *
      * @return encoder counts from the bottom of the lift's travel
      */
-    public double getRawPosition() {
-        if (liftMotorR.isMotorEnabled() && liftMotorL.isMotorEnabled())
-            return (liftMotorL.getCurrentPosition() + liftMotorR.getCurrentPosition()) * 0.5;
-
-        if (liftMotorR.isMotorEnabled())
-            return liftMotorR.getCurrentPosition();
-
-        return liftMotorL.getCurrentPosition();
-
-    }
 
     /**
      * gets the current extension of the lift
@@ -112,7 +122,7 @@ public class Lift {
      * @return inches from the bottom of the lift's travel
      */
     public double getPositionInch() {
-        return getRawPosition() / encoderCountsPerInch;
+        return motors.getCurrentPosition() / encoderCountsPerInch;
     }
 
     /**
@@ -121,8 +131,7 @@ public class Lift {
      * @param positionInch inches from the bottom of the lift's travel
      */
     public void setPositionInch(double positionInch) {
-        targetPosition = positionInch;
-        updatePosition();
+        motors.setTargetPosition((int) (positionInch * encoderCountsPerInch));
     }
 
     /**
@@ -131,7 +140,7 @@ public class Lift {
      * @return inches from the bottom of the lift's travel
      */
     public double getTargetPositionInch() {
-        return targetPosition;
+        return motors.getTargetPosition();
     }
 
 

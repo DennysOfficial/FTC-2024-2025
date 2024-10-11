@@ -20,7 +20,7 @@ public class MotionControl {
     double duration;
     double startTime;
 
-    boolean active = false;
+    boolean busy = false;
 
 
     public MotionControl(ElapsedTime runtime, OpMode opMode, RobotConfig config) {
@@ -47,10 +47,10 @@ public class MotionControl {
     }
 
     public void smoothMove(double startPosition, double endPosition, double duration) {
-        if (active)
+        if (busy)
             return;
 
-        active = true;
+        busy = true;
 
         this.startPosition = startPosition;
         this.endPosition = endPosition;
@@ -59,17 +59,17 @@ public class MotionControl {
     }
 
     public double update() {
-        if (!active)
+        if (!busy)
             return Double.NaN;
 
         if (runtime.seconds() - startTime > duration)
-            active = false;
+            busy = false;
 
         return smoothLerp(startPosition, endPosition, (runtime.seconds() - startTime) / duration);
     }
 
-    public boolean isActive() {
-        return active;
+    public boolean isBusy() {
+        return busy;
     }
 
 
