@@ -1,27 +1,33 @@
 package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
-import androidx.core.math.MathUtils;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
+
 @Config
 public class PivotBasic {
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = 1./200.; // rotations of final over rotations of motor
-    static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor/finalGearRatio;
-    static final double encoderCountsPerDeg = encoderCountsPerRevFinal/360;
+    static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
+    static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
+    static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
+
+    //@Config
+    public static class motorProperties {
+        public static double maxSpeedRPM = 6000;
+        public static double stallAmps;
+    }
 
     static double minAngle = -87; // measured from vertical forward is positive
     static double maxAngle = 90;
 
     final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
-    public static   boolean debugModeActive = false;
+    public static boolean debugModeActive = false;
     LinearOpMode opMode;
     RobotConfig config;
 
@@ -29,149 +35,49 @@ public class PivotBasic {
      * degrees from vertical: forward is positive
      */
     protected double targetAngle = 0;
-    protected DcMotorEx pivotMotorL = null;
-    protected DcMotorEx pivotMotorR = null;
 
     protected DcMotor.RunMode runMode = DcMotor.RunMode.RUN_TO_POSITION;
+
+    protected MultiMotor motors;
 
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
+        motors = new MultiMotor(opMode.hardwareMap);
 
-        pivotMotorL = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.leftPivot);
-        pivotMotorR = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightPivot);
+        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
-        //pivotMotorL.setDirection(DcMotorEx.Direction.REVERSE); //this makes the motor run in reverse
-        pivotMotorR.setDirection(DcMotorEx.Direction.REVERSE);
-
-        pivotMotorL.setMotorEnable();
-        pivotMotorR.setMotorEnable();
-
-        pivotMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); //this resets the encoder
-        pivotMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        pivotMotorR.setTargetPosition(0);
-        pivotMotorL.setTargetPosition(0);
-
-        pivotMotorL.setMode(runMode);
-        pivotMotorR.setMode(runMode);
-
-        pivotMotorR.setPower(maxPIDPower);
-        pivotMotorL.setPower(maxPIDPower);
+        motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    protected void setRunMode(DcMotor.RunMode runMode) {
-        this.runMode = runMode;
-        pivotMotorL.setMode(runMode);
-        pivotMotorR.setMode(runMode);
-    }
+    public void setTorque(double targetTorque) {
 
-    /**
-     * moves the pivot based on stick input
-     *
-     * @param deltaTime the change in time (seconds) since the method was last called
-     */
-    public void directControlStockPID(double deltaTime) {
+        double motorSpeedRPM = motors.getVelocity() / encoderCountsPerRevMotor;
 
-        targetAngle += config.getPivotStick() * config.getPivotRate() * deltaTime;
-        updatePosition();
+        double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
 
-    }
+        motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
 
-    void updatePosition(){
-        targetAngle = MathUtils.clamp(targetAngle,minAngle,maxAngle);
-
-        setTargetPosition((int)(targetAngle*encoderCountsPerDeg));
-
-        if (debugModeActive){
-            opMode.telemetry.addData("PivotTarget",targetAngle);
-            opMode.telemetry.addData("PivotActual",getAngle());
-            opMode.telemetry.addData("PivotError = ",getAngle() - targetAngle);
+        if (config.debugConfig.pivotTorqueDebug()) {
+            opMode.telemetry.addData("targetTorque", targetTorque);
+            opMode.telemetry.addData("motorCurrent", motors.getCurrent(CurrentUnit.AMPS));
+            //opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
+            opMode.telemetry.addData("motorPower", motors.getPower());
         }
-    }
-
-    /**
-     * sets to motor powers equal to the stick position
-     */
-    public void directControlNoPID() {
-        double targetPower = config.getPivotStick();
-
-        if (debugModeActive){
-            opMode.telemetry.addData("motor power = ",targetPower);
-        }
-
-        setPower(targetPower);
-    }
-
-    public void setPower(double targetPower){
-        if (runMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER)
-            setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        pivotMotorR.setPower(targetPower);
-        pivotMotorL.setPower(targetPower);
-    }
-
-    public void setTargetPosition(int targetPosition){
-        if (runMode != DcMotor.RunMode.RUN_TO_POSITION)
-            setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        pivotMotorR.setPower(maxPIDPower);
-        pivotMotorL.setPower(maxPIDPower);
-
-        pivotMotorR.setTargetPosition(targetPosition);
-        pivotMotorL.setTargetPosition(targetPosition);
-    }
-
-    public void setTargetVelocity(double targetVelocity){
-        if (runMode != DcMotor.RunMode.RUN_USING_ENCODER)
-            setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        pivotMotorR.setVelocity(-targetVelocity, AngleUnit.DEGREES);
-        pivotMotorL.setVelocity(-targetVelocity, AngleUnit.DEGREES);
-    }
-
-    /**
-     * @return velocity in ticks per second
-     */
-    public double getVelocityTPS(){
-        if (pivotMotorL.isMotorEnabled() && pivotMotorR.isMotorEnabled())
-            return (pivotMotorR.getVelocity() + pivotMotorL.getVelocity())/2f;
-
-        if (pivotMotorL.isMotorEnabled())
-            return pivotMotorL.getVelocity();
-
-        if (pivotMotorR.isMotorEnabled())
-            return pivotMotorR.getVelocity();
-        return 0;
     }
 
     /**
      * @return velocity in degrees per second
      */
-    public double getVelocityDPS(){
-       return getVelocityTPS()/encoderCountsPerDeg;
+    public double getVelocityDPS() {
+        return motors.getVelocity() / encoderCountsPerDeg;
     }
 
-    public void directControlBasic(double delaTime) {
-        directControlNoPID();
-    }
 
-    /**
-     * gets the current extension of the lift
-     *
-     * @return encoder counts from the bottom of the lift's travel
-     */
-    public double getRawEncoder() {
-        if (pivotMotorL.isMotorEnabled() && pivotMotorR.isMotorEnabled())
-            return (pivotMotorR.getCurrentPosition() + pivotMotorL.getCurrentPosition())/2f;
-
-        if (pivotMotorL.isMotorEnabled())
-            return pivotMotorL.getCurrentPosition();
-
-        if (pivotMotorR.isMotorEnabled())
-            return pivotMotorR.getCurrentPosition();
-        return 0;
+    public void directControlBasic() {
+        motors.setPower(config.getPivotStick() * config.getPivotRate());
     }
 
     /**
@@ -180,26 +86,9 @@ public class PivotBasic {
      * @return degrees from the vertical: forward is positive
      */
     public double getAngle() {
-        return getRawEncoder() / encoderCountsPerDeg;
+        return motors.getCurrentPosition() / encoderCountsPerDeg;
     }
 
-    /**
-     * sets the target extension of the lift
-     *
-     * @param angle angle from vertical: forward is positive
-     */
-    public void setTargetAngle(double angle) {
-        targetAngle = angle;
-        updatePosition();
-    }
 
-    /**
-     * gets the current targeted Angle of the lift
-     *
-     * @return degrees from the vertical: forward is positive
-     */
-    public double getTargetAngle(){
-        return targetAngle;
-    }
 
 }

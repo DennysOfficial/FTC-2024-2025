@@ -7,7 +7,12 @@ public class DebugConfig {
 
     float makeTheSquigglyThingGoAwayPlease = 420; // very important
     public static boolean pivotPositionAndDerivatives = false;
-    public boolean isPivotPositionAndDerivativesDebug() {
+    public boolean pivotPositionAndDerivativesDebug() {
         return pivotPositionAndDerivatives;
+    }
+
+    public static boolean pivotTorqueDebug = false;
+    public boolean pivotTorqueDebug() {
+        return pivotTorqueDebug;
     }
 }
