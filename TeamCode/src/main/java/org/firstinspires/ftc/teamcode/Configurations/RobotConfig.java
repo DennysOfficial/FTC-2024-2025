@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Configurations;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 @Config
 public class RobotConfig {
@@ -9,9 +10,20 @@ public class RobotConfig {
     LinearOpMode opMode;
 
     public DeviceConfig deviceConfig = new DeviceConfig();
+    public DebugConfig debugConfig = new DebugConfig();
+
+    public final VoltageSensor batteryVoltageSensor;
+    VoltageSensor getBatteryVoltageSensor() {
+        for (VoltageSensor sensor : opMode.hardwareMap.voltageSensor) {
+            if (sensor.getVoltage() > 0)
+                return sensor;
+        }
+        return null;
+    }
 
     public RobotConfig(LinearOpMode opMode) {
         this.opMode = opMode;
+        batteryVoltageSensor = getBatteryVoltageSensor();
     }
 
     public static float driveSensitivity = 1;

@@ -56,20 +56,13 @@ public class PivotAdvanced extends PivotBasic {
 
     CustomPID pivotPID;
 
-    PositionDerivatives positionDerivatives; // calculates velocity and acceleration
+    PositionDerivatives positionDerivatives; // calculates velocity, acceleration, and jerk
 
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
-        batteryVoltageSensor = getBatteryVoltageSensor();
         pivotPID = new CustomPID(opMode, config);
         pivotPID.debugEnabled = true;
         positionDerivatives = new PositionDerivatives(getAngle());
-    }
-
-
-    public void directControlFancy(double liftExtensionInch) {
-        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - calculateDragTorque(positionDerivatives.getVelocity(), coefficients.directControlDamping));
-        opMode.telemetry.addData("input", config.getPivotStick() * config.getPivotSensitivity());
     }
 
     public void update(double deltaTime, double liftExtensionInch) {
@@ -93,10 +86,20 @@ public class PivotAdvanced extends PivotBasic {
                 break;
         }
 
-
-
+        if(config.debugConfig.isPivotPositionAndDerivativesDebug()){
+            opMode.telemetry.addData("pivot angle", getAngle());
+            opMode.telemetry.addData("pivot velocity", positionDerivatives.getVelocity());
+            opMode.telemetry.addData("pivot acceleration", positionDerivatives.getAcceleration());
+            opMode.telemetry.addData("pivot jerk", positionDerivatives.getJerk());
+        }
     }
 
+    public void directControlFancy(double liftExtensionInch) {
+        double dampingTorque = calculateDragTorque(positionDerivatives.getVelocity(), coefficients.directControlDamping);
+        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - dampingTorque);
+
+        opMode.telemetry.addData("dampingTorque", dampingTorque);
+    }
 
     @Override
     public void setTargetAngle(double targetAngle) {
@@ -104,26 +107,15 @@ public class PivotAdvanced extends PivotBasic {
         controlSate = ControlSate.PIDControl;
     }
 
-    public VoltageSensor getBatteryVoltageSensor() {
-        for (VoltageSensor sensor : opMode.hardwareMap.voltageSensor) {
-            if (sensor.getVoltage() > 0)
-                return sensor;
-        }
-        return null;
-    }
-
-    VoltageSensor batteryVoltageSensor;
-
     public void setTorque(double targetTorque) {
 
         double motorSpeedRPM = getVelocityTPS() / encoderCountsPerRevMotor;
 
-        double battery = batteryVoltageSensor.getVoltage() / 12.0;
+        double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
 
         setPower((targetTorque + motorSpeedRPM / motorProperties.maxSpeedRPM) / battery);
 
         if (advancedDebugEnabled) {
-            opMode.telemetry.addData("pivotAngle", getAngle());
             //opMode.telemetry.addData("targetTorque", targetTorque);
             //opMode.telemetry.addData("motorCurrent", getCurrentAmp());
             //opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
@@ -147,9 +139,8 @@ public class PivotAdvanced extends PivotBasic {
     }
 
     double calculateTorqueGravity(double liftExtension, double pivotAngleDeg, double maxLiftExtension) {
-
-
-        return Math.sin(Math.toRadians(pivotAngleDeg)) * MathStuff.lerp(liftProperties.retractedGComp, liftProperties.extendedGComp, liftExtension / maxLiftExtension);
+        pivotAngleDeg = Math.toRadians(pivotAngleDeg);
+        return Math.sin(pivotAngleDeg) * MathStuff.lerp(liftProperties.retractedGComp, liftProperties.extendedGComp, liftExtension / maxLiftExtension);
     }
 
     double calculateTorqueFriction(double targetDirection, double pivotVelocity, double staticFrictionTorque, double kinematicFrictionTorque, double staticThreshold) {
@@ -157,10 +148,6 @@ public class PivotAdvanced extends PivotBasic {
             return staticFrictionTorque * Math.copySign(1, -targetDirection);
 
         return kinematicFrictionTorque * Math.copySign(1, pivotVelocity);
-    }
-
-    double calculateTorqueAcceleration(double liftCGRadius, double targetAcceleration) {
-        return liftCGRadius * liftCGRadius * targetAcceleration;
     }
 
     double calculateDragTorque(double pivotVelocity, double dragCoefficient) {

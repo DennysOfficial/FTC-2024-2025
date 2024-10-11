@@ -78,13 +78,13 @@ public class TestingOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
         SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class, "OTOS");
-
         opticalTracker.begin();
-
         if (!opticalTracker.calibrateImu())
             telemetry.addLine("SparkFunOTOS imu calibration failed");
 
+
         MotionControl pivotControl = new MotionControl(runtime, this, activeConfig);
+
 
         waitForStart();
         runtime.reset();
@@ -108,8 +108,9 @@ public class TestingOpMode extends LinearOpMode {
             } else
                 spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;
 
-            spinyBit.update(deltaTime, lift.getPositionInch());
 
+
+            spinyBit.update(deltaTime, lift.getPositionInch());
 
             activeDriveMode.updateDrive(deltaTime);
 
