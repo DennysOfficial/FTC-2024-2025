@@ -37,12 +37,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotBasic;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
 
@@ -50,7 +49,7 @@ import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
 @TeleOp(name = "Test: OpMode", group = "Linear OpMode")
 @Config
 //@Disabled
-public class TestingOpMode extends LinearOpMode {
+public class OtherTestingOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -99,11 +98,12 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            if (!pivotControl.isActive() && gamepad2.a) {
+            if (gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
             }
 
             if (pivotControl.isActive()) {
+                spinyBit.controlSate = PivotAdvanced.ControlSate.PIDControl;
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
                 spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;

@@ -96,5 +96,16 @@ public class RobotConfig {
         return opMode.gamepad2.left_bumper;
     }
 
+    public boolean getAbort() {
+        return (opMode.gamepad1.left_bumper && opMode.gamepad1.right_bumper) || (opMode.gamepad2.left_bumper && opMode.gamepad2.right_bumper);
+    }
 
+    public static double autoAbortThreshold = 0.2; // how far the relevant stick has to be pushed from center before any active pid is aborted
+
+    /**
+     * how far the relevant stick has to be pushed from center before any active corresponding PID is aborted
+     */
+    public double getAutoAbortThreshold() {
+        return autoAbortThreshold;
+    }
 }

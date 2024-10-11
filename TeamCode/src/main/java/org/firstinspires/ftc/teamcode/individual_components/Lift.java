@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 public class Lift {
 
     public final double MinRangeInch = 0.1;
-    public final double MaxRangeInch = 27.6;
+    public final double MaxRangeInch = 27.3;
     final double encoderCountsPerInch = 4300.0 / 27.0;
     final double maxPower = 1;
 

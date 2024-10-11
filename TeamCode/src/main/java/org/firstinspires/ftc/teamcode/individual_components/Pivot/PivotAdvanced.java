@@ -2,34 +2,33 @@ package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
+import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
 
 @Config
 public class PivotAdvanced extends PivotBasic {
 
 
-    public static double staticThresholdDPS = 10;
+    public static double staticThresholdDPS = 2;
 
 
     @Config
     public static class coefficients {
         public static double staticFrictionTorque = 0;
         public static double kinematicFrictionTorque = 0;
-        public static double gravityCoefficient = 1;
         public static double directControlDamping = 0;
-        public static double beans = 1.0;
     }
 
-    //@Config
+    @Config
     public static class liftProperties {
-        public static double CGRadiusRetracted = 5;
-        public static double movingMassProportion = 0.35f;
-        public static double mass = 0.004;
+        public static double extendedGComp = .4;
+        public static double retractedGComp = .11;
+        public static double maxExtension = 27.3;
     }
 
     //@Config
@@ -37,6 +36,7 @@ public class PivotAdvanced extends PivotBasic {
         public static double maxSpeedRPM = 6000;
         public static double stallAmps;
     }
+
     @Config
     public static class pivotPIDCon {
         public static double kP = 0.05;
@@ -48,41 +48,60 @@ public class PivotAdvanced extends PivotBasic {
 
     public enum ControlSate {
         directControl,
-        PIDControl
+        PIDControl,
+        testing
     }
 
     public ControlSate controlSate = ControlSate.directControl;
 
     CustomPID pivotPID;
 
+    PositionDerivatives positionDerivatives; // calculates velocity and acceleration
+
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
         batteryVoltageSensor = getBatteryVoltageSensor();
         pivotPID = new CustomPID(opMode, config);
         pivotPID.debugEnabled = true;
+        positionDerivatives = new PositionDerivatives(getAngle());
     }
+
 
     public void directControlFancy(double liftExtensionInch) {
-        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - calculateDragTorque(getVelocityDPS(), coefficients.directControlDamping));
+        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - calculateDragTorque(positionDerivatives.getVelocity(), coefficients.directControlDamping));
+        opMode.telemetry.addData("input", config.getPivotStick() * config.getPivotSensitivity());
     }
 
-    public void update(double deltaTime,double liftExtensionInch){
-        switch (controlSate){
+    public void update(double deltaTime, double liftExtensionInch) {
+
+        if (config.getAbort())
+            controlSate = ControlSate.directControl;
+
+        if (config.getPivotStick() > 0.5f + config.getAutoAbortThreshold() || config.getPivotStick() < 0.5f - config.getAutoAbortThreshold())
+            controlSate = ControlSate.directControl;
+
+        switch (controlSate) {
             case directControl:
                 directControlFancy(liftExtensionInch);
                 break;
             case PIDControl:
-                pivotPID.setCoefficients(pivotPIDCon.kP,pivotPIDCon.kI,pivotPIDCon.kD);
-                setTorque(calculateNetTorque(pivotPID.runPID(targetAngle,getAngle(),deltaTime),liftExtensionInch));
+                pivotPID.setCoefficients(pivotPIDCon.kP, pivotPIDCon.kI, pivotPIDCon.kD);
+                setTorque(calculateNetTorque(pivotPID.runPID(targetAngle, getAngle(), deltaTime, positionDerivatives.getVelocity()), liftExtensionInch));
+                break;
+            case testing:
+
                 break;
         }
 
-        pivotPID.setPreviousActualPosition(getAngle());
+
+
     }
 
+
     @Override
-    public void setTargetAngle(double targetAngle) { //TODO
+    public void setTargetAngle(double targetAngle) {
         this.targetAngle = targetAngle;
+        controlSate = ControlSate.PIDControl;
     }
 
     public VoltageSensor getBatteryVoltageSensor() {
@@ -115,7 +134,7 @@ public class PivotAdvanced extends PivotBasic {
 
     public double calculateNetTorque(double targetNetTorque, double liftExtension) {
 
-        double gravityTorque = calculateTorqueGravity(liftProperties.CGRadiusRetracted + liftExtension * liftProperties.movingMassProportion, getAngle(), liftProperties.mass);
+        double gravityTorque = calculateTorqueGravity(liftExtension, getAngle(), liftProperties.maxExtension);
         double frictionTorque = calculateTorqueFriction(targetNetTorque, getVelocityDPS(), coefficients.staticFrictionTorque, coefficients.kinematicFrictionTorque, staticThresholdDPS);
 
         double outputTorque = targetNetTorque - gravityTorque - frictionTorque;
@@ -127,8 +146,10 @@ public class PivotAdvanced extends PivotBasic {
         return outputTorque;
     }
 
-    double calculateTorqueGravity(double liftCGRadius, double pivotAngleDeg, double liftMass) {
-        return liftCGRadius * Math.sin(Math.toRadians(pivotAngleDeg)) * liftMass * coefficients.gravityCoefficient;
+    double calculateTorqueGravity(double liftExtension, double pivotAngleDeg, double maxLiftExtension) {
+
+
+        return Math.sin(Math.toRadians(pivotAngleDeg)) * MathStuff.lerp(liftProperties.retractedGComp, liftProperties.extendedGComp, liftExtension / maxLiftExtension);
     }
 
     double calculateTorqueFriction(double targetDirection, double pivotVelocity, double staticFrictionTorque, double kinematicFrictionTorque, double staticThreshold) {
@@ -151,9 +172,5 @@ public class PivotAdvanced extends PivotBasic {
      */
     double getCurrentAmp() {
         return (pivotMotorL.getCurrent(CurrentUnit.AMPS) + pivotMotorR.getCurrent(CurrentUnit.AMPS)) / 2.0;
-    }
-
-    public void updatePID(double deltaTime) {
-
     }
 }

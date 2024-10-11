@@ -32,6 +32,8 @@ public class PivotBasic {
     protected DcMotorEx pivotMotorL = null;
     protected DcMotorEx pivotMotorR = null;
 
+    protected DcMotor.RunMode runMode = DcMotor.RunMode.RUN_TO_POSITION;
+
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
@@ -52,11 +54,17 @@ public class PivotBasic {
         pivotMotorR.setTargetPosition(0);
         pivotMotorL.setTargetPosition(0);
 
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivotMotorL.setMode(runMode);
+        pivotMotorR.setMode(runMode);
 
         pivotMotorR.setPower(maxPIDPower);
         pivotMotorL.setPower(maxPIDPower);
+    }
+
+    protected void setRunMode(DcMotor.RunMode runMode) {
+        this.runMode = runMode;
+        pivotMotorL.setMode(runMode);
+        pivotMotorR.setMode(runMode);
     }
 
     /**
@@ -97,16 +105,16 @@ public class PivotBasic {
     }
 
     public void setPower(double targetPower){
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (runMode != DcMotor.RunMode.RUN_WITHOUT_ENCODER)
+            setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         pivotMotorR.setPower(targetPower);
         pivotMotorL.setPower(targetPower);
     }
 
     public void setTargetPosition(int targetPosition){
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        if (runMode != DcMotor.RunMode.RUN_TO_POSITION)
+            setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         pivotMotorR.setPower(maxPIDPower);
         pivotMotorL.setPower(maxPIDPower);
@@ -116,8 +124,8 @@ public class PivotBasic {
     }
 
     public void setTargetVelocity(double targetVelocity){
-        pivotMotorL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        pivotMotorR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        if (runMode != DcMotor.RunMode.RUN_USING_ENCODER)
+            setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         pivotMotorR.setVelocity(-targetVelocity, AngleUnit.DEGREES);
         pivotMotorL.setVelocity(-targetVelocity, AngleUnit.DEGREES);
@@ -145,7 +153,7 @@ public class PivotBasic {
        return getVelocityTPS()/encoderCountsPerDeg;
     }
 
-    public void directControlNoPID(double delaTime) {
+    public void directControlBasic(double delaTime) {
         directControlNoPID();
     }
 

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.MathStuff;
 
 public class MotionControl {
 
@@ -22,7 +23,6 @@ public class MotionControl {
     boolean active = false;
 
 
-
     public MotionControl(ElapsedTime runtime, OpMode opMode, RobotConfig config) {
         this.runtime = runtime;
         this.opMode = opMode;
@@ -34,10 +34,6 @@ public class MotionControl {
      *
      * @param interpolationAmount normally ranges from 0-1
      */
-    double lerp(double point1, double point2, double interpolationAmount) {
-        double pointDelta = point2 - point1;
-        return point1 + pointDelta * interpolationAmount;
-    }
 
     /**
      * sinusoidally interpolates between point 1 and point 2 by interpolation amount
@@ -45,13 +41,12 @@ public class MotionControl {
      * @param interpolationAmount clamped from 0-1
      */
     double smoothLerp(double point1, double point2, double interpolationAmount) {
-        double pointDelta = point2 - point1;
+        interpolationAmount *= Math.sin(interpolationAmount * Math.PI / 2.0);
         interpolationAmount = MathUtils.clamp(interpolationAmount, 0, 1);
-        return point1 + pointDelta * Math.sin(Math.PI * interpolationAmount / 2.0);
+        return MathStuff.lerp(point1, point2, interpolationAmount);
     }
 
     public void smoothMove(double startPosition, double endPosition, double duration) {
-
         if (active)
             return;
 
@@ -61,26 +56,21 @@ public class MotionControl {
         this.endPosition = endPosition;
         this.duration = duration;
         this.startTime = runtime.seconds();
-
-    };
-
-    public double update(){
-        if(!active)
-            return 0;
-        if(runtime.seconds()-startTime > duration)
-            active = false;
-        return smoothLerp(startPosition,endPosition,(runtime.seconds()-startTime)/duration);
     }
 
-    public boolean isActive(){
+    public double update() {
+        if (!active)
+            return Double.NaN;
+
+        if (runtime.seconds() - startTime > duration)
+            active = false;
+
+        return smoothLerp(startPosition, endPosition, (runtime.seconds() - startTime) / duration);
+    }
+
+    public boolean isActive() {
         return active;
     }
-
-
-
-
-
-
 
 
 }
