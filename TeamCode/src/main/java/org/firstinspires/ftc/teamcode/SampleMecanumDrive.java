@@ -24,7 +24,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
@@ -47,45 +46,14 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksTo
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
-import androidx.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.drive.DriveSignal;
-import com.acmerobotics.roadrunner.drive.TankDrive;
-import com.acmerobotics.roadrunner.followers.TankPIDVAFollower;
-import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TankVelocityConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.drive.opmode.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
@@ -109,7 +77,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     private TrajectoryFollower follower;
 
     private DcMotorEx leftFront, leftRear, rightRear, rightFront;
-    private List<DcMotorEx> motors;
+    private List<DcMotorEx> motors = new ArrayList<DcMotorEx>();
 
     private IMU imu;
     private VoltageSensor batteryVoltageSensor;
@@ -137,24 +105,23 @@ public class SampleMecanumDrive extends MecanumDrive {
                 DriveConstants.LOGO_FACING_DIR, DriveConstants.USB_FACING_DIR));
         imu.initialize(parameters);
 
-        DcMotor FLWheel;
-        FLWheel = hardwareMap.get(DcMotor.class, "FLWheel"); //this needs to be changed to match the robot's motor configuration
-        DcMotor FRWheel;
-        FRWheel = hardwareMap.get(DcMotor.class, "FRWheel");
-        DcMotor BRWheel;
-        BRWheel = hardwareMap.get(DcMotor.class, "BRWheel");
-        DcMotor BLWheel;
-        BLWheel = hardwareMap.get(DcMotor.class, "BLWheel");
 
-        FLWheel.setDirection(DcMotorSimple.Direction.FORWARD);
-        FRWheel.setDirection(DcMotorSimple.Direction.FORWARD);
-        BRWheel.setDirection(DcMotorSimple.Direction.REVERSE);
-        BLWheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront = hardwareMap.get(DcMotorEx.class, "FLWheel"); //this needs to be changed to match the robot's motor configuration
+        rightFront = hardwareMap.get(DcMotorEx.class, "FRWheel");
+        rightRear = hardwareMap.get(DcMotorEx.class, "BRWheel");
+        leftRear = hardwareMap.get(DcMotorEx.class, "BLWheel");
 
-        FLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FRWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BRWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        BLWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
