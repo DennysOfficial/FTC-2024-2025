@@ -70,7 +70,7 @@ public class pivotPIDTest extends LinearOpMode {
 
         PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
 
-        lift.debugModeActive = true;
+
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
@@ -95,7 +95,7 @@ public class pivotPIDTest extends LinearOpMode {
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
-
+            spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
             spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.getPivotRate()*activeConfig.getPivotStick()*deltaTime);
             spinyBit.update(lift.getPositionInch(), deltaTime);
 

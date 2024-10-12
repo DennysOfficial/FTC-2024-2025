@@ -9,7 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
+import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
+import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
 import org.opencv.core.Mat;
 
 @Config
@@ -31,14 +33,23 @@ public class Lift {
         PIDControl,
         testing
     }
-    public LiftControlSate controlSate = LiftControlSate.directControl;
 
+    public static double Kp = 0;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    public LiftControlSate controlSate = LiftControlSate.directControl;
     protected final MultiMotor motors;
+
+    PositionDerivatives positionDerivatives;
+    CustomPID liftPid;
+    public double targetPosition = 0.1;
 
 
     public Lift(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
+
+        positionDerivatives = new PositionDerivatives(getPositionInch());
 
         motors = new MultiMotor(opMode.hardwareMap);
 
@@ -48,14 +59,34 @@ public class Lift {
         motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
+
+        liftPid = new CustomPID(opMode,config);
     }
 
-    public void update(){
+    public void update(double deltaTime, double pivotAngle){
+
+        positionDerivatives.update(getPositionInch(),deltaTime);
+
         if (config.getAbort())
             controlSate = LiftControlSate.directControl;
 
         if (config.getLiftStick() > config.getAutoAbortThreshold() || config.getLiftStick() < -config.getAutoAbortThreshold())
             controlSate = LiftControlSate.directControl;
+
+        switch (controlSate) {
+            case directControl:
+                fancyDirectControl(pivotAngle);
+                break;
+
+            case PIDControl:
+                liftPid.setCoefficients(Kp, Ki, Kd);
+                setCompensatedForce(liftPid.runPID(targetPosition, getPositionInch(), deltaTime, positionDerivatives.getVelocity()), pivotAngle);
+                break;
+
+            case testing:
+
+                break;
+        }
     }
 
     public void fancyDirectControl(double pivotAngleDeg) {

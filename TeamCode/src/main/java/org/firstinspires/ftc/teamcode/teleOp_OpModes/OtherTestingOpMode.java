@@ -99,21 +99,21 @@ public class OtherTestingOpMode extends LinearOpMode {
 
             if (gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
             }
 
             if (pivotControl.isBusy()) {
-                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
                 spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
 
+            lift.controlSate = Lift.LiftControlSate.directControl;
+
+
+            lift.update(deltaTime, spinyBit.getAngle());
             spinyBit.update(deltaTime, lift.getPositionInch());
-
-
             activeDriveMode.updateDrive(deltaTime);
 
-            lift.directControl(deltaTime);
-            //pincher.directControl(deltaTime);
 
             intake.directControl();
 

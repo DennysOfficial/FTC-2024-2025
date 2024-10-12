@@ -89,6 +89,10 @@ public class PivotBasic {
         return motors.getCurrentPosition() / encoderCountsPerDeg;
     }
 
+    public double getTargetAngle(){
+        return targetAngle;
+    }
+
 
 
 }

@@ -70,7 +70,6 @@ public class TestingOpMode extends LinearOpMode {
 
         PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
 
-        lift.debugModeActive = true;
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
