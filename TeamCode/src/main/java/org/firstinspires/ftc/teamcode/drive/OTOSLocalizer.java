@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode.drive;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +20,7 @@ public class OTOSLocalizer implements Localizer {
     public OTOSLocalizer(HardwareMap hardwaremap) {
         sensor = hardwaremap.get(SparkFunOTOS.class, "sensor");
         configureOtos();
+        sensor.calibrateImu();
     }
     @NonNull
     @Override
