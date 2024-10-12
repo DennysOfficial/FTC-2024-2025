@@ -62,6 +62,10 @@ public class PivotAdvanced extends PivotBasic {
         if (config.getPivotStick() > config.getAutoAbortThreshold() || config.getPivotStick() < -config.getAutoAbortThreshold())
             controlSate = PivotControlSate.directControl;
 
+        opMode.telemetry.addData("pivotStick", config.getPivotStick());
+        opMode.telemetry.addData("pivotStatus", controlSate);
+
+
         switch (controlSate) {
             case directControl:
                 directControlFancy(liftExtensionInch);
@@ -79,7 +83,6 @@ public class PivotAdvanced extends PivotBasic {
             opMode.telemetry.addData("pivot angle", getAngle());
             opMode.telemetry.addData("pivot velocity", positionDerivatives.getVelocity());
             opMode.telemetry.addData("pivot acceleration", positionDerivatives.getAcceleration());
-            opMode.telemetry.addData("pivot jerk", positionDerivatives.getJerk());
         }
     }
 

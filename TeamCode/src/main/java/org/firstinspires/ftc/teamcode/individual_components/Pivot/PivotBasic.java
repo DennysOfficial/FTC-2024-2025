@@ -49,7 +49,8 @@ public class PivotBasic {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
-        motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motors.setTargetPosition(0);
+        motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void setTorque(double targetTorque) {

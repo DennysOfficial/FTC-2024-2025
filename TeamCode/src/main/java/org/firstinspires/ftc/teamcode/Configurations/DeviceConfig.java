@@ -29,4 +29,6 @@ public class DeviceConfig {
 
     public final String grabberServo = "Pinch";
 
+    public final String flapServo = "Flap";
+
 }

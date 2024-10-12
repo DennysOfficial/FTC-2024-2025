@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MultiMotor implements DcMotorEx {
 
-    List<DcMotorEx> motors = new ArrayList<>();
+    List<DcMotorEx> motors;
 
     RunMode runMode = RunMode.RUN_WITHOUT_ENCODER;
     Direction direction = Direction.FORWARD;
@@ -24,17 +24,19 @@ public class MultiMotor implements DcMotorEx {
     double motorPower = 0;
     int targetPosition = 0;
 
-
     HardwareMap hardwareMap;
 
     public MultiMotor(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        motors = new ArrayList<DcMotorEx>();
+
     }
 
     public void addMotor(String deviceName, Direction direction) {
         motors.add(hardwareMap.get(DcMotorEx.class, deviceName));
 
         motors.get(motors.size() - 1).setDirection(direction);
+        motors.get(motors.size() - 1).setTargetPosition(targetPosition);
 
         forceUpdateRunMode(runMode);
     }

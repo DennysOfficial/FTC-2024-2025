@@ -22,7 +22,7 @@ public class Lift {
     final double encoderCountsPerInch = 4300.0 / 27.0;
     final double maxPower = 1;
 
-    public static double gCompMultiplier = 0;
+    public static double gCompMultiplier = 0.069;
 
 
     LinearOpMode opMode;
@@ -49,8 +49,6 @@ public class Lift {
         this.opMode = opMode;
         this.config = config;
 
-        positionDerivatives = new PositionDerivatives(getPositionInch());
-
         motors = new MultiMotor(opMode.hardwareMap);
 
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
@@ -60,12 +58,15 @@ public class Lift {
 
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
 
-        liftPid = new CustomPID(opMode,config);
+        positionDerivatives = new PositionDerivatives(getPositionInch());
+
+
+        liftPid = new CustomPID(opMode, config);
     }
 
-    public void update(double deltaTime, double pivotAngle){
+    public void update(double deltaTime, double pivotAngle) {
 
-        positionDerivatives.update(getPositionInch(),deltaTime);
+        positionDerivatives.update(getPositionInch(), deltaTime);
 
         if (config.getAbort())
             controlSate = LiftControlSate.directControl;
@@ -75,6 +76,7 @@ public class Lift {
 
         switch (controlSate) {
             case directControl:
+                motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 fancyDirectControl(pivotAngle);
                 break;
 
@@ -86,6 +88,12 @@ public class Lift {
             case testing:
 
                 break;
+        }
+
+        if (config.debugConfig.liftPositionAndDerivativesDebug()) {
+            opMode.telemetry.addData("liftPosition", getPositionInch());
+            opMode.telemetry.addData("liftVelocity", positionDerivatives.getVelocity());
+            opMode.telemetry.addData("liftAcceleration", positionDerivatives.getAcceleration());
         }
     }
 
@@ -100,7 +108,7 @@ public class Lift {
     }
 
     public double calcGravityForce(double pivotAngleDeg) {
-        return Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;
+        return -Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;
     }
 
     public void setTorque(double targetTorque) {//TODO

@@ -13,6 +13,7 @@ public class RobotConfig {
     public DebugConfig debugConfig = new DebugConfig();
 
     public final VoltageSensor batteryVoltageSensor;
+
     VoltageSensor getBatteryVoltageSensor() {
         for (VoltageSensor sensor : opMode.hardwareMap.voltageSensor) {
             if (sensor.getVoltage() > 0)
@@ -38,7 +39,7 @@ public class RobotConfig {
         return forwardSensitivity;
     }
 
-    public static float turningSensitivity = 1;
+    public static float turningSensitivity = .69f;
 
     public float getTurningSensitivity() {
         return turningSensitivity;
@@ -87,7 +88,7 @@ public class RobotConfig {
     }
 
     public double getLiftStick() {
-        return opMode.gamepad2.left_stick_y;
+        return -1 * opMode.gamepad2.left_stick_y;
     }
 
     public double getPivotStick() {
@@ -125,5 +126,9 @@ public class RobotConfig {
      */
     public double getAutoAbortThreshold() {
         return autoAbortThreshold;
+    }
+
+    public boolean getFlapButton() {
+        return opMode.gamepad2.left_trigger > 0.5;
     }
 }

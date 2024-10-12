@@ -92,7 +92,6 @@ public class OtherTestingOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
@@ -116,7 +115,6 @@ public class OtherTestingOpMode extends LinearOpMode {
 
 
             intake.directControl();
-
 
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
