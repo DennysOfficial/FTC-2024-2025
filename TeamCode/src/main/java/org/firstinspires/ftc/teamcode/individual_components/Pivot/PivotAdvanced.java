@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
@@ -37,14 +36,12 @@ public class PivotAdvanced extends PivotBasic {
         public static double kD = 0.002;
     }
 
-    public enum ControlSate {
+    public enum PivotControlSate {
         directControl,
         PIDControl,
         testing
     }
-
-
-    public ControlSate controlSate = ControlSate.directControl;
+    public PivotControlSate controlSate = PivotControlSate.directControl;
 
     CustomPID pivotPID;
 
@@ -60,10 +57,10 @@ public class PivotAdvanced extends PivotBasic {
     public void update(double deltaTime, double liftExtensionInch) {
 
         if (config.getAbort())
-            controlSate = ControlSate.directControl;
+            controlSate = PivotControlSate.directControl;
 
-        if (config.getPivotStick() > 0.5f + config.getAutoAbortThreshold() || config.getPivotStick() < 0.5f - config.getAutoAbortThreshold())
-            controlSate = ControlSate.directControl;
+        if (config.getPivotStick() > config.getAutoAbortThreshold() || config.getPivotStick() < -config.getAutoAbortThreshold())
+            controlSate = PivotControlSate.directControl;
 
         switch (controlSate) {
             case directControl:
@@ -95,7 +92,7 @@ public class PivotAdvanced extends PivotBasic {
 
     public void setTargetAngle(double targetAngle) {
         this.targetAngle = targetAngle;
-        controlSate = ControlSate.PIDControl;
+        controlSate = PivotControlSate.PIDControl;
     }
 
 

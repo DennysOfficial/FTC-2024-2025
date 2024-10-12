@@ -11,11 +11,12 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MultiMotor implements DcMotorEx {
 
-    List<DcMotorEx> motors;
+    List<DcMotorEx> motors = new ArrayList<>();
 
     RunMode runMode = RunMode.RUN_WITHOUT_ENCODER;
     Direction direction = Direction.FORWARD;

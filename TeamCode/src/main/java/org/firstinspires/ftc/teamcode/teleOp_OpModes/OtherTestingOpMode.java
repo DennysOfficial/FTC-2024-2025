@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntak
 import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
 
 
-@TeleOp(name = "Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Other Test: OpMode", group = "Linear OpMode")
 @Config
 //@Disabled
 public class OtherTestingOpMode extends LinearOpMode {
@@ -70,7 +70,6 @@ public class OtherTestingOpMode extends LinearOpMode {
 
         PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
 
-        lift.debugModeActive = true;
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
@@ -103,10 +102,10 @@ public class OtherTestingOpMode extends LinearOpMode {
             }
 
             if (pivotControl.isBusy()) {
-                spinyBit.controlSate = PivotAdvanced.ControlSate.PIDControl;
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
-                spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
 
             spinyBit.update(deltaTime, lift.getPositionInch());
 

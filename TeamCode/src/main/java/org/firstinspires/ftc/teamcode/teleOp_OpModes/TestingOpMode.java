@@ -105,7 +105,7 @@ public class TestingOpMode extends LinearOpMode {
             if (pivotControl.isBusy()) {
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
-                spinyBit.controlSate = PivotAdvanced.ControlSate.directControl;
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
 
 
 

@@ -2,13 +2,17 @@ package org.firstinspires.ftc.teamcode.individual_components;
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
+import org.opencv.core.Mat;
 
+@Config
 public class Lift {
 
     public final double minRangeInch = 0.1;
@@ -16,9 +20,18 @@ public class Lift {
     final double encoderCountsPerInch = 4300.0 / 27.0;
     final double maxPower = 1;
 
+    public static double gCompMultiplier = 0;
+
 
     LinearOpMode opMode;
     RobotConfig config;
+
+    public enum LiftControlSate {
+        directControl,
+        PIDControl,
+        testing
+    }
+    public LiftControlSate controlSate = LiftControlSate.directControl;
 
     protected final MultiMotor motors;
 
@@ -35,6 +48,32 @@ public class Lift {
         motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
+    }
+
+    public void update(){
+        if (config.getAbort())
+            controlSate = LiftControlSate.directControl;
+
+        if (config.getLiftStick() > config.getAutoAbortThreshold() || config.getLiftStick() < -config.getAutoAbortThreshold())
+            controlSate = LiftControlSate.directControl;
+    }
+
+    public void fancyDirectControl(double pivotAngleDeg) {
+        double targetForce = config.getLiftStick() * config.getLiftSensitivity();
+        setCompensatedForce(targetForce, pivotAngleDeg);
+    }
+
+    public void setCompensatedForce(double targetForce, double pivotAngleDeg) {
+        double outputForce = targetForce - calcGravityForce(pivotAngleDeg);
+        setTorque(outputForce);
+    }
+
+    public double calcGravityForce(double pivotAngleDeg) {
+        return Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;
+    }
+
+    public void setTorque(double targetTorque) {//TODO
+        motors.setPower(targetTorque);
     }
 
     /**
