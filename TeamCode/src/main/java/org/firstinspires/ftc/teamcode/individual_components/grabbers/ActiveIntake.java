@@ -39,16 +39,16 @@ public class ActiveIntake {
     public void wheelControl(){
         spinyServo.setPower(0);
 
-        if (config.getIntakeButton())
+        if (config.inputMap.getIntakeButton())
             spinyServo.setPower(intakeSpeed);
 
-        else if (config.getOuttakeButton())
+        else if (config.inputMap.getOuttakeButton())
             spinyServo.setPower(outtakeSpeed);
     }
 
     public void flapControl(){
         flapServo.setPosition(flapClosed);
-        if (config.getFlapButton())
+        if (config.inputMap.getFlapButton())
             flapServo.setPosition(flapOpen);
     }
 

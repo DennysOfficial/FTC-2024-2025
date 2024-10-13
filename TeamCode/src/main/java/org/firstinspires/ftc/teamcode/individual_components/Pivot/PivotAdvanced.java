@@ -56,13 +56,13 @@ public class PivotAdvanced extends PivotBasic {
 
     public void update(double deltaTime, double liftExtensionInch) {
 
-        if (config.getAbort())
+        if (config.inputMap.getAbort())
             controlSate = PivotControlSate.directControl;
 
-        if (config.getPivotStick() > config.getAutoAbortThreshold() || config.getPivotStick() < -config.getAutoAbortThreshold())
+        if (config.inputMap.getPivotStick() > config.getAutoAbortThreshold() || config.inputMap.getPivotStick() < -config.getAutoAbortThreshold())
             controlSate = PivotControlSate.directControl;
 
-        opMode.telemetry.addData("pivotStick", config.getPivotStick());
+        opMode.telemetry.addData("pivotStick", config.inputMap.getPivotStick());
         opMode.telemetry.addData("pivotStatus", controlSate);
 
 
@@ -88,7 +88,7 @@ public class PivotAdvanced extends PivotBasic {
 
     public void directControlFancy(double liftExtensionInch) {
         double dampingTorque = calculateDragTorque(positionDerivatives.getVelocity(), coefficients.directControlDamping);
-        setTorque(calculateNetTorque(config.getPivotStick() * config.getPivotSensitivity(), liftExtensionInch) - dampingTorque);
+        setTorque(calculateNetTorque(config.inputMap.getPivotStick() * config.sensitivities.getPivotSensitivity(), liftExtensionInch) - dampingTorque);
         if (config.debugConfig.pivotTorqueDebug())
             opMode.telemetry.addData("dampingTorque", dampingTorque);
     }

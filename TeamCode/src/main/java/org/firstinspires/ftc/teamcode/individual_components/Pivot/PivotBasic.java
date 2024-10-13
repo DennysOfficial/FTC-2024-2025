@@ -78,7 +78,7 @@ public class PivotBasic {
 
 
     public void directControlBasic() {
-        motors.setPower(config.getPivotStick() * config.getPivotRate());
+        motors.setPower(config.inputMap.getPivotStick() * config.sensitivities.getPivotRate());
     }
 
     /**

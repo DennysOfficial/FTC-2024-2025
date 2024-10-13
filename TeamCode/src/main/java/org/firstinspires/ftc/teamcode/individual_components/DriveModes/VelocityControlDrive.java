@@ -28,9 +28,9 @@ public class VelocityControlDrive extends DriveModeBase{
 
     @Override
     public void updateDrive() {
-        double forwardBackward = -1 * config.getForwardStick() * config.getForwardSensitivity();  //Note: pushing stick forward gives negative value
-        double strafe = -1 * config.getStrafeStick() * config.getStrafingSensitivity();
-        double yaw = -1 * config.getTurnStick() * config.getTurningSensitivity();
+        double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();  //Note: pushing stick forward gives negative value
+        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
+        double yaw = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity();
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -43,10 +43,10 @@ public class VelocityControlDrive extends DriveModeBase{
 
 
         // Send calculated power to wheels
-        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.getDriveSensitivity());
-        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.getDriveSensitivity());
-        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.getDriveSensitivity());
-        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.getDriveSensitivity());
+        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.sensitivities.getDriveSensitivity());
+        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.sensitivities.getDriveSensitivity());
+        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.sensitivities.getDriveSensitivity());
+        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.sensitivities.getDriveSensitivity());
 
         //frontRightDrive.setPower(1);
 

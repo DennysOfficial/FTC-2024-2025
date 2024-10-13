@@ -95,7 +95,7 @@ public class pivotPIDTest extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
             spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
-            spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.getPivotRate()*activeConfig.getPivotStick()*deltaTime);
+            spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.sensitivities.getPivotRate()*activeConfig.inputMap.getPivotStick()*deltaTime);
             spinyBit.update(lift.getPositionInch(), deltaTime);
 
             activeDriveMode.updateDrive(deltaTime);

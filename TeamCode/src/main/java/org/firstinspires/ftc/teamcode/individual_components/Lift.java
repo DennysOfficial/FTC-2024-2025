@@ -66,10 +66,10 @@ public class Lift {
 
         positionDerivatives.update(getPositionInch(), deltaTime);
 
-        if (config.getAbort())
+        if (config.inputMap.getAbort())
             controlSate = LiftControlSate.directControl;
 
-        if (config.getLiftStick() > config.getAutoAbortThreshold() || config.getLiftStick() < -config.getAutoAbortThreshold())
+        if (config.inputMap.getLiftStick() > config.getAutoAbortThreshold() || config.inputMap.getLiftStick() < -config.getAutoAbortThreshold())
             controlSate = LiftControlSate.directControl;
 
         switch (controlSate) {
@@ -96,7 +96,7 @@ public class Lift {
     }
 
     public void fancyDirectControl(double pivotAngleDeg) {
-        double targetForce = config.getLiftStick() * config.getLiftSensitivity();
+        double targetForce = config.inputMap.getLiftStick() * config.sensitivities.getLiftSensitivity();
         setCompensatedForce(targetForce, pivotAngleDeg);
     }
 
@@ -119,7 +119,7 @@ public class Lift {
      * @param deltaTime the change in time (seconds) since the method was last called
      */
     public void directControl(double deltaTime) {
-        setTargetPositionInch(motors.getTargetPosition() + opMode.gamepad2.left_stick_y * config.getLiftRate() * deltaTime);
+        setTargetPositionInch(motors.getTargetPosition() + opMode.gamepad2.left_stick_y * config.sensitivities.getLiftRate() * deltaTime);
     }
 
     public void directControlBasic() {
