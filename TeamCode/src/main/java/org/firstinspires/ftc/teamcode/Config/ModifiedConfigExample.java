@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.Configurations;
+package org.firstinspires.ftc.teamcode.Config;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class DashboardConfig extends RobotConfig {
+public class ModifiedConfigExample extends RobotConfig {
 
-    DashboardConfig(LinearOpMode opMode, RobotConfig config){
+    ModifiedConfigExample(LinearOpMode opMode, RobotConfig config){
         super(opMode);
     }
 

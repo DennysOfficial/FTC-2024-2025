@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode.Configurations;
+package org.firstinspires.ftc.teamcode.Config;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+
+import org.firstinspires.ftc.teamcode.Config.SubConfigs.DebugConfig;
+import org.firstinspires.ftc.teamcode.Config.SubConfigs.DeviceConfig;
 
 @Config
 public class RobotConfig {

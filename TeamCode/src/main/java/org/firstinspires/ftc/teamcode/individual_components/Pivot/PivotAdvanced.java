@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
@@ -24,8 +24,8 @@ public class PivotAdvanced extends PivotBasic {
 
     @Config
     public static class liftProperties {
-        public static double extendedGComp = .4;
-        public static double retractedGComp = .11;
+        public static double extendedGComp = .2;
+        public static double retractedGComp = .05;
         public static double maxExtension = 27.3;
     }
 

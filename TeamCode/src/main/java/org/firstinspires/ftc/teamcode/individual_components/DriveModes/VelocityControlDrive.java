@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 //@Config
 public class VelocityControlDrive extends DriveModeBase{
 

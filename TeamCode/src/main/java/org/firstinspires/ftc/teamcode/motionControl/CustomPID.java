@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.motionControl;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Configurations.RobotConfig;
+import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 public class CustomPID {
 
