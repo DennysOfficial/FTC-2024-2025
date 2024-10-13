@@ -37,11 +37,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
 
@@ -75,14 +75,8 @@ public class TestingOpMode extends LinearOpMode {
 
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
-        SparkFunOTOS opticalTracker = hardwareMap.get(SparkFunOTOS.class, "OTOS");
-        opticalTracker.begin();
-        if (!opticalTracker.calibrateImu())
-            telemetry.addLine("SparkFunOTOS imu calibration failed");
-
 
         MotionControl pivotControl = new MotionControl(runtime, this, activeConfig);
-
 
         waitForStart();
         runtime.reset();
@@ -92,13 +86,13 @@ public class TestingOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
-            if (!pivotControl.isBusy() && gamepad2.a) {
+            if (gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
             }
 
             if (pivotControl.isBusy()) {
@@ -106,24 +100,19 @@ public class TestingOpMode extends LinearOpMode {
             } else
                 spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
 
+            lift.controlSate = Lift.LiftControlSate.directControl;
 
 
+            lift.update(deltaTime, spinyBit.getAngle());
             spinyBit.update(deltaTime, lift.getPositionInch());
-
             activeDriveMode.updateDrive(deltaTime);
 
-            lift.directControl(deltaTime);
-            //pincher.directControl(deltaTime);
 
             intake.directControl();
-
 
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
     }
 
-    public void telemetryOTOS() {
-
-    }
 }
