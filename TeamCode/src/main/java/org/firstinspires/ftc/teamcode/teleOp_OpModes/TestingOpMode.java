@@ -32,11 +32,13 @@ package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.acmerobotics.roadrunner.localization.Localizer;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Autonomous.drive.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
@@ -78,6 +80,8 @@ public class TestingOpMode extends LinearOpMode {
 
         MotionControl pivotControl = new MotionControl(runtime, this, activeConfig);
 
+        OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap);
+
         waitForStart();
         runtime.reset();
         frameTimer.reset();
@@ -109,6 +113,8 @@ public class TestingOpMode extends LinearOpMode {
 
 
             intake.directControl();
+
+            localizer.printPose(telemetry);
 
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
