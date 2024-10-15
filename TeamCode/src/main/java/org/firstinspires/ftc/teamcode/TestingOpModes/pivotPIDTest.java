@@ -42,7 +42,7 @@ import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMech
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
+import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
 
 @TeleOp(name = "pivot PID test", group = "Linear OpMode")
@@ -80,7 +80,7 @@ public class pivotPIDTest extends LinearOpMode {
         if(!opticalTracker.calibrateImu())
             telemetry.addLine("SparkFunOTOS imu calibration failed");
 
-        MotionControl pivotControl = new MotionControl(runtime,this,activeConfig);
+        Animator pivotControl = new Animator(runtime,this,activeConfig);
 
         waitForStart();
         runtime.reset();

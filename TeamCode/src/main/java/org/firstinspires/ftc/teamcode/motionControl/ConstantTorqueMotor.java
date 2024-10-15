@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.individual_components;
+package org.firstinspires.ftc.teamcode.motionControl;
 
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,12 +9,39 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.Config.SensorData;
 
-public class TorqueControlMotor implements DcMotorEx {
-    DcMotorEx motor;
+public class ConstantTorqueMotor implements DcMotorEx {
+    final DcMotorEx motor;
+    RunMode runMode;
 
-    TorqueControlMotor(HardwareMap hardwareMap, String deviceName) {
+    SensorData sensorData;
+
+    public final double maxVelocityTPS;
+    public final double nominalBatteryVoltage =  12.0;
+
+    double getBackEMF(double velocityTPS) {
+        return -(velocityTPS / maxVelocityTPS) / nominalBatteryVoltage;
+    }
+
+    double targetVoltageDiff;
+    double dutyCycle;
+
+
+    ConstantTorqueMotor(HardwareMap hardwareMap, String deviceName, Direction direction, SensorData sensorData) {
         motor = hardwareMap.get(DcMotorEx.class, deviceName);
+
+        motor.setMode(runMode);
+
+        maxVelocityTPS = (motor.getMotorType().getMaxRPM() * motor.getMotorType().getTicksPerRev()) / 60.0;
+
+        this.sensorData = sensorData;
+    }
+
+    public void setTorque(double targetTorque, double motorVelocityTPS) {
+        targetVoltageDiff = targetTorque * nominalBatteryVoltage - getBackEMF(motorVelocityTPS);
+        dutyCycle = targetVoltageDiff / sensorData.getBatteryVoltage();
+        setPower(dutyCycle);
     }
 
     /**
@@ -443,6 +470,9 @@ public class TorqueControlMotor implements DcMotorEx {
      */
     @Override
     public void setMode(RunMode mode) {
+        if (runMode == mode)
+            return;
+        runMode = mode;
         motor.setMode(mode);
     }
 
@@ -455,7 +485,7 @@ public class TorqueControlMotor implements DcMotorEx {
      */
     @Override
     public RunMode getMode() {
-        return motor.getMode();
+        return runMode;
     }
 
     /**

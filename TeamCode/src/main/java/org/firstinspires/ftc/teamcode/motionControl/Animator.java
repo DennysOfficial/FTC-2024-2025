@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 
-public class MotionControl {
+public class Animator {
 
     ElapsedTime runtime;
     OpMode opMode;
@@ -23,7 +23,7 @@ public class MotionControl {
     boolean busy = false;
 
 
-    public MotionControl(ElapsedTime runtime, OpMode opMode, RobotConfig config) {
+    public Animator(ElapsedTime runtime, OpMode opMode, RobotConfig config) {
         this.runtime = runtime;
         this.opMode = opMode;
         this.config = config;

@@ -19,22 +19,16 @@ public class RobotConfig {
     public final InputMap inputMap;
     public final Sensitivities sensitivities = new Sensitivities();
 
-    public final VoltageSensor batteryVoltageSensor;
+    public final SensorData sensorData;
 
 
     public RobotConfig(LinearOpMode opMode) {
         this.opMode = opMode;
-        batteryVoltageSensor = getBatteryVoltageSensor();
         inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
+        sensorData = new SensorData(opMode.hardwareMap);
     }
 
-    VoltageSensor getBatteryVoltageSensor() {
-        for (VoltageSensor sensor : opMode.hardwareMap.voltageSensor) {
-            if (sensor.getVoltage() > 0)
-                return sensor;
-        }
-        return null;
-    }
+
 
     /**
      * how far the relevant stick has to be pushed from center before any active corresponding PID is aborted

@@ -32,8 +32,7 @@ package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.localization.Localizer;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -45,7 +44,7 @@ import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveMode
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.motionControl.MotionControl;
+import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
 
 @TeleOp(name = "Test: OpMode", group = "Linear OpMode")
@@ -59,6 +58,10 @@ public class TestingOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO); // if multiple sensors read calls are made in a row it will group them together making code more fasterer
+        }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
@@ -78,7 +81,7 @@ public class TestingOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        MotionControl pivotControl = new MotionControl(runtime, this, activeConfig);
+        Animator pivotControl = new Animator(runtime, this, activeConfig);
 
         OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap);
 
@@ -96,15 +99,19 @@ public class TestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
 
+            activeConfig.sensorData.update();
+
             if (gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
                 spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
             }
 
+
             if (pivotControl.isBusy()) {
                 spinyBit.setTargetAngle(pivotControl.update());
             } else
                 spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
+
 
             lift.controlSate = Lift.LiftControlSate.directControl;
 
