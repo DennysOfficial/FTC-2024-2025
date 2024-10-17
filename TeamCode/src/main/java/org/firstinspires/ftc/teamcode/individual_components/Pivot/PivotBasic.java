@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
 
 @Config
+
 public class PivotBasic {
 
     static final int encoderCountsPerRevMotor = 28;
@@ -57,9 +58,9 @@ public class PivotBasic {
 
         double motorSpeedRPM = motors.getVelocity() / encoderCountsPerRevMotor;
 
-        double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
+        //double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
 
-        motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
+        //motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
 
         if (config.debugConfig.pivotTorqueDebug()) {
             opMode.telemetry.addData("targetTorque", targetTorque);
