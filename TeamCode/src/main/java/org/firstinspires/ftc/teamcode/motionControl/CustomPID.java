@@ -20,18 +20,22 @@ public class CustomPID {
     LinearOpMode opMode;
     RobotConfig config;
 
+    public final String name;
 
-    public CustomPID(LinearOpMode opMode, RobotConfig config) {
+
+    public CustomPID(LinearOpMode opMode, RobotConfig config, String instanceName) {
         this.opMode = opMode;
         this.config = config;
+        name = instanceName;
     }
 
-    public CustomPID(LinearOpMode opMode, RobotConfig config, double P, double kI, double kD) {
+    public CustomPID(LinearOpMode opMode, RobotConfig config, double P, double kI, double kD, String instanceName) {
         this.opMode = opMode;
         this.config = config;
         this.kP = P;
         this.kI = kI;
         this.kD = kD;
+        name = instanceName;
     }
 
     public void setCoefficients(double kP, double kI, double kD) {
@@ -44,7 +48,7 @@ public class CustomPID {
         previousActualPosition = actualPosition;
     }
 
-    public void setPreviousActualPosition(double previousActualPosition){
+    public void setPreviousActualPosition(double previousActualPosition) {
         this.previousActualPosition = previousActualPosition;
     }
 
@@ -53,21 +57,22 @@ public class CustomPID {
         return runPID(targetPosition, actualPosition, deltaTime, (previousActualPosition - (previousActualPosition = actualPosition)) / deltaTime);
     }
 
-    public double runPID(double targetPosition, double actualPosition, double deltaTime, double velocity) {
+    public double runPID(double targetValue, double actualValue, double deltaTime, double dValueDT) {
 
-        final double error = targetPosition - actualPosition;
+        final double error = targetValue - actualValue;
 
         P = kP * error; // proportional
 
         I += kI * error * deltaTime; // integral
 
-        D = kD * velocity;
+        D = kD * dValueDT;
 
-        if (debugEnabled) {
-            opMode.telemetry.addData("error", error);
-            opMode.telemetry.addData("position", actualPosition);
-            opMode.telemetry.addData("targetPosition", targetPosition);
-            opMode.telemetry.addData("Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
+
+        if (config.debugConfig.getPIDDebug()) {
+            opMode.telemetry.addData(name + " " + "error", error);
+            opMode.telemetry.addData(name + " " + "value", actualValue);
+            opMode.telemetry.addData(name + " " + "target", targetValue);
+            opMode.telemetry.addData(name + " " + "Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
         }
 
         return P + I + D;

@@ -57,7 +57,7 @@ public class PivotBasic {
 
         double motorSpeedRPM = motors.getVelocity() / encoderCountsPerRevMotor;
 
-        double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
+        double battery = config.sensorData.getBatteryVoltage() / 12.0;
 
         motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
 

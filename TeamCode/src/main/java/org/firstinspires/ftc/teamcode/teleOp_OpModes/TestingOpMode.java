@@ -103,7 +103,7 @@ public class TestingOpMode extends LinearOpMode {
 
             if (gamepad2.a) {
                 pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
-                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
+                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDPositionControl;
             }
 
 

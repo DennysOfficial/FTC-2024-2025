@@ -31,36 +31,49 @@ public class PivotAdvanced extends PivotBasic {
 
     @Config
     public static class pivotPIDCon {
-        public static double kP = 0.05;
-        public static double kI = 0;
-        public static double kD = 0.002;
+        public static double posKP = 0.05;
+        public static double posKI = 0;
+        public static double posKD = 0.002;
+
+        public static double velKP = 0;
+        public static double velKI = 0;
+        public static double velKD = 0;
+        public static double velFeedforward = 0;
     }
 
     public enum PivotControlSate {
         directControl,
-        PIDControl,
+        PIDPositionControl,
+        PIDVelocityControl,
         testing
     }
     public PivotControlSate controlSate = PivotControlSate.directControl;
 
-    CustomPID pivotPID;
+    CustomPID pivotPositionPID;
+    CustomPID pivotVelocityPID;
+
+    double targetVelocity = 0;
+
 
     PositionDerivatives positionDerivatives; // calculates velocity, acceleration, and jerk
 
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
-        pivotPID = new CustomPID(opMode, config);
-        pivotPID.debugEnabled = true;
+        pivotPositionPID = new CustomPID(opMode, config,"PivotPosition");
+        pivotVelocityPID = new CustomPID(opMode,config,"pivotVelocity");
+
         positionDerivatives = new PositionDerivatives(getAngle());
     }
 
     public void update(double deltaTime, double liftExtensionInch) {
 
+        positionDerivatives.update(getAngle(),deltaTime);
+
         if (config.inputMap.getAbort())
             controlSate = PivotControlSate.directControl;
 
-        if (config.inputMap.getPivotStick() > config.getAutoAbortThreshold() || config.inputMap.getPivotStick() < -config.getAutoAbortThreshold())
-            controlSate = PivotControlSate.directControl;
+        //if (config.inputMap.getPivotStick() > config.getAutoAbortThreshold() || config.inputMap.getPivotStick() < -config.getAutoAbortThreshold())
+            //controlSate = PivotControlSate.directControl;
 
         opMode.telemetry.addData("pivotStick", config.inputMap.getPivotStick());
         opMode.telemetry.addData("pivotStatus", controlSate);
@@ -70,9 +83,13 @@ public class PivotAdvanced extends PivotBasic {
             case directControl:
                 directControlFancy(liftExtensionInch);
                 break;
-            case PIDControl:
-                pivotPID.setCoefficients(pivotPIDCon.kP, pivotPIDCon.kI, pivotPIDCon.kD);
-                setTorque(calculateNetTorque(pivotPID.runPID(targetAngle, getAngle(), deltaTime, positionDerivatives.getVelocity()), liftExtensionInch));
+            case PIDPositionControl:
+                pivotPositionPID.setCoefficients(pivotPIDCon.posKP, pivotPIDCon.posKI, pivotPIDCon.posKD);
+                setTorque(calculateNetTorque(pivotPositionPID.runPID(targetAngle, getAngle(), deltaTime, positionDerivatives.getVelocity()), liftExtensionInch));
+                break;
+            case PIDVelocityControl:
+                pivotVelocityPID.setCoefficients(pivotPIDCon.velKP, pivotPIDCon.velKI, pivotPIDCon.velKD);
+                setTorque(pivotPIDCon.velFeedforward*targetVelocity + calculateNetTorque(pivotVelocityPID.runPID(targetVelocity, positionDerivatives.getVelocity(), deltaTime, positionDerivatives.getAcceleration()), liftExtensionInch));
                 break;
             case testing:
 
@@ -95,8 +112,14 @@ public class PivotAdvanced extends PivotBasic {
 
     public void setTargetAngle(double targetAngle) {
         this.targetAngle = targetAngle;
-        controlSate = PivotControlSate.PIDControl;
+        controlSate = PivotControlSate.PIDPositionControl;
     }
+
+    public void setTargetVelocity(double targetVelocityDPS){
+        this.targetVelocity = targetVelocityDPS;
+    }
+
+
 
 
     public double calculateNetTorque(double targetNetTorque, double liftExtension) {

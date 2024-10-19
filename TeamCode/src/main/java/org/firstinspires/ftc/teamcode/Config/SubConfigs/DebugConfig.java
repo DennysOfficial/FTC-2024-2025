@@ -35,4 +35,8 @@ public class DebugConfig {
     public boolean inputDebug() {
         return inputDebug;
     }
+
+    public static boolean PIDDebug = false;
+    public boolean getPIDDebug(){return PIDDebug;}
+
 }

@@ -94,7 +94,7 @@ public class pivotPIDTest extends LinearOpMode {
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime ", deltaTime);
             frameTimer.reset();
-            spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDControl;
+            spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDPositionControl;
             spinyBit.setTargetAngle(spinyBit.getTargetAngle()+activeConfig.sensitivities.getPivotRate()*activeConfig.inputMap.getPivotStick()*deltaTime);
             spinyBit.update(lift.getPositionInch(), deltaTime);
 
