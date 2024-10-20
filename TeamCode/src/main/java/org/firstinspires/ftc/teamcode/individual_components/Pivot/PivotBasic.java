@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
+import org.firstinspires.ftc.teamcode.motionControl.MultiTorqueMotor;
 
-@Config
 public class PivotBasic {
 
     static final int encoderCountsPerRevMotor = 28;
@@ -38,13 +38,14 @@ public class PivotBasic {
 
     protected DcMotor.RunMode runMode = DcMotor.RunMode.RUN_TO_POSITION;
 
-    protected MultiMotor motors;
+    protected MultiTorqueMotor motors;
+
 
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
-        motors = new MultiMotor(opMode.hardwareMap);
+        motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
@@ -53,21 +54,6 @@ public class PivotBasic {
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void setTorque(double targetTorque) {
-
-        double motorSpeedRPM = motors.getVelocity() / encoderCountsPerRevMotor;
-
-        double battery = config.sensorData.getBatteryVoltage() / 12.0;
-
-        motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
-
-        if (config.debugConfig.pivotTorqueDebug()) {
-            opMode.telemetry.addData("targetTorque", targetTorque);
-            opMode.telemetry.addData("motorCurrent", motors.getCurrent(CurrentUnit.AMPS));
-            //opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
-            opMode.telemetry.addData("motorPower", motors.getPower());
-        }
-    }
 
     /**
      * @return velocity in degrees per second
@@ -90,10 +76,9 @@ public class PivotBasic {
         return motors.getCurrentPosition() / encoderCountsPerDeg;
     }
 
-    public double getTargetAngle(){
+    public double getTargetAngle() {
         return targetAngle;
     }
-
 
 
 }
