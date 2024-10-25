@@ -17,17 +17,11 @@ public class PivotBasic {
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
-    //@Config
-    public static class motorProperties {
-        public static double maxSpeedRPM = 6000;
-        public static double stallAmps;
-    }
 
     static double minAngle = -87; // measured from vertical forward is positive
     static double maxAngle = 90;
 
-    final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
-    public static boolean debugModeActive = false;
+
     LinearOpMode opMode;
     RobotConfig config;
 
@@ -35,6 +29,7 @@ public class PivotBasic {
      * degrees from vertical: forward is positive
      */
     protected double targetAngle = 0;
+    protected double angleOffset = 0;
 
     protected DcMotor.RunMode runMode = DcMotor.RunMode.RUN_TO_POSITION;
 
