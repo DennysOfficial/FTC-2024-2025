@@ -42,6 +42,8 @@ public class NewLift extends ControlAxis {
     public void update(double deltaTime, double pivotAngleDeg) {
         updateEssentials(deltaTime);
 
+
+
         switch (controlMode) {
             case directControl:
                 targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
@@ -68,8 +70,6 @@ public class NewLift extends ControlAxis {
         }
 
     }
-
-
 
     public double calcGravityForce(double pivotAngleDeg) {
         return -Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;

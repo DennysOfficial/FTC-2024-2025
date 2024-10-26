@@ -5,7 +5,12 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class DebugConfig {
 
-    float makeTheSquigglyThingGoAwayPlease = 420; // very important
+    public static boolean allPositionDebug = true;
+
+    public boolean getAllPositionDebug() {
+        return allPositionDebug;
+    }
+
     public static boolean pivotPositionAndDerivatives = false;
 
     public boolean pivotPositionAndDerivativesDebug() {
@@ -37,6 +42,15 @@ public class DebugConfig {
     }
 
     public static boolean PIDDebug = false;
-    public boolean getPIDDebug(){return PIDDebug;}
+
+    public boolean getPIDDebug() {
+        return PIDDebug;
+    }
+
+    public static boolean controlModeDebug = false;
+
+    public boolean getControlModeDebug() {
+        return controlModeDebug;
+    }
 
 }
