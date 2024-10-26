@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Config.SubConfigs.DeviceConfig;
 import org.firstinspires.ftc.teamcode.Config.SubConfigs.InputMap;
 import org.firstinspires.ftc.teamcode.Config.SubConfigs.Sensitivities;
 
-@Config
+//@Config
 public class RobotConfig {
 
     LinearOpMode opMode;

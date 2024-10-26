@@ -17,9 +17,8 @@ public class NewPivot extends ControlAxis {
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
     static final double maxLiftExtension = 27;
-
-    public static double extendedGCompMultiplier = 0;
-    public static double retractedGCompMultiplier = 0;
+    public static double extendedGComp = .2;
+    public static double retractedGComp = .05;
 
     public static double posKp = 0;
     public static double posKi = 0;
@@ -80,6 +79,6 @@ public class NewPivot extends ControlAxis {
     }
 
     double calculateTorqueGravity(double liftExtension) {
-        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(PivotAdvanced.liftProperties.retractedGComp, PivotAdvanced.liftProperties.extendedGComp, liftExtension / maxLiftExtension);
+        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(extendedGComp, retractedGComp, liftExtension / maxLiftExtension);
     }
 }

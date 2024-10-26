@@ -41,7 +41,7 @@ public abstract class ControlAxis {
         testing
     }
 
-    protected ControlMode controlMode = ControlMode.disabled;
+    ControlMode controlMode = ControlMode.disabled;
 
     public void setControlMode(ControlMode controlMode) {
         if (this.controlMode == controlMode)
@@ -79,7 +79,6 @@ public abstract class ControlAxis {
         }
     }
 
-
     protected PositionDerivatives positionDerivatives;
 
     protected CustomPID positionPID;
@@ -103,8 +102,21 @@ public abstract class ControlAxis {
 
     protected double upperLimit = Double.POSITIVE_INFINITY;
     protected double lowerLimit = Double.NEGATIVE_INFINITY;
+    protected double physicalUpperLimit = Double.POSITIVE_INFINITY;
+    protected double physicalLowerLimit = Double.NEGATIVE_INFINITY;
     protected double positionOffset = 0;
 
+
+    /**
+     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts
+     */
+    void adjustOffsetForPhysicalLimits() {
+        if (getPosition() > physicalUpperLimit) {
+            positionOffset -= getPosition() - physicalUpperLimit;
+        } else if (getPosition() < physicalLowerLimit) {
+            positionOffset -= getPosition() - physicalLowerLimit;
+        }
+    }
 
     double targetVelocity;
 
@@ -125,6 +137,11 @@ public abstract class ControlAxis {
 
         initPid();
         initMotors();
+
+        DcMotor.RunMode runMode = motors.getMode();
+        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motors.setMode(runMode);
+
         updatePositionPIDCoefficients();
     }
 
@@ -135,6 +152,8 @@ public abstract class ControlAxis {
      */
     protected void updateEssentials(double deltaTime) {
         positionDerivatives.update(getPosition(), deltaTime);
+
+        adjustOffsetForPhysicalLimits();
 
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
@@ -149,6 +168,7 @@ public abstract class ControlAxis {
 
         if (config.debugConfig.getAllPositionDebug())
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
+
     }
 
 
