@@ -65,6 +65,8 @@ public class Lift {
 
     public void update(double deltaTime, double pivotAngle) {
 
+
+
         positionDerivatives.update(getPositionInch(), deltaTime);
 
         if (config.inputMap.getAbort())

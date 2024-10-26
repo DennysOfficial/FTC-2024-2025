@@ -13,6 +13,10 @@ import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
 public abstract class ControlAxis {
 
 
+    public static double staticThresholdUnitsPerSec = 0;
+    public static double staticFrictionComp = 0;
+    public static double kinematicFrictionComp = 0;
+
     public final String axisName;
     public final String unitName;
 
@@ -123,7 +127,7 @@ public abstract class ControlAxis {
         initMotors();
         updatePositionPIDCoefficients();
     }
- 
+
     /**
      * updated position derivatives and checks for an abort
      *
@@ -139,16 +143,37 @@ public abstract class ControlAxis {
             motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motors.setPower(0);
         }
+
+        if (config.debugConfig.getControlModeDebug())
+            opMode.telemetry.addData(axisName + "ControlMode", controlMode.name());
+
+        if (config.debugConfig.getAllPositionDebug())
+            opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
     }
 
 
     protected void updatePositionPID(double targetPosition, double deltaTime, double feedforward) {
         updatePositionPIDCoefficients();
-        motors.setTorque(feedforward + positionPID.runPID(targetPosition, getPosition(), deltaTime, positionDerivatives.getVelocity()), positionDerivatives.getVelocity());
+
+        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime, positionDerivatives.getVelocity());
+        feedforward += frictionCompensation(targetTorque, positionDerivatives.getVelocity());
+        targetTorque += feedforward;
+
+        motors.setTorque(targetTorque, positionDerivatives.getVelocity());
     }
 
+    /**
+     * returns the current position of the axis in the designated units
+     */
     public double getPosition() {
         return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
+    }
+
+    double frictionCompensation(double targetDirection, double velocity) {
+        if (Math.abs(velocity) < staticThresholdUnitsPerSec)
+            return staticFrictionComp * Math.copySign(1, -targetDirection);
+
+        return kinematicFrictionComp * Math.copySign(1, velocity);
     }
 
 
