@@ -52,6 +52,7 @@ public class Lift {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
+        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();

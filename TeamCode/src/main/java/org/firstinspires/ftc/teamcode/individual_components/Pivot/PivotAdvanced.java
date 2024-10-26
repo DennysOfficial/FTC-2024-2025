@@ -24,8 +24,8 @@ public class PivotAdvanced extends PivotBasic {
 
     @Config
     public static class liftProperties {
-        public static double extendedGComp = .2;
-        public static double retractedGComp = .05;
+        public static double extendedGComp = .3;
+        public static double retractedGComp = .15;
         public static double maxExtension = 27.3;
     }
 
@@ -39,43 +39,55 @@ public class PivotAdvanced extends PivotBasic {
         public static double velKI = 0;
         public static double velKD = 0;
         public static double velFeedforward = 0;
+
+        public static double accKP = 0;
+        public static double accKI = 0;
+        public static double accKD = 0;
+        public static double accFeedforward = 0;
     }
 
     public enum PivotControlSate {
         directControl,
         PIDPositionControl,
         PIDVelocityControl,
+        PIDAccelerationControl,
         testing
     }
+
     public PivotControlSate controlSate = PivotControlSate.directControl;
 
     CustomPID pivotPositionPID;
     CustomPID pivotVelocityPID;
+    CustomPID pivotAccelerationPID;
 
     double targetVelocity = 0;
+    double targetAcceleration = 0;
 
 
     PositionDerivatives positionDerivatives; // calculates velocity, acceleration, and jerk
 
     public PivotAdvanced(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
-        pivotPositionPID = new CustomPID(opMode, config,"PivotPosition");
-        pivotVelocityPID = new CustomPID(opMode,config,"pivotVelocity");
+        pivotPositionPID = new CustomPID(opMode, config, "PivotPosition");
+        pivotVelocityPID = new CustomPID(opMode, config, "pivotVelocity");
+        pivotAccelerationPID = new CustomPID(opMode,config,"pivotAcceleration");
 
         positionDerivatives = new PositionDerivatives(getAngle());
     }
 
     public void update(double deltaTime, double liftExtensionInch) {
 
-        positionDerivatives.update(getAngle(),deltaTime);
+        positionDerivatives.update(getAngle(), deltaTime);
 
         if (config.inputMap.getAbort())
             controlSate = PivotControlSate.directControl;
 
         //if (config.inputMap.getPivotStick() > config.getAutoAbortThreshold() || config.inputMap.getPivotStick() < -config.getAutoAbortThreshold())
-            //controlSate = PivotControlSate.directControl;
+        //controlSate = PivotControlSate.directControl;
 
-        opMode.telemetry.addData("pivotStick", config.inputMap.getPivotStick());
+        if(config.debugConfig.inputDebug())
+            opMode.telemetry.addData("pivotStick", config.inputMap.getPivotStick());
+
         opMode.telemetry.addData("pivotStatus", controlSate);
 
 
@@ -89,7 +101,11 @@ public class PivotAdvanced extends PivotBasic {
                 break;
             case PIDVelocityControl:
                 pivotVelocityPID.setCoefficients(pivotPIDCon.velKP, pivotPIDCon.velKI, pivotPIDCon.velKD);
-                setTorque(pivotPIDCon.velFeedforward*targetVelocity + calculateNetTorque(pivotVelocityPID.runPID(targetVelocity, positionDerivatives.getVelocity(), deltaTime, positionDerivatives.getAcceleration()), liftExtensionInch));
+                setTorque(pivotPIDCon.velFeedforward * targetVelocity + calculateNetTorque(pivotVelocityPID.runPID(targetVelocity, positionDerivatives.getVelocity(), deltaTime, positionDerivatives.getAcceleration()), liftExtensionInch));
+                break;
+            case PIDAccelerationControl:
+                pivotVelocityPID.setCoefficients(pivotPIDCon.accKP, pivotPIDCon.accKI, pivotPIDCon.accKD);
+                setTorque(calculateNetTorque(pivotPIDCon.accFeedforward * targetAcceleration + pivotAccelerationPID.runPID(targetAcceleration, positionDerivatives.getAcceleration(), deltaTime, positionDerivatives.getJerk()), liftExtensionInch));
                 break;
             case testing:
 
@@ -115,11 +131,9 @@ public class PivotAdvanced extends PivotBasic {
         controlSate = PivotControlSate.PIDPositionControl;
     }
 
-    public void setTargetVelocity(double targetVelocityDPS){
+    public void setTargetVelocity(double targetVelocityDPS) {
         this.targetVelocity = targetVelocityDPS;
     }
-
-
 
 
     public double calculateNetTorque(double targetNetTorque, double liftExtension) {
@@ -134,6 +148,21 @@ public class PivotAdvanced extends PivotBasic {
             opMode.telemetry.addData("frictionTorque", frictionTorque);
         }
         return outputTorque;
+    }
+
+    public double calculateGravityAndStuff(double targetNetTorque, double liftExtension) {
+
+        double gravityTorque = calculateTorqueGravity(liftExtension, getAngle(), liftProperties.maxExtension);
+        double frictionTorque = calculateTorqueFriction(targetNetTorque, getVelocityDPS(), coefficients.staticFrictionTorque, coefficients.kinematicFrictionTorque, staticThresholdDPS);
+
+        double torqueSum = gravityTorque - frictionTorque;
+
+        if (config.debugConfig.pivotTorqueDebug()) {
+            opMode.telemetry.addData("gravityTorque", gravityTorque);
+            opMode.telemetry.addData("frictionTorque", frictionTorque);
+        }
+
+        return torqueSum;
     }
 
     double calculateTorqueGravity(double liftExtension, double pivotAngleDeg, double maxLiftExtension) {
