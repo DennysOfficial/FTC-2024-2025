@@ -36,13 +36,17 @@ public class NewLift extends ControlAxis {
 
     public NewLift(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
+
+        upperLimit = 26.9;
+        lowerLimit = 0.2;
+
+        physicalUpperLimit = 27.2;
+        physicalLowerLimit = 0;
     }
 
 
     public void update(double deltaTime, double pivotAngleDeg) {
         updateEssentials(deltaTime);
-
-
 
         switch (controlMode) {
             case directControl:
