@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Autonomous.drive.OTOSLocalizer;
+
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
@@ -83,8 +83,6 @@ public class TestingOpMode extends LinearOpMode {
 
         Animator pivotControl = new Animator(runtime, this, activeConfig);
 
-        OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap);
-
 
 
         waitForStart();
@@ -120,10 +118,7 @@ public class TestingOpMode extends LinearOpMode {
             spinyBit.update(deltaTime, lift.getPositionInch());
             activeDriveMode.updateDrive(deltaTime);
 
-
             intake.directControl();
-
-            localizer.printPose(telemetry);
 
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();

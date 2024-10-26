@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Config.SubConfigs;
 
+import com.acmerobotics.dashboard.config.Config;
+
+@Config
 public class Sensitivities {
 
     public static float driveSensitivity = 1;
@@ -44,7 +47,7 @@ public class Sensitivities {
         return pivotRate;
     }
 
-    public static float pivotSensitivity = 0.3f; //thingamabobs per yugvjkhjblk
+    public static float pivotSensitivity = 0.45f; //thingamabobs per yugvjkhjblk
 
     public float getPivotSensitivity() {
         return pivotSensitivity;

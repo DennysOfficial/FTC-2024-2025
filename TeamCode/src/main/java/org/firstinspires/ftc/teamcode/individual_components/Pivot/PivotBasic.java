@@ -46,7 +46,9 @@ public class PivotBasic {
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
         motors.setTargetPosition(0);
+        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
 
