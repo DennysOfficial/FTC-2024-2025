@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.motionControl;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
@@ -8,28 +9,28 @@ public class CustomPID {
 
     public boolean debugEnabled = false;
 
-    double kP = 1;
-    double kI = 1;
-    double kD = 1;
+    double kP = 0;
+    double kI = 0;
+    double kD = 0;
 
     double P = 0;
     double I = 0;
     double D = 0;
 
     double previousActualPosition = 0;
-    LinearOpMode opMode;
+    OpMode opMode;
     RobotConfig config;
 
     public final String name;
 
 
-    public CustomPID(LinearOpMode opMode, RobotConfig config, String instanceName) {
+    public CustomPID(OpMode opMode, RobotConfig config, String instanceName) {
         this.opMode = opMode;
         this.config = config;
         name = instanceName;
     }
 
-    public CustomPID(LinearOpMode opMode, RobotConfig config, double P, double kI, double kD, String instanceName) {
+    public CustomPID(OpMode opMode, RobotConfig config, double P, double kI, double kD, String instanceName) {
         this.opMode = opMode;
         this.config = config;
         this.kP = P;
