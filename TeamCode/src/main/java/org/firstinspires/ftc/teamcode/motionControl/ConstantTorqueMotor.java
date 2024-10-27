@@ -12,20 +12,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Config.SensorData;
 
-public class ConstantTorqueMotor{
+public class ConstantTorqueMotor {
     final DcMotorEx motor;
 
     SensorData sensorData;
 
     public final double maxVelocityTPS;
-    public final double nominalBatteryVoltage =  12.0;
+    public final double nominalBatteryVoltage = 12.0;
 
-    double getBackEMF(double velocityTPS) {
-        return -(velocityTPS / maxVelocityTPS) / nominalBatteryVoltage;
-    }
-
-    double targetVoltageDiff;
-    double dutyCycle;
+    double outputPower;
 
 
     public ConstantTorqueMotor(DcMotorEx motor, SensorData sensorData) {
@@ -38,9 +33,12 @@ public class ConstantTorqueMotor{
     }
 
     public void setTorque(double targetTorque, double motorVelocityTPS) {
-        targetVoltageDiff = targetTorque * nominalBatteryVoltage - getBackEMF(motorVelocityTPS);
-        dutyCycle = targetVoltageDiff / sensorData.getBatteryVoltage();
-        motor.setPower(dutyCycle);
+
+        outputPower = targetTorque +   (motorVelocityTPS / maxVelocityTPS);
+
+        outputPower /= sensorData.getBatteryVoltage() / nominalBatteryVoltage;
+
+        motor.setPower(outputPower);
     }
 
 }
