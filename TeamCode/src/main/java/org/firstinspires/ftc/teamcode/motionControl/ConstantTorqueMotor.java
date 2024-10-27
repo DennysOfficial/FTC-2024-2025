@@ -20,7 +20,12 @@ public class ConstantTorqueMotor {
     public final double maxVelocityTPS;
     public final double nominalBatteryVoltage = 12.0;
 
-    double outputPower;
+    double getBackEMF(double velocityTPS) {
+        return -(velocityTPS / maxVelocityTPS) * nominalBatteryVoltage;
+    }
+
+    double voltageDiff;
+    double dutyCycle;
 
 
     public ConstantTorqueMotor(DcMotorEx motor, SensorData sensorData) {
@@ -34,11 +39,11 @@ public class ConstantTorqueMotor {
 
     public void setTorque(double targetTorque, double motorVelocityTPS) {
 
-        outputPower = targetTorque +   (motorVelocityTPS / maxVelocityTPS);
+        voltageDiff = Math.abs(Math.copySign(targetTorque, sensorData.getBatteryVoltage()) - getBackEMF(motorVelocityTPS));
 
-        outputPower /= sensorData.getBatteryVoltage() / nominalBatteryVoltage;
+        dutyCycle = targetTorque * nominalBatteryVoltage / voltageDiff;
 
-        motor.setPower(outputPower);
+        motor.setPower(dutyCycle);
     }
 
 }
