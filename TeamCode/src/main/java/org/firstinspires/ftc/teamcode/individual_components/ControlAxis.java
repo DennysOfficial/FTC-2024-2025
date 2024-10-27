@@ -179,7 +179,7 @@ public abstract class ControlAxis {
         feedforward += frictionCompensation(targetTorque, positionDerivatives.getVelocity());
         targetTorque += feedforward;
 
-        motors.setTorque(targetTorque, positionDerivatives.getVelocity());
+        motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
     /**
