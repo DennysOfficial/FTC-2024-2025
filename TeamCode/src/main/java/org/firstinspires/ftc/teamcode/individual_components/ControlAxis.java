@@ -36,6 +36,7 @@ public abstract class ControlAxis {
 
         disabled,
         directControl,
+        directTorqueControl,
         positionControl,
         velocityControl,
         testing
@@ -78,6 +79,7 @@ public abstract class ControlAxis {
                 this.controlMode = controlMode;
         }
     }
+
 
     protected PositionDerivatives positionDerivatives;
 
@@ -194,6 +196,10 @@ public abstract class ControlAxis {
             return staticFrictionComp * Math.copySign(1, -targetDirection);
 
         return kinematicFrictionComp * Math.copySign(1, velocity);
+    }
+
+    public double getVelocityTPS() {
+        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
 

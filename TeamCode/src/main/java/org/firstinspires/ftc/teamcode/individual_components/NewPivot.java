@@ -72,6 +72,10 @@ public class NewPivot extends ControlAxis {
                 updatePositionPID(targetPosition, deltaTime, velocityFeedforward);
                 break;
 
+            case directTorqueControl:
+                motors.setTorque(config.inputMap.getPivotStick() * config.sensitivities.getPivotSensitivity() - calculateTorqueGravity(liftExtension), getVelocityTPS());
+                break;
+
             case testing:
 
         }

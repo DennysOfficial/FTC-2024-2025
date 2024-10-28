@@ -68,11 +68,13 @@ public class NewLift extends ControlAxis {
                 updatePositionPID(targetPosition, deltaTime, velocityFeedforward);
                 break;
 
+            case directTorqueControl:
+                motors.setTorque(config.inputMap.getLiftStick() * config.sensitivities.getLiftSensitivity() - calcGravityForce(pivotAngleDeg), getVelocityTPS());
+                break;
+
             case testing:
 
-
         }
-
     }
 
     public double calcGravityForce(double pivotAngleDeg) {
