@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.core.math.MathUtils;
+
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -7,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
-
+@Config
 public class NewPivot extends ControlAxis {
 
 
@@ -50,7 +53,6 @@ public class NewPivot extends ControlAxis {
 
     public void update(double deltaTime, double liftExtension) {
         updateEssentials(deltaTime);
-
 
         switch (controlMode) {
             case directControl:
