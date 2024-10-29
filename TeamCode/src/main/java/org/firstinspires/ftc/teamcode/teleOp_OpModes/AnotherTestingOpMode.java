@@ -70,6 +70,7 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
+
         NewLift lift = new NewLift(this, activeConfig);
 
         NewPivot spinyBit = new NewPivot(this, activeConfig);

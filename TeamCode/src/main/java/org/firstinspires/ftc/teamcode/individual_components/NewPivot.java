@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.core.math.MathUtils;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +13,8 @@ import org.firstinspires.ftc.teamcode.MathStuff;
 @Config
 public class NewPivot extends ControlAxis {
 
+
+    public double liftPosition;
 
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
@@ -33,6 +37,8 @@ public class NewPivot extends ControlAxis {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
+        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         motors.setTargetPosition(0);
         motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -47,16 +53,28 @@ public class NewPivot extends ControlAxis {
     public NewPivot(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        lowerLimit = -40;
         upperLimit = 86.9;
+        lowerLimit = -40;
+
+    }
+
+    @Override
+    public void setTargetPosition(double targetPosition) {
+        double lowerLimit = -Math.acos(config.rearExtensionLimitInch / (config.retractedLiftLengthInch + liftPosition));
+        lowerLimit = Math.toDegrees(lowerLimit);
+        targetPosition = MathUtils.clamp(targetPosition, lowerLimit, Double.POSITIVE_INFINITY);
+        super.setTargetPosition(targetPosition);
     }
 
 
-    public void update(double deltaTime, double liftExtension) {
+    public void update(double deltaTime, double liftPosition) {
         updateEssentials(deltaTime);
 
+        this.liftPosition = liftPosition;
+
+
         if (config.debugConfig.pivotTorqueDebug()) {
-            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftExtension));
+            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
         }
 
         switch (controlMode) {
@@ -64,23 +82,23 @@ public class NewPivot extends ControlAxis {
                 targetVelocity = config.inputMap.getPivotStick() * config.sensitivities.getPivotRate();
 
                 setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double directFeedforward = -calculateTorqueGravity(liftExtension) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(targetPosition, deltaTime, directFeedforward);
+                double directFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * velocityFeedforwardCoefficient;
+                updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
                 break;
 
             case positionControl:
-                double positionFeedforward = -calculateTorqueGravity(liftExtension);
-                updatePositionPID(targetPosition, deltaTime, positionFeedforward);
+                double positionFeedforward = -calculateTorqueGravity(liftPosition);
+                updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
                 break;
 
             case velocityControl:
                 setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double velocityFeedforward = -calculateTorqueGravity(liftExtension) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(targetPosition, deltaTime, velocityFeedforward);
+                double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * velocityFeedforwardCoefficient;
+                updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
                 break;
 
             case directTorqueControl:
-                motors.setTorque(config.inputMap.getPivotStick() * config.sensitivities.getPivotSensitivity() - calculateTorqueGravity(liftExtension), getVelocityTPS());
+                motors.setTorque(config.inputMap.getPivotStick() * config.sensitivities.getPivotSensitivity() - calculateTorqueGravity(liftPosition), getVelocityTPS());
                 break;
 
             case testing:

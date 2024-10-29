@@ -92,7 +92,7 @@ public abstract class ControlAxis {
     protected abstract void updatePositionPIDCoefficients();
 
 
-    double targetPosition = 0;
+    private double targetPosition = 0;
 
     public double getTargetPosition() {
         return targetPosition;
@@ -141,11 +141,6 @@ public abstract class ControlAxis {
         initMotors();
 
         positionDerivatives = new PositionDerivatives(getPosition());
-
-
-        DcMotor.RunMode runMode = motors.getMode();
-        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motors.setMode(runMode);
 
         updatePositionPIDCoefficients();
     }
