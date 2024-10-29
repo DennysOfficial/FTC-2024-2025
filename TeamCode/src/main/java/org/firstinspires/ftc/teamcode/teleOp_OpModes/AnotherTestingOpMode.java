@@ -73,7 +73,11 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         NewLift lift = new NewLift(this, activeConfig);
 
+        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+
         NewPivot spinyBit = new NewPivot(this, activeConfig);
+
+        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -98,19 +102,28 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            if (gamepad2.a) {
-                pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
-                spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+            if (gamepad2.x) {
+                lift.setTargetPosition(0);
+                if (lift.getPosition() < 15)
+                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+
             }
 
+            if (gamepad2.y) {
+                if (lift.getPosition() < 10) {
+                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+                    lift.setTargetPosition(30);
+                }
+            }
 
-            if (pivotControl.isBusy()) {
+            if (gamepad2.a) {
+                lift.setTargetPosition(0);
+                if (lift.getPosition() < 10)
+                    pivotControl.smoothMove(spinyBit.getPosition(), 80, 1);
+            }
+
+            if (pivotControl.isBusy())
                 spinyBit.setTargetPosition(pivotControl.update());
-            } else
-                spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
-
-
-            lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
 
             lift.update(deltaTime, spinyBit.getPosition());
