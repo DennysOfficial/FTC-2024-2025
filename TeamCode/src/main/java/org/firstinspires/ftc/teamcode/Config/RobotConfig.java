@@ -9,8 +9,13 @@ import org.firstinspires.ftc.teamcode.Config.SubConfigs.DeviceConfig;
 import org.firstinspires.ftc.teamcode.Config.SubConfigs.InputMap;
 import org.firstinspires.ftc.teamcode.Config.SubConfigs.Sensitivities;
 
-//@Config
+@Config
 public class RobotConfig {
+
+    public final double retractedLiftLengthInch = 15;
+    public final double rearExtensionLimitInch = 10;
+
+    public final double frontExtensionLimitInch = 42 - rearExtensionLimitInch;
 
     LinearOpMode opMode;
 
@@ -27,7 +32,6 @@ public class RobotConfig {
         inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
         sensorData = new SensorData(opMode.hardwareMap);
     }
-
 
 
     /**

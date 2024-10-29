@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.core.math.MathUtils;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+
 @Config
 public class NewLift extends ControlAxis {
 
-
+    double pivotPosition;
     public static double gCompMultiplier = 0.1;
 
     public static double Kp = 0;
@@ -22,11 +25,12 @@ public class NewLift extends ControlAxis {
     @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
-       // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
+        // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
+        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-       motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
+        motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
 
     @Override
@@ -41,13 +45,25 @@ public class NewLift extends ControlAxis {
         upperLimit = 31;
         lowerLimit = 0.2;
 
-        physicalUpperLimit = 33.75;;
+        physicalUpperLimit = 33.75;
         physicalLowerLimit = 0;
+    }
+
+    @Override
+    public void setTargetPosition(double targetPosition) {
+
+        double upperLimit = config.frontExtensionLimitInch / Math.cos(Math.toRadians(pivotPosition));
+        upperLimit = Math.abs(upperLimit);
+        targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
+
+        super.setTargetPosition(targetPosition);
     }
 
 
     public void update(double deltaTime, double pivotAngleDeg) {
         updateEssentials(deltaTime);
+
+        this.pivotPosition = pivotAngleDeg;
 
         switch (controlMode) {
             case directControl:
@@ -55,18 +71,18 @@ public class NewLift extends ControlAxis {
 
                 setTargetPosition(getPosition() + targetVelocity * deltaTime);
                 double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(targetPosition, deltaTime, directFeedforward);
+                updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
                 break;
 
             case positionControl:
                 double positionFeedforward = -calcGravityForce(pivotAngleDeg);
-                updatePositionPID(targetPosition, deltaTime, positionFeedforward);
+                updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
                 break;
 
             case velocityControl:
                 setTargetPosition(getPosition() + targetVelocity * deltaTime);
                 double velocityFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(targetPosition, deltaTime, velocityFeedforward);
+                updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
                 break;
 
             case directTorqueControl:
