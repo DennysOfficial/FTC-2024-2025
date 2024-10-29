@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
+
 @Config
 public class NewPivot extends ControlAxis {
 
@@ -19,13 +20,13 @@ public class NewPivot extends ControlAxis {
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
-    static final double maxLiftExtension = 27;
-    public static double extendedGComp = .2;
-    public static double retractedGComp = .05;
+    static final double maxLiftExtension = 27 + 27.0 / 4.0;
+    public static double extendedGComp = 0.2;
+    public static double retractedGComp = 0.12;
 
-    public static double posKp = 0;
-    public static double posKi = 0;
-    public static double posKd = 0;
+    public static double posKp = 0.1;
+    public static double posKi = 0.01;
+    public static double posKd = 0.005;
 
     public static double velocityFeedforwardCoefficient = 0;
 
@@ -48,17 +49,24 @@ public class NewPivot extends ControlAxis {
 
     public NewPivot(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
+
+        lowerLimit = -40;
+        upperLimit = 86.9;
     }
 
 
     public void update(double deltaTime, double liftExtension) {
         updateEssentials(deltaTime);
 
+        if (config.debugConfig.pivotTorqueDebug()) {
+            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftExtension));
+        }
+
         switch (controlMode) {
             case directControl:
-                targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
+                targetVelocity = config.inputMap.getPivotStick() * config.sensitivities.getPivotRate();
 
-                setTargetPosition(getPosition() + targetVelocity * deltaTime);
+                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
                 double directFeedforward = -calculateTorqueGravity(liftExtension) + targetVelocity * velocityFeedforwardCoefficient;
                 updatePositionPID(targetPosition, deltaTime, directFeedforward);
                 break;
@@ -69,7 +77,7 @@ public class NewPivot extends ControlAxis {
                 break;
 
             case velocityControl:
-                setTargetPosition(getPosition() + targetVelocity * deltaTime);
+                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
                 double velocityFeedforward = -calculateTorqueGravity(liftExtension) + targetVelocity * velocityFeedforwardCoefficient;
                 updatePositionPID(targetPosition, deltaTime, velocityFeedforward);
                 break;
@@ -85,6 +93,9 @@ public class NewPivot extends ControlAxis {
     }
 
     double calculateTorqueGravity(double liftExtension) {
-        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(extendedGComp, retractedGComp, liftExtension / maxLiftExtension);
+        double interpolationAmount = liftExtension / maxLiftExtension;
+        opMode.telemetry.addData("interpolation amount", interpolationAmount);
+
+        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 }

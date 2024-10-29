@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 public class NewLift extends ControlAxis {
 
 
-    public static double gCompMultiplier = 0;
+    public static double gCompMultiplier = 0.1;
 
     public static double posKp = 0;
     public static double posKi = 0;
@@ -22,11 +22,11 @@ public class NewLift extends ControlAxis {
     @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
-        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
+       // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
+       // motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
 
     @Override

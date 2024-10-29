@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.individual_components.NewLift;
+import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
 
 
 @TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
@@ -38,6 +39,10 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
 
         lift.setControlMode(ControlAxis.ControlMode.directControl);
 
+        NewPivot spinyBit = new NewPivot(this, activeConfig);
+
+        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+
 
         waitForStart();
         runtime.reset();
@@ -53,7 +58,9 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            lift.update(deltaTime, 0);
+            lift.update(deltaTime, lift.getPosition());
+
+            spinyBit.update(deltaTime, spinyBit.getPosition());
 
 
             telemetry.addData("Run Time: ", runtime.toString());

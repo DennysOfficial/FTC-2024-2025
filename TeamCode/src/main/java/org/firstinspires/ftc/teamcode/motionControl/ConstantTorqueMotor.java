@@ -39,11 +39,13 @@ public class ConstantTorqueMotor {
 
     public void setTorque(double targetTorque, double motorVelocityTPS) {
 
-        voltageDiff = Math.abs(Math.copySign(targetTorque, sensorData.getBatteryVoltage()) - getBackEMF(motorVelocityTPS));
-
-        dutyCycle = targetTorque * nominalBatteryVoltage / voltageDiff;
-
-        motor.setPower(dutyCycle);
+        motor.setPower(targetTorque);
+//
+//        voltageDiff = Math.abs(Math.copySign(targetTorque, sensorData.getBatteryVoltage()) - getBackEMF(motorVelocityTPS));
+//
+//        dutyCycle = targetTorque * nominalBatteryVoltage / voltageDiff;
+//
+//        motor.setPower(dutyCycle);
     }
 
 }
