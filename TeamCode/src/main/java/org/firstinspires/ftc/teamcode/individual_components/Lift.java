@@ -59,7 +59,7 @@ public class Lift {
         positionDerivatives = new PositionDerivatives(getPositionInch());
 
 
-        liftPid = new CustomPID(opMode, config);
+        liftPid = new CustomPID(opMode, config, "Lift");
     }
 
     public void update(double deltaTime, double pivotAngle) {

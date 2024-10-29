@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
-
-@Config
+import org.firstinspires.ftc.teamcode.motionControl.MultiTorqueMotor;
 
 public class PivotBasic {
 
@@ -18,17 +17,11 @@ public class PivotBasic {
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
-    //@Config
-    public static class motorProperties {
-        public static double maxSpeedRPM = 6000;
-        public static double stallAmps;
-    }
 
     static double minAngle = -87; // measured from vertical forward is positive
     static double maxAngle = 90;
 
-    final double maxPIDPower = 1f; // mostly a testing thing to stop the robot from committing scooter ankle
-    public static boolean debugModeActive = false;
+
     LinearOpMode opMode;
     RobotConfig config;
 
@@ -36,16 +29,18 @@ public class PivotBasic {
      * degrees from vertical: forward is positive
      */
     protected double targetAngle = 0;
+    protected double angleOffset = 0;
 
     protected DcMotor.RunMode runMode = DcMotor.RunMode.RUN_TO_POSITION;
 
-    protected MultiMotor motors;
+    protected MultiTorqueMotor motors;
+
 
     public PivotBasic(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
-        motors = new MultiMotor(opMode.hardwareMap);
+        motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
@@ -54,21 +49,6 @@ public class PivotBasic {
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void setTorque(double targetTorque) {
-
-        double motorSpeedRPM = motors.getVelocity() / encoderCountsPerRevMotor;
-
-        //double battery = config.batteryVoltageSensor.getVoltage() / 12.0;
-
-        //motors.setPower((targetTorque + motorSpeedRPM / PivotAdvanced.motorProperties.maxSpeedRPM) / battery);
-
-        if (config.debugConfig.pivotTorqueDebug()) {
-            opMode.telemetry.addData("targetTorque", targetTorque);
-            opMode.telemetry.addData("motorCurrent", motors.getCurrent(CurrentUnit.AMPS));
-            //opMode.telemetry.addData("motorSpeed", motorSpeedRPM);
-            opMode.telemetry.addData("motorPower", motors.getPower());
-        }
-    }
 
     /**
      * @return velocity in degrees per second
@@ -91,10 +71,9 @@ public class PivotBasic {
         return motors.getCurrentPosition() / encoderCountsPerDeg;
     }
 
-    public double getTargetAngle(){
+    public double getTargetAngle() {
         return targetAngle;
     }
-
 
 
 }
