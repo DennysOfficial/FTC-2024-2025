@@ -80,6 +80,10 @@ public class Animator {
         return busy;
     }
 
+    public void abort() {
+        busy = false;
+    }
+
 
 }
 

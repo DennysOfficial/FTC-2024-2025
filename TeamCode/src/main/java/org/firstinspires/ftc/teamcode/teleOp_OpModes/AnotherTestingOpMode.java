@@ -125,6 +125,9 @@ public class AnotherTestingOpMode extends LinearOpMode {
             if (pivotControl.isBusy())
                 spinyBit.setTargetPosition(pivotControl.update());
 
+            if (activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold())
+                pivotControl.abort();
+
 
             lift.update(deltaTime, spinyBit.getPosition());
             spinyBit.update(deltaTime, lift.getPosition());
