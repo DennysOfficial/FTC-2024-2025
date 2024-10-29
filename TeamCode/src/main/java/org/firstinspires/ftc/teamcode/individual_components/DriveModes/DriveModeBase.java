@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
-public class DriveModeBase {
+public abstract class DriveModeBase {
 
     protected LinearOpMode opMode;
     protected RobotConfig config;
@@ -34,10 +34,6 @@ public class DriveModeBase {
         frontRightDrive.setDirection(config.deviceConfig.frontRightDriveDir);
     }
 
-    void updateDrive() {
-    }
 
-    public void updateDrive(double deltaTime) {
-        updateDrive();
-    }
+    abstract public void updateDrive(double deltaTime);
 }

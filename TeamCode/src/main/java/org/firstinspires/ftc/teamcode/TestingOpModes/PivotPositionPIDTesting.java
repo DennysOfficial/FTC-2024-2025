@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.individual_components.NewLift;
 import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
+
 
 
 @TeleOp(name = "Pivot Pid Test: OpMode", group = "Linear OpMode")

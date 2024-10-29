@@ -27,7 +27,7 @@ public class VelocityControlDrive extends DriveModeBase{
     }
 
     @Override
-    public void updateDrive() {
+    public void updateDrive(double deltaTime) {
         double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();  //Note: pushing stick forward gives negative value
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
         double yaw = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity();
