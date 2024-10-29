@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.Animator;
@@ -39,9 +40,9 @@ public class PivotVelocityPIDTest extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
+        NewPivot spinyBit = new NewPivot(this, activeConfig);
 
-        spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDVelocityControl;
+        //spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDVelocityControl;
 
 
         waitForStart();
@@ -59,7 +60,7 @@ public class PivotVelocityPIDTest extends LinearOpMode {
             activeConfig.sensorData.update();
 
 
-            spinyBit.setTargetVelocity(activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate());
+            //spinyBit.setTargetVelocity(activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate());
             spinyBit.update(deltaTime, 15);
 
 

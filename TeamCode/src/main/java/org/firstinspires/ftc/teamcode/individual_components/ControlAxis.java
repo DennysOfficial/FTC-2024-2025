@@ -92,14 +92,14 @@ public abstract class ControlAxis {
     protected abstract void updatePositionPIDCoefficients();
 
 
-    double targetPosition;
+    double targetPosition = 0;
 
     public double getTargetPosition() {
         return targetPosition;
     }
 
     public void setTargetPosition(double targetPosition) {
-        this.targetPosition = MathUtils.clamp(targetPosition, upperLimit, lowerLimit);
+        this.targetPosition = MathUtils.clamp(targetPosition, lowerLimit, upperLimit);
     }
 
     protected double upperLimit = Double.POSITIVE_INFINITY;
@@ -135,10 +135,13 @@ public abstract class ControlAxis {
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
 
-        positionDerivatives = new PositionDerivatives(getPosition());
+        motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
         initPid();
         initMotors();
+
+        positionDerivatives = new PositionDerivatives(getPosition());
+
 
         DcMotor.RunMode runMode = motors.getMode();
         motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -153,6 +156,7 @@ public abstract class ControlAxis {
      * @param deltaTime chang in time since last update
      */
     protected void updateEssentials(double deltaTime) {
+        //opMode.telemetry.addData()
         positionDerivatives.update(getPosition(), deltaTime);
 
         adjustOffsetForPhysicalLimits();
@@ -177,7 +181,7 @@ public abstract class ControlAxis {
     protected void updatePositionPID(double targetPosition, double deltaTime, double feedforward) {
         updatePositionPIDCoefficients();
 
-        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime, positionDerivatives.getVelocity());
+        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
         feedforward += frictionCompensation(targetTorque, positionDerivatives.getVelocity());
         targetTorque += feedforward;
 

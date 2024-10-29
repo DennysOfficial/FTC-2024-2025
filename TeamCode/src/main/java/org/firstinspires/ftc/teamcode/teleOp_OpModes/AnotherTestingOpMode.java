@@ -101,7 +101,7 @@ public class AnotherTestingOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
             if (gamepad2.a) {
-                pivotControl.smoothMove(spinyBit.getPosition(), 0, 2);
+                pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
                 spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
             }
 
@@ -112,7 +112,7 @@ public class AnotherTestingOpMode extends LinearOpMode {
                 spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
 
 
-            lift.setControlMode(ControlAxis.ControlMode.directControl);
+            lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
 
             lift.update(deltaTime, spinyBit.getPosition());

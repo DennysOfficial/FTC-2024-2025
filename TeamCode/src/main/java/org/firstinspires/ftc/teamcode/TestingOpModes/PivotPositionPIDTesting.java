@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.individual_components.NewLift;
+import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 
 
@@ -34,8 +37,11 @@ public class PivotPositionPIDTesting extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
-        spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDPositionControl;
+        NewPivot spinyBit = new NewPivot(this, activeConfig);
+        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+
+        NewLift lift = new NewLift(this, activeConfig);
+        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
 
         waitForStart();
@@ -52,9 +58,9 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            double targetAngle = spinyBit.getTargetAngle() + activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate() * deltaTime;
-            spinyBit.setTargetAngle(targetAngle);
-            spinyBit.update(deltaTime, 15);
+            spinyBit.update(deltaTime, lift.getPosition());
+
+            lift.update(deltaTime, spinyBit.getPosition());
 
 
             telemetry.addData("Run Time: ", runtime.toString());
