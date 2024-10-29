@@ -37,17 +37,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.NewLift;
+import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
 
-@TeleOp(name = "Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "test: OpMode", group = "Linear OpMode")
 //@Disabled
 public class TestingOpMode extends LinearOpMode {
 
@@ -70,9 +72,9 @@ public class TestingOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-        Lift lift = new Lift(this, activeConfig);
+        NewLift lift = new NewLift(this, activeConfig);
 
-        PivotAdvanced spinyBit = new PivotAdvanced(this, activeConfig);
+        NewPivot spinyBit = new NewPivot(this, activeConfig);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -80,8 +82,7 @@ public class TestingOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        Animator pivotControl = new Animator(runtime, this, activeConfig);
-
+        Animator pivotControl = new Animator(runtime, this, activeConfig, spinyBit, lift);
 
 
         waitForStart();
@@ -99,22 +100,22 @@ public class TestingOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
             if (gamepad2.a) {
-                pivotControl.smoothMove(spinyBit.getAngle(), 0, 2);
-                spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDPositionControl;
+                pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
+                spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
             }
 
 
             if (pivotControl.isBusy()) {
-                spinyBit.setTargetAngle(pivotControl.update());
+                spinyBit.setTargetPosition(pivotControl.update());
             } else
-                spinyBit.controlSate = PivotAdvanced.PivotControlSate.directControl;
+                spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
 
 
-            lift.controlSate = Lift.LiftControlSate.directControl;
+            lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
 
-            lift.update(deltaTime, spinyBit.getAngle());
-            spinyBit.update(deltaTime, lift.getPositionInch());
+            lift.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update(deltaTime, lift.getPosition());
             activeDriveMode.updateDrive(deltaTime);
 
             intake.directControl();

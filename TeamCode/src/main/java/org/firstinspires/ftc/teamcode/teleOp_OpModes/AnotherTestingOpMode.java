@@ -82,8 +82,7 @@ public class AnotherTestingOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        Animator pivotControl = new Animator(runtime, this, activeConfig);
-
+        Animator pivotControl = new Animator(runtime, this, activeConfig, spinyBit, lift);
 
 
         waitForStart();

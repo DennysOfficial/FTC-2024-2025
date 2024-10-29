@@ -12,9 +12,9 @@ public class NewLift extends ControlAxis {
 
     public static double gCompMultiplier = 0.1;
 
-    public static double posKp = 0;
-    public static double posKi = 0;
-    public static double posKd = 0;
+    public static double Kp = 0;
+    public static double Ki = 0;
+    public static double Kd = 0;
 
     public static double velocityFeedforwardCoefficient = 0;
 
@@ -26,22 +26,22 @@ public class NewLift extends ControlAxis {
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-       // motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
+       motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
 
     @Override
     protected void updatePositionPIDCoefficients() {
-        positionPID.setCoefficients(posKp, posKi, posKd);
+        positionPID.setCoefficients(Kp, Ki, Kd);
     }
 
 
     public NewLift(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
-        upperLimit = 26.9;
+        upperLimit = 31;
         lowerLimit = 0.2;
 
-        physicalUpperLimit = 27.2;
+        physicalUpperLimit = 33.75;;
         physicalLowerLimit = 0;
     }
 
