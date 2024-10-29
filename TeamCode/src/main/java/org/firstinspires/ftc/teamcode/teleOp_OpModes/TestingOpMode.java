@@ -41,6 +41,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.VelocityControlDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.testingDrive;
 import org.firstinspires.ftc.teamcode.individual_components.NewLift;
 import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
@@ -56,7 +57,6 @@ public class TestingOpMode extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    @Override
     public void runOpMode() {
 
         for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
@@ -69,16 +69,18 @@ public class TestingOpMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-        DriveModeBase imuDebug = new testingDrive(this, activeConfig);
+        DriveModeBase activeDriveMode = new VelocityControlDrive(this, activeConfig);
+
+
 
         NewLift lift = new NewLift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.directControl);
 
         NewPivot spinyBit = new NewPivot(this, activeConfig);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
@@ -102,14 +104,43 @@ public class TestingOpMode extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
+            if (gamepad2.x) {
+                lift.setTargetPosition(0);
+                if (lift.getPosition() < 15)
+                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+
+            }
+
+            if (gamepad2.y) {
+                if (lift.getPosition() < 10)
+                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+
+
+                if (spinyBit.getPosition() < 40)
+                    lift.setTargetPosition(30);
+
+            }
+
+            if (gamepad2.a) {
+                lift.setTargetPosition(0);
+                if (lift.getPosition() < 10)
+                    pivotControl.smoothMove(spinyBit.getPosition(), 75, 1);
+            }
+
+            if (pivotControl.isBusy())
+                spinyBit.setTargetPosition(pivotControl.update());
+
+            if (activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
+                pivotControl.abort();
+                spinyBit.setTargetPosition(spinyBit.getPosition());
+            }
+
 
             lift.update(deltaTime, spinyBit.getPosition());
             spinyBit.update(deltaTime, lift.getPosition());
             activeDriveMode.updateDrive(deltaTime);
 
             intake.directControl();
-
-            imuDebug.updateDrive(deltaTime);
 
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();

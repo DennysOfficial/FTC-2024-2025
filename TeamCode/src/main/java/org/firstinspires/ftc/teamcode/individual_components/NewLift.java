@@ -15,9 +15,9 @@ public class NewLift extends ControlAxis {
     double pivotPosition;
     public static double gCompMultiplier = 0.1;
 
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
+    public static double Kp = 0.8;
+    public static double Ki = 0.1;
+    public static double Kd = 0.03;
 
     public static double velocityFeedforwardCoefficient = 0;
 
@@ -52,9 +52,11 @@ public class NewLift extends ControlAxis {
     @Override
     public void setTargetPosition(double targetPosition) {
 
-        double upperLimit = config.frontExtensionLimitInch / Math.cos(Math.toRadians(pivotPosition));
+        double upperLimit = config.frontExtensionLimitInch / Math.sin(Math.toRadians(pivotPosition))- config.retractedLiftLengthInch;
         upperLimit = Math.abs(upperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
+
+        opMode.telemetry.addData("liftDynamicLimit", upperLimit);
 
         super.setTargetPosition(targetPosition);
     }
@@ -69,7 +71,7 @@ public class NewLift extends ControlAxis {
             case directControl:
                 targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
 
-                setTargetPosition(getPosition() + targetVelocity * deltaTime);
+                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
                 double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
                 updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
                 break;
@@ -80,7 +82,7 @@ public class NewLift extends ControlAxis {
                 break;
 
             case velocityControl:
-                setTargetPosition(getPosition() + targetVelocity * deltaTime);
+                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
                 double velocityFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
                 updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
                 break;

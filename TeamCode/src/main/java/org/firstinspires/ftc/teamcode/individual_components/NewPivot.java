@@ -60,9 +60,11 @@ public class NewPivot extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        double lowerLimit = -Math.acos(config.rearExtensionLimitInch / (config.retractedLiftLengthInch + liftPosition));
+        double lowerLimit = -Math.asin(config.rearExtensionLimitInch / (config.retractedLiftLengthInch + liftPosition));
         lowerLimit = Math.toDegrees(lowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, lowerLimit, Double.POSITIVE_INFINITY);
+
+        opMode.telemetry.addData("pivotDynamicLimit", lowerLimit);
         super.setTargetPosition(targetPosition);
     }
 
