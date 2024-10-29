@@ -45,7 +45,7 @@ public class NewLift extends ControlAxis {
         upperLimit = 31;
         lowerLimit = 0.2;
 
-        physicalUpperLimit = 33.75;
+        //physicalUpperLimit = 33.75;
         physicalLowerLimit = 0;
     }
 
