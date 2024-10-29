@@ -73,7 +73,7 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         NewLift lift = new NewLift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.directControl);
 
         NewPivot spinyBit = new NewPivot(this, activeConfig);
 
@@ -110,16 +110,19 @@ public class AnotherTestingOpMode extends LinearOpMode {
             }
 
             if (gamepad2.y) {
-                if (lift.getPosition() < 10) {
+                if (lift.getPosition() < 10)
                     pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+
+
+                if (spinyBit.getPosition() < 40)
                     lift.setTargetPosition(30);
-                }
+
             }
 
             if (gamepad2.a) {
                 lift.setTargetPosition(0);
-                if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinyBit.getPosition(), 80, 1);
+                if (lift.getPosition() < 14)
+                    pivotControl.smoothMove(spinyBit.getPosition(), 75, 1);
             }
 
             if (pivotControl.isBusy())
@@ -129,7 +132,6 @@ public class AnotherTestingOpMode extends LinearOpMode {
                 pivotControl.abort();
                 spinyBit.setTargetPosition(spinyBit.getPosition());
             }
-
 
 
             lift.update(deltaTime, spinyBit.getPosition());

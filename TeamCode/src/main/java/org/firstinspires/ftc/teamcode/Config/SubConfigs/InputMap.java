@@ -54,8 +54,7 @@ public class InputMap {
     }
 
     public boolean getAbort() {
-        return (gamepad1.left_bumper && gamepad1.right_bumper && (gamepad1.left_trigger > 0.5) && (gamepad1.right_trigger > 0.5)) || 
-                (gamepad2.left_bumper && gamepad2.right_bumper && (gamepad2.left_trigger > 0.5) && (gamepad2.right_trigger > 0.5));
+        return gamepad1.dpad_left ||  gamepad2.dpad_left;
     }
 
     ElapsedTime doubleClickTimer = new ElapsedTime();

@@ -1,20 +1,23 @@
 package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-//@Config
-public class VelocityControlDrive extends DriveModeBase{
+
+@Config
+public class VelocityControlDrive extends DriveModeBase {
 
 
+    public static double velocityGain = 0.5f;
     public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     double[] motorPowers = new double[4];
 
-    public VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
+    public  VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
 
-        super(opMode,config);
+        super(opMode, config);
 
         updatePIDCoefficients();
     }
@@ -43,10 +46,10 @@ public class VelocityControlDrive extends DriveModeBase{
 
 
         // Send calculated power to wheels
-        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.sensitivities.getDriveSensitivity());
-        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.sensitivities.getDriveSensitivity());
-        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.sensitivities.getDriveSensitivity());
-        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.sensitivities.getDriveSensitivity());
+        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
+        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
+        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
+        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
 
         //frontRightDrive.setPower(1);
 

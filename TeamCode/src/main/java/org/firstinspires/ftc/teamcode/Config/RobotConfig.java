@@ -12,10 +12,10 @@ import org.firstinspires.ftc.teamcode.Config.SubConfigs.Sensitivities;
 @Config
 public class RobotConfig {
 
-    public final double retractedLiftLengthInch = 15;
-    public final double rearExtensionLimitInch = 10;
+    public static double retractedLiftLengthInch = 16;
+    public static double rearExtensionLimitInch = 15;
 
-    public final double frontExtensionLimitInch = 42 - rearExtensionLimitInch;
+    public static double frontExtensionLimitInch = 20;
 
     LinearOpMode opMode;
 
