@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
-import androidx.core.math.MathUtils;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot.PivotAdvanced;
 
 @Config
 public class NewPivot extends ControlAxis {
@@ -24,9 +21,9 @@ public class NewPivot extends ControlAxis {
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.12;
 
-    public static double posKp = 0.1;
-    public static double posKi = 0.01;
-    public static double posKd = 0.005;
+    public static double Kp = 0.1;
+    public static double Ki = 0.01;
+    public static double Kd = 0.005;
 
     public static double velocityFeedforwardCoefficient = 0;
 
@@ -43,7 +40,7 @@ public class NewPivot extends ControlAxis {
 
     @Override
     protected void updatePositionPIDCoefficients() {
-        positionPID.setCoefficients(posKp, posKi, posKd);
+        positionPID.setCoefficients(Kp, Ki, Kd);
     }
 
 

@@ -8,12 +8,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
+import org.firstinspires.ftc.teamcode.individual_components.NewLift;
+import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
 
 public class Animator {
 
     ElapsedTime runtime;
     OpMode opMode;
     RobotConfig config;
+
+    NewPivot spinyBit;
+    NewLift lift;
 
     double startPosition;
     double endPosition;
@@ -23,10 +28,13 @@ public class Animator {
     boolean busy = false;
 
 
-    public Animator(ElapsedTime runtime, OpMode opMode, RobotConfig config) {
+    public Animator(ElapsedTime runtime, OpMode opMode, RobotConfig config, NewPivot spinyBit, NewLift lift) {
         this.runtime = runtime;
         this.opMode = opMode;
         this.config = config;
+
+        this.spinyBit = spinyBit;
+        this.lift = lift;
     }
 
     /**

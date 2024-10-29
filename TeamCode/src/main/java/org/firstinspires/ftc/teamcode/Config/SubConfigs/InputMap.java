@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Config.SubConfigs;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class InputMap {
 
@@ -53,10 +54,12 @@ public class InputMap {
     }
 
     public boolean getAbort() {
-        return (gamepad1.left_bumper && gamepad1.right_bumper) || (gamepad2.left_bumper && gamepad2.right_bumper);
-
-
+        return (gamepad1.left_bumper && gamepad1.right_bumper && (gamepad1.left_trigger > 0.5) && (gamepad1.right_trigger > 0.5)) || 
+                (gamepad2.left_bumper && gamepad2.right_bumper && (gamepad2.left_trigger > 0.5) && (gamepad2.right_trigger > 0.5));
     }
+
+    ElapsedTime doubleClickTimer = new ElapsedTime();
+    public boolean getUnAbort;
 
     public boolean getFlapButton() {
         return gamepad2.left_trigger > 0.5;
