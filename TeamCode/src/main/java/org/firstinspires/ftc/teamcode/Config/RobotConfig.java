@@ -12,15 +12,29 @@ import org.firstinspires.ftc.teamcode.Config.SubConfigs.Sensitivities;
 @Config
 public class RobotConfig {
 
-    public static double retractedLiftLengthInch = 16;
-    public static double rearExtensionLimitInch = 15;
+    public static double retractedLiftLengthInch = 15;
 
-    public static double frontExtensionLimitInch = 20;
+    public double getRetractedLiftLengthInch() {
+        return retractedLiftLengthInch;
+    }
+
+    public static double rearExtensionLimitInch = 10;
+
+    public double getRearExtensionLimitInch() {
+        return rearExtensionLimitInch;
+    }
+
+    public static double frontExtensionLimitInch = 26;
+
+    public double getFrontExtensionLimitInch() {
+        return frontExtensionLimitInch;
+    }
 
     LinearOpMode opMode;
 
     public final DeviceConfig deviceConfig = new DeviceConfig();
     public final DebugConfig debugConfig = new DebugConfig();
+
     public final InputMap inputMap;
     public final Sensitivities sensitivities = new Sensitivities();
 

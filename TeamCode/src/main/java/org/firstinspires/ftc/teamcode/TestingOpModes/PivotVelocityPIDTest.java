@@ -9,11 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
-import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.motionControl.Animator;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 
 @TeleOp(name = "Pivot Velocity Pid Test", group = "Linear OpMode")
@@ -38,7 +34,7 @@ public class PivotVelocityPIDTest extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        NewPivot spinyBit = new NewPivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig);
 
         //spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDVelocityControl;
 

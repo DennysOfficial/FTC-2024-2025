@@ -10,13 +10,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 @Config
-public class NewLift extends ControlAxis {
+public class Lift extends ControlAxis {
 
     double pivotPosition;
     public static double gCompMultiplier = 0.1;
 
     public static double Kp = 0.8;
-    public static double Ki = 0.1;
+    public static double Ki = 0.02;
     public static double Kd = 0.03;
 
     public static double velocityFeedforwardCoefficient = 0;
@@ -39,7 +39,7 @@ public class NewLift extends ControlAxis {
     }
 
 
-    public NewLift(OpMode opMode, RobotConfig config) {
+    public Lift(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
         upperLimit = 31;
@@ -52,7 +52,7 @@ public class NewLift extends ControlAxis {
     @Override
     public void setTargetPosition(double targetPosition) {
 
-        double upperLimit = config.frontExtensionLimitInch / Math.sin(Math.toRadians(pivotPosition))- config.retractedLiftLengthInch;
+        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivotPosition))- config.getRetractedLiftLengthInch();
         upperLimit = Math.abs(upperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
 

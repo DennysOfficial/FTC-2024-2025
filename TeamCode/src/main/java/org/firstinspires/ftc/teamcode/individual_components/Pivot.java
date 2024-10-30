@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 
 @Config
-public class NewPivot extends ControlAxis {
+public class Pivot extends ControlAxis {
 
 
     public double liftPosition;
@@ -21,13 +21,25 @@ public class NewPivot extends ControlAxis {
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
-    static final double maxLiftExtension = 27 + 27.0 / 4.0;
+    static final double maxLiftExtension = 30;
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.12;
 
-    public static double Kp = 0.1;
-    public static double Ki = 0.01;
-    public static double Kd = 0.005;
+    double getKp(){
+        return MathStuff.lerp(KpRetracted,KpExtended,liftPosition/maxLiftExtension);
+    }
+    double getKi(){
+        return MathStuff.lerp(KiRetracted,KiExtended,liftPosition/maxLiftExtension);
+    }
+    double getKd(){
+        return MathStuff.lerp(KdRetracted,KdExtended,liftPosition/maxLiftExtension);
+    }
+    public static double KpRetracted = 0.1;
+    public static double KiRetracted = 0.01;
+    public static double KdRetracted = 0.005;
+    public static double KpExtended = 0.1;
+    public static double KiExtended = 0.01;
+    public static double KdExtended = 0.005;
 
     public static double velocityFeedforwardCoefficient = 0;
 
@@ -46,11 +58,11 @@ public class NewPivot extends ControlAxis {
 
     @Override
     protected void updatePositionPIDCoefficients() {
-        positionPID.setCoefficients(Kp, Ki, Kd);
+        positionPID.setCoefficients(getKp(), getKi(), getKd());
     }
 
 
-    public NewPivot(OpMode opMode, RobotConfig config) {
+    public Pivot(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         upperLimit = 86.9;
@@ -60,7 +72,7 @@ public class NewPivot extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        double lowerLimit = -Math.asin(config.rearExtensionLimitInch / (config.retractedLiftLengthInch + liftPosition));
+        double lowerLimit = -Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
         lowerLimit = Math.toDegrees(lowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, lowerLimit, Double.POSITIVE_INFINITY);
 

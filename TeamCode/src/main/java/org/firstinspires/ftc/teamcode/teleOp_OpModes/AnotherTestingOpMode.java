@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -41,8 +40,8 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.individual_components.NewLift;
-import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
+import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
@@ -71,11 +70,11 @@ public class AnotherTestingOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        NewLift lift = new NewLift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig);
 
         lift.setControlMode(ControlAxis.ControlMode.directControl);
 
-        NewPivot spinyBit = new NewPivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig);
 
         spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
 
@@ -131,6 +130,9 @@ public class AnotherTestingOpMode extends LinearOpMode {
             if (activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
                 pivotControl.abort();
                 spinyBit.setTargetPosition(spinyBit.getPosition());
+            }
+            if (activeConfig.inputMap.getLiftStick() > activeConfig.getAutoAbortThreshold()) {
+                lift.setTargetPosition(lift.getPosition());
             }
 
 

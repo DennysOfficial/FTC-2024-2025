@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.NewLift;
-import org.firstinspires.ftc.teamcode.individual_components.NewPivot;
+import org.firstinspires.ftc.teamcode.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 
 @TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
@@ -35,11 +35,11 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        NewLift lift = new NewLift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig);
 
         lift.setControlMode(ControlAxis.ControlMode.directControl);
 
-        NewPivot spinyBit = new NewPivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig);
 
         spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
