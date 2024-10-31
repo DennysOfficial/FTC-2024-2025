@@ -21,27 +21,35 @@ public class Pivot extends ControlAxis {
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
-    static final double maxLiftExtension = 30;
+    static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.12;
 
-    double getKp(){
-        return MathStuff.lerp(KpRetracted,KpExtended,liftPosition/maxLiftExtension);
+    double getKp() {
+        return MathStuff.lerp(KpRetracted, KpExtended, liftPosition / extendedLiftPosition);
     }
-    double getKi(){
-        return MathStuff.lerp(KiRetracted,KiExtended,liftPosition/maxLiftExtension);
+
+    double getKi() {
+        return MathStuff.lerp(KiRetracted, KiExtended, liftPosition / extendedLiftPosition);
     }
-    double getKd(){
-        return MathStuff.lerp(KdRetracted,KdExtended,liftPosition/maxLiftExtension);
+
+    double getKd() {
+        return MathStuff.lerp(KdRetracted, KdExtended, liftPosition / extendedLiftPosition);
     }
+
+    double getVelocityFeedforwardCoefficient() {
+        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, liftPosition / extendedLiftPosition);
+    }
+
+    public static double velocityFeedforwardCoefficientRetracted = 0;
     public static double KpRetracted = 0.1;
     public static double KiRetracted = 0.01;
     public static double KdRetracted = 0.005;
+
+    public static double velocityFeedforwardCoefficientExtended = 0;
     public static double KpExtended = 0.1;
     public static double KiExtended = 0.01;
     public static double KdExtended = 0.005;
-
-    public static double velocityFeedforwardCoefficient = 0;
 
 
     @Override
@@ -94,10 +102,7 @@ public class Pivot extends ControlAxis {
         switch (controlMode) {
             case directControl:
                 targetVelocity = config.inputMap.getPivotStick() * config.sensitivities.getPivotRate();
-
-                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double directFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
+                updateVelocityControl(deltaTime);
                 break;
 
             case positionControl:
@@ -106,9 +111,7 @@ public class Pivot extends ControlAxis {
                 break;
 
             case velocityControl:
-                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
+                updateVelocityControl(deltaTime);
                 break;
 
             case directTorqueControl:
@@ -121,8 +124,14 @@ public class Pivot extends ControlAxis {
 
     }
 
+    void updateVelocityControl(double deltaTime) {
+        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
+        double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * getVelocityFeedforwardCoefficient();
+        updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
+    }
+
     double calculateTorqueGravity(double liftExtension) {
-        double interpolationAmount = liftExtension / maxLiftExtension;
+        double interpolationAmount = liftExtension / extendedLiftPosition;
         opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
