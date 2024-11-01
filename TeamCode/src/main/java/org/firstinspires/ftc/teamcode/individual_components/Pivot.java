@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.MathStuff;
 public class Pivot extends ControlAxis {
 
 
-    private double liftPosition;
+    public double liftPosition;
 
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
@@ -78,11 +78,11 @@ public class Pivot extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
+        double dynamicLowerLimit = -1* Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
-        //opMode.telemetry.addData("pivotDynamicLimit", dynamicLowerLimit);
+        opMode.telemetry.addData("pivotDynamicLimit", dynamicLowerLimit);
         super.setTargetPosition(targetPosition);
     }
 
@@ -119,8 +119,6 @@ public class Pivot extends ControlAxis {
             case testing:
 
         }
-
-        opMode.telemetry.addData("targetPivotVelocity", targetVelocity);
 
     }
 

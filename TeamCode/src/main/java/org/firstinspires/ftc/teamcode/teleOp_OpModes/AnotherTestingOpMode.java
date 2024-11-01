@@ -97,6 +97,8 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         double deltaTime = 0;
 
+        double predictedPivotTargetPosition = spinyBit.getTargetPosition();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
@@ -118,24 +120,26 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+                    pivotControl.smoothMove(spinyBit.getPosition(), -18, 1);
 
 
                 if (spinyBit.getPosition() < 40)
-                    lift.setTargetPosition(30);
+                    lift.setTargetPosition(31);
 
             }
 
             if (gamepad2.a) {
+                if (lift.getPosition() >25 && spinyBit.getPosition() < -5)
+                    pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
-                    pivotControl.smoothMove(spinyBit.getPosition(), 75, 1);
+                    pivotControl.smoothMove(spinyBit.getPosition(), 71, 1);
             }
 
             if (pivotControl.isBusy())
                 spinyBit.setTargetPosition(pivotControl.update());
 
-            if (pivotControl.isBusy() || activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
+            if (pivotControl.isBusy() && Math.abs(activeConfig.inputMap.getPivotStick()) > activeConfig.getAutoAbortThreshold()) {
                 pivotControl.abort();
                 spinyBit.setTargetPosition(spinyBit.getPosition());
             }

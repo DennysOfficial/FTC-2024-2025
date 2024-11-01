@@ -92,7 +92,7 @@ public abstract class ControlAxis {
     protected abstract void updatePositionPIDCoefficients();
 
 
-    private double targetPosition = 0;
+    protected double targetPosition = 0;
 
     public double getTargetPosition() {
         return targetPosition;
