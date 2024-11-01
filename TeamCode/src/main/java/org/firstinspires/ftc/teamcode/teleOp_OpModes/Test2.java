@@ -34,30 +34,29 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.VelocityControlDrive;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.motionControl.Animator;
+
+import java.util.List;
 
 
-@TeleOp(name = "test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Test2", group = "Linear OpMode")
 //@Disabled
-public class TestingOpMode extends LinearOpMode {
+public class Test2 extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    @Override
     public void runOpMode() {
 
-        for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO); // if multiple sensors read calls are made in a row it will group them together making code more fasterer
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
@@ -66,81 +65,31 @@ public class TestingOpMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new VelocityControlDrive(this, activeConfig);
-
-
-        Lift lift = new Lift(this, activeConfig);
-
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
-
-        Pivot spinyBit = new Pivot(this, activeConfig);
-
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
-
-
-        //Pincher pincher = new Pincher(this,activeConfig);
-
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
-
-
-        Animator pivotControl = new Animator(runtime, this, activeConfig, spinyBit, lift);
-
-
         waitForStart();
         runtime.reset();
         frameTimer.reset();
 
         double deltaTime = 0;
 
+        int count = 0;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
-            telemetry.addData("deltaTime ", deltaTime);
+            telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
-            activeConfig.sensorData.update();
 
-            if (gamepad2.x) {
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 15)
-                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
-
-            }
-
-            if (gamepad2.y) {
-                if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+            for (int i = 0; i < count; i++)
+                for(DcMotor motor:hardwareMap.dcMotor){
+                    int e = motor.getCurrentPosition();
+                }
+            
+            count++;
 
 
-                if (spinyBit.getPosition() < 40)
-                    lift.setTargetPosition(30);
-
-            }
-
-            if (gamepad2.a) {
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinyBit.getPosition(), 75, 1);
-            }
-
-            if (pivotControl.isBusy())
-                spinyBit.setTargetPosition(pivotControl.update());
-
-            if (activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
-                pivotControl.abort();
-                spinyBit.setTargetPosition(spinyBit.getPosition());
-            }
-            if (activeConfig.inputMap.getLiftStick() > activeConfig.getAutoAbortThreshold()) {
-                lift.setTargetPosition(lift.getPosition());
-            }
-
-
-            lift.update(deltaTime, spinyBit.getPosition());
-            spinyBit.update(deltaTime, lift.getPosition());
-            activeDriveMode.updateDrive(deltaTime);
-
-            intake.directControl();
-
+            telemetry.addData("count", count);
+            telemetry.addData("timePerCount", deltaTime/count);
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
