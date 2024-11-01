@@ -45,6 +45,8 @@ import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
+import java.util.List;
+
 
 @TeleOp(name = "AnotherOne: OpMode", group = "Linear OpMode")
 //@Disabled
@@ -57,8 +59,10 @@ public class AnotherTestingOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        for (LynxModule hub : hardwareMap.getAll(LynxModule.class)) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO); // if multiple sensors read calls are made in a row it will group them together making code more fasterer
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
@@ -100,6 +104,9 @@ public class AnotherTestingOpMode extends LinearOpMode {
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
             activeConfig.sensorData.update();
 
             if (gamepad2.x) {

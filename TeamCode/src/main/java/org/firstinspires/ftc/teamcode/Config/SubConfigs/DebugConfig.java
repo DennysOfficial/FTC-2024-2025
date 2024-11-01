@@ -47,7 +47,7 @@ public class DebugConfig {
         return PIDDebug;
     }
 
-    public static boolean controlModeDebug = false;
+    public static boolean controlModeDebug = true;
 
     public boolean getControlModeDebug() {
         return controlModeDebug;

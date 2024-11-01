@@ -56,7 +56,7 @@ public abstract class ControlAxis {
                 break;
 
             case velocityControl:
-                targetPosition = getPosition();
+                setTargetPosition(getPosition());
                 this.controlMode = ControlMode.velocityControl;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -69,7 +69,7 @@ public abstract class ControlAxis {
                 break;
 
             case directControl:
-                targetPosition = getPosition();
+                setTargetPosition(getPosition());
                 this.controlMode = ControlMode.directControl;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -169,7 +169,7 @@ public abstract class ControlAxis {
         }
 
         if (config.debugConfig.getControlModeDebug())
-            opMode.telemetry.addData(axisName + "ControlMode", controlMode.name());
+            opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
         if (config.debugConfig.getAllPositionDebug())
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
