@@ -95,8 +95,9 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
-            telemetry.addData("deltaTime ", deltaTime);
+            telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
             activeConfig.sensorData.update();
@@ -127,12 +128,9 @@ public class AnotherTestingOpMode extends LinearOpMode {
             if (pivotControl.isBusy())
                 spinyBit.setTargetPosition(pivotControl.update());
 
-            if (activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
+            if (pivotControl.isBusy() || activeConfig.inputMap.getPivotStick() > activeConfig.getAutoAbortThreshold()) {
                 pivotControl.abort();
                 spinyBit.setTargetPosition(spinyBit.getPosition());
-            }
-            if (activeConfig.inputMap.getLiftStick() > activeConfig.getAutoAbortThreshold()) {
-                lift.setTargetPosition(lift.getPosition());
             }
 
 

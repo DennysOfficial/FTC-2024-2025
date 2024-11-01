@@ -27,7 +27,7 @@ public class Lift extends ControlAxis {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
         // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
-        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
@@ -43,7 +43,7 @@ public class Lift extends ControlAxis {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
         upperLimit = 31;
-        lowerLimit = 0.2;
+        lowerLimit = 0.5;
 
         //physicalUpperLimit = 33.75;
         physicalLowerLimit = 0;
@@ -52,7 +52,7 @@ public class Lift extends ControlAxis {
     @Override
     public void setTargetPosition(double targetPosition) {
 
-        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivotPosition))- config.getRetractedLiftLengthInch();
+        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivotPosition)) - config.getRetractedLiftLengthInch();
         upperLimit = Math.abs(upperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
 
@@ -71,9 +71,7 @@ public class Lift extends ControlAxis {
             case directControl:
                 targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
 
-                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
+                updateVelocityControl(deltaTime, pivotAngleDeg);
                 break;
 
             case positionControl:
@@ -82,9 +80,7 @@ public class Lift extends ControlAxis {
                 break;
 
             case velocityControl:
-                setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-                double velocityFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-                updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
+                updateVelocityControl(deltaTime, pivotAngleDeg);
                 break;
 
             case directTorqueControl:
@@ -94,6 +90,13 @@ public class Lift extends ControlAxis {
             case testing:
 
         }
+    }
+
+
+    void updateVelocityControl(double deltaTime, double pivotAngleDeg) {
+        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
+        double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
+        updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
     }
 
     public double calcGravityForce(double pivotAngleDeg) {

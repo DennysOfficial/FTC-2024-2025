@@ -57,10 +57,8 @@ public class Pivot extends ControlAxis {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
-        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         motors.setTargetPosition(0);
-        motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -121,6 +119,8 @@ public class Pivot extends ControlAxis {
             case testing:
 
         }
+
+        opMode.telemetry.addData("targetPivotVelocity", targetVelocity);
 
     }
 

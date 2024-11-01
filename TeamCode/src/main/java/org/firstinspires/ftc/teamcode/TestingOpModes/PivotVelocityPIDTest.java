@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 
@@ -36,7 +38,11 @@ public class PivotVelocityPIDTest extends LinearOpMode {
 
         Pivot spinyBit = new Pivot(this, activeConfig);
 
-        //spinyBit.controlSate = PivotAdvanced.PivotControlSate.PIDVelocityControl;
+        spinyBit.setControlMode(ControlAxis.ControlMode.velocityControl);
+
+        Lift lift = new Lift(this, activeConfig);
+
+        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
 
 
         waitForStart();
@@ -53,9 +59,16 @@ public class PivotVelocityPIDTest extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
+            if (gamepad2.dpad_down)
+                spinyBit.setTargetVelocity(-20);
+            else if (gamepad2.dpad_up)
+                spinyBit.setTargetVelocity(20);
+            else
+                spinyBit.setTargetVelocity(activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate());
 
-            //spinyBit.setTargetVelocity(activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate());
-            spinyBit.update(deltaTime, 15);
+
+            spinyBit.update(deltaTime, lift.getPosition());
+            lift.update(deltaTime, spinyBit.getPosition());
 
 
             telemetry.addData("Run Time: ", runtime.toString());

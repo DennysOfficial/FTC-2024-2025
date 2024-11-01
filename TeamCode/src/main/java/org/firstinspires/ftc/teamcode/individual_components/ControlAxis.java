@@ -126,6 +126,10 @@ public abstract class ControlAxis {
         return targetVelocity;
     }
 
+    public void setTargetVelocity(double targetVelocity) {
+        this.targetVelocity = targetVelocity;
+    }
+
 
     public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount) {
         this.opMode = opMode;
