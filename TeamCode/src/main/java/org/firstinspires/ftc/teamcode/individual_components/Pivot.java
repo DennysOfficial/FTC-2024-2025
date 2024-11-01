@@ -93,6 +93,8 @@ public class Pivot extends ControlAxis {
         this.liftPosition = liftPosition;
 
 
+
+
         if (config.debugConfig.pivotTorqueDebug()) {
             opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
         }
@@ -120,6 +122,7 @@ public class Pivot extends ControlAxis {
 
         }
 
+        positionPID.setPreviousActualPosition(getPosition());
     }
 
     void updateVelocityControl(double deltaTime) {
