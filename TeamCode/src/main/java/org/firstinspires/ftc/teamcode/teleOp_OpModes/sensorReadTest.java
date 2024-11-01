@@ -34,6 +34,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
@@ -41,9 +42,9 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import java.util.List;
 
 
-@TeleOp(name = "Test1", group = "Linear OpMode")
+@TeleOp(name = "Test2", group = "Linear OpMode")
 //@Disabled
-public class Test1 extends LinearOpMode {
+public class sensorReadTest extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -55,7 +56,7 @@ public class Test1 extends LinearOpMode {
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
@@ -78,16 +79,17 @@ public class Test1 extends LinearOpMode {
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
-            for (LynxModule hub : allHubs) {
-                hub.clearBulkCache();
-            }
 
             for (int i = 0; i < count; i++)
-                telemetry.addData("", count);
+                for(DcMotor motor:hardwareMap.dcMotor){
+                    int e = motor.getCurrentPosition();
+                }
             
             count++;
 
 
+            telemetry.addData("count", count);
+            telemetry.addData("timePerCount", deltaTime/count);
             telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
