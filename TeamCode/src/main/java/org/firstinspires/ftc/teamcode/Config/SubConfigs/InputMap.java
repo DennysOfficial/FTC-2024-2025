@@ -55,7 +55,9 @@ public class InputMap {
         return gamepad2.left_trigger > 0.5;
     }
 
-    public float decreaseSpeed(){return gamepad1.left_trigger;}
+    public boolean getSlowDown(){return gamepad1.left_trigger > 0.5;}
+
+    public boolean getSpeedUp(){return gamepad1.right_trigger > 0.5;}
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 
