@@ -11,7 +11,6 @@ public class Sensitivities {
         return driveSensitivity;
     }
 
-
     public static float forwardSensitivity = 1; // basic driving sensitivities only relative to each other
 
     public float getForwardSensitivity() {
@@ -63,4 +62,12 @@ public class Sensitivities {
     public float getPivotSensitivity() {
         return pivotSensitivity;
     }
+
+    public static float slowDownModifier = 0.4f;
+
+    public float getSlowDownModifier(){return slowDownModifier;}
+
+    public static float speedUpModifier = 1.5f;
+
+    public float getSpeedUpModifier(){return speedUpModifier;}
 }

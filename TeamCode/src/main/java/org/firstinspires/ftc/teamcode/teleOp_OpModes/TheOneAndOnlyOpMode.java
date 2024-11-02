@@ -48,9 +48,9 @@ import org.firstinspires.ftc.teamcode.motionControl.Animator;
 import java.util.List;
 
 
-@TeleOp(name = "AnotherOne: OpMode", group = "Linear OpMode")
+@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
 //@Disabled
-public class AnotherTestingOpMode extends LinearOpMode {
+public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -76,11 +76,15 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl;
+
+        lift.setControlMode(defaultLiftControlMode);
 
         Pivot spinyBit = new Pivot(this, activeConfig);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
+
+        spinyBit.setControlMode(defaultPivotControlMode);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -101,6 +105,11 @@ public class AnotherTestingOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            if (activeConfig.inputMap.getUnAbort()) {
+                lift.setControlMode(defaultLiftControlMode);
+                spinyBit.setControlMode(defaultPivotControlMode);
+            }
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
