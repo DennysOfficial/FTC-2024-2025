@@ -11,7 +11,6 @@ public class Sensitivities {
         return driveSensitivity;
     }
 
-
     public static float forwardSensitivity = 1; // basic driving sensitivities only relative to each other
 
     public float getForwardSensitivity() {

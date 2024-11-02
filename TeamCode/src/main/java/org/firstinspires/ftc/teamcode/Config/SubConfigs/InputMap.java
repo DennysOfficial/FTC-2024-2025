@@ -33,14 +33,6 @@ public class InputMap {
         return -1 * gamepad2.right_stick_y;
     }
 
-    public boolean getIntakeInButton() {
-        return gamepad1.right_bumper;
-    }
-
-    public boolean getIntakeOutButton() {
-        return gamepad1.left_bumper;
-    }
-
     public boolean getPinchButton() {
         return gamepad2.right_bumper;
     }
@@ -57,11 +49,15 @@ public class InputMap {
         return gamepad1.dpad_left ||  gamepad2.dpad_left;
     }
 
-    ElapsedTime doubleClickTimer = new ElapsedTime();
-    public boolean getUnAbort;
+    public boolean getUnAbort(){return gamepad1.dpad_right ||  gamepad2.dpad_right;}
 
     public boolean getFlapButton() {
         return gamepad2.left_trigger > 0.5;
     }
+
+    public float getDriveSpeedMod(){return gamepad1.left_trigger;}
+
+    ElapsedTime doubleClickTimer = new ElapsedTime();
+
 
 }
