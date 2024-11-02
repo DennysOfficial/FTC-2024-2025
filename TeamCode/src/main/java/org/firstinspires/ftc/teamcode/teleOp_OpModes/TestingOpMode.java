@@ -49,7 +49,7 @@ import org.firstinspires.ftc.teamcode.motionControl.Animator;
 import java.util.List;
 
 
-@TeleOp(name = "AnotherOne: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Testing: OpMode", group = "Linear OpMode ")
 //@Disabled
 public class TestingOpMode extends LinearOpMode {
 

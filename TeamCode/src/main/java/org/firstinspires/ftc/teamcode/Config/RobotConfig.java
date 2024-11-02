@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Config;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Config.SubConfigs.DebugConfig;
@@ -30,7 +31,7 @@ public class RobotConfig {
         return frontExtensionLimitInch;
     }
 
-    LinearOpMode opMode;
+    OpMode opMode;
 
     public final DeviceConfig deviceConfig = new DeviceConfig();
     public final DebugConfig debugConfig = new DebugConfig();
@@ -41,7 +42,7 @@ public class RobotConfig {
     public final SensorData sensorData;
 
 
-    public RobotConfig(LinearOpMode opMode) {
+    public RobotConfig(OpMode opMode) {
         this.opMode = opMode;
         inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
         sensorData = new SensorData(opMode.hardwareMap);

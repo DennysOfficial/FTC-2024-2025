@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.drive.OTOSLocalizer;
 public class LocalizationTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, this);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class Automous extends LinearOpMode {
     @Override
     public void runOpMode() {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, this);
         Pose2d startPose = new Pose2d(new Vector2d(72,0), Math.toRadians(180));
 
         drive.setPoseEstimate(startPose);

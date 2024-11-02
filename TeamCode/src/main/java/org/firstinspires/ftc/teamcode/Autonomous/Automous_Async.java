@@ -21,7 +21,7 @@ public class Automous_Async extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, this);
 
         drive.setPoseEstimate(startPose);
 

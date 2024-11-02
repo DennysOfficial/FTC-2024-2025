@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 @TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
 @Config
-//@Disabled
+@Disabled
 public class GCompCalibration extends LinearOpMode {
 
 
