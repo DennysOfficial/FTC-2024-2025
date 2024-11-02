@@ -48,9 +48,9 @@ import org.firstinspires.ftc.teamcode.motionControl.Animator;
 import java.util.List;
 
 
-@TeleOp(name = "AnotherANOTHERone: OpMode", group = "Linear OpMode")
+@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
 //@Disabled
-public class AnotherANOTHERTestingOpMode extends LinearOpMode {
+public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
