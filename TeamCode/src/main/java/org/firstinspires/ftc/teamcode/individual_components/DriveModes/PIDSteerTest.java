@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 @Config
 public class PIDSteerTest extends DriveModeBase {
 
-    public static double turnFeedforward = 0;
+    public static double turnFeedforward = 0.02;
     public static double Kp = 0;
     public static double Ki = 0;
     public static double Kd = 0;
@@ -27,10 +27,16 @@ public class PIDSteerTest extends DriveModeBase {
         imu = opMode.hardwareMap.get(IMU.class, "imu");
     }
 
+    public void telemetryAngleVelocity(){
+        opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
+        opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
+        opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+    }
 
     @Override
     public void updateDrive(double deltaTime) {
 
+        telemetryAngleVelocity();
 
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
         double drive = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();
@@ -39,7 +45,7 @@ public class PIDSteerTest extends DriveModeBase {
 
         steeringPID.setCoefficients(Kp, Ki, Kd);
         double turn = turnFeedforward * targetTurnRate;
-        turn+= steeringPID.runPID(targetTurnRate, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES), deltaTime);
+        turn+= steeringPID.runPID(targetTurnRate, imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate, deltaTime);
 
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
