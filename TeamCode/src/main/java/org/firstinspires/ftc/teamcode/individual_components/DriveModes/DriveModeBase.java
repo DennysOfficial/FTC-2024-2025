@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
 public abstract class DriveModeBase {
 
     protected LinearOpMode opMode;
+
     protected RobotConfig config;
     protected DcMotorEx frontLeftDrive;
     protected DcMotorEx backLeftDrive;
@@ -31,6 +32,7 @@ public abstract class DriveModeBase {
         backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
         frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
 
+        motors = new MultiMotor(opMode.hardwareMap);
         motors.addMotor(frontLeftDrive);
         motors.addMotor(frontRightDrive);
         motors.addMotor(backLeftDrive);
