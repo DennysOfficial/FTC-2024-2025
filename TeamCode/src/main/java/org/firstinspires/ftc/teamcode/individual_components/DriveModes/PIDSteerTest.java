@@ -21,7 +21,7 @@ public class PIDSteerTest extends DriveModeBase {
 
     double[] motorPowers = new double[4];
 
-    PIDSteerTest(LinearOpMode opMode, RobotConfig config) {
+    public PIDSteerTest(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
         steeringPID = new CustomPID(opMode, config, "steeringPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
