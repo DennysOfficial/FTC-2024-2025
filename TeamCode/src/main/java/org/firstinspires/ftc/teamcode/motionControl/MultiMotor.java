@@ -40,6 +40,14 @@ public class MultiMotor implements DcMotorEx {
 
         forceUpdateRunMode(runMode);
     }
+    public void addMotor(DcMotorEx motor) {
+        motors.add(motor);
+
+        motors.get(motors.size() - 1).setDirection(direction);
+        motors.get(motors.size() - 1).setTargetPosition(targetPosition);
+
+        forceUpdateRunMode(runMode);
+    }
 
     public DcMotorEx getMotor(String deviceName){
        return hardwareMap.get(DcMotorEx.class, deviceName);

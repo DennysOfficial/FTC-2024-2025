@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
 
 public abstract class DriveModeBase {
 
@@ -13,6 +14,8 @@ public abstract class DriveModeBase {
     protected DcMotorEx backLeftDrive;
     protected DcMotorEx frontRightDrive;
     protected DcMotorEx backRightDrive;
+
+    protected MultiMotor motors;
 
     public DriveModeBase(LinearOpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -27,6 +30,11 @@ public abstract class DriveModeBase {
         backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);
         backRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
         frontRightDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
+
+        motors.addMotor(frontLeftDrive);
+        motors.addMotor(frontRightDrive);
+        motors.addMotor(backLeftDrive);
+        motors.addMotor(backRightDrive);
 
         frontLeftDrive.setDirection(config.deviceConfig.frontLeftDriveDir);
         backLeftDrive.setDirection(config.deviceConfig.backLeftDriveDir);

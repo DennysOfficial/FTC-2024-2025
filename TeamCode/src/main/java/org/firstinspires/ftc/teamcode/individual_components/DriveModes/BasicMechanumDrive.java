@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
@@ -10,12 +11,13 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 public class BasicMechanumDrive extends DriveModeBase {
 
 
-
     double[] motorPowers = new double[4];
 
     public BasicMechanumDrive(LinearOpMode opMode, RobotConfig config) {
-        super(opMode,config);
+        super(opMode, config);
         frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -72,7 +74,7 @@ public class BasicMechanumDrive extends DriveModeBase {
         max = Math.max(max, Math.abs(inputArray[2]));
         max = Math.max(max, Math.abs(inputArray[3]));
 
-        if(max > 1)
+        if (max > 1)
             for (int i = 0; i < inputArray.length; i++)
                 inputArray[i] /= max;
 
