@@ -54,12 +54,16 @@ import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.Autonomous.util.LynxModuleUtil;
+import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
+
+    protected RobotConfig config;
+
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
@@ -106,15 +110,15 @@ public class SampleMecanumDrive extends MecanumDrive {
         imu.initialize(parameters);
 
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "FL"); //this needs to be changed to match the robot's motor configuration
-        rightFront = hardwareMap.get(DcMotorEx.class, "FR");
-        rightRear = hardwareMap.get(DcMotorEx.class, "BR");
-        leftRear = hardwareMap.get(DcMotorEx.class, "BL");
+        leftFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontLeftDrive); //this needs to be changed to match the robot's motor configuration
+        rightFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
+        rightRear = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
+        leftRear = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);
 
-        leftFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(config.deviceConfig.frontLeftDriveDir);
+        rightFront.setDirection(config.deviceConfig.frontRightDriveDir);
+        rightRear.setDirection(config.deviceConfig.backRightDriveDir);
+        leftRear.setDirection(config.deviceConfig.backLeftDriveDir);
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
