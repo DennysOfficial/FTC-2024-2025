@@ -16,7 +16,7 @@ B: Unbound
 
 ### Dpad
 Up: Unbound\
-Left: Lift about\
+Left: Lift abort\
 Down: Unbound\
 Right: Lift unabort
 
@@ -47,7 +47,7 @@ B: Unbound
 
 ### Dpad
 Up: Unbound\
-Left: Lift about\
+Left: Lift abort\
 Down: Unbound\
 Right: Lift unabort
 
