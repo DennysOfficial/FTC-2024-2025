@@ -57,7 +57,7 @@ public class InputMap {
 
     public boolean getSlowDown(){return gamepad1.left_trigger > 0.5;}
 
-    public boolean getSpeedUp(){return gamepad1.right_trigger > 0.5;}
+    //public boolean getBrake(){return gamepad1.right_trigger > 0.5;} will test later
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 
