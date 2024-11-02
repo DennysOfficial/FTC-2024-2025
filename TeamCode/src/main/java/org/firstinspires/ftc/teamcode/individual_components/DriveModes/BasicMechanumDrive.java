@@ -22,7 +22,7 @@ public class BasicMechanumDrive extends DriveModeBase {
 
     @Override
     public void updateDrive(double deltaTime) {
-        double SensitivityModifier = config.inputMap.getDriveSpeedMod() + 1;
+        double SensitivityModifier = config.inputMap.decreaseSpeed() + 1;
         double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity() / SensitivityModifier;  //Note: pushing stick forward gives negative value
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity() / SensitivityModifier;
         double yaw = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() / SensitivityModifier;

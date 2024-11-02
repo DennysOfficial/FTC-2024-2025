@@ -55,7 +55,7 @@ public class InputMap {
         return gamepad2.left_trigger > 0.5;
     }
 
-    public float getDriveSpeedMod(){return gamepad1.left_trigger;}
+    public float decreaseSpeed(){return gamepad1.left_trigger;}
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 
