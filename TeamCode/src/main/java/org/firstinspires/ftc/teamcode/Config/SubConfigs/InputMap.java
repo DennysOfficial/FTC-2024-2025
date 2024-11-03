@@ -38,7 +38,7 @@ public class InputMap {
     }
 
     public boolean getIntakeButton() {
-        return gamepad2.right_bumper;
+        return gamepad2.right_bumper || (gamepad2.right_trigger > 0.2);
     }
 
     public boolean getOuttakeButton() {
@@ -46,16 +46,20 @@ public class InputMap {
     }
 
     public boolean getAbort() {
-        return gamepad1.dpad_left ||  gamepad2.dpad_left;
+        return gamepad1.dpad_left || gamepad2.dpad_left;
     }
 
-    public boolean getUnAbort(){return gamepad1.dpad_right ||  gamepad2.dpad_right;}
+    public boolean getUnAbort() {
+        return gamepad1.dpad_right || gamepad2.dpad_right;
+    }
 
     public boolean getFlapButton() {
         return gamepad2.left_trigger > 0.5;
     }
 
-    public boolean getSlowDown(){return gamepad1.left_trigger > 0.5;}
+    public boolean getSlowDown() {
+        return gamepad1.left_trigger > 0.5;
+    }
 
     //public boolean getBrake(){return gamepad1.right_trigger > 0.5;} will test later
 
