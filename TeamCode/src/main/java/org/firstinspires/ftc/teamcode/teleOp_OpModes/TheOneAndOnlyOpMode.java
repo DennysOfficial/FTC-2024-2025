@@ -76,13 +76,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl; //for unabort
 
         lift.setControlMode(defaultLiftControlMode);
 
         Pivot spinnyBit = new Pivot(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl; //for unabort
 
         spinnyBit.setControlMode(defaultPivotControlMode);
 
