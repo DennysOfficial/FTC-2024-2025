@@ -94,7 +94,6 @@ public class Pivot extends ControlAxis {
 
 
 
-
         if (config.debugConfig.pivotTorqueDebug()) {
             opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
         }

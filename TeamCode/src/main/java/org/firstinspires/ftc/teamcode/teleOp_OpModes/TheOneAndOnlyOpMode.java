@@ -34,6 +34,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
@@ -76,15 +77,15 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl; //for unabort
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
-        Pivot spinnyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl; //for unabort
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
 
-        spinnyBit.setControlMode(defaultPivotControlMode);
+        spinyBit.setControlMode(defaultPivotControlMode);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -92,7 +93,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        Animator pivotControl = new Animator(runtime, this, activeConfig, spinnyBit, lift);
+        Animator pivotControl = new Animator(runtime, this, activeConfig, spinyBit, lift);
 
 
         waitForStart();
@@ -101,17 +102,19 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         double deltaTime = 0;
 
-        double predictedPivotTargetPosition = spinnyBit.getTargetPosition();
+        double predictedPivotTargetPosition = spinyBit.getTargetPosition();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (spinnyBit.getControlMode() == ControlAxis.ControlMode.disabled && activeConfig.inputMap.getUnAbort())
-                spinnyBit.setControlMode(defaultPivotControlMode);
+            telemetry.addData("pivotMotorR", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.rightPivot).getCurrentPosition());
+            telemetry.addData("pivotMotorL", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.leftPivot).getCurrentPosition());
 
-            if (lift.getControlMode() == ControlAxis.ControlMode.disabled && activeConfig.inputMap.getUnAbort())
+
+            if (activeConfig.inputMap.getUnAbort()) {
                 lift.setControlMode(defaultLiftControlMode);
-
+                spinyBit.setControlMode(defaultPivotControlMode);
+            }
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -125,47 +128,39 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             if (gamepad2.x) {
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 15)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), -10, 1);
+                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
 
             }
 
             if (gamepad2.y) {
                 if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), -18, 1);
+                    pivotControl.smoothMove(spinyBit.getPosition(), -18, 1);
 
 
-                if (spinnyBit.getPosition() < 40)
+                if (spinyBit.getPosition() < 40)
                     lift.setTargetPosition(31);
 
             }
 
             if (gamepad2.a) {
-                if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), 0, 0.5);
+                if (lift.getPosition() > 25 && spinyBit.getPosition() < -5)
+                    pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), 71, 1);
+                    pivotControl.smoothMove(spinyBit.getPosition(), 71, 1);
             }
 
             if (pivotControl.isBusy())
-                spinnyBit.setTargetPosition(pivotControl.update());
+                spinyBit.setTargetPosition(pivotControl.update());
 
             if (pivotControl.isBusy() && Math.abs(activeConfig.inputMap.getPivotStick()) > activeConfig.getAutoAbortThreshold()) {
                 pivotControl.abort();
-                spinnyBit.setTargetPosition(spinnyBit.getPosition());
+                spinyBit.setTargetPosition(spinyBit.getPosition());
             }
 
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
-                spinnyBit.setNetTorque(gamepad2.right_trigger * 0.3);
-
-            } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
-                spinnyBit.setControlMode(defaultPivotControlMode);
-
-
-            lift.update(deltaTime, spinnyBit.getPosition());
-            spinnyBit.update(deltaTime, lift.getPosition());
+            lift.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update(deltaTime, lift.getPosition());
             activeDriveMode.updateDrive(deltaTime);
 
             intake.directControl();
