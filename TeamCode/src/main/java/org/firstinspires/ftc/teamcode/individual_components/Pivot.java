@@ -125,6 +125,10 @@ public class Pivot extends ControlAxis {
         positionPID.setPreviousActualPosition(getPosition());
     }
 
+    public void setNetTorque(double torque){
+        motors.setTorque(torque - calculateTorqueGravity(liftPosition), getVelocityTPS());
+    }
+
     void updateVelocityControl(double deltaTime) {
         setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
         double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * getVelocityFeedforwardCoefficient();

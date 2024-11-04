@@ -81,6 +81,7 @@ public class TestingOpMode extends LinearOpMode {
 
         lift.setControlMode(defaultLiftControlMode);
 
+
         Pivot spinyBit = new Pivot(this, activeConfig);
 
         final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
@@ -134,7 +135,7 @@ public class TestingOpMode extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                if (lift.getPosition() >25 && spinyBit.getPosition() < -5)
+                if (lift.getPosition() > 25 && spinyBit.getPosition() < -5)
                     pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
