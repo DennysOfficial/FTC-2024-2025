@@ -54,7 +54,7 @@ public class Pivot extends ControlAxis {
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.REVERSE);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
         motors.setTargetPosition(0);
