@@ -11,6 +11,9 @@ import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Animator {
 
     ElapsedTime runtime;
@@ -26,6 +29,15 @@ public class Animator {
     double startTime;
 
     boolean busy = false;
+
+    class animation{
+        double startTime;
+        double endTime;
+        double startPosition;
+        double endPosition;
+    }
+
+    List<animation> animationQueue = new ArrayList<>();
 
 
     public Animator(ElapsedTime runtime, OpMode opMode, RobotConfig config, Pivot spinyBit, Lift lift) {
@@ -83,7 +95,6 @@ public class Animator {
     public void abort() {
         busy = false;
     }
-
 
 }
 

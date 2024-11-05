@@ -67,4 +67,10 @@ public class Sensitivities {
 
     public float getSlowDownModifier(){return slowDownModifier;}
 
+    public static float maxGoDownAmount = 0.3f;
+
+    public float getMaxGoDownAmount(){
+        return maxGoDownAmount;
+    }
+
 }

@@ -79,6 +79,10 @@ public abstract class ControlAxis {
                 this.controlMode = controlMode;
         }
     }
+    public void setControlModeUnsafe(ControlMode controlMode) {
+        this.controlMode = controlMode;
+    }
+
     public ControlMode getControlMode(){
         return controlMode;
     }

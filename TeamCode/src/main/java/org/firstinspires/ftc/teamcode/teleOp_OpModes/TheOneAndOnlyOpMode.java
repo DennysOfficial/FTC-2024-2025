@@ -81,11 +81,11 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         lift.setControlMode(defaultLiftControlMode);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinnyBit = new Pivot(this, activeConfig);
 
         final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
 
-        spinyBit.setControlMode(defaultPivotControlMode);
+        spinnyBit.setControlMode(defaultPivotControlMode);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -93,7 +93,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        Animator pivotControl = new Animator(runtime, this, activeConfig, spinyBit, lift);
+        Animator pivotControl = new Animator(runtime, this, activeConfig, spinnyBit, lift);
 
 
         waitForStart();
@@ -102,7 +102,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         double deltaTime = 0;
 
-        double predictedPivotTargetPosition = spinyBit.getTargetPosition();
+        double predictedPivotTargetPosition = spinnyBit.getTargetPosition();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -113,7 +113,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (activeConfig.inputMap.getUnAbort()) {
                 lift.setControlMode(defaultLiftControlMode);
-                spinyBit.setControlMode(defaultPivotControlMode);
+                spinnyBit.setControlMode(defaultPivotControlMode);
             }
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -128,39 +128,46 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             if (gamepad2.x) {
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 15)
-                    pivotControl.smoothMove(spinyBit.getPosition(), -10, 1);
+                    pivotControl.smoothMove(spinnyBit.getPosition(), -10, 1);
 
             }
 
             if (gamepad2.y) {
                 if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinyBit.getPosition(), -18, 1);
+                    pivotControl.smoothMove(spinnyBit.getPosition(), -18, 1);
 
 
-                if (spinyBit.getPosition() < 40)
+                if (spinnyBit.getPosition() < 40)
                     lift.setTargetPosition(31);
 
             }
 
             if (gamepad2.a) {
-                if (lift.getPosition() > 25 && spinyBit.getPosition() < -5)
-                    pivotControl.smoothMove(spinyBit.getPosition(), 0, 0.5);
+                if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
+                    pivotControl.smoothMove(spinnyBit.getPosition(), 0, 0.5);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
-                    pivotControl.smoothMove(spinyBit.getPosition(), 71, 1);
+                    pivotControl.smoothMove(spinnyBit.getPosition(), 71, 1);
             }
 
             if (pivotControl.isBusy())
-                spinyBit.setTargetPosition(pivotControl.update());
+                spinnyBit.setTargetPosition(pivotControl.update());
 
             if (pivotControl.isBusy() && Math.abs(activeConfig.inputMap.getPivotStick()) > activeConfig.getAutoAbortThreshold()) {
                 pivotControl.abort();
-                spinyBit.setTargetPosition(spinyBit.getPosition());
+                spinnyBit.setTargetPosition(spinnyBit.getPosition());
             }
 
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-            lift.update(deltaTime, spinyBit.getPosition());
-            spinyBit.update(deltaTime, lift.getPosition());
+                spinnyBit.setControlMode(ControlAxis.ControlMode.testing);
+                spinnyBit.setNetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+
+            } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
+                spinnyBit.setControlModeUnsafe(defaultPivotControlMode);
+
+            lift.update(deltaTime, spinnyBit.getPosition());
+            spinnyBit.update(deltaTime, lift.getPosition());
             activeDriveMode.updateDrive(deltaTime);
 
             intake.directControl();
