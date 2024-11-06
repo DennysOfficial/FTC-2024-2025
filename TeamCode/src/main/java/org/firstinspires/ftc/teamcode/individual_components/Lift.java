@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 @Config
 public class Lift extends ControlAxis {
 
+
+
     double pivotPosition;
     public static double gCompMultiplier = 0.1;
 
