@@ -38,11 +38,11 @@ public class GCompCalibration extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
         Pivot spinyBit = new Pivot(this, activeConfig);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
         waitForStart();

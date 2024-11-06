@@ -38,11 +38,11 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
         Pivot spinyBit = new Pivot(this, activeConfig);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
         waitForStart();

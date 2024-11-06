@@ -9,13 +9,13 @@ import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 
 @Config
 public class Pivot extends ControlAxis {
-
 
     public double liftPosition;
 
@@ -71,8 +71,8 @@ public class Pivot extends ControlAxis {
     }
 
 
-    public Pivot(OpMode opMode, RobotConfig config) {
-        super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
+    public Pivot(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
+        super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
 
         upperLimit = 86.9;
         lowerLimit = -40;
@@ -81,7 +81,7 @@ public class Pivot extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        double dynamicLowerLimit = -1* Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
@@ -89,47 +89,52 @@ public class Pivot extends ControlAxis {
         super.setTargetPosition(targetPosition);
     }
 
-    public class RunPID implements Action{
+    @Override
+    void runUpdate() {
+        updateEssentials();
+
+        liftPosition = lift.getPosition();
+
+        if (config.debugConfig.pivotTorqueDebug()) {
+            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
+        }
+
+        switch (getControlMode()) {
+
+            case positionControl:
+                double positionFeedforward = -calculateTorqueGravity(liftPosition);
+                updatePositionPID(getTargetPosition(), positionFeedforward);
+                break;
+
+            case testing:
+        }
+
+        positionPID.setPreviousActualPosition(getPosition());
+    }
+
+
+    public class RunPID implements Action {
         Lift lift;
-        public RunPID(Lift lift){
+
+        public RunPID(Lift lift) {
             this.lift = lift;
         }
+
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            updateEssentials(deltaTime);
 
-            liftPosition = lift.getPosition();
-
-            if (config.debugConfig.pivotTorqueDebug()) {
-                opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
-            }
-
-            switch (controlMode) {
-
-                case positionControl:
-                    double positionFeedforward = -calculateTorqueGravity(liftPosition);
-                    updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
-                    break;
-
-                case testing:
-
-            }
-
-            positionPID.setPreviousActualPosition(getPosition());
-            return true;
         }
     }
 
 
-
-    public void setNetTorque(double torque){
+    public void setNetTorque(double torque) {
         motors.setTorque(torque - calculateTorqueGravity(liftPosition), getVelocityTPS());
     }
 
     void updateVelocityControl(double deltaTime) {
         setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
         double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * getVelocityFeedforwardCoefficient();
-        updatePositionPID(getTargetPosition(), deltaTime, velocityFeedforward);
+        updatePositionPID(getTargetPosition(), velocityFeedforward);
     }
 
     double calculateTorqueGravity(double liftExtension) {
@@ -139,10 +144,11 @@ public class Pivot extends ControlAxis {
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 
-    public class GoToPosition implements Action{
+    public class GoToPosition implements Action {
 
         double targetPosition;
-        public GoToPosition(double targetPosition){
+
+        public GoToPosition(double targetPosition) {
             this.targetPosition = targetPosition;
         }
 
@@ -154,7 +160,7 @@ public class Pivot extends ControlAxis {
         }
     }
 
-    public Action goToPosition(double targetPosition){
+    public Action goToPosition(double targetPosition) {
         return new GoToPosition(targetPosition);
     }
 }

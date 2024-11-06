@@ -39,10 +39,10 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
 
         Pivot spinyBit = new Pivot(this, activeConfig);
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
         Lift lift = new Lift(this, activeConfig);
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
         waitForStart();

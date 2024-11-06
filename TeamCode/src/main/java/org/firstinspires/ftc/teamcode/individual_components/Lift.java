@@ -63,12 +63,12 @@ public class Lift extends ControlAxis {
 
 
     public void update(double deltaTime, double pivotAngleDeg) {
-        updateEssentials(deltaTime);
+        updateEssentials();
 
         this.pivotPosition = pivotAngleDeg;
 
-        switch (controlMode) {
-            case directControl:
+        switch (getControlMode()) {
+            case positionControl:
                 targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
 
                 updateVelocityControl(deltaTime, pivotAngleDeg);
@@ -76,14 +76,14 @@ public class Lift extends ControlAxis {
 
             case positionControl:
                 double positionFeedforward = -calcGravityForce(pivotAngleDeg);
-                updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
+                updatePositionPID(getTargetPosition(), positionFeedforward);
                 break;
 
             case velocityControl:
                 updateVelocityControl(deltaTime, pivotAngleDeg);
                 break;
 
-            case directTorqueControl:
+            case torqueControl:
                 motors.setTorque(config.inputMap.getLiftStick() * config.sensitivities.getLiftSensitivity() - calcGravityForce(pivotAngleDeg), getVelocityTPS());
                 break;
 
@@ -96,7 +96,7 @@ public class Lift extends ControlAxis {
     void updateVelocityControl(double deltaTime, double pivotAngleDeg) {
         setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
         double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-        updatePositionPID(getTargetPosition(), deltaTime, directFeedforward);
+        updatePositionPID(getTargetPosition(), directFeedforward);
     }
 
     public double calcGravityForce(double pivotAngleDeg) {

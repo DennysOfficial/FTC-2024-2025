@@ -74,16 +74,16 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-
+        
         Lift lift = new Lift(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
         Pivot spinnyBit = new Pivot(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
 
         spinnyBit.setControlMode(defaultPivotControlMode);
 

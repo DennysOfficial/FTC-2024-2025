@@ -43,7 +43,7 @@ public class PivotVelocityPIDTest extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
         waitForStart();

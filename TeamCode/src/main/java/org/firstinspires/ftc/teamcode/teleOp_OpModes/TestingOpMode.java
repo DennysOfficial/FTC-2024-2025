@@ -38,7 +38,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.PIDSteerTest;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
@@ -77,14 +76,14 @@ public class TestingOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
 
         Pivot spinyBit = new Pivot(this, activeConfig);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.directControl;
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
 
         spinyBit.setControlMode(defaultPivotControlMode);
 

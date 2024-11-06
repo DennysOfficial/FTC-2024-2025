@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.annotation.NonNull;
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
@@ -12,10 +16,12 @@ import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
 
 public abstract class ControlAxis {
 
-
+    ElapsedTime runtime;
+    double deltaTime = 0;
     public static double staticThresholdUnitsPerSec = 0;
     public static double staticFrictionComp = 0;
-    public static double kinematicFrictionComp = 0;
+    public static double kineticFrictionComp = 0;
+
 
     public final String axisName;
     public final String unitName;
@@ -31,18 +37,16 @@ public abstract class ControlAxis {
 
     protected abstract void initMotors();
 
-
     public enum ControlMode {
-
         disabled,
-        directControl,
-        directTorqueControl,
+        torqueControl,
         positionControl,
         velocityControl,
+        gamepadVelocityControl,
         testing
     }
 
-    ControlMode controlMode = ControlMode.disabled;
+    private ControlMode controlMode = ControlMode.disabled;
 
     public void setControlMode(ControlMode controlMode) {
         if (this.controlMode == controlMode)
@@ -67,35 +71,65 @@ public abstract class ControlAxis {
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
-
-            case directControl:
+            case gamepadVelocityControl:
                 setTargetPosition(getPosition());
-                this.controlMode = ControlMode.directControl;
+                this.controlMode = ControlMode.gamepadVelocityControl;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-                break;
-
             default:
                 this.controlMode = controlMode;
         }
     }
+
     public void setControlModeUnsafe(ControlMode controlMode) {
         this.controlMode = controlMode;
     }
 
-    public ControlMode getControlMode(){
+    public ControlMode getControlMode() {
         return controlMode;
     }
 
+
     protected PositionDerivatives positionDerivatives;
+
 
     protected CustomPID positionPID;
 
     void initPid() {
         positionPID = new CustomPID(opMode, config, axisName + " positionPID");
+        updatePIDCoefficients();
     }
 
-    protected abstract void updatePositionPIDCoefficients();
+    abstract double getKp();
+
+    abstract double getKi();
+
+    abstract double getKd();
+
+    abstract double getStaticFeedforward(double targetDirection);
+
+    double staticFrictionForce(double targetDirection, double velocity) {
+        if (Math.abs(velocity) > staticThresholdUnitsPerSec)
+            return 0;
+
+        return staticFrictionComp * Math.copySign(1, -targetDirection);
+    }
+
+
+    abstract double getVelocityFeedforward();
+
+    double kineticFrictionForce(double targetDirection, double velocity) {
+        if (Math.abs(velocity) <= staticThresholdUnitsPerSec)
+            return 0;
+        return kineticFrictionComp * Math.copySign(1, velocity);
+    }
+
+
+    abstract double getAccelerationFeedforward();
+
+    void updatePIDCoefficients() {
+        positionPID.setCoefficients(getKp(), getKi(), getKd());
+    }
 
 
     protected double targetPosition = 0;
@@ -136,13 +170,24 @@ public abstract class ControlAxis {
         this.targetVelocity = targetVelocity;
     }
 
-    public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount) {
+    double targetTorque;
+
+    public double getTargetTorque() {
+        return targetTorque;
+    }
+
+    void setTargetTorque(double targetTorque) {
+        this.targetTorque = targetTorque;
+    }
+
+    public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ElapsedTime runtime) {
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
 
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
+        this.runtime = runtime;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
@@ -154,16 +199,25 @@ public abstract class ControlAxis {
         updatePositionPIDCoefficients();
     }
 
-    /**
-     * updated position derivatives and checks for an abort
-     *
-     * @param deltaTime chang in time since last update
-     */
-    protected void updateEssentials(double deltaTime) {
+    double previousTime = Double.NaN;
+
+    void updateDeltaTime() {
+        if (Double.isNaN(previousTime)) {
+            previousTime = runtime.seconds();
+            deltaTime = 0;
+            return;
+        }
+
+        deltaTime = -1 * previousTime + (previousTime = runtime.seconds());
+    }
+
+
+    protected void updateEssentials() {
         //opMode.telemetry.addData()
+        updateDeltaTime();
         positionDerivatives.update(getPosition(), deltaTime);
 
-        adjustOffsetForPhysicalLimits();
+        //adjustOffsetForPhysicalLimits();
 
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
@@ -181,17 +235,23 @@ public abstract class ControlAxis {
 
     }
 
+    abstract void runUpdate();
 
-    protected void updatePositionPID(double targetPosition, double deltaTime, double feedforward) {
-        updatePositionPIDCoefficients();
+    abstract public Action update();
+
+    protected void updatePositionPID(double targetPosition, double feedforward) {
+        updatePIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
-        feedforward += frictionCompensation(targetTorque, positionDerivatives.getVelocity());
         targetTorque += feedforward;
 
         motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
+    void updateVelocityControl() {
+        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
+        updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+    }
     /**
      * returns the current position of the axis in the designated units
      */
@@ -199,15 +259,49 @@ public abstract class ControlAxis {
         return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
     }
 
-    double frictionCompensation(double targetDirection, double velocity) {
-        if (Math.abs(velocity) < staticThresholdUnitsPerSec)
-            return staticFrictionComp * Math.copySign(1, -targetDirection);
-
-        return kinematicFrictionComp * Math.copySign(1, velocity);
-    }
 
     public double getVelocityTPS() {
         return positionDerivatives.getVelocity() / unitsPerEncoderCount;
+    }
+
+
+    public class SetPosition implements Action {
+        double targetPosition;
+
+        public SetPosition(double targetPosition) {
+            this.targetPosition = targetPosition;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetPosition(targetPosition);
+            setControlMode(ControlMode.positionControl);
+            return false;
+        }
+    }
+
+    public Action setPosition(double targetPosition) {
+        return new SetPosition(targetPosition);
+    }
+
+
+    public class SetTorque implements Action {
+        double targetTorque;
+
+        public SetTorque(double targetTorque) {
+            this.targetTorque = targetTorque;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetTorque(targetTorque);
+            setControlMode(ControlMode.torqueControl);
+            return false;
+        }
+    }
+
+    public Action setTorque(double targetTorque) {
+        return new SetTorque(targetTorque);
     }
 
 
