@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.messages;
+package org.firstinspires.ftc.teamcode.NewAutonomous.messages;
 
 import com.acmerobotics.roadrunner.PoseVelocity2dDual;
 import com.acmerobotics.roadrunner.Time;
