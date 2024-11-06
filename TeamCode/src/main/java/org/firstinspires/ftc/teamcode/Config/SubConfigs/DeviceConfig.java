@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class DeviceConfig {
     public final String frontRightDrive = "FR";
-    public final DcMotorSimple.Direction frontRightDriveDir = DcMotorSimple.Direction.REVERSE;
+    public final DcMotorSimple.Direction frontRightDriveDir = DcMotorSimple.Direction.FORWARD;
 
 
     public final String frontLeftDrive = "FL";
@@ -12,11 +12,11 @@ public class DeviceConfig {
 
 
     public final String backRightDrive = "BR";
-    public final DcMotorSimple.Direction backRightDriveDir = DcMotorSimple.Direction.REVERSE;
+    public final DcMotorSimple.Direction backRightDriveDir = DcMotorSimple.Direction.FORWARD;
 
 
     public final String backLeftDrive = "BL";
-    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.FORWARD;
+    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.REVERSE;
 
 
     public final String leftPivot = "PivotL";
