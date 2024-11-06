@@ -3,6 +3,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
@@ -174,11 +175,15 @@ public class ExampleOpMode extends LinearOpMode {
             trajectoryActionChosen = tab3.build();
         }
 
+        ParallelAction thing = new ParallelAction(
+                lift.liftUp(),
+                claw.openClaw()
+        );
+
         Actions.runBlocking(
                 new SequentialAction(
                         trajectoryActionChosen,
-                        lift.liftUp(),
-                        claw.openClaw(),
+                        thing,
                         lift.liftDown(),
                         trajectoryActionCloseOut
                 )
