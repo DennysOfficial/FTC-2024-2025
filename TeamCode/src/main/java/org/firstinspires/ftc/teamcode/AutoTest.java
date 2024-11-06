@@ -88,7 +88,7 @@ public class AutoTest extends LinearOpMode {
                 .build();
 
         // actions that need to happen on init; for instance, a claw tightening.
-        Actions.runBlocking(claw.closeClaw());
+        //Actions.runBlocking(claw.closeClaw());
 
 
 
@@ -99,14 +99,12 @@ public class AutoTest extends LinearOpMode {
 
 
         SequentialAction thingy = new SequentialAction(
-                trajectoryActionChosen,
+                tab1.build(),
                 trajectoryActionCloseOut
         );
 
         ParallelAction mainLoop = new ParallelAction(
-                thingy,
-                lift.liftUp(),
-                claw.openClaw()
+                thingy
         );
 
         Actions.runBlocking(
