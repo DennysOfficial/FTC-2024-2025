@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import androidx.annotation.NonNull;
 import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -86,43 +89,38 @@ public class Pivot extends ControlAxis {
         super.setTargetPosition(targetPosition);
     }
 
-
-    public void update(double deltaTime, double liftPosition) {
-        updateEssentials(deltaTime);
-
-        this.liftPosition = liftPosition;
-
-
-
-        if (config.debugConfig.pivotTorqueDebug()) {
-            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
+    public class RunPID implements Action{
+        Lift lift;
+        public RunPID(Lift lift){
+            this.lift = lift;
         }
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            updateEssentials(deltaTime);
 
-        switch (controlMode) {
-            case directControl:
-                targetVelocity = config.inputMap.getPivotStick() * config.sensitivities.getPivotRate();
-                updateVelocityControl(deltaTime);
-                break;
+            liftPosition = lift.getPosition();
 
-            case positionControl:
-                double positionFeedforward = -calculateTorqueGravity(liftPosition);
-                updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
-                break;
+            if (config.debugConfig.pivotTorqueDebug()) {
+                opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
+            }
 
-            case velocityControl:
-                updateVelocityControl(deltaTime);
-                break;
+            switch (controlMode) {
 
-            case directTorqueControl:
-                motors.setTorque(config.inputMap.getPivotStick() * config.sensitivities.getPivotSensitivity() - calculateTorqueGravity(liftPosition), getVelocityTPS());
-                break;
+                case positionControl:
+                    double positionFeedforward = -calculateTorqueGravity(liftPosition);
+                    updatePositionPID(getTargetPosition(), deltaTime, positionFeedforward);
+                    break;
 
-            case testing:
+                case testing:
 
+            }
+
+            positionPID.setPreviousActualPosition(getPosition());
+            return true;
         }
-
-        positionPID.setPreviousActualPosition(getPosition());
     }
+
+
 
     public void setNetTorque(double torque){
         motors.setTorque(torque - calculateTorqueGravity(liftPosition), getVelocityTPS());
@@ -139,5 +137,24 @@ public class Pivot extends ControlAxis {
         opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+    }
+
+    public class GoToPosition implements Action{
+
+        double targetPosition;
+        public GoToPosition(double targetPosition){
+            this.targetPosition = targetPosition;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setControlMode(ControlMode.positionControl);
+            setTargetPosition(targetPosition);
+            return false;
+        }
+    }
+
+    public Action goToPosition(double targetPosition){
+        return new GoToPosition(targetPosition);
     }
 }
