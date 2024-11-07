@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 
 @Config
-public class Pivot extends ControlAxis {
+public class Pivot extends ControlAxis { //schrödinger's code
 
     Lift lift;
 
