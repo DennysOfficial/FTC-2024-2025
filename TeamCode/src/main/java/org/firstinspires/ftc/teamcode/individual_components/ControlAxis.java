@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import android.util.Range;
+
 import androidx.annotation.NonNull;
-import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -18,10 +19,8 @@ public abstract class ControlAxis {
 
     ElapsedTime runtime;
     double deltaTime = 0;
-    public static double staticThresholdUnitsPerSec = 0;
-    public static double staticFrictionComp = 0;
-    public static double kineticFrictionComp = 0;
 
+    protected PositionDerivatives positionDerivatives;
 
     public final String axisName;
     public final String unitName;
@@ -32,21 +31,31 @@ public abstract class ControlAxis {
     protected OpMode opMode;
     protected RobotConfig config;
 
+    // input stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    abstract float getInput();
+
+    float velocityControlMaxRate; //units per second
+    float torqueControlSensitivity;
+
+    // motor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
     protected MultiTorqueMotor motors;
 
     protected abstract void initMotors();
+
+
+    // control mode stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    private ControlMode controlMode = ControlMode.disabled;
 
     public enum ControlMode {
         disabled,
         torqueControl,
         positionControl,
         velocityControl,
-        gamepadVelocityControl,
+        gamePadVelocityControl,
+        gamePadTorqueControl,
         testing
     }
-
-    private ControlMode controlMode = ControlMode.disabled;
 
     public void setControlMode(ControlMode controlMode) {
         if (this.controlMode == controlMode)
@@ -71,11 +80,13 @@ public abstract class ControlAxis {
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
-            case gamepadVelocityControl:
+
+            case gamePadVelocityControl:
                 setTargetPosition(getPosition());
-                this.controlMode = ControlMode.gamepadVelocityControl;
+                this.controlMode = ControlMode.gamePadVelocityControl;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
             default:
                 this.controlMode = controlMode;
         }
@@ -89,10 +100,7 @@ public abstract class ControlAxis {
         return controlMode;
     }
 
-
-    protected PositionDerivatives positionDerivatives;
-
-
+    // PID stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     protected CustomPID positionPID;
 
     void initPid() {
@@ -105,6 +113,11 @@ public abstract class ControlAxis {
     abstract double getKi();
 
     abstract double getKd();
+
+    // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    public static double staticThresholdUnitsPerSec = 0;
+    public static double staticFrictionComp = 0;
+    public static double kineticFrictionComp = 0;
 
     abstract double getStaticFeedforward(double targetDirection);
 
@@ -131,7 +144,7 @@ public abstract class ControlAxis {
         positionPID.setCoefficients(getKp(), getKi(), getKd());
     }
 
-
+    // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     protected double targetPosition = 0;
 
     public double getTargetPosition() {
@@ -139,28 +152,57 @@ public abstract class ControlAxis {
     }
 
     public void setTargetPosition(double targetPosition) {
-        this.targetPosition = MathUtils.clamp(targetPosition, lowerLimit, upperLimit);
+        this.targetPosition = softLimits.clamp(targetPosition);
     }
 
-    protected double upperLimit = Double.POSITIVE_INFINITY;
-    protected double lowerLimit = Double.NEGATIVE_INFINITY;
-    protected double physicalUpperLimit = Double.POSITIVE_INFINITY;
-    protected double physicalLowerLimit = Double.NEGATIVE_INFINITY;
+    Range<Double> softLimits = new Range<Double>(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    Range<Double> physicalLimits = new Range<Double>(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+
     protected double positionOffset = 0;
 
+    /**
+     * returns the current position of the axis in the designated units
+     */
+    public double getPosition() {
+        return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
+    }
 
     /**
-     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts
+     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe
      */
     void adjustOffsetForPhysicalLimits() {
-        if (getPosition() > physicalUpperLimit) {
-            positionOffset -= getPosition() - physicalUpperLimit;
-        } else if (getPosition() < physicalLowerLimit) {
-            positionOffset -= getPosition() - physicalLowerLimit;
+        if (getPosition() > physicalLimits.getUpper()) {
+            positionOffset -= getPosition() - physicalLimits.getUpper();
+        } else if (getPosition() < physicalLimits.getLower()) {
+            positionOffset -= getPosition() - physicalLimits.getLower();
         }
     }
 
+    public class SetPosition implements Action {
+        double targetPosition;
+
+        public SetPosition(double targetPosition) {
+            this.targetPosition = targetPosition;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetPosition(targetPosition);
+            setControlMode(ControlMode.positionControl);
+            return false;
+        }
+    }
+
+    public Action setPosition(double targetPosition) {
+        return new SetPosition(targetPosition);
+    }
+
+    // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     double targetVelocity;
+
+    public double getVelocityTPS() {
+        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
+    }
 
     public double getTargetVelocity() {
         return targetVelocity;
@@ -170,6 +212,31 @@ public abstract class ControlAxis {
         this.targetVelocity = targetVelocity;
     }
 
+    void updateVelocityControl() {
+        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
+        updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+    }
+
+    public class SetVelocity implements Action {
+        double targetVelocity;
+
+        public SetVelocity(double targetVelocity) {
+            this.targetVelocity = targetVelocity;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetVelocity(targetVelocity);
+            setControlMode(ControlMode.velocityControl);
+            return false;
+        }
+    }
+
+    public Action setVelocity(double targetVelocity) {
+        return new SetVelocity(targetVelocity);
+    }
+
+    // Torque stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     double targetTorque;
 
     public double getTargetTorque() {
@@ -179,6 +246,40 @@ public abstract class ControlAxis {
     void setTargetTorque(double targetTorque) {
         this.targetTorque = targetTorque;
     }
+
+    public class SetTorque implements Action {
+        double targetTorque;
+
+        public SetTorque(double targetTorque) {
+            this.targetTorque = targetTorque;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetTorque(targetTorque);
+            setControlMode(ControlMode.torqueControl);
+            return false;
+        }
+    }
+
+    public Action setTorque(double targetTorque) {
+        return new SetTorque(targetTorque);
+    }
+
+    // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    double previousTime = Double.NaN;
+
+    void updateDeltaTime() {
+        if (Double.isNaN(previousTime)) {
+            previousTime = runtime.seconds();
+            deltaTime = 0;
+            return;
+        }
+
+        deltaTime = -1 * previousTime + (previousTime = runtime.seconds());
+    }
+
+    // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
     public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ElapsedTime runtime) {
         this.opMode = opMode;
@@ -195,23 +296,9 @@ public abstract class ControlAxis {
         initMotors();
 
         positionDerivatives = new PositionDerivatives(getPosition());
-
-        updatePositionPIDCoefficients();
     }
 
-    double previousTime = Double.NaN;
-
-    void updateDeltaTime() {
-        if (Double.isNaN(previousTime)) {
-            previousTime = runtime.seconds();
-            deltaTime = 0;
-            return;
-        }
-
-        deltaTime = -1 * previousTime + (previousTime = runtime.seconds());
-    }
-
-
+    // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     protected void updateEssentials() {
         //opMode.telemetry.addData()
         updateDeltaTime();
@@ -235,73 +322,52 @@ public abstract class ControlAxis {
 
     }
 
-    abstract void runUpdate();
+    public void runUpdate() {
+        updateEssentials();
+
+        switch (getControlMode()) {
+            case gamePadVelocityControl:
+                targetVelocity = getInput() * velocityControlMaxRate;
+                updateVelocityControl();
+                break;
+
+            case positionControl:
+                updatePositionPID(getTargetPosition(), 0);
+                break;
+
+            case velocityControl:
+                updateVelocityControl();
+                break;
+
+            case torqueControl:
+                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
+                break;
+            case gamePadTorqueControl:
+                targetTorque = getInput() * torqueControlSensitivity;
+                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
+                break;
+
+            case testing:
+
+        }
+    }
 
     abstract public Action update();
 
+    /**
+     * ALREADY HAS STATIC FEEDFORWARD
+     *
+     * @param targetPosition take a guess
+     * @param feedforward    ALREADY HAS STATIC FEEDFORWARD
+     */
     protected void updatePositionPID(double targetPosition, double feedforward) {
         updatePIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
+        targetTorque += getStaticFeedforward(targetTorque);
         targetTorque += feedforward;
 
         motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
-    }
-
-    void updateVelocityControl() {
-        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-        updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
-    }
-    /**
-     * returns the current position of the axis in the designated units
-     */
-    public double getPosition() {
-        return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
-    }
-
-
-    public double getVelocityTPS() {
-        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
-    }
-
-
-    public class SetPosition implements Action {
-        double targetPosition;
-
-        public SetPosition(double targetPosition) {
-            this.targetPosition = targetPosition;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetPosition(targetPosition);
-            setControlMode(ControlMode.positionControl);
-            return false;
-        }
-    }
-
-    public Action setPosition(double targetPosition) {
-        return new SetPosition(targetPosition);
-    }
-
-
-    public class SetTorque implements Action {
-        double targetTorque;
-
-        public SetTorque(double targetTorque) {
-            this.targetTorque = targetTorque;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetTorque(targetTorque);
-            setControlMode(ControlMode.torqueControl);
-            return false;
-        }
-    }
-
-    public Action setTorque(double targetTorque) {
-        return new SetTorque(targetTorque);
     }
 
 

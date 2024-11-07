@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import android.util.Range;
+
 import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -11,7 +13,6 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 @Config
 public class Lift extends ControlAxis {
-
 
 
     double pivotPosition;
@@ -44,11 +45,9 @@ public class Lift extends ControlAxis {
     public Lift(OpMode opMode, RobotConfig config) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
-        upperLimit = 31;
-        lowerLimit = 0.5;
+        softLimits = new Range<>(0.5, 31.0);
 
-        //physicalUpperLimit = 33.75;
-        physicalLowerLimit = 0;
+        physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }
 
     @Override
