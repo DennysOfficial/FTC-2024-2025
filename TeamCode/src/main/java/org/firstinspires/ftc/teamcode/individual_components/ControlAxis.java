@@ -114,6 +114,25 @@ public abstract class ControlAxis {
 
     abstract double getKd();
 
+    void updatePIDCoefficients() {
+        positionPID.setCoefficients(getKp(), getKi(), getKd());
+    }
+
+    /**
+     * ALREADY HAS STATIC FEEDFORWARD
+     *
+     * @param feedforward ALREADY HAS STATIC FEEDFORWARD
+     */
+    protected void updatePositionPID(double targetPosition, double feedforward) {
+        updatePIDCoefficients();
+
+        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
+        targetTorque += feedforward;
+        targetTorque += getStaticFeedforward(targetTorque);
+
+        motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
+    }
+
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     public static double staticThresholdUnitsPerSec = 0;
     public static double staticFrictionComp = 0;
@@ -139,10 +158,6 @@ public abstract class ControlAxis {
 
 
     abstract double getAccelerationFeedforward();
-
-    void updatePIDCoefficients() {
-        positionPID.setCoefficients(getKp(), getKi(), getKd());
-    }
 
     // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     protected double targetPosition = 0;
@@ -353,22 +368,6 @@ public abstract class ControlAxis {
     }
 
     abstract public Action update();
-
-    /**
-     * ALREADY HAS STATIC FEEDFORWARD
-     *
-     * @param targetPosition take a guess
-     * @param feedforward    ALREADY HAS STATIC FEEDFORWARD
-     */
-    protected void updatePositionPID(double targetPosition, double feedforward) {
-        updatePIDCoefficients();
-
-        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
-        targetTorque += getStaticFeedforward(targetTorque);
-        targetTorque += feedforward;
-
-        motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
-    }
 
 
 }
