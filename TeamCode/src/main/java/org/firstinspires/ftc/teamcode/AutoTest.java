@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.MecanumDrive;
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
@@ -45,19 +46,23 @@ public class AutoTest extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(this, activeConfig);
+        ElapsedTime runtime = new ElapsedTime();
 
+
+        Lift lift = new Lift(this, activeConfig, runtime);
 
         lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
 
-        Pivot spinnyBit = new Pivot(this, activeConfig);
+        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
 
         spinnyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
 
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
         MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
+        //TrajectoryActionBuilder driveIntoDaBar = drive.actionBuilder(initialPose).
 
         TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
                 .lineToYSplineHeading(33, Math.toRadians(0))
@@ -89,7 +94,6 @@ public class AutoTest extends LinearOpMode {
 
         // actions that need to happen on init; for instance, a claw tightening.
         //Actions.runBlocking(claw.closeClaw());
-
 
 
         telemetry.update();
