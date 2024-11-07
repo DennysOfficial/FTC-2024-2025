@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
@@ -36,14 +37,10 @@ public class Lift extends ControlAxis {
         motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
 
-    @Override
-    protected void updatePositionPIDCoefficients() {
-        positionPID.setCoefficients(Kp, Ki, Kd);
-    }
 
 
-    public Lift(OpMode opMode, RobotConfig config) {
-        super(opMode, config, "Lift", "inches", 27.0 / 4300.0);
+    public Lift(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
+        super(opMode, config, "Lift", "inches", 27.0 / 4300.0, runtime);
 
         softLimits = new Range<>(0.5, 31.0);
 
@@ -63,44 +60,7 @@ public class Lift extends ControlAxis {
     }
 
 
-    public void update(double deltaTime, double pivotAngleDeg) {
-        updateEssentials();
-
-        this.pivotPosition = pivotAngleDeg;
-
-        switch (getControlMode()) {
-            case positionControl:
-                targetVelocity = config.inputMap.getLiftStick() * config.sensitivities.getLiftRate();
-
-                updateVelocityControl(deltaTime, pivotAngleDeg);
-                break;
-
-            case positionControl:
-                double positionFeedforward = -calcGravityForce(pivotAngleDeg);
-                updatePositionPID(getTargetPosition(), positionFeedforward);
-                break;
-
-            case velocityControl:
-                updateVelocityControl(deltaTime, pivotAngleDeg);
-                break;
-
-            case torqueControl:
-                motors.setTorque(config.inputMap.getLiftStick() * config.sensitivities.getLiftSensitivity() - calcGravityForce(pivotAngleDeg), getVelocityTPS());
-                break;
-
-            case testing:
-
-        }
-    }
-
-
-    void updateVelocityControl(double deltaTime, double pivotAngleDeg) {
-        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-        double directFeedforward = -calcGravityForce(pivotAngleDeg) + targetVelocity * velocityFeedforwardCoefficient;
-        updatePositionPID(getTargetPosition(), directFeedforward);
-    }
-
-    public double calcGravityForce(double pivotAngleDeg) {
+    public double staticFeed(double pivotAngleDeg) {
         return -Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;
     }
 }

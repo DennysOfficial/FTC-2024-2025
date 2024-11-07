@@ -314,12 +314,24 @@ public abstract class ControlAxis {
     }
 
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    protected void updateEssentials() {
+
+    abstract void miscUpdate();
+
+    protected void debugUpdate() {
         //opMode.telemetry.addData()
-        updateDeltaTime();
-        positionDerivatives.update(getPosition(), deltaTime);
 
         //adjustOffsetForPhysicalLimits();
+
+        if (config.debugConfig.getControlModeDebug())
+            opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
+
+        if (config.debugConfig.getAllPositionDebug())
+            opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
+    }
+
+    public void runUpdate() {
+        updateDeltaTime();
+        positionDerivatives.update(getPosition(), deltaTime);
 
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
@@ -328,17 +340,6 @@ public abstract class ControlAxis {
             motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motors.setPower(0);
         }
-
-        if (config.debugConfig.getControlModeDebug())
-            opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
-
-        if (config.debugConfig.getAllPositionDebug())
-            opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
-
-    }
-
-    public void runUpdate() {
-        updateEssentials();
 
         switch (getControlMode()) {
             case gamePadVelocityControl:
@@ -363,11 +364,22 @@ public abstract class ControlAxis {
                 break;
 
             case testing:
+        }
+        miscUpdate();
+        debugUpdate();
+    }
 
+    public class Update implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            runUpdate();
+            return true;
         }
     }
 
-    abstract public Action update();
+    public Action update() {
+        return new Update();
+    }
 
 
 }
