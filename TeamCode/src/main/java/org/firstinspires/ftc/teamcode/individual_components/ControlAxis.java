@@ -79,7 +79,13 @@ public abstract class ControlAxis {
                 this.controlMode = controlMode;
         }
     }
+    public void setControlModeUnsafe(ControlMode controlMode) {
+        this.controlMode = controlMode;
+    }
 
+    public ControlMode getControlMode(){
+        return controlMode;
+    }
 
     protected PositionDerivatives positionDerivatives;
 
@@ -129,7 +135,6 @@ public abstract class ControlAxis {
     public void setTargetVelocity(double targetVelocity) {
         this.targetVelocity = targetVelocity;
     }
-
 
     public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount) {
         this.opMode = opMode;

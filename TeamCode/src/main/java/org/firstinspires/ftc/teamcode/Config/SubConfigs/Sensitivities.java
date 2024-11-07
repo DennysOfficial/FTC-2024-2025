@@ -62,4 +62,15 @@ public class Sensitivities {
     public float getPivotSensitivity() {
         return pivotSensitivity;
     }
+
+    public static float slowDownModifier = 0.4f;
+
+    public float getSlowDownModifier(){return slowDownModifier;}
+
+    public static float maxGoDownAmount = 0.3f;
+
+    public float getMaxGoDownAmount(){
+        return maxGoDownAmount;
+    }
+
 }

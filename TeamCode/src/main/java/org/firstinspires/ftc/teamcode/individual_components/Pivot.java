@@ -55,7 +55,7 @@ public class Pivot extends ControlAxis {
     @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
+        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
 
         motors.setTargetPosition(0);
         //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -94,7 +94,6 @@ public class Pivot extends ControlAxis {
 
 
 
-
         if (config.debugConfig.pivotTorqueDebug()) {
             opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
         }
@@ -123,6 +122,10 @@ public class Pivot extends ControlAxis {
         }
 
         positionPID.setPreviousActualPosition(getPosition());
+    }
+
+    public void setNetTorque(double torque){
+        motors.setTorque(torque - calculateTorqueGravity(liftPosition), getVelocityTPS());
     }
 
     void updateVelocityControl(double deltaTime) {
