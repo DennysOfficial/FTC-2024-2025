@@ -34,8 +34,8 @@ public abstract class ControlAxis {
     // input stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     abstract float getInput();
 
-    float velocityControlMaxRate; //units per second
-    float torqueControlSensitivity;
+    abstract float getVelocityControlMaxRate(); //units per second
+    abstract float getTorqueControlSensitivity();
 
     // motor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
@@ -140,8 +140,8 @@ public abstract class ControlAxis {
 
     abstract double getStaticFeedforward(double targetDirection);
 
-    double staticFrictionForce(double targetDirection, double velocity) {
-        if (Math.abs(velocity) > staticThresholdUnitsPerSec)
+    public double staticFrictionForce(double targetDirection) {
+        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
             return 0;
 
         return staticFrictionComp * Math.copySign(1, -targetDirection);
@@ -150,10 +150,10 @@ public abstract class ControlAxis {
 
     abstract double getVelocityFeedforward();
 
-    double kineticFrictionForce(double targetDirection, double velocity) {
-        if (Math.abs(velocity) <= staticThresholdUnitsPerSec)
+    public double kineticFrictionForce(double targetDirection) {
+        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
             return 0;
-        return kineticFrictionComp * Math.copySign(1, velocity);
+        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
     }
 
 
@@ -343,7 +343,7 @@ public abstract class ControlAxis {
 
         switch (getControlMode()) {
             case gamePadVelocityControl:
-                targetVelocity = getInput() * velocityControlMaxRate;
+                targetVelocity = getInput() * getVelocityControlMaxRate();
                 updateVelocityControl();
                 break;
 
@@ -359,7 +359,7 @@ public abstract class ControlAxis {
                 motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
                 break;
             case gamePadTorqueControl:
-                targetTorque = getInput() * torqueControlSensitivity;
+                targetTorque = getInput() * getTorqueControlSensitivity();
                 motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
                 break;
 

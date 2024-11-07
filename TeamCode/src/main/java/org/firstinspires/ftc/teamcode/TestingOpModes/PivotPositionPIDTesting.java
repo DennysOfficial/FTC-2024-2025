@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 
 
-
 @TeleOp(name = "Pivot Pid Test: OpMode", group = "Linear OpMode")
 @Config
 @Disabled
@@ -38,10 +37,10 @@ public class PivotPositionPIDTesting extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
         spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
         lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
@@ -59,9 +58,8 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            spinyBit.update(deltaTime, lift.getPosition());
-
-            lift.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update();
+            lift.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

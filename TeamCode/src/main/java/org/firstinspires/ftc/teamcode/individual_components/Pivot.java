@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.individual_components;
 
+import android.util.Range;
+
 import androidx.annotation.NonNull;
 import androidx.core.math.MathUtils;
 
@@ -17,7 +19,11 @@ import org.firstinspires.ftc.teamcode.MathStuff;
 @Config
 public class Pivot extends ControlAxis {
 
-    public double liftPosition;
+    Lift lift;
+
+    public void assignLift(Lift lift) {
+        this.lift = lift;
+    }
 
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
@@ -29,19 +35,34 @@ public class Pivot extends ControlAxis {
     public static double retractedGComp = 0.12;
 
     double getKp() {
-        return MathStuff.lerp(KpRetracted, KpExtended, liftPosition / extendedLiftPosition);
+        return MathStuff.lerp(KpRetracted, KpExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKi() {
-        return MathStuff.lerp(KiRetracted, KiExtended, liftPosition / extendedLiftPosition);
+        return MathStuff.lerp(KiRetracted, KiExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKd() {
-        return MathStuff.lerp(KdRetracted, KdExtended, liftPosition / extendedLiftPosition);
+        return MathStuff.lerp(KdRetracted, KdExtended, lift.getPosition() / extendedLiftPosition);
+    }
+
+    @Override
+    double getStaticFeedforward(double targetDirection) {
+        return calculateTorqueGravity(lift.getPosition());
+    }
+
+    @Override
+    double getVelocityFeedforward() {
+        return targetVelocity * getVelocityFeedforwardCoefficient();
+    }
+
+    @Override
+    double getAccelerationFeedforward() {
+        return 0;
     }
 
     double getVelocityFeedforwardCoefficient() {
-        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, liftPosition / extendedLiftPosition);
+        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
@@ -56,6 +77,21 @@ public class Pivot extends ControlAxis {
 
 
     @Override
+    float getInput() {
+        return (float) config.inputMap.getPivotStick();
+    }
+
+    @Override
+    float getVelocityControlMaxRate() {
+        return config.sensitivities.getPivotRate();
+    }
+
+    @Override
+    float getTorqueControlSensitivity() {
+        return config.sensitivities.getPivotSensitivity();
+    }
+
+    @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
@@ -65,77 +101,28 @@ public class Pivot extends ControlAxis {
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    @Override
-    protected void updatePositionPIDCoefficients() {
-        positionPID.setCoefficients(getKp(), getKi(), getKd());
-    }
-
 
     public Pivot(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
         super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
 
-        upperLimit = 86.9;
-        lowerLimit = -40;
-
+        softLimits = new Range<>(-40.0, 86.9);
     }
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + liftPosition));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
-        opMode.telemetry.addData("pivotDynamicLimit", dynamicLowerLimit);
+        //opMode.telemetry.addData("pivotDynamicLimit", dynamicLowerLimit);
         super.setTargetPosition(targetPosition);
     }
 
     @Override
-    void runUpdate() {
-        updateEssentials();
+    void miscUpdate() {
 
-        liftPosition = lift.getPosition();
-
-        if (config.debugConfig.pivotTorqueDebug()) {
-            opMode.telemetry.addData("Pivot gravity", calculateTorqueGravity(liftPosition));
-        }
-
-        switch (getControlMode()) {
-
-            case positionControl:
-                double positionFeedforward = -calculateTorqueGravity(liftPosition);
-                updatePositionPID(getTargetPosition(), positionFeedforward);
-                break;
-
-            case testing:
-        }
-
-        positionPID.setPreviousActualPosition(getPosition());
     }
 
-
-    public class RunPID implements Action {
-        Lift lift;
-
-        public RunPID(Lift lift) {
-            this.lift = lift;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-
-        }
-    }
-
-
-    public void setNetTorque(double torque) {
-        motors.setTorque(torque - calculateTorqueGravity(liftPosition), getVelocityTPS());
-    }
-
-    void updateVelocityControl(double deltaTime) {
-        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-        double velocityFeedforward = -calculateTorqueGravity(liftPosition) + targetVelocity * getVelocityFeedforwardCoefficient();
-        updatePositionPID(getTargetPosition(), velocityFeedforward);
-    }
 
     double calculateTorqueGravity(double liftExtension) {
         double interpolationAmount = liftExtension / extendedLiftPosition;

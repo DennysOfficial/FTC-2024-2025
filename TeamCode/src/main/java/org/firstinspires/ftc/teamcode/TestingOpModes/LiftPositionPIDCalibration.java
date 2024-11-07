@@ -36,11 +36,11 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
 
         lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
         spinyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
 
@@ -59,9 +59,9 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            lift.update(deltaTime, lift.getPosition());
+            lift.update();
 
-            spinyBit.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

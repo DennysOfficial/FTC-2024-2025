@@ -36,13 +36,13 @@ public class GCompCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
 
-        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 
 
         waitForStart();
@@ -59,9 +59,9 @@ public class GCompCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            lift.update(deltaTime, spinyBit.getPosition());
+            lift.update();
 
-            spinyBit.update(deltaTime,lift.getPosition());
+            spinyBit.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

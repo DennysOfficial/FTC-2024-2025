@@ -37,11 +37,11 @@ public class PivotVelocityPIDTest extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig,runtime);
 
         spinyBit.setControlMode(ControlAxis.ControlMode.velocityControl);
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig,runtime);
 
         lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
@@ -68,8 +68,8 @@ public class PivotVelocityPIDTest extends LinearOpMode {
                 spinyBit.setTargetVelocity(activeConfig.inputMap.getPivotStick() * activeConfig.sensitivities.getPivotRate());
 
 
-            spinyBit.update(deltaTime, lift.getPosition());
-            lift.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update();
+            lift.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

@@ -15,16 +15,50 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 @Config
 public class Lift extends ControlAxis {
 
+    Pivot pivot;
 
-    double pivotPosition;
+    public void assignPivot(Pivot pivot){
+        this.pivot = pivot;
+    }
+
     public static double gCompMultiplier = 0.1;
 
     public static double Kp = 0.8;
     public static double Ki = 0.02;
     public static double Kd = 0.03;
 
+    @Override
+    double getKp() {
+        return Kp;
+    }
+
+    @Override
+    double getKi() {
+        return Ki;
+    }
+
+    @Override
+    double getKd() {
+        return Kd;
+    }
+
     public static double velocityFeedforwardCoefficient = 0;
 
+
+    @Override
+    float getInput() {
+        return (float) config.inputMap.getLiftStick();
+    }
+
+    @Override
+    float getVelocityControlMaxRate() {
+        return config.sensitivities.getLiftRate();
+    }
+
+    @Override
+    float getTorqueControlSensitivity() {
+        return config.sensitivities.getLiftSensitivity();
+    }
 
     @Override
     protected void initMotors() {
@@ -38,6 +72,21 @@ public class Lift extends ControlAxis {
     }
 
 
+    @Override
+    double getStaticFeedforward(double targetDirection) {
+        return staticFrictionForce(targetDirection) - Math.cos(Math.toRadians(pivot.getPosition())) * gCompMultiplier;
+    }
+
+    @Override
+    double getVelocityFeedforward() {
+        return targetVelocity * velocityFeedforwardCoefficient;
+    }
+
+    @Override
+    double getAccelerationFeedforward() {
+        return 0;
+    }
+
 
     public Lift(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0, runtime);
@@ -50,17 +99,18 @@ public class Lift extends ControlAxis {
     @Override
     public void setTargetPosition(double targetPosition) {
 
-        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivotPosition)) - config.getRetractedLiftLengthInch();
+        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
         upperLimit = Math.abs(upperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
 
-        opMode.telemetry.addData("liftDynamicLimit", upperLimit);
+        //opMode.telemetry.addData("liftDynamicLimit", upperLimit);
 
         super.setTargetPosition(targetPosition);
     }
 
+    @Override
+    void miscUpdate() {
 
-    public double staticFeed(double pivotAngleDeg) {
-        return -Math.cos(Math.toRadians(pivotAngleDeg)) * gCompMultiplier;
     }
+
 }

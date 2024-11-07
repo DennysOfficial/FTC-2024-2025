@@ -74,18 +74,21 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-        
-        Lift lift = new Lift(this, activeConfig);
+
+        Lift lift = new Lift(this, activeConfig, runtime);
 
         final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
-        Pivot spinnyBit = new Pivot(this, activeConfig);
+        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
 
         final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
 
         spinnyBit.setControlMode(defaultPivotControlMode);
+
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -160,14 +163,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.testing);
-                spinnyBit.setNetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+                spinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+                spinnyBit.setTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
                 spinnyBit.setControlModeUnsafe(defaultPivotControlMode);
 
-            lift.update(deltaTime, spinnyBit.getPosition());
-            spinnyBit.update(deltaTime, lift.getPosition());
+            lift.update();
+            spinnyBit.update();
             activeDriveMode.updateDrive(deltaTime);
 
             intake.directControl();
