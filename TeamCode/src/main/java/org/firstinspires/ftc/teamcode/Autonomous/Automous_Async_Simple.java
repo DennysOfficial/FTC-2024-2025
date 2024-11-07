@@ -73,7 +73,7 @@ public class Automous_Async_Simple extends LinearOpMode {
             drive.update();
             lift.update(deltaTime, spinyBit.getPosition());
             spinyBit.update(deltaTime, lift.getPosition());
-
+            telemetry.addLine("I am running");
             // Put your PID Update Function Here
         }
     }

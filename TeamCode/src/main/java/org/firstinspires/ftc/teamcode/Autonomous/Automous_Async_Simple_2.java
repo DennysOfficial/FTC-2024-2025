@@ -61,10 +61,13 @@ public class Automous_Async_Simple_2 extends LinearOpMode {
                 .build();
 
         while (!isStopRequested() && !opModeIsActive()) {
-
+            telemetry.addLine("waiting...");
+            telemetry.update();
         }
 
         waitForStart();
+
+        telemetry.addLine("vamos");
 
         if (isStopRequested()) return;
 
@@ -81,11 +84,12 @@ public class Automous_Async_Simple_2 extends LinearOpMode {
             drive.update();
             lift.update(deltaTime, spinyBit.getPosition());
             spinyBit.update(deltaTime, lift.getPosition());
-            
+
             Pose2d poseEstimate = drive.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
-            telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
+            //telemetry.addData("x", poseEstimate.getX());
+            //telemetry.addData("y", poseEstimate.getY());
+            //telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
+            telemetry.addLine("I am running");
             telemetry.update();
             // Put your PID Update Function Here
         }
