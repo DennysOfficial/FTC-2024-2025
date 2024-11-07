@@ -151,19 +151,4 @@ public class Automous_FSM extends LinearOpMode {
             // Put your PID Update Function Here
         }
     }
-
-    // Assume we have a hardware class called lift
-    // Lift uses a PID controller to maintain its height
-    // Thus, update() must be called in a loop
-    class Lift {
-        public Lift(HardwareMap hardwareMap) {
-            // Beep boop this is the the constructor for the lift
-            // Assume this sets up the lift hardware
-        }
-
-        public void update() {
-            // Beep boop this is the lift update function
-            // Assume this runs some PID controller for the lift
-        }
-    }
 }
