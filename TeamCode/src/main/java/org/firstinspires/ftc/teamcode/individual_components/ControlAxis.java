@@ -307,7 +307,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
-        initPid();
+        //initPid();
         initMotors();
 
         positionDerivatives = new PositionDerivatives(getPosition());
