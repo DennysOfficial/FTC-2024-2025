@@ -105,7 +105,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     void initPid() {
         positionPID = new CustomPID(opMode, config, axisName + " positionPID");
-        updatePIDCoefficients();
+        // updatePIDCoefficients();
     }
 
     abstract double getKp();
@@ -307,7 +307,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
-        //initPid();
+        initPid();
         initMotors();
 
         positionDerivatives = new PositionDerivatives(getPosition());
@@ -329,7 +329,7 @@ public abstract class ControlAxis {  //schrödinger's code
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
     }
 
-    public void runUpdate() {
+    public void update() {
         updateDeltaTime();
         positionDerivatives.update(getPosition(), deltaTime);
 
@@ -372,12 +372,12 @@ public abstract class ControlAxis {  //schrödinger's code
     public class Update implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            runUpdate();
+            update();
             return true;
         }
     }
 
-    public Action update() {
+    public Action actionUpdate() {
         return new Update();
     }
 

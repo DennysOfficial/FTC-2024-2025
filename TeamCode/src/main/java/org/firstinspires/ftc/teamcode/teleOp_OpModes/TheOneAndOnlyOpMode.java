@@ -48,7 +48,6 @@ import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
 import java.util.List;
 
-
 @TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
 //@Disabled
 public class TheOneAndOnlyOpMode extends LinearOpMode {
@@ -77,18 +76,18 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         Lift lift = new Lift(this, activeConfig, runtime);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
-
-        lift.setControlMode(defaultLiftControlMode);
-
         Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
-
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
-
-        spinnyBit.setControlMode(defaultPivotControlMode);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
+
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
+        lift.setControlMode(defaultLiftControlMode);
+
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
+        spinnyBit.setControlMode(defaultPivotControlMode);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -163,7 +162,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.setTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
