@@ -9,9 +9,9 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 
 @Config
-public class PIDSteerTest extends DriveModeBase {
+public class HeadingPIDSteerTest extends DriveModeBase {
 
-    public static double turnFeedforward = 0.02;
+    public static double turnFeedforwardCoefficient = 0.02;
     public static double Kp = 0;
     public static double Ki = 0;
     public static double Kd = 0;
@@ -21,13 +21,22 @@ public class PIDSteerTest extends DriveModeBase {
 
     double[] motorPowers = new double[4];
 
-    public PIDSteerTest(LinearOpMode opMode, RobotConfig config) {
+    double targetHeading;
+
+    public HeadingPIDSteerTest(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
         steeringPID = new CustomPID(opMode, config, "steeringPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
+        targetHeading = getHeadingDeg();
     }
 
-    public void telemetryAngleVelocity(){
+    double getHeadingDeg() {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+    public void telemetryAngleVelocity() {
+        opMode.telemetry.addData("Heading", getHeadingDeg());
+        opMode.telemetry.addData("TargetHeading", targetHeading);
         opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
         opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
         opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
@@ -43,9 +52,13 @@ public class PIDSteerTest extends DriveModeBase {
 
         double targetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
+        targetHeading += targetTurnRate * deltaTime;
+
         steeringPID.setCoefficients(Kp, Ki, Kd);
-        double turn = turnFeedforward * targetTurnRate;
-        turn+= steeringPID.runPID(targetTurnRate, imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate, deltaTime);
+
+        double turn = turnFeedforwardCoefficient * targetTurnRate;
+
+        turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
 
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
