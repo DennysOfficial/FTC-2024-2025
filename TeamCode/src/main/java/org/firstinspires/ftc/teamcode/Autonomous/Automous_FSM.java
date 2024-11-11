@@ -38,6 +38,8 @@ public class Automous_FSM extends LinearOpMode {
     // This is essentially just defines the possible steps our program will take
     enum State {
         TO_RUNG,
+        TO_WALL,
+        TO_NETZONE,
         IDLE            // Our bot will enter the IDLE state when done
     }
 
@@ -53,6 +55,9 @@ public class Automous_FSM extends LinearOpMode {
     double deltaTime;
 
     Trajectory toRung;
+    Trajectory toWall;
+    Trajectory toNetZone;
+
     Pose2d startPose = new Pose2d(new Vector2d(60, 0), Math.toRadians(180));
 
     @Override
@@ -80,18 +85,20 @@ public class Automous_FSM extends LinearOpMode {
         // Set inital pose
         drive.setPoseEstimate(startPose);
 
-        // Let's define our trajectory
+        // Let's define our trajectories
         toRung = drive.trajectoryBuilder(startPose)
                 .addDisplacementMarker(() -> {
                     spinyBit.setTargetPosition(0);
                     lift.setTargetPosition(8.8);
                 })
-                .splineTo(new Vector2d(0,0), Math.toRadians(180))
+                .splineTo(new Vector2d(18,0), Math.toRadians(180))
                 .addDisplacementMarker(() -> {
                     //[place] SPECIMEN on RUNG
                     lift.setTargetPosition(0);
                 })
                 .build();
+
+
 
         waitForStart();
 
