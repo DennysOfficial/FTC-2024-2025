@@ -175,20 +175,19 @@ public class ExampleOpMode extends LinearOpMode {
             trajectoryActionChosen = tab3.build();
         }
 
-        SequentialAction thingy = new SequentialAction(
+        SequentialAction driveUpdate = new SequentialAction(
                 trajectoryActionChosen,
                 trajectoryActionCloseOut
         );
 
-        ParallelAction thing = new ParallelAction(
-                thingy,
-                lift.liftUp(),
-                claw.openClaw()
+        ParallelAction routine = new ParallelAction(
+                driveUpdate,
+
         );
 
 
         Actions.runBlocking(
-            thing
+                routine
         );
     }
 }
