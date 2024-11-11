@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 @Config
 public class VelocityPIDSteerTest extends DriveModeBase {
 
-    public static double turnFeedforwardCoefficient = 0.02;
-    public static double Kp = 0;
+    public static double turnFeedforwardCoefficient = -0.0025;
+    public static double Kp = -0.003;
     public static double Ki = 0;
     public static double Kd = 0;
 
