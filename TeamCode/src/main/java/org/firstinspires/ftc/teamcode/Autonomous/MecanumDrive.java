@@ -44,6 +44,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.Autonomous.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.Autonomous.messages.MecanumLocalizerInputsMessage;
 import org.firstinspires.ftc.teamcode.Autonomous.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -205,6 +206,8 @@ public final class MecanumDrive {
             );
         }
     }
+
+    protected RobotConfig config;
 
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
