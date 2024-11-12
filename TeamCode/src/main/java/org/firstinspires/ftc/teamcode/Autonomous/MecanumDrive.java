@@ -107,6 +107,21 @@ public final class MecanumDrive {
 
     public final DcMotorEx leftFront, leftBack, rightBack, rightFront;
 
+    leftFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontLeftDrive); //this needs to be changed to match the robot's motor configuration
+    rightFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
+    rightBack = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
+    leftBack = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);
+
+        leftFront.setDirection(config.deviceConfig.frontLeftDriveDir);
+        rightFront.setDirection(config.deviceConfig.frontRightDriveDir);
+        rightBack.setDirection(config.deviceConfig.backRightDriveDir);
+        leftBack.setDirection(config.deviceConfig.backLeftDriveDir);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     public final VoltageSensor voltageSensor;
 
     public final LazyImu lazyImu;
