@@ -4,7 +4,11 @@ import android.util.Range;
 
 import androidx.core.math.MathUtils;
 
+import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,7 +19,15 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 @Config
 public class Lift extends ControlAxis {
 
+
+
+    public static Action LiftUpdate;
+    public static Action MoveLift;
+
     Pivot pivot;
+
+
+
 
     public void assignPivot(Pivot pivot){
         this.pivot = pivot;
@@ -112,5 +124,4 @@ public class Lift extends ControlAxis {
     void miscUpdate() {
 
     }
-
 }
