@@ -146,23 +146,4 @@ public class Pivot extends ControlAxis { //schrödinger's code
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 
-    public class GoToPosition implements Action {
-
-        double targetPosition;
-
-        public GoToPosition(double targetPosition) {
-            this.targetPosition = targetPosition;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setControlMode(ControlMode.positionControl);
-            setTargetPosition(targetPosition);
-            return false;
-        }
-    }
-
-    public Action goToPosition(double targetPosition) {
-        return new GoToPosition(targetPosition);
-    }
 }
