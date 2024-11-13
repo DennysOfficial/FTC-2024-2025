@@ -6,6 +6,9 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.profile.MotionProfile;
+import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
+import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -317,6 +320,40 @@ public abstract class ControlAxis {  //schrödinger's code
 
 
     // Actions stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
+    double maxVel = Double.NaN;
+    double maxAccel = Double.NaN;;
+    double maxJerk = Double.NaN;;
+
+    public void setMotionConstraints(double maxVel, double maxAccel, double maxJerk){
+        this.maxJerk = maxJerk;
+        this.maxAccel = maxAccel;
+        this.maxVel = maxVel;
+    }
+
+    public class GoToPosition implements Action {
+        MotionProfile profile;
+
+        public GoToPosition(double targetPosition) {
+
+            if(Double.isNaN(maxVel) || Double.isNaN(maxAccel) || Double.isNaN(maxJerk))
+                throw new Error("run set Motion Constraints first goober");
+            profile = MotionProfileGenerator.generateSimpleMotionProfile(
+                    new MotionState(getPosition(), 0, 0),
+                    new MotionState(targetPosition, 0, 0),
+                    maxVel,
+                    maxAccel,
+                    maxJerk
+            );
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetPosition(targetPosition);
+            setControlMode(ControlMode.positionControl);
+            return false;
+        }
+    }
 
     public class SetPosition implements Action {
         double targetPosition;
