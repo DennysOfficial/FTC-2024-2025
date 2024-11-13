@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-
+import org.firstinspires.ftc.teamcode.MathStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 
