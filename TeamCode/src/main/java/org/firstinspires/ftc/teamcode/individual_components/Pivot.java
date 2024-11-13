@@ -17,12 +17,14 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
 
 @Config
-public class Pivot extends ControlAxis {
+public class Pivot extends ControlAxis { //schrödinger's code
 
     public static Action PivotUpdate;
     Lift lift;
 
     public void assignLift(Lift lift) {
+        if (lift == null)
+            throw new NullPointerException("the lift you tried to assign is null you goober");
         this.lift = lift;
     }
 
@@ -36,19 +38,27 @@ public class Pivot extends ControlAxis {
     public static double retractedGComp = 0.12;
 
     double getKp() {
+        if (lift == null)
+            throw new NullPointerException("run the assign lift method before running anything else");
         return MathStuff.lerp(KpRetracted, KpExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKi() {
+        if (lift == null)
+            throw new NullPointerException("run the assign lift method before running anything else");
         return MathStuff.lerp(KiRetracted, KiExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKd() {
+        if (lift == null)
+            throw new NullPointerException("run the assign lift method before running anything else");
         return MathStuff.lerp(KdRetracted, KdExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     @Override
     double getStaticFeedforward(double targetDirection) {
+        if (lift == null)
+            throw new NullPointerException("run the assign lift method before running anything else");
         return calculateTorqueGravity(lift.getPosition());
     }
 
@@ -63,6 +73,8 @@ public class Pivot extends ControlAxis {
     }
 
     double getVelocityFeedforwardCoefficient() {
+        if(lift == null)
+            throw new NullPointerException("run the assign lift method before running anything else");
         return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.getPosition() / extendedLiftPosition);
     }
 
@@ -111,6 +123,9 @@ public class Pivot extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
+        if (lift == null)
+            throw new NullPointerException("run the assign lift method before setting target position");
+
         double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);

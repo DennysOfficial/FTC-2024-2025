@@ -39,8 +39,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.individual_components.DriveModes.VelocityPIDSteerTest;
 import org.firstinspires.ftc.teamcode.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
@@ -48,9 +48,10 @@ import org.firstinspires.ftc.teamcode.motionControl.Animator;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+
+@TeleOp(name = "Velocity PID steer test", group = "Linear OpMode")
 //@Disabled
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+public class VelocityPIDSteerTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -71,23 +72,23 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+        DriveModeBase activeDriveMode = new VelocityPIDSteerTest(this, activeConfig);
 
 
         Lift lift = new Lift(this, activeConfig, runtime);
 
-        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
-
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
-
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
+
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
 
         spinnyBit.setControlMode(defaultPivotControlMode);
+
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -162,7 +163,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
+                spinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                 spinnyBit.setTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)

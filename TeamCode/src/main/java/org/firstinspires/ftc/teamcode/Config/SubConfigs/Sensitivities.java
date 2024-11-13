@@ -25,7 +25,7 @@ public class Sensitivities {
     }
 
 
-    public static float turningRateDPS = 30;
+    public static float turningRateDPS = 130;
 
     public float getTurningRateDPS() {
         return turningRateDPS;

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
 import org.firstinspires.ftc.teamcode.motionControl.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
 
-public abstract class ControlAxis {
+public abstract class ControlAxis {  //schrödinger's code
 
     ElapsedTime runtime;
     double deltaTime = 0;
@@ -105,7 +105,7 @@ public abstract class ControlAxis {
 
     void initPid() {
         positionPID = new CustomPID(opMode, config, axisName + " positionPID");
-        updatePIDCoefficients();
+        // updatePIDCoefficients();
     }
 
     abstract double getKp();
@@ -329,7 +329,7 @@ public abstract class ControlAxis {
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
     }
 
-    public void runUpdate() {
+    public void update() {
         updateDeltaTime();
         positionDerivatives.update(getPosition(), deltaTime);
 
@@ -372,12 +372,12 @@ public abstract class ControlAxis {
     public class Update implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            runUpdate();
+            update();
             return true;
         }
     }
 
-    public Action update() {
+    public Action actionUpdate() {
         return new Update();
     }
 
