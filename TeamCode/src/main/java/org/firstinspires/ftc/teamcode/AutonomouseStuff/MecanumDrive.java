@@ -55,7 +55,7 @@ import java.util.List;
 @Config
 public class MecanumDrive {
 
-    RobotConfig config;
+    public final RobotConfig config;
 
     public static class Params {
         // IMU orientation

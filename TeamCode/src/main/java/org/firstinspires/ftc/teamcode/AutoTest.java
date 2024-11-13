@@ -33,20 +33,21 @@ import org.firstinspires.ftc.teamcode.AutonomouseStuff.MecanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 
 
-
 @Autonomous(name = "please dont break robot", group = "Autonomous")
 public class AutoTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        ElapsedTime runtime = new ElapsedTime();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
 
-        RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
+        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
 
+        SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
-        ElapsedTime runtime = new ElapsedTime();
+        RobotConfig activeConfig = drive.config; // selects the active setting that will be used in the rest of the code
 
 
         Lift lift = new Lift(this, activeConfig, runtime);
@@ -58,10 +59,6 @@ public class AutoTest extends LinearOpMode {
 
         spinnyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
-
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
-
-        SparkFunOTOSDrive drive  = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
         //TrajectoryActionBuilder driveIntoDaBar = drive.actionBuilder(initialPose).
 
