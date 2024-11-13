@@ -35,6 +35,7 @@ public class RobotConfig {
     public final DebugConfig debugConfig = new DebugConfig();
 
     public final InputMap inputMap;
+
     public final Sensitivities sensitivities = new Sensitivities();
 
     public final SensorData sensorData;
@@ -43,6 +44,10 @@ public class RobotConfig {
     public RobotConfig(OpMode opMode) {
         this.opMode = opMode;
         inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
+        sensorData = new SensorData(opMode.hardwareMap);
+    }
+    protected RobotConfig() {
+        inputMap = null;
         sensorData = new SensorData(opMode.hardwareMap);
     }
 
