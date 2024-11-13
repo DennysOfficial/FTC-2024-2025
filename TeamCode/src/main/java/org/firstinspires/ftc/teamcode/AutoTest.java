@@ -43,7 +43,7 @@ public class AutoTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
 
-        Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(0, 72-18f/2, Math.toRadians(90));
 
         SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
@@ -62,33 +62,10 @@ public class AutoTest extends LinearOpMode {
 
         //TrajectoryActionBuilder driveIntoDaBar = drive.actionBuilder(initialPose).
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(initialPose)
-                .lineToYSplineHeading(33, Math.toRadians(0))
-                .waitSeconds(2)
-                .setTangent(Math.toRadians(90))
-                .lineToY(48)
-                .setTangent(Math.toRadians(0))
-                .lineToX(32)
-                .strafeTo(new Vector2d(44.5, 30))
-                .turn(Math.toRadians(180))
-                .lineToX(47.5)
-                .waitSeconds(3);
-        TrajectoryActionBuilder tab2 = drive.actionBuilder(initialPose)
-                .lineToY(37)
-                .setTangent(Math.toRadians(0))
-                .lineToX(18)
-                .waitSeconds(3)
-                .setTangent(Math.toRadians(0))
-                .lineToXSplineHeading(46, Math.toRadians(180))
-                .waitSeconds(3);
-        TrajectoryActionBuilder tab3 = drive.actionBuilder(initialPose)
-                .lineToYSplineHeading(33, Math.toRadians(180))
-                .waitSeconds(2)
-                .strafeTo(new Vector2d(46, 30))
-                .waitSeconds(3);
-        Action trajectoryActionCloseOut = tab1.fresh()
-                .strafeTo(new Vector2d(48, 12))
-                .build();
+        TrajectoryActionBuilder driveIntoDaBar = drive.actionBuilder(initialPose)
+                .lineToY(-30);
+
+
 
         // actions that need to happen on init; for instance, a claw tightening.
         //Actions.runBlocking(claw.closeClaw());
@@ -100,14 +77,16 @@ public class AutoTest extends LinearOpMode {
         if (isStopRequested()) return;
 
 
-        SequentialAction thingy = new SequentialAction(
-                tab1.build(),
-                trajectoryActionCloseOut
+        SequentialAction actualAutonomousStuff = new SequentialAction(
+                spinnyBit.actionGoToPosition(0),
+                lift.actionGoToPosition(9),
+                driveIntoDaBar.build()
         );
 
         ParallelAction mainLoop = new ParallelAction(
-                thingy
-
+                actualAutonomousStuff,
+                spinnyBit.actionUpdate(),
+                lift.actionUpdate()
         );
 
         Actions.runBlocking(

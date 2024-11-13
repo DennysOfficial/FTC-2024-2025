@@ -318,10 +318,10 @@ public abstract class ControlAxis {  //schrödinger's code
 
     // Actions stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-    public class SetPosition implements Action {
+    public class GoToPosition implements Action {
         double targetPosition;
 
-        public SetPosition(double targetPosition) {
+        public GoToPosition(double targetPosition) {
             this.targetPosition = targetPosition;
         }
 
@@ -333,8 +333,8 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public Action goToPositionAction(double targetPosition) {
-        return new SetPosition(targetPosition);
+    public Action actionGoToPosition(double targetPosition) {
+        return new GoToPosition(targetPosition);
     }
 
     public class SetVelocity implements Action {
@@ -352,7 +352,7 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public Action setVelocityAction(double targetVelocity) {
+    public Action actionSetVelocity(double targetVelocity) {
         return new SetVelocity(targetVelocity);
     }
 
@@ -372,7 +372,7 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public Action setTorqueAction(double targetTorque) {
+    public Action actionSetTorque(double targetTorque) {
         return new SetTorque(targetTorque);
     }
 
@@ -385,7 +385,7 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public Action updateAction() {
+    public Action actionUpdate() {
         return new Update();
     }
 
