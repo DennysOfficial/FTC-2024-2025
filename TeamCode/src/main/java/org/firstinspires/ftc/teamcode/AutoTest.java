@@ -43,7 +43,7 @@ public class AutoTest extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
 
-        Pose2d initialPose = new Pose2d(0, 72-18f/2, Math.toRadians(90));
+        Pose2d initialPose = new Pose2d(0, -72+18f/2, Math.toRadians(90));
 
         SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
