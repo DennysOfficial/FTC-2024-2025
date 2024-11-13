@@ -223,7 +223,7 @@ public abstract class ControlAxis {  //schrödinger's code
         return targetTorque;
     }
 
-    void setTargetTorque(double targetTorque) {
+    public void setTargetTorque(double targetTorque) {
         this.targetTorque = targetTorque;
     }
 

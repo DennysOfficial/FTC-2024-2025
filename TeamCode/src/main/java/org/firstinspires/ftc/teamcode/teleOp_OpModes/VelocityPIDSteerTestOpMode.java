@@ -164,7 +164,7 @@ public class VelocityPIDSteerTestOpMode extends LinearOpMode {
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
                 spinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
-                spinnyBit.setTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+                spinnyBit.setTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
                 spinnyBit.setControlModeUnsafe(defaultPivotControlMode);
