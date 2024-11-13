@@ -35,6 +35,7 @@ public abstract class ControlAxis {  //schrödinger's code
     abstract float getInput();
 
     abstract float getVelocityControlMaxRate(); //units per second
+
     abstract float getTorqueControlSensitivity();
 
     // motor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -193,24 +194,6 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public class SetPosition implements Action {
-        double targetPosition;
-
-        public SetPosition(double targetPosition) {
-            this.targetPosition = targetPosition;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetPosition(targetPosition);
-            setControlMode(ControlMode.positionControl);
-            return false;
-        }
-    }
-
-    public Action setPosition(double targetPosition) {
-        return new SetPosition(targetPosition);
-    }
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     double targetVelocity;
@@ -232,24 +215,6 @@ public abstract class ControlAxis {  //schrödinger's code
         updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
-    public class SetVelocity implements Action {
-        double targetVelocity;
-
-        public SetVelocity(double targetVelocity) {
-            this.targetVelocity = targetVelocity;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetVelocity(targetVelocity);
-            setControlMode(ControlMode.velocityControl);
-            return false;
-        }
-    }
-
-    public Action setVelocity(double targetVelocity) {
-        return new SetVelocity(targetVelocity);
-    }
 
     // Torque stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     double targetTorque;
@@ -260,25 +225,6 @@ public abstract class ControlAxis {  //schrödinger's code
 
     void setTargetTorque(double targetTorque) {
         this.targetTorque = targetTorque;
-    }
-
-    public class SetTorque implements Action {
-        double targetTorque;
-
-        public SetTorque(double targetTorque) {
-            this.targetTorque = targetTorque;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetTorque(targetTorque);
-            setControlMode(ControlMode.torqueControl);
-            return false;
-        }
-    }
-
-    public Action setTorque(double targetTorque) {
-        return new SetTorque(targetTorque);
     }
 
     // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -369,6 +315,68 @@ public abstract class ControlAxis {  //schrödinger's code
         debugUpdate();
     }
 
+
+    // Actions stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
+    public class SetPosition implements Action {
+        double targetPosition;
+
+        public SetPosition(double targetPosition) {
+            this.targetPosition = targetPosition;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetPosition(targetPosition);
+            setControlMode(ControlMode.positionControl);
+            return false;
+        }
+    }
+
+    public Action goToPositionAction(double targetPosition) {
+        return new SetPosition(targetPosition);
+    }
+
+    public class SetVelocity implements Action {
+        double targetVelocity;
+
+        public SetVelocity(double targetVelocity) {
+            this.targetVelocity = targetVelocity;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetVelocity(targetVelocity);
+            setControlMode(ControlMode.velocityControl);
+            return false;
+        }
+    }
+
+    public Action setVelocityAction(double targetVelocity) {
+        return new SetVelocity(targetVelocity);
+    }
+
+
+    public class SetTorque implements Action {
+        double targetTorque;
+
+        public SetTorque(double targetTorque) {
+            this.targetTorque = targetTorque;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setTargetTorque(targetTorque);
+            setControlMode(ControlMode.torqueControl);
+            return false;
+        }
+    }
+
+    public Action setTorqueAction(double targetTorque) {
+        return new SetTorque(targetTorque);
+    }
+
+
     public class Update implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -377,7 +385,7 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public Action actionUpdate() {
+    public Action updateAction() {
         return new Update();
     }
 

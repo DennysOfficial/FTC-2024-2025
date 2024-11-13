@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.MathStuff;
 @Config
 public class Pivot extends ControlAxis { //schrödinger's code
 
-    public static Action PivotUpdate;
     Lift lift;
 
     public void assignLift(Lift lift) {
@@ -147,32 +146,4 @@ public class Pivot extends ControlAxis { //schrödinger's code
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 
-    public class MovePivot implements Action {
-
-        double Position;
-
-        public MovePivot(double Position) {
-            this.Position = Position;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setControlMode(ControlMode.positionControl);
-            setTargetPosition(targetPosition);
-            return false;
-        }
-    }
-
-    public Action MovePivot(double Position) {return new MovePivot(Position);}
-
-    public class PivotUpdate implements Action {
-
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            update();
-            return false;
-        }
-    }
-    public Action PivotUpdate() {return new Pivot.PivotUpdate();}
 }
