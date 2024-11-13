@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.individual_components.grabbers;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class Pincher {
 

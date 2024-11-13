@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.motionControl;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;

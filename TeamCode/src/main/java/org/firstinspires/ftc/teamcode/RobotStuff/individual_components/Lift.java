@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.individual_components;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 
 import android.util.Range;
 
@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 @Config
 public class Lift extends ControlAxis {

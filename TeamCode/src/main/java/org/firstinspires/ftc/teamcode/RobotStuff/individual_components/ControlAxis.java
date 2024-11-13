@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.individual_components;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 
 import android.util.Range;
 
@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
-import org.firstinspires.ftc.teamcode.motionControl.MultiTorqueMotor;
-import org.firstinspires.ftc.teamcode.motionControl.PositionDerivatives;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 
 public abstract class ControlAxis {  //schrödinger's code
 

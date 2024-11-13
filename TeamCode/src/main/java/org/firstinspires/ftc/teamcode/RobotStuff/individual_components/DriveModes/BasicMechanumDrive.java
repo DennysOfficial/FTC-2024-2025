@@ -1,39 +1,38 @@
-package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 @Config
-public class VelocityControlDrive extends DriveModeBase {
+public class BasicMechanumDrive extends DriveModeBase {
 
 
-    public static double velocityGain = 0.5f;
-    public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     double[] motorPowers = new double[4];
 
-    public  VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
-
+    public BasicMechanumDrive(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        updatePIDCoefficients();
-    }
-
-    public void updatePIDCoefficients() {
-        frontLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        backLeftDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        frontRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-        backRightDrive.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void updateDrive(double deltaTime) {
-        double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();  //Note: pushing stick forward gives negative value
-        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
-        double yaw = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity();
+
+        double SensitivityModifier = config.sensitivities.getDriveSensitivity();
+        double Brake = 1;
+
+        if (config.inputMap.getSlowDown()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+
+        if (config.inputMap.getBrake()){Brake = 0;}
+
+        double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity() * SensitivityModifier * Brake;  //Note: pushing stick forward gives negative value
+        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier * Brake;
+        double yaw = config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier * Brake;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -46,10 +45,10 @@ public class VelocityControlDrive extends DriveModeBase {
 
 
         // Send calculated power to wheels
-        frontLeftDrive.setVelocity(motorPowers[0] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
-        frontRightDrive.setVelocity(motorPowers[1] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
-        backLeftDrive.setVelocity(motorPowers[2] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
-        backRightDrive.setVelocity(motorPowers[3] * 2000 * config.sensitivities.getDriveSensitivity() * velocityGain);
+        frontLeftDrive.setPower(motorPowers[0] * config.sensitivities.getDriveSensitivity());
+        frontRightDrive.setPower(motorPowers[1] * config.sensitivities.getDriveSensitivity());
+        backLeftDrive.setPower(motorPowers[2] * config.sensitivities.getDriveSensitivity());
+        backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
 
         //frontRightDrive.setPower(1);
 
@@ -83,10 +82,11 @@ public class VelocityControlDrive extends DriveModeBase {
         max = Math.max(max, Math.abs(inputArray[2]));
         max = Math.max(max, Math.abs(inputArray[3]));
 
-        if (max > 1.0)
+        if (max > 1)
             for (int i = 0; i < inputArray.length; i++)
                 inputArray[i] /= max;
 
         return inputArray;
     }
+
 }

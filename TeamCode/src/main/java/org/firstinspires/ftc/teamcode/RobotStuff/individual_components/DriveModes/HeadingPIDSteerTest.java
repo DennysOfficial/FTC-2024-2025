@@ -1,12 +1,12 @@
-package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.motionControl.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 
 @Config
 public class HeadingPIDSteerTest extends DriveModeBase {

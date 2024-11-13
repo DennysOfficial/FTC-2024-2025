@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.motionControl;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
 
 import androidx.core.math.MathUtils;
@@ -6,10 +6,10 @@ import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 
 import java.util.ArrayList;
 import java.util.List;

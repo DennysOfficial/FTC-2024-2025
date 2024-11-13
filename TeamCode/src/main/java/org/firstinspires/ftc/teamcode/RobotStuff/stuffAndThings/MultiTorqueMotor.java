@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.motionControl;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Config.SensorData;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SensorData;
 
 import java.util.ArrayList;
 import java.util.List;

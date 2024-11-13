@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.individual_components.DriveModes;
+package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.motionControl.MultiMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiMotor;
 
 public abstract class DriveModeBase {
 

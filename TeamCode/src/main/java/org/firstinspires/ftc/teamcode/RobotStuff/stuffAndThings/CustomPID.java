@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.motionControl;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class CustomPID {
 

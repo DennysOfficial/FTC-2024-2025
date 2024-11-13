@@ -1,16 +1,8 @@
-package org.firstinspires.ftc.teamcode.motionControl;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.teamcode.Config.SensorData;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SensorData;
 
 public class ConstantTorqueMotor {
     final DcMotorEx motor;

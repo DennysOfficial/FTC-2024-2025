@@ -1,14 +1,12 @@
-package org.firstinspires.ftc.teamcode.Config;
+package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.teamcode.Config.SubConfigs.DebugConfig;
-import org.firstinspires.ftc.teamcode.Config.SubConfigs.DeviceConfig;
-import org.firstinspires.ftc.teamcode.Config.SubConfigs.InputMap;
-import org.firstinspires.ftc.teamcode.Config.SubConfigs.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DebugConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DeviceConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.InputMap;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.Sensitivities;
 
 @Config
 public class RobotConfig {
