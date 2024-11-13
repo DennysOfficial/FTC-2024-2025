@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.AutonomouseStuff.SparkFunOTOSDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
@@ -45,9 +46,6 @@ public class AutoTest extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-
         ElapsedTime runtime = new ElapsedTime();
 
 
@@ -62,7 +60,8 @@ public class AutoTest extends LinearOpMode {
 
 
         Pose2d initialPose = new Pose2d(11.8, 61.7, Math.toRadians(90));
-        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
+
+        SparkFunOTOSDrive drive  = new SparkFunOTOSDrive(hardwareMap, initialPose);
 
         //TrajectoryActionBuilder driveIntoDaBar = drive.actionBuilder(initialPose).
 
