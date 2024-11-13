@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -80,8 +81,12 @@ public class AutoTest extends LinearOpMode {
         SequentialAction actualAutonomousStuff = new SequentialAction(
                 spinnyBit.actionGoToPosition(0),
                 lift.actionGoToPosition(9),
-                driveIntoDaBar.build()
-        );
+                driveIntoDaBar.build(),
+                new SleepAction(0.5),
+                lift.actionGoToPosition(0),
+                new SleepAction(0.5),
+                spinnyBit.actionGoToPosition(-20)
+                );
 
         ParallelAction mainLoop = new ParallelAction(
                 actualAutonomousStuff,
