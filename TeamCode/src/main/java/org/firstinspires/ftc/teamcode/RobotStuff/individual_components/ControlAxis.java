@@ -223,15 +223,15 @@ public abstract class ControlAxis {  //schrödinger's code
         return targetTorque;
     }
 
-    void setTargetTorque(double targetTorque) {
+    public void setTargetTorque(double targetTorque) {
         this.targetTorque = targetTorque;
     }
 
     // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    double previousTime = Double.NaN;
+    double previousTime = 0;
 
     void updateDeltaTime() {
-        if (Double.isNaN(previousTime)) {
+        if (previousTime == 0) {
             previousTime = runtime.seconds();
             deltaTime = 0;
             return;
