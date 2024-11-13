@@ -44,6 +44,8 @@ import org.firstinspires.ftc.teamcode.AutonomouseStuff.messages.DriveCommandMess
 import org.firstinspires.ftc.teamcode.AutonomouseStuff.messages.MecanumCommandMessage;
 import org.firstinspires.ftc.teamcode.AutonomouseStuff.messages.MecanumLocalizerInputsMessage;
 import org.firstinspires.ftc.teamcode.AutonomouseStuff.messages.PoseMessage;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.InputLessRobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 import java.lang.Math;
 import java.util.Arrays;
@@ -52,6 +54,9 @@ import java.util.List;
 
 @Config
 public class MecanumDrive {
+
+    RobotConfig config;
+
     public static class Params {
         // IMU orientation
         // TODO: fill in these values based on
@@ -207,6 +212,7 @@ public class MecanumDrive {
 
     public MecanumDrive(HardwareMap hardwareMap, Pose2d pose) {
         this.pose = pose;
+        this.config = new InputLessRobotConfig(hardwareMap);
 
         LynxFirmware.throwIfModulesAreOutdated(hardwareMap);
 
@@ -214,23 +220,26 @@ public class MecanumDrive {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        // TODO: make sure your config has motors with these names (or change them)
-        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
-        leftFront = hardwareMap.get(DcMotorEx.class, "left_front");
-        leftBack = hardwareMap.get(DcMotorEx.class, "left_back");
-        rightBack = hardwareMap.get(DcMotorEx.class, "right_back");
-        rightFront = hardwareMap.get(DcMotorEx.class, "right_front");
+
+        leftFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontLeftDrive);
+        leftBack = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);
+        rightBack = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
+        rightFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
+
+
 
         leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        // TODO: reverse motor directions if needed
-        //   leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        //  reverse motor directions if needed
+        leftFront.setDirection(config.deviceConfig.frontLeftDriveDir);
+        leftBack.setDirection(config.deviceConfig.backLeftDriveDir);
+        rightBack.setDirection(config.deviceConfig.backRightDriveDir);
+        rightFront.setDirection(config.deviceConfig.frontRightDriveDir);
 
-        // TODO: make sure your config has an IMU with this name (can be BNO or BHI)
-        //   see https://ftc-docs.firstinspires.org/en/latest/hardware_and_software_configuration/configuring/index.html
+
         lazyImu = new LazyImu(hardwareMap, "imu", new RevHubOrientationOnRobot(
                 PARAMS.logoFacingDirection, PARAMS.usbFacingDirection));
 
