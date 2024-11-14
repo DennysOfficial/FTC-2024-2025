@@ -50,13 +50,15 @@ public class AutoTest extends LinearOpMode {
 
         RobotConfig activeConfig = drive.config; // selects the active setting that will be used in the rest of the code
 
-
         Lift lift = new Lift(this, activeConfig, runtime);
 
         lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
 
         Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
+
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
         spinnyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
@@ -81,7 +83,7 @@ public class AutoTest extends LinearOpMode {
         SequentialAction actualAutonomousStuff = new SequentialAction(
                 spinnyBit.actionGoToPosition(0),
                 lift.actionGoToPosition(9),
-                driveIntoDaBar.build(),
+                //driveIntoDaBar.build(),
                 new SleepAction(0.5),
                 lift.actionGoToPosition(0),
                 new SleepAction(0.5),
