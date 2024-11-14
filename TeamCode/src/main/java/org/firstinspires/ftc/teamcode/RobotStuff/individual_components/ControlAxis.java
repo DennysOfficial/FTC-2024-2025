@@ -349,8 +349,9 @@ public abstract class ControlAxis {  //schrödinger's code
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetPosition(targetPosition);
-            setControlMode(ControlMode.positionControl);
+                setTargetPosition(targetPosition);
+                setControlMode(ControlMode.positionControl);
+
             return false;
         }
     }
