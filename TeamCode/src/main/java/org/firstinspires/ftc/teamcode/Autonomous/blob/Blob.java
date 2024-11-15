@@ -101,10 +101,10 @@ public class Blob {
 
     public ArrayList<Double> CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, ArrayList<Double> Vector, ArrayList<Double> VectorCam){
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.get(3));
-        //VectorCam.add(0, );
-
-
-
+        double MagOffset= Math.sqrt(Math.pow(2,CameraOffsets.get(0)) + Math.pow(2,CameraOffsets.get(1)));
+        VectorCam.add(0, MagOffset* Math.cos(angle));
+        VectorCam.add(1, MagOffset* Math.sin(angle));
+        VectorCam.add(2, CameraOffsets.get(2));
 
         return Vector;
     }
