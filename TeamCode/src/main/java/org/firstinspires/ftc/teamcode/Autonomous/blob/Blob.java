@@ -71,11 +71,41 @@ public class Blob {
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             SampleCenter.add(0, boxFit.center.x);
             SampleCenter.add(1, boxFit.center.y);
-
+            SampleCenter.add(3, boxFit.angle);
         }
-
         opMode.telemetry.update();
         //opMode.sleep(50);
         return SampleCenter;
+    }
+
+    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets){
+        double CamYOffset = 1;
+        double CamXOffset = 1;
+        double CamZOffset = 0;
+
+        CameraOffsets.add(0, CamXOffset);
+        CameraOffsets.add(1, CamYOffset);
+        CameraOffsets.add(2, CamZOffset);
+        double CamAngle = Math.tanh(CamYOffset/CamXOffset);
+        CameraOffsets.add(3, CamAngle);
+        return CameraOffsets;
+    }
+
+    public ArrayList<Double> VectorToRobot(ArrayList<Double> VectorToRobot, double RobotX, double RobotY, double RobotHeading){
+
+        VectorToRobot.add(0, RobotX);
+        VectorToRobot.add(1, RobotY);
+        VectorToRobot.add(3, RobotHeading);
+        return VectorToRobot;
+    }
+
+    public ArrayList<Double> CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, ArrayList<Double> Vector, ArrayList<Double> VectorCam){
+        double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.get(3));
+        //VectorCam.add(0, );
+
+
+
+
+        return Vector;
     }
 }
