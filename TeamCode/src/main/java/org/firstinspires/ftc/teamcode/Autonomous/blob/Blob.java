@@ -12,6 +12,7 @@ import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Blob {
@@ -56,7 +57,7 @@ public class Blob {
         return colorLocator;
     }
 
-    public double GetSampleCenter(ColorBlobLocatorProcessor colorLocator, double SampleXCenterCamera, double SampleYCenterCamera){
+    public ArrayList<Double> GetSampleCenter(ColorBlobLocatorProcessor colorLocator, ArrayList<Double> SampleCenter){
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
         ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);
 
@@ -68,13 +69,13 @@ public class Blob {
             RotatedRect boxFit = b.getBoxFit();
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-            SampleXCenterCamera = boxFit.center.x;
-            SampleYCenterCamera = boxFit.center.y;
+            SampleCenter.add(0, boxFit.center.x);
+            SampleCenter.add(1, boxFit.center.y);
 
         }
 
         opMode.telemetry.update();
         //opMode.sleep(50);
-        return
+        return SampleCenter;
     }
 }

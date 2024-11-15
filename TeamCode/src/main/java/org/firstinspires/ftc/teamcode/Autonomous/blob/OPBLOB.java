@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 
+import java.util.ArrayList;
+
 public class OPBLOB extends LinearOpMode {
     public void runOpMode() {
 
@@ -13,10 +15,10 @@ public class OPBLOB extends LinearOpMode {
         int YCameraResolutionWidth = 480;
         Blob NewBlob = new Blob();
         ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, XCameraResolutionHeight, YCameraResolutionWidth);
-        double SampleXCenterCamera = 0;
-        double SampleYCenterCamera = 0;
+        ArrayList<Double> SampleCenter = new ArrayList<Double>();
 
-        NewBlob.GetSampleCenter(colorLocator, SampleXCenterCamera, SampleYCenterCamera);
+
+        NewBlob.GetSampleCenter(colorLocator, SampleCenter);
 
     }
 }
