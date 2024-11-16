@@ -128,12 +128,12 @@ public class Blob {
         VAngle = (sampleCenter.y- camera.get(1)/2) - (camera.get(1)/2) * VFOV/2;
 
         VAngle += camera.get(3);
-        SampleDistanceFromCam = Math.cos(VAngle) * vectorToCam.getZ();
+        SampleDistanceFromCam = Math.cos(Math.toRadians(VAngle)) * vectorToCam.getZ();
         double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
-        SampleLRFromCam = Math.tan(HAngle)* CameraLenseToSample;
+        SampleLRFromCam = Math.tan(Math.toRadians(HAngle))* CameraLenseToSample;
 
-        samplePose.x = SampleDistanceFromCam * Math.cos(robotPose.h) - SampleLRFromCam *Math.sin(robotPose.h);
-        samplePose.y = SampleDistanceFromCam * Math.cos(robotPose.h) + SampleLRFromCam *Math.sin(robotPose.h);
+        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h)) - SampleLRFromCam *Math.sin(Math.toRadians(robotPose.h));
+        samplePose.y = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h)) + SampleLRFromCam *Math.sin(Math.toRadians(robotPose.h));
         samplePose.h = sampleCenter.h;
 
         samplePose.x += vectorToCam.getX();

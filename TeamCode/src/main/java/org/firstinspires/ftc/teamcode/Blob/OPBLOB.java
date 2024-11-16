@@ -38,14 +38,15 @@ public class OPBLOB extends LinearOpMode {
         //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
         //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
-
-
-
         NewBlob.CameraOffsetSetup(CameraOffsets);
 
         NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose, VectorToCam);
 
-        NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera , SamplePose, RobotPose);
+        NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera ,SamplePose, RobotPose);
+
+        telemetry.addData("x",SamplePose.x);
+        telemetry.addData("y",SamplePose.y);
+
 
 
     }
