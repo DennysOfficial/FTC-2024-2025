@@ -140,7 +140,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
                 if (spinnyBit.getPosition() < 40)
-                    lift.setTargetPosition(31);
+                    lift.setTargetPosition(33);
 
             }
 

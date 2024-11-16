@@ -17,7 +17,7 @@ public class RobotConfig {
         return retractedLiftLengthInch;
     }
 
-    public static double rearExtensionLimitInch = 14;
+    public static double rearExtensionLimitInch = 12;
 
     public double getRearExtensionLimitInch() {
         return rearExtensionLimitInch;
