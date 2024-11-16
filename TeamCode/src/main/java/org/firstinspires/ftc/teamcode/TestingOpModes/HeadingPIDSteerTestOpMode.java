@@ -27,11 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -40,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.VelocityPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
@@ -50,8 +51,8 @@ import java.util.List;
 
 
 @TeleOp(name = "Velocity PID steer test", group = "Linear OpMode")
-//@Disabled
-public class VelocityPIDSteerTestOpMode extends LinearOpMode {
+@Disabled
+public class HeadingPIDSteerTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -72,7 +73,7 @@ public class VelocityPIDSteerTestOpMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new VelocityPIDSteerTest(this, activeConfig);
+        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
 
 
         Lift lift = new Lift(this, activeConfig, runtime);
