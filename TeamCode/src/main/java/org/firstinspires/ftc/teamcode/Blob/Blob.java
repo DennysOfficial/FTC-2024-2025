@@ -4,6 +4,8 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opM
 
 import android.util.Size;
 
+//import com.acmerobotics.roadrunner.Vector2dDual;
+
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,6 +15,8 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
 import org.firstinspires.ftc.vision.opencv.ImageRegion;
 import org.opencv.core.RotatedRect;
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +63,7 @@ public class Blob {
         return colorLocator;
     }
 
-    public ArrayList<Double> GetSampleCenter(ColorBlobLocatorProcessor colorLocator, ArrayList<Double> SampleCenter){
+    public SparkFunOTOS.Pose2D GetSampleCenter(ColorBlobLocatorProcessor colorLocator, SparkFunOTOS.Pose2D SampleCenter){
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
         ColorBlobLocatorProcessor.Util.filterByArea(50, 20000, blobs);
 
@@ -71,9 +75,9 @@ public class Blob {
             RotatedRect boxFit = b.getBoxFit();
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-            SampleCenter.add(0, boxFit.center.x);
-            SampleCenter.add(1, boxFit.center.y);
-            SampleCenter.add(3, boxFit.angle);
+            SampleCenter.x= (boxFit.center.x);
+            SampleCenter.y = (boxFit.center.y);
+            SampleCenter.h = (boxFit.angle);
         }
         opMode.telemetry.update();
         //opMode.sleep(50);
@@ -83,7 +87,8 @@ public class Blob {
     public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets){
         double CamYOffset = 1;
         double CamXOffset = 1;
-        double CamZOffset = 0;
+        double CamZOffset = 1;
+
 
         CameraOffsets.add(0, CamXOffset);
         CameraOffsets.add(1, CamYOffset);
@@ -101,14 +106,39 @@ public class Blob {
         return VectorToRobot;
     }
 
-    public SparkFunOTOS.Pose2D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector, ArrayList<Double> VectorCam){
+    public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector, Vector3D VectorCam){
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
         double MagOffset= Math.sqrt(Math.pow(2,CameraOffsets.get(0)) + Math.pow(2,CameraOffsets.get(1)));
-
+        Vector3D VectorToCam = new Vector3D(MagOffset* Math.cos(angle),MagOffset* Math.sin(angle), CameraOffsets.get(2));
         //VectorCam.add(0, MagOffset* Math.cos(angle));
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return VectorCam;
+        return VectorToCam;
     }
+
+    public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, ArrayList<Double> camera, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose){
+        double HFOV = 70.42;
+        double VFOV = 43.3;
+        double HAngle = 0;
+        double VAngle = 0;
+        double SampleDistanceFromCam;
+        double SampleLRFromCam;
+        HAngle = (sampleCenter.x- camera.get(0)/2) - (camera.get(0)/2) * HFOV/2;
+        VAngle = (sampleCenter.y- camera.get(1)/2) - (camera.get(1)/2) * VFOV/2;
+
+        VAngle += camera.get(3);
+        SampleDistanceFromCam = Math.cos(VAngle) * vectorToCam.getZ();
+        double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
+        SampleLRFromCam = Math.tan(HAngle)* CameraLenseToSample;
+        samplePose.x = vectorToCam.getX() * Math.cos(robotPose.h) - vectorToCam.getY() *Math.sin(robotPose.h);
+        samplePose.y = vectorToCam.getX() * Math.cos(robotPose.h) + vectorToCam.getY() *Math.sin(robotPose.h);
+        samplePose.h = sampleCenter.h;
+
+        samplePose.x += vectorToCam.getX();
+        samplePose.y += vectorToCam.getY();
+
+        return  samplePose;
+    }
+
 }

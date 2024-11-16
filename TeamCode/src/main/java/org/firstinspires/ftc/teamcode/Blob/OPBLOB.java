@@ -3,37 +3,49 @@ package org.firstinspires.ftc.teamcode.Blob;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 
 import java.util.ArrayList;
-import java.util.Vector;
+
+import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 public class OPBLOB extends LinearOpMode {
     public void runOpMode() {
 
         String PixelColor = "Blue";
-        int XCameraResolutionHeight = 640;
-        int YCameraResolutionWidth = 480;
+        double XCameraResolutionHeight = 640;
+        double YCameraResolutionWidth = 480;
+        double CameraAngle = 45;
+        ArrayList<Double> Camera = new ArrayList<Double>();
+        Camera.add(0,XCameraResolutionHeight);
+        Camera.add(1,YCameraResolutionWidth);
+        Camera.add(3,CameraAngle);
         Blob NewBlob = new Blob();
-        ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, XCameraResolutionHeight, YCameraResolutionWidth);
-        ArrayList<Double> SampleCenter = new ArrayList<Double>();
+        ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+
+        SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
+
+        Vector3D VectorToCam = new Vector3D(0,0,0);
+
+        SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
+        SparkFunOTOS.Pose2D SamplePose = new SparkFunOTOS.Pose2D();
+        ArrayList<Double> CameraOffsets = new ArrayList<Double>();
+        //loop all bellow
 
 
         NewBlob.GetSampleCenter(colorLocator, SampleCenter);
-        double RobotX = 0;
-        double RobotY = 0;
-        double RobotHeading = 0;
+
         //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
         //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
-        SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
-        ArrayList<Double> CameraOffsets = new ArrayList<Double>();
 
-        Vector VectorToCam = new Vector;
+
+
         NewBlob.CameraOffsetSetup(CameraOffsets);
 
-        NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, RobotPose, VectorToCam);
+        NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose, VectorToCam);
+
+        NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera , SamplePose, RobotPose);
 
 
     }
