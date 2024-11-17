@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.InputLessRobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
@@ -151,7 +152,7 @@ public class Follower {
      */
     public Follower(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
-        //config = new
+        config = new InputLessRobotConfig(hardwareMap);
         initialize();
     }
 
@@ -165,14 +166,18 @@ public class Follower {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(hardwareMap);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+        // now sets the directions and motor names based on robot config
+        leftFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontLeftDrive);
+        leftRear = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);
+        rightRear = hardwareMap.get(DcMotorEx.class, config.deviceConfig.backRightDrive);
+        rightFront = hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontRightDrive);
 
-        // TODO: Make sure that this is the direction your motors need to be reversed in.
-        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftRear.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(config.deviceConfig.frontLeftDriveDir);
+        leftRear.setDirection(config.deviceConfig.backLeftDriveDir);
+        rightRear.setDirection(config.deviceConfig.backRightDriveDir);
+        rightFront.setDirection(config.deviceConfig.frontRightDriveDir);
+
+
 
         motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
 
