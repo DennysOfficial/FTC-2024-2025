@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.Config;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DebugConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DeviceConfig;
@@ -44,6 +45,12 @@ public class RobotConfig {
         this.opMode = opMode;
         inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
         sensorData = new SensorData(opMode.hardwareMap);
+    }
+
+    public RobotConfig(HardwareMap hardwareMap) {
+        this.opMode = null;
+        inputMap = null;
+        sensorData = new SensorData(hardwareMap);
     }
 
 
