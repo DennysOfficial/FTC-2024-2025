@@ -31,7 +31,7 @@ public class ConstantTorqueMotor {
 
     public void setTorque(double targetTorque, double motorVelocityTPS) {
 
-        motor.setPower(targetTorque);
+        motor.setPower(targetTorque); // I gave up
 //
 //        voltageDiff = Math.abs(Math.copySign(targetTorque, sensorData.getBatteryVoltage()) - getBackEMF(motorVelocityTPS));
 //

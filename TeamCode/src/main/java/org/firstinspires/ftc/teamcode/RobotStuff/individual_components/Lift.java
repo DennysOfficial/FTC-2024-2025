@@ -17,7 +17,7 @@ public class Lift extends ControlAxis {
 
     Pivot pivot;
 
-    public void assignPivot(Pivot pivot){
+    public void assignPivot(Pivot pivot) {
         if (pivot == null)
             throw new NullPointerException("the pivot you tried to assign is null you goober");
         this.pivot = pivot;
@@ -28,6 +28,10 @@ public class Lift extends ControlAxis {
     public static double Kp = 0.8;
     public static double Ki = 0.02;
     public static double Kd = 0.03;
+
+    public static double staticFrictionCoefficient = 0;
+    public static double kineticFrictionCoefficient = 0;
+    public static double staticThreshold = 0.1;
 
     @Override
     double getKp() {
@@ -76,15 +80,15 @@ public class Lift extends ControlAxis {
 
     @Override
     double getStaticFeedforward(double targetDirection) {
-        if(pivot == null)
+        if (pivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection) - Math.cos(Math.toRadians(pivot.getPosition())) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(pivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
     double getVelocityFeedforward() {
-        return targetVelocity * velocityFeedforwardCoefficient;
+        return kineticFrictionForce(targetVelocity, kineticFrictionCoefficient, staticThreshold) + targetVelocity * velocityFeedforwardCoefficient;
     }
 
     @Override
@@ -103,7 +107,7 @@ public class Lift extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
-        if(pivot == null)
+        if (pivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
         double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();

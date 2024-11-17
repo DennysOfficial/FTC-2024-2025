@@ -6,9 +6,6 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.profile.MotionProfile;
-import com.acmerobotics.roadrunner.profile.MotionProfileGenerator;
-import com.acmerobotics.roadrunner.profile.MotionState;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -72,12 +69,14 @@ public abstract class ControlAxis {  //schrödinger's code
                 motors.setPower(0);
                 break;
 
+            case gamePadVelocityControl:
             case velocityControl:
                 setTargetPosition(getPosition());
-                this.controlMode = ControlMode.velocityControl;
+                this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
+
 
             case positionControl:
                 this.controlMode = ControlMode.positionControl;
@@ -85,11 +84,12 @@ public abstract class ControlAxis {  //schrödinger's code
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
 
-            case gamePadVelocityControl:
-                setTargetPosition(getPosition());
-                this.controlMode = ControlMode.gamePadVelocityControl;
+            case gamePadTorqueControl:
+            case torqueControl:
+                this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                break;
 
             default:
                 this.controlMode = controlMode;
@@ -108,7 +108,7 @@ public abstract class ControlAxis {  //schrödinger's code
     protected CustomPID positionPID;
 
     void initPid() {
-        positionPID = new CustomPID(opMode, config, axisName + " positionPID");
+        positionPID = new CustomPID(opMode.telemetry, config, axisName + " positionPID");
         // updatePIDCoefficients();
     }
 
@@ -138,28 +138,22 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    public static double staticThresholdUnitsPerSec = 0;
-    public static double staticFrictionComp = 0;
-    public static double kineticFrictionComp = 0;
-
     abstract double getStaticFeedforward(double targetDirection);
 
-    public double staticFrictionForce(double targetDirection) {
+    public double staticFrictionForce(double targetDirection, double staticFrictionComp, double staticThresholdUnitsPerSec) {
         if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
             return 0;
 
         return staticFrictionComp * Math.copySign(1, -targetDirection);
     }
 
-
     abstract double getVelocityFeedforward();
 
-    public double kineticFrictionForce(double targetDirection) {
+    public double kineticFrictionForce(double targetDirection, double kineticFrictionComp, double staticThresholdUnitsPerSec) {
         if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
             return 0;
         return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
     }
-
 
     abstract double getAccelerationFeedforward();
 
@@ -317,115 +311,4 @@ public abstract class ControlAxis {  //schrödinger's code
         miscUpdate();
         debugUpdate();
     }
-
-
-    // Actions stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-
-    double maxVel = Double.NaN;
-    double maxAccel = Double.NaN;;
-    double maxJerk = Double.NaN;;
-
-    public void setMotionConstraints(double maxVel, double maxAccel, double maxJerk){
-        this.maxJerk = maxJerk;
-        this.maxAccel = maxAccel;
-        this.maxVel = maxVel;
-    }
-
-    public class GoToPosition implements Action {
-        MotionProfile profile;
-
-        public GoToPosition(double targetPosition) {
-
-            if(Double.isNaN(maxVel) || Double.isNaN(maxAccel) || Double.isNaN(maxJerk))
-                throw new Error("run set Motion Constraints first goober");
-            profile = MotionProfileGenerator.generateSimpleMotionProfile(
-                    new MotionState(getPosition(), 0, 0),
-                    new MotionState(targetPosition, 0, 0),
-                    maxVel,
-                    maxAccel,
-                    maxJerk
-            );
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                setTargetPosition(targetPosition);
-                setControlMode(ControlMode.positionControl);
-
-            return false;
-        }
-    }
-
-    public class SetPosition implements Action {
-        double targetPosition;
-
-        public SetPosition(double targetPosition) {
-            this.targetPosition = targetPosition;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetPosition(targetPosition);
-            setControlMode(ControlMode.positionControl);
-            return false;
-        }
-    }
-
-    public Action goToPositionAction(double targetPosition) {
-        return new SetPosition(targetPosition);
-    }
-
-    public class SetVelocity implements Action {
-        double targetVelocity;
-
-        public SetVelocity(double targetVelocity) {
-            this.targetVelocity = targetVelocity;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetVelocity(targetVelocity);
-            setControlMode(ControlMode.velocityControl);
-            return false;
-        }
-    }
-
-    public Action setVelocityAction(double targetVelocity) {
-        return new SetVelocity(targetVelocity);
-    }
-
-
-    public class SetTorque implements Action {
-        double targetTorque;
-
-        public SetTorque(double targetTorque) {
-            this.targetTorque = targetTorque;
-        }
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setTargetTorque(targetTorque);
-            setControlMode(ControlMode.torqueControl);
-            return false;
-        }
-    }
-
-    public Action setTorqueAction(double targetTorque) {
-        return new SetTorque(targetTorque);
-    }
-
-
-    public class Update implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            update();
-            return true;
-        }
-    }
-
-    public Action updateAction() {
-        return new Update();
-    }
-
-
 }

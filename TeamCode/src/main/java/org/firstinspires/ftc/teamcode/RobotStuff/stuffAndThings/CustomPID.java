@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class CustomPID {
-
-    public boolean debugEnabled = false;
 
     double kP = 0;
     double kI = 0;
@@ -16,26 +13,26 @@ public class CustomPID {
     double I = 0;
     double D = 0;
 
-    double previousActualPosition = 0;
-    OpMode opMode;
+    double previousActualPosition = Double.NaN;
+    Telemetry telemetry;
     RobotConfig config;
 
-    public final String name;
+    public final String instanceName;
 
 
-    public CustomPID(OpMode opMode, RobotConfig config, String instanceName) {
-        this.opMode = opMode;
+    public CustomPID(Telemetry telemetry, RobotConfig config, String instanceName) {
         this.config = config;
-        name = instanceName;
+        this.telemetry = telemetry;
+        this.instanceName = instanceName;
     }
 
-    public CustomPID(OpMode opMode, RobotConfig config, double P, double kI, double kD, String instanceName) {
-        this.opMode = opMode;
+    public CustomPID(Telemetry telemetry, RobotConfig config, double P, double kI, double kD, String instanceName) {
         this.config = config;
+        this.telemetry = telemetry;
         this.kP = P;
         this.kI = kI;
         this.kD = kD;
-        name = instanceName;
+        this.instanceName = instanceName;
     }
 
     public void setCoefficients(double kP, double kI, double kD) {
@@ -44,13 +41,6 @@ public class CustomPID {
         this.kD = kD;
     }
 
-    public void startPID(double actualPosition) {
-        previousActualPosition = actualPosition;
-    }
-
-    public void setPreviousActualPosition(double previousActualPosition) {
-        this.previousActualPosition = previousActualPosition;
-    }
 
     public double runPID(double targetPosition, double actualPosition, double deltaTime) {
 
@@ -58,6 +48,11 @@ public class CustomPID {
     }
 
     public double runPID(double targetValue, double actualValue, double deltaTime, double dValueDT) {
+
+        if (Double.isNaN(previousActualPosition)) {
+            previousActualPosition = actualValue;
+            return 0;
+        }
 
         final double error = targetValue - actualValue;
 
@@ -69,10 +64,10 @@ public class CustomPID {
 
 
         if (config.debugConfig.getPIDDebug()) {
-            opMode.telemetry.addData(name + " " + "error", error);
-            opMode.telemetry.addData(name + " " + "value", actualValue);
-            opMode.telemetry.addData(name + " " + "target", targetValue);
-            opMode.telemetry.addData(name + " " + "Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
+            telemetry.addData(instanceName + " " + "error", error);
+            telemetry.addData(instanceName + " " + "value", actualValue);
+            telemetry.addData(instanceName + " " + "target", targetValue);
+            telemetry.addData(instanceName + " " + "Current PID values", "P: %4.2f, I: %4.2f, D %4.2f ", P, I, D);
         }
 
         return P + I + D;
