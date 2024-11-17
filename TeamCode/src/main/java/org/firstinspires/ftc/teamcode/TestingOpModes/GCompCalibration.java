@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 public class GCompCalibration extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override

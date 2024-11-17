@@ -45,6 +45,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import java.util.List;
 
@@ -53,7 +54,8 @@ import java.util.List;
 public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
+
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override

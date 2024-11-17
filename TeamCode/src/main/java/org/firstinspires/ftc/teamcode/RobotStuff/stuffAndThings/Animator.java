@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Animator {
 
-    ElapsedTime runtime;
+    ReadOnlyRuntime runtime;
     OpMode opMode;
     RobotConfig config;
 
@@ -40,7 +40,7 @@ public class Animator {
     List<animation> animationQueue = new ArrayList<>();
 
 
-    public Animator(ElapsedTime runtime, OpMode opMode, RobotConfig config, Pivot spinyBit, Lift lift) {
+    public Animator(ReadOnlyRuntime runtime, OpMode opMode, RobotConfig config, Pivot spinyBit, Lift lift) {
         this.runtime = runtime;
         this.opMode = opMode;
         this.config = config;

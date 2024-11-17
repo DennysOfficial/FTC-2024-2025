@@ -14,10 +14,11 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 public abstract class ControlAxis {  //schrödinger's code
 
-    ElapsedTime runtime;
+    ReadOnlyRuntime runtime;
     double deltaTime = 0;
 
     protected PositionDerivatives positionDerivatives;
@@ -239,7 +240,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-    public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ElapsedTime runtime) {
+    public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ReadOnlyRuntime runtime) {
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;

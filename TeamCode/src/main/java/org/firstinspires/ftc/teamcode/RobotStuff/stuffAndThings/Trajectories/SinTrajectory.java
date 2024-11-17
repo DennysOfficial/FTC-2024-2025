@@ -7,7 +7,7 @@ public class SinTrajectory {
 
     double startTime;
     double endTime;
-    ElapsedTime;
+    //ElapsedTime;
     public SinTrajectory(double startTime, double endTime){
 
     }

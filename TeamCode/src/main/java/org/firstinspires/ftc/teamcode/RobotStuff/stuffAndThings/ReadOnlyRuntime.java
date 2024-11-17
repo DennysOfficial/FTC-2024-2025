@@ -8,16 +8,25 @@ public class ReadOnlyRuntime {
     boolean initialized = false;
 
 
-    public void start() {
+    public void reset() {
         if (initialized)
             throw new Error("read only runtime can only be started once. that's like the whole point");
 
-        elapsedTime.startTime();
+        elapsedTime.reset();
         initialized = true;
     }
 
+
     public ReadOnlyRuntime(ElapsedTime elapsedTime) {
         this.elapsedTime = elapsedTime;
+    }
+
+    public ReadOnlyRuntime() {
+        elapsedTime = new ElapsedTime();
+    }
+
+    public ReadOnlyRuntime(ElapsedTime.Resolution resolution) {
+        elapsedTime = new ElapsedTime(resolution);
     }
 
     public double time(){

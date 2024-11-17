@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
 public class Lift extends ControlAxis {
@@ -97,7 +98,7 @@ public class Lift extends ControlAxis {
     }
 
 
-    public Lift(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
+    public Lift(OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
         super(opMode, config, "Lift", "inches", 27.0 / 4300.0, runtime);
 
         softLimits = new Range<>(0.5, 31.0);

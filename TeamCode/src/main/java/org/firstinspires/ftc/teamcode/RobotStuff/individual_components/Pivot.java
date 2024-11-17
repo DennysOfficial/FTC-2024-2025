@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.MathStuff;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
 public class Pivot extends ControlAxis { //schrödinger's code
@@ -114,7 +115,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
 
-    public Pivot(OpMode opMode, RobotConfig config, ElapsedTime runtime) {
+    public Pivot(OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
         super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
 
         softLimits = new Range<>(-40.0, 86.9);
