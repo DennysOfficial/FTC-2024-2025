@@ -16,7 +16,7 @@ public class OPBLOB extends LinearOpMode {
         double XCameraResolutionHeight = 640;
         double YCameraResolutionWidth = 480;
         double CameraAngle = 45;
-        ArrayList<Double> Camera = new ArrayList<Double>();
+        ArrayList<Double> Camera = new ArrayList<>();
         Camera.add(0,XCameraResolutionHeight);
         Camera.add(1,YCameraResolutionWidth);
         Camera.add(3,CameraAngle);
@@ -25,29 +25,33 @@ public class OPBLOB extends LinearOpMode {
 
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 
-        Vector3D VectorToCam = new Vector3D(0,0,0);
+        Vector3D VectorToCam;
 
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
         SparkFunOTOS.Pose2D SamplePose = new SparkFunOTOS.Pose2D();
-        ArrayList<Double> CameraOffsets = new ArrayList<Double>();
+        ArrayList<Double> CameraOffsets = new ArrayList<>();
         //loop all bellow
 
+        while (opModeIsActive()) {
+            SampleCenter = NewBlob.GetSampleCenter(colorLocator, SampleCenter);
 
-        NewBlob.GetSampleCenter(colorLocator, SampleCenter);
+            //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
+            //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
-        //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
-        //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
+            CameraOffsets = NewBlob.CameraOffsetSetup(CameraOffsets);
 
-        NewBlob.CameraOffsetSetup(CameraOffsets);
+            VectorToCam = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose);
 
-        NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose, VectorToCam);
+            SamplePose = NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera, SamplePose, RobotPose);
 
-        NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera ,SamplePose, RobotPose);
+            telemetry.addData("CameraX" ,"CameraY" ,"CameraZ ","CameraA ", (CameraOffsets.get(0)),CameraOffsets.get(1) ,CameraOffsets.get(2),CameraOffsets.get(3));
 
-        telemetry.addData("x",SamplePose.x);
-        telemetry.addData("y",SamplePose.y);
+            telemetry.addData("x", SamplePose.x);
+            telemetry.addData("y", SamplePose.y);
 
+            telemetry.update();
 
+        }
 
     }
 }
