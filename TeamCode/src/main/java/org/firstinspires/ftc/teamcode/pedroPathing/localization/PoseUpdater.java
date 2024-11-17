@@ -81,9 +81,12 @@ public class PoseUpdater {
     public void update() {
         previousVelocity = getVelocity();
         previousPose = applyOffset(getRawPose());
+
+        // why are these not at the beginning of the loop
         currentPose = null;
         currentVelocity = null;
         currentAcceleration = null;
+
         previousPoseTime = currentPoseTime;
         currentPoseTime = System.nanoTime();
         localizer.update();

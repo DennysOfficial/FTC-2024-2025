@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
@@ -142,6 +143,7 @@ public class Follower {
     public static boolean useHeading = true;
     public static boolean useDrive = true;
 
+    RobotConfig config;
     /**
      * This creates a new Follower given a HardwareMap.
      *
@@ -149,6 +151,7 @@ public class Follower {
      */
     public Follower(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
+        //config = new
         initialize();
     }
 
