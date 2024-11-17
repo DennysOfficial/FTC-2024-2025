@@ -25,7 +25,7 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
     public HeadingPIDSteerTest(LinearOpMode opMode, RobotConfig config) {
         super(opMode, config);
-        steeringPID = new CustomPID(opMode, config, "steeringPID");
+        steeringPID = new CustomPID(opMode.telemetry, config, "steeringPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
     }
