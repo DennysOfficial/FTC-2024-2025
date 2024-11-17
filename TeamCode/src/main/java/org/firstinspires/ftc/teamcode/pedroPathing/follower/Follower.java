@@ -470,6 +470,7 @@ public class Follower {
     public void update() {
         updatePose();
 
+        //never nesters be damned
         if (!teleopDrive) {
             if (currentPath != null) {
                 if (holdingPosition) {
