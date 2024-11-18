@@ -142,8 +142,8 @@ public class Blob {
         double SampleDistanceFromCam;
         double SampleLRFromCam;
         //angle of pixel from center
-        HAngle = ((sampleCenter.x + (camera.get(0)/4) - (camera.get(0)/2))) - (camera.get(0)/2) * HFOV/2;
-        VAngle = ((sampleCenter.y + (camera.get(1)/4)- (camera.get(1)/2))) - (camera.get(1)/2) * VFOV/2;
+        HAngle = ((sampleCenter.x + (camera.get(0)/4) - (camera.get(0)/2))) / ((camera.get(0)/2) * HFOV/2);
+        VAngle = ((sampleCenter.y + (camera.get(1)/4) - (camera.get(1)/2))) / ((camera.get(1)/2) * VFOV/2);
 
         VAngle += camera.get(2);
         SampleDistanceFromCam = Math.cos(Math.toRadians(VAngle)) * vectorToCam.getZ();
