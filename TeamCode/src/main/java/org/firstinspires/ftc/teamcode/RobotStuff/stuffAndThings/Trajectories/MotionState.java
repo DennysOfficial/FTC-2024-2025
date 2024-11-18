@@ -35,4 +35,11 @@ public class MotionState {
         this.jerk = 0;
     }
 
+    public MotionState(){
+        this.position = Double.NaN;
+        this.velocity = 0;
+        this.acceleration = 0;
+        this.jerk = 0;
+    }
+
 }
