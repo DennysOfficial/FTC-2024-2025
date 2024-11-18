@@ -46,7 +46,7 @@ import static java.lang.Thread.sleep;
 public class Auto_Test_FSM extends LinearOpMode {
 
     //Points of Interest
-    private final Pose startposeactual =  new Pose( 00 + 72,  63 + 72, Math.toRadians(270));  // This is where the robot starts
+    public final Pose startposeactual =  new Pose( 00 + 72,  63 + 72, Math.toRadians(270));  // This is where the robot starts
     private final Pose startpose =        new Pose( 00 + 72,  63 + 72, Math.toRadians(180));  // this is a POI that just so happens to be similar to the above pose. Make sure you use these two correctly
     private final Pose rungpose =         new Pose( 00 + 72,  36 + 72, Math.toRadians(270));
     private final Pose rungpose1 =        new Pose(-03 + 72,  36 + 72, Math.toRadians(270));
@@ -66,7 +66,7 @@ public class Auto_Test_FSM extends LinearOpMode {
     private PathChain moveSamples, scoreSpecimens;
 
     // Other misc. stuff
-    private Follower follower;
+    private Follower follower = new Follower(hardwareMap);
 
     // This enum defines our "state"
     // This is essentially just defines the possible steps our program will take
