@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -39,8 +39,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
@@ -49,13 +49,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
-//@Disabled y
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+
+@TeleOp(name = "Velocity PID steer test", group = "Linear OpMode")
+//@Disabled
+public class HeadingPIDSteerTestOpMode extends LinearOpMode {
 
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
-
+private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -73,23 +73,23 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
 
 
         Lift lift = new Lift(this, activeConfig, runtime);
 
-        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
-
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
-
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.positionControl;
 
         lift.setControlMode(defaultLiftControlMode);
 
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
+
+        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.positionControl;
 
         spinnyBit.setControlMode(defaultPivotControlMode);
+
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -142,7 +142,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
                 if (spinnyBit.getPosition() < 40)
-                    lift.setTargetPosition(33);
+                    lift.setTargetPosition(31);
 
             }
 
@@ -164,7 +164,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
+                spinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                 spinnyBit.setTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)

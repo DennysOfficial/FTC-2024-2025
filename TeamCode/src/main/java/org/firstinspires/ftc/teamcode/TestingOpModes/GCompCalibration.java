@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 public class GCompCalibration extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -36,13 +37,13 @@ public class GCompCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
 
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        lift.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 
 
         waitForStart();
@@ -59,9 +60,9 @@ public class GCompCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            lift.update(deltaTime, spinyBit.getPosition());
+            lift.update();
 
-            spinyBit.update(deltaTime,lift.getPosition());
+            spinyBit.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

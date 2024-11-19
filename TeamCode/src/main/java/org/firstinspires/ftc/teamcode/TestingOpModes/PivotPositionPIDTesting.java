@@ -9,11 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "Pivot Pid Test: OpMode", group = "Linear OpMode")
@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 public class PivotPositionPIDTesting extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -38,11 +38,11 @@ public class PivotPositionPIDTesting extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Lift lift = new Lift(this, activeConfig);
-        lift.setControlMode(ControlAxis.ControlMode.directTorqueControl);
+        Lift lift = new Lift(this, activeConfig, runtime);
+        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
         waitForStart();
@@ -59,9 +59,8 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            spinyBit.update(deltaTime, lift.getPosition());
-
-            lift.update(deltaTime, spinyBit.getPosition());
+            spinyBit.update();
+            lift.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());
