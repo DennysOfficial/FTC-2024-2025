@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -57,66 +52,22 @@ public class ActiveIntake {
             flapServo.setPosition(flapOpen);
     }
 
-    public class Intake implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(intakeSpeed);
-            return false;
-        }
+    public void intake(){
+        spinnyServo.setPower(intakeSpeed);
+    }
+    public void outtake(){
+        spinnyServo.setPower(outtakeSpeed);
+    }
+    public void stop(){
+        spinnyServo.setPower(0);
     }
 
-    public Action intake() {
-        return new Intake();
+    public void openFlap(){
+        flapServo.setPosition(flapOpen);
     }
 
-    public class Outtake implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(outtakeSpeed);
-            return false;
-        }
+    public void closeFlap(){
+        flapServo.setPosition(flapClosed);
     }
 
-    public Action outtake() {
-        return new Outtake();
-    }
-
-
-    public class Stop implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(0);
-            return false;
-        }
-    }
-
-    public Action stop() {
-        return new Stop();
-    }
-
-
-    public class OpenFlap implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flapServo.setPosition(flapOpen);
-            return false;
-        }
-    }
-
-    public Action openFlap() {
-        return new OpenFlap();
-    }
-
-
-    public class CloseFlap implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flapServo.setPosition(flapClosed);
-            return false;
-        }
-    }
-
-    public Action closeFlap() {
-        return new CloseFlap();
-    }
 }
