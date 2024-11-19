@@ -1,10 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -57,66 +52,4 @@ public class ActiveIntake {
             flapServo.setPosition(flapOpen);
     }
 
-    public class Intake implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(intakeSpeed);
-            return false;
-        }
-    }
-
-    public Action intake() {
-        return new Intake();
-    }
-
-    public class Outtake implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(outtakeSpeed);
-            return false;
-        }
-    }
-
-    public Action outtake() {
-        return new Outtake();
-    }
-
-
-    public class Stop implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            spinnyServo.setPower(0);
-            return false;
-        }
-    }
-
-    public Action stop() {
-        return new Stop();
-    }
-
-
-    public class OpenFlap implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flapServo.setPosition(flapOpen);
-            return false;
-        }
-    }
-
-    public Action openFlap() {
-        return new OpenFlap();
-    }
-
-
-    public class CloseFlap implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            flapServo.setPosition(flapClosed);
-            return false;
-        }
-    }
-
-    public Action closeFlap() {
-        return new CloseFlap();
-    }
 }
