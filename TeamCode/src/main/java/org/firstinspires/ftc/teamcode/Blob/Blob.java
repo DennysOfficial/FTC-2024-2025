@@ -110,7 +110,7 @@ public class Blob {
         CameraOffsets.add(0, CamXOffset);
         CameraOffsets.add(1, CamYOffset);
         CameraOffsets.add(2, CamZOffset);
-        double CamAngle = Math.tanh(CamYOffset / CamXOffset);
+        double CamAngle = Math.toDegrees(Math.tanh(CamXOffset / CamYOffset));
         CameraOffsets.add(3, CamAngle);
         return CameraOffsets;
     }
@@ -127,7 +127,7 @@ public class Blob {
         double anglecamera = 45;
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
         double MagOffset = Math.sqrt(Math.pow(2, CameraOffsets.get(0)) + Math.pow(2, CameraOffsets.get(1)));
-        Vector3D VectorToCam = new Vector3D(MagOffset * Math.cos(angle), MagOffset * Math.sin(angle), CameraOffsets.get(2));
+        Vector3D VectorToCam = new Vector3D(MagOffset * Math.sin(angle), MagOffset * Math.cos(angle), CameraOffsets.get(2));
         //VectorCam.add(0, MagOffset* Math.cos(angle));
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
@@ -159,7 +159,7 @@ public class Blob {
         //this not work
         SampleDistanceFromCam = vectorToCam.getZ()/ Math.tan(Math.toRadians(VAngle))  ;
         //double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
-        SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * SampleDistanceFromCam;
+        SampleLRFromCam = SampleDistanceFromCam /Math.tan(Math.toRadians(HAngle));
         //SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
         // vector rotation
         opMode.telemetry.addData("thing",SampleDistanceFromCam);
