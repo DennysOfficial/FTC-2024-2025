@@ -8,4 +8,6 @@ public class CameraData {
     Vector3D positionOnRobot;
     double headingAngleOffset;
     double pitchAngle;
+    double HFOV = 70.42;
+    double VFOV = 43.3;
 }

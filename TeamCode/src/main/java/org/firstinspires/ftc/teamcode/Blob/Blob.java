@@ -138,17 +138,17 @@ public class Blob {
 
 
     public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose) {
-        double HFOV = 70.42;
-        double VFOV = 43.3;
 
         double VAngle;
         double SampleDistanceFromCam;
         double SampleLRFromCam;
         //angle of pixel from center
+
         double screenCordX = sampleCenter.x + cameraData.xResolution / 4.0 - cameraData.xResolution / 2.0;
         double normalizedScreenCordX = screenCordX / (cameraData.xResolution / 2.0);
-        double HAngle = normalizedScreenCordX * (HFOV / 2);
-        VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * VFOV / 2);
+        double HAngle = normalizedScreenCordX * (cameraData.HFOV / 2);
+
+        VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * cameraData.VFOV / 2);
 
         VAngle += cameraData.pitchAngle;
         SampleDistanceFromCam = Math.cos(Math.toRadians(VAngle)) * vectorToCam.getZ();
