@@ -157,15 +157,16 @@ public class Blob {
         opMode.telemetry.addData("vAngle", VAngle);
         VAngle += cameraData.pitchAngle;
         //this not work
-        SampleDistanceFromCam = vectorToCam.getZ()/ Math.cos(Math.toRadians(VAngle))  ;
-        double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
-        SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
+        SampleDistanceFromCam = vectorToCam.getZ()/ Math.tan(Math.toRadians(VAngle))  ;
+        //double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
+        SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * SampleDistanceFromCam;
+        //SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
         // vector rotation
         opMode.telemetry.addData("thing",SampleDistanceFromCam);
         opMode.telemetry.addData("thing2",SampleLRFromCam);
 
-        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90.0 )) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90.0));
-        samplePose.y = SampleLRFromCam * Math.cos(Math.toRadians(robotPose.h + 90.0)) +  SampleDistanceFromCam * Math.sin(Math.toRadians(robotPose.h + 90.0));
+        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h )) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h ));
+        samplePose.y = SampleLRFromCam * Math.cos(Math.toRadians(robotPose.h )) +  SampleDistanceFromCam * Math.sin(Math.toRadians(robotPose.h ));
         samplePose.h = sampleCenter.h;
         opMode.telemetry.addData("hAngle", HAngle);
         opMode.telemetry.addData("x", samplePose.x);
