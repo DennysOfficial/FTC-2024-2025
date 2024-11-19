@@ -158,8 +158,8 @@ public class Blob {
         samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
         samplePose.y = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) + SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
         samplePose.h = sampleCenter.h;
-        opMode.telemetry.addData("hangle", HAngle);
-        opMode.telemetry.addData("hvngle", VAngle);
+        opMode.telemetry.addData("hAngle", HAngle);
+        opMode.telemetry.addData("vAngle", VAngle);
         samplePose.x += vectorToCam.getX();
         samplePose.y += vectorToCam.getY();
 
