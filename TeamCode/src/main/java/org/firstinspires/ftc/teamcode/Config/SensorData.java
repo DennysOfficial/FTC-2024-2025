@@ -14,7 +14,7 @@ public class SensorData {
     }
 
     public void update() {
-        updateBatteryVoltage();
+        //updateBatteryVoltage();
     }
 
     void updateBatteryVoltage() {
@@ -31,7 +31,7 @@ public class SensorData {
         return null;
     }
     VoltageSensor batteryVoltageSensor;
-    double batteryVoltage;
+    double batteryVoltage = 12;
     public double getBatteryVoltage() {
         return batteryVoltage;
     }

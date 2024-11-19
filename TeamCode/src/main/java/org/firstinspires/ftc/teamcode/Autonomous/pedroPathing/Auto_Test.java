@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "SoupcOpMode_PP_Small_FSM")
+@Autonomous(name = "SoupcOpMode_PP_Small_FSM-2")
 public class Auto_Test extends OpMode{
 
     enum State {
@@ -177,8 +177,6 @@ public class Auto_Test extends OpMode{
 
 
         RobotConfig config = new RobotConfig(this);
-
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap, this);
     }
 
     @Override

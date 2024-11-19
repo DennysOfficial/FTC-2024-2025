@@ -24,8 +24,8 @@ public class ActiveIntake {
     double flapClosed = 0.9;
 
 
-    public ActiveIntake(OpMode opMode, RobotConfig config) {
-        this.opMode = (LinearOpMode) opMode;
+    public ActiveIntake(LinearOpMode opMode, RobotConfig config) {
+        this.opMode = opMode;
         this.config = config;
         spinyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.grabberServo);
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
