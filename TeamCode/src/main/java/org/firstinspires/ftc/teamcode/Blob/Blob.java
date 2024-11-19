@@ -135,13 +135,7 @@ public class Blob {
         return VectorToCam;
     }
 
-    public class CameraData {
-        int xResolution;
-        int yResolution;
-        Vector3D positionOnRobot;
-        double headingAngleOffset;
-        double pitchAngle;
-    }
+
 
     public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose) {
         double HFOV = 70.42;

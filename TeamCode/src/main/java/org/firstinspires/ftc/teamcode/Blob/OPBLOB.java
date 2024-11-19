@@ -19,12 +19,12 @@ public class OPBLOB extends LinearOpMode {
         double XCameraResolutionHeight = 640;
         double YCameraResolutionWidth = 480;
         double CameraAngle = 30;
-        ArrayList<Double> Camera = new ArrayList<>();
-        Camera.add(0,XCameraResolutionHeight);
-        Camera.add(1,YCameraResolutionWidth);
-        Camera.add(2,CameraAngle);
 
-        Blob.CameraData cameraData = new Blob.CameraData();
+        CameraData cameraData = new CameraData();
+        cameraData.xResolution = (int)XCameraResolutionHeight;
+        cameraData.yResolution = (int)YCameraResolutionWidth;
+        cameraData.pitchAngle = CameraAngle;
+
 
         Blob NewBlob = new Blob(this);
         ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
@@ -48,7 +48,7 @@ public class OPBLOB extends LinearOpMode {
 
             VectorToCam = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose);
 
-            SamplePose = NewBlob.SampleLocation(SampleCenter, VectorToCam, Camera, SamplePose, RobotPose);
+            SamplePose = NewBlob.SampleLocation(SampleCenter, VectorToCam, cameraData, SamplePose, RobotPose);
 
             telemetry.addData("Sample center", SampleCenter.x);
             telemetry.addData("Sample center", SampleCenter.y);
