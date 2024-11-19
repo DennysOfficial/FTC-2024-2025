@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Config.RobotConfig;
 
 public class ActiveIntake {
 
-    LinearOpMode opMode;
+    OpMode opMode;
     RobotConfig config;
 
 
@@ -24,7 +24,7 @@ public class ActiveIntake {
     double flapClosed = 0.9;
 
 
-    public ActiveIntake(LinearOpMode opMode, RobotConfig config) {
+    public ActiveIntake(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
         spinyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.grabberServo);
