@@ -139,27 +139,38 @@ public class Blob {
 
     public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose) {
 
-        double VAngle;
+        //double VAngle;
         double SampleDistanceFromCam;
         double SampleLRFromCam;
         //angle of pixel from center
 
-        double screenCordX = sampleCenter.x + cameraData.xResolution / 4.0 - cameraData.xResolution / 2.0;
+        double screenCordX = sampleCenter.x - cameraData.xResolution / 2.0;
         double normalizedScreenCordX = screenCordX / (cameraData.xResolution / 2.0);
         double HAngle = normalizedScreenCordX * (cameraData.HFOV / 2);
 
-        VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * cameraData.VFOV / 2);
-
+        double screenCordY = sampleCenter.y - cameraData.yResolution / 2.0;
+        double normalizedScreenCordY = screenCordY / (cameraData.yResolution / 2.0);
+        double VAngle = normalizedScreenCordY * (cameraData.VFOV / 2) * -1;
+        opMode.telemetry.addData("screencordX", screenCordX);
+        opMode.telemetry.addData("screencordY", screenCordY);
+        //VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * cameraData.VFOV / 2);
+        opMode.telemetry.addData("vAngle", VAngle);
         VAngle += cameraData.pitchAngle;
-        SampleDistanceFromCam = Math.cos(Math.toRadians(VAngle)) * vectorToCam.getZ();
+        //this not work
+        SampleDistanceFromCam = vectorToCam.getZ()/ Math.cos(Math.toRadians(VAngle))  ;
         double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
         SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
         // vector rotation
-        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
-        samplePose.y = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) + SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
+        opMode.telemetry.addData("thing",SampleDistanceFromCam);
+        opMode.telemetry.addData("thing2",SampleLRFromCam);
+
+        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90.0 )) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90.0));
+        samplePose.y = SampleLRFromCam * Math.cos(Math.toRadians(robotPose.h + 90.0)) +  SampleDistanceFromCam * Math.sin(Math.toRadians(robotPose.h + 90.0));
         samplePose.h = sampleCenter.h;
         opMode.telemetry.addData("hAngle", HAngle);
-        opMode.telemetry.addData("vAngle", VAngle);
+        opMode.telemetry.addData("x", samplePose.x);
+        opMode.telemetry.addData("y", samplePose.y);
+
         samplePose.x += vectorToCam.getX();
         samplePose.y += vectorToCam.getY();
 
