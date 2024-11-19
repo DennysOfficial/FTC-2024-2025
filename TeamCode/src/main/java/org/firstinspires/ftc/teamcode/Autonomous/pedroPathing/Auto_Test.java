@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.localization.Pose;
@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Bez
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -62,7 +63,7 @@ public class Auto_Test extends OpMode{
 
     RobotConfig activeConfig = new RobotConfig(this);
 
-    private final ElapsedTime runtime = new ElapsedTime();
+    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -163,13 +164,13 @@ public class Auto_Test extends OpMode{
         // Initialize our lift
         RobotConfig activeConfig = new RobotConfig(this);
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
 
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
         //Pincher pincher = new Pincher(this,activeConfig);
 

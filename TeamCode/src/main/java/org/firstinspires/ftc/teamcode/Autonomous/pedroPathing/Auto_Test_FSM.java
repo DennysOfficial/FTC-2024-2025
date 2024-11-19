@@ -11,10 +11,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.localization.Pose;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Bez
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import static java.lang.Thread.sleep;
 
@@ -89,7 +91,7 @@ public class Auto_Test_FSM extends LinearOpMode {
 
     // Define our start pose
 
-    private final ElapsedTime runtime = new ElapsedTime();
+    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -105,13 +107,13 @@ public class Auto_Test_FSM extends LinearOpMode {
         // Initialize our lift
         RobotConfig activeConfig = new RobotConfig(this);
 
-        org.firstinspires.ftc.teamcode.individual_components.Lift lift = new org.firstinspires.ftc.teamcode.individual_components.Lift(this, activeConfig);
+        Lift lift = new Lift(this, activeConfig, runtime);
 
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.directControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
@@ -255,8 +257,8 @@ public class Auto_Test_FSM extends LinearOpMode {
             frameTimer.reset();
 
             drive.update();
-            lift.update(deltaTime, spinyBit.getPosition());
-            spinyBit.update(deltaTime, lift.getPosition());
+            lift.update();
+            spinyBit.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
             telemetry.addData("x", poseEstimate.getX());
@@ -271,15 +273,4 @@ public class Auto_Test_FSM extends LinearOpMode {
     // Assume we have a hardware class called lift
     // Lift uses a PID controller to maintain its height
     // Thus, update() must be called in a loop
-    class Lift {
-        public Lift(HardwareMap hardwareMap) {
-            // Beep boop this is the the constructor for the lift
-            // Assume this sets up the lift hardware
-        }
-
-        public void update() {
-            // Beep boop this is the lift update function
-            // Assume this runs some PID controller for the lift
-        }
-    }
 }

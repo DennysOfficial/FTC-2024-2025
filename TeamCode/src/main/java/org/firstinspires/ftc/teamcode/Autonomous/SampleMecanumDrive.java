@@ -54,7 +54,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySe
 import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.Autonomous.trajectorysequence.TrajectorySequenceRunner;
 import org.firstinspires.ftc.teamcode.Autonomous.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 /*
  * Simple mecanum drive hardware implementation for REV hardware.
