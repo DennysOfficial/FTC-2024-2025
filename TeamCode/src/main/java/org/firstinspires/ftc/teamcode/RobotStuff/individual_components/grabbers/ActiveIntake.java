@@ -52,4 +52,22 @@ public class ActiveIntake {
             flapServo.setPosition(flapOpen);
     }
 
+    public void intake(){
+        spinnyServo.setPower(intakeSpeed);
+    }
+    public void outtake(){
+        spinnyServo.setPower(outtakeSpeed);
+    }
+    public void stop(){
+        spinnyServo.setPower(0);
+    }
+
+    public void openFlap(){
+        flapServo.setPosition(flapOpen);
+    }
+
+    public void closeFlap(){
+        flapServo.setPosition(flapClosed);
+    }
+
 }
