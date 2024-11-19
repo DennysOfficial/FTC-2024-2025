@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -12,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class ActiveIntake {
 
-    LinearOpMode opMode;
+    OpMode opMode;
     RobotConfig config;
 
 
@@ -27,7 +28,7 @@ public class ActiveIntake {
     double flapClosed = 0.9;
 
 
-    public ActiveIntake(LinearOpMode opMode, RobotConfig config) {
+    public ActiveIntake(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
         spinnyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.grabberServo);

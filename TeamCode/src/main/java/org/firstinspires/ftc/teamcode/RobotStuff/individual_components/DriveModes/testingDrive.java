@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 public class testingDrive extends DriveModeBase {
 
     BNO055IMU imu;
-    public testingDrive(LinearOpMode opMode, RobotConfig config) {
+    public testingDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
 
         imu = opMode.hardwareMap.get(BNO055IMU.class,"imu");

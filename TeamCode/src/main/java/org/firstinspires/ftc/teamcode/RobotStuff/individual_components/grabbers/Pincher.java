@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class Pincher {
 
-    LinearOpMode opMode;
+    OpMode opMode;
     RobotConfig config;
 
 
@@ -18,7 +19,7 @@ public class Pincher {
     Servo wristServo;
 
 
-    public Pincher(LinearOpMode opMode, RobotConfig config) {
+    public Pincher(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
         pinchServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.grabberServo);

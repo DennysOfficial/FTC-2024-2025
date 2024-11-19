@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -15,7 +16,7 @@ public class VelocityControlDrive extends DriveModeBase {
     public static PIDFCoefficients pidfCoefficients = new PIDFCoefficients(20, 0.1, 1, 1); // TODO needs to be adjusted to robot
     double[] motorPowers = new double[4];
 
-    public  VelocityControlDrive(LinearOpMode opMode, RobotConfig config) {
+    public  VelocityControlDrive(OpMode opMode, RobotConfig config) {
 
         super(opMode, config);
 

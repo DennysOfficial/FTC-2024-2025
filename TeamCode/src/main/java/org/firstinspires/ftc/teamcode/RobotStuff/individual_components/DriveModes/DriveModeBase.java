@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiMotor;
 
 public abstract class DriveModeBase {
 
-    protected LinearOpMode opMode;
+    protected OpMode opMode;
 
     protected RobotConfig config;
     protected DcMotorEx frontLeftDrive;
@@ -18,14 +19,14 @@ public abstract class DriveModeBase {
 
     protected MultiMotor motors;
 
-    public DriveModeBase(LinearOpMode opMode, RobotConfig config) {
+    public DriveModeBase(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
         initMotors(opMode, config);
     }
 
-    public void initMotors(LinearOpMode opMode, RobotConfig config) {
+    public void initMotors(OpMode opMode, RobotConfig config) {
 
         frontLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.frontLeftDrive);
         backLeftDrive = opMode.hardwareMap.get(DcMotorEx.class, config.deviceConfig.backLeftDrive);

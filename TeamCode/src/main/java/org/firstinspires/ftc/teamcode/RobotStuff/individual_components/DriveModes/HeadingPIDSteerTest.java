@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -23,7 +24,7 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
     double targetHeading;
 
-    public HeadingPIDSteerTest(LinearOpMode opMode, RobotConfig config) {
+    public HeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         steeringPID = new CustomPID(opMode.telemetry, config, "steeringPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
