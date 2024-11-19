@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -42,11 +43,12 @@ import static java.lang.Thread.sleep;
  * to supercharge your code. This can be much cleaner by abstracting many of these things. This
  * opmode only serves as an initial starting point.
  */
+@Disabled
 @Autonomous(name = "SoupcOpMode_PP_Small_FSM")
 public class Auto_Test_FSM extends LinearOpMode {
 
     //Points of Interest
-    public final Pose startposeactual =  new Pose( 00 + 72,  63 + 72, Math.toRadians(270));  // This is where the robot starts
+    private final Pose startposeactual =  new Pose( 00 + 72,  63 + 72, Math.toRadians(270));  // This is where the robot starts
     private final Pose startpose =        new Pose( 00 + 72,  63 + 72, Math.toRadians(180));  // this is a POI that just so happens to be similar to the above pose. Make sure you use these two correctly
     private final Pose rungpose =         new Pose( 00 + 72,  36 + 72, Math.toRadians(270));
     private final Pose rungpose1 =        new Pose(-03 + 72,  36 + 72, Math.toRadians(270));
@@ -66,7 +68,7 @@ public class Auto_Test_FSM extends LinearOpMode {
     private PathChain moveSamples, scoreSpecimens;
 
     // Other misc. stuff
-    private Follower follower = new Follower(hardwareMap);
+    private Follower follower;
 
     // This enum defines our "state"
     // This is essentially just defines the possible steps our program will take
