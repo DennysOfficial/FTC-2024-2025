@@ -26,7 +26,7 @@ public class OPBLOB extends LinearOpMode {
         Blob NewBlob = new Blob(this);
         ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
 
-        SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
+        SparkFunOTOS.Pose2D SampleCenter;
 
         Vector3D VectorToCam;
 
@@ -36,7 +36,7 @@ public class OPBLOB extends LinearOpMode {
         //loop all bellow
 
         while (opModeIsActive()) {
-            SampleCenter = NewBlob.GetSampleCenter(colorLocator, SampleCenter);
+            SampleCenter = NewBlob.GetSampleCenter(colorLocator);
 
             //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
             //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
