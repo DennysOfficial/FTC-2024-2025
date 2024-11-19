@@ -23,6 +23,9 @@ public class OPBLOB extends LinearOpMode {
         Camera.add(0,XCameraResolutionHeight);
         Camera.add(1,YCameraResolutionWidth);
         Camera.add(2,CameraAngle);
+
+        Blob.CameraData cameraData = new Blob.CameraData();
+
         Blob NewBlob = new Blob(this);
         ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Blob;
 
 //import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -29,11 +30,11 @@ public class Blob {
 
     LinearOpMode opMode;
 
-    public Blob(LinearOpMode opMode){
+    public Blob(LinearOpMode opMode) {
         this.opMode = opMode;
     }
 
-    public ColorBlobLocatorProcessor CameraSetUp(String PixelColor, int XCameraResolutionHeight, int YCameraResolutionWidth){
+    public ColorBlobLocatorProcessor CameraSetUp(String PixelColor, int XCameraResolutionHeight, int YCameraResolutionWidth) {
 
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
                 .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
@@ -43,7 +44,7 @@ public class Blob {
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
                 .build();
 
-        switch (PixelColor){
+        switch (PixelColor) {
             case "Yellow":
                 colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match// Smooth the transitions between different colors in image
@@ -57,7 +58,7 @@ public class Blob {
                         .setDrawContours(true)                        // Show contours on the Stream Preview
                         .setBlurSize(5)                               // Smooth the transitions between different colors in image
 
-                                    // use a predefined color match// Smooth the transitions between different colors in image
+                        // use a predefined color match// Smooth the transitions between different colors in image
                         .build();
                 break;
             case "Red":
@@ -78,7 +79,7 @@ public class Blob {
         return colorLocator;
     }
 
-    public SparkFunOTOS.Pose2D GetSampleCenter(ColorBlobLocatorProcessor colorLocator){
+    public SparkFunOTOS.Pose2D GetSampleCenter(ColorBlobLocatorProcessor colorLocator) {
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
@@ -87,12 +88,11 @@ public class Blob {
         opMode.telemetry.addLine(" Area Density Aspect  Center");
 
         // Display the size (area) and center location for each Blob.
-        for(ColorBlobLocatorProcessor.Blob b : blobs)
-        {
+        for (ColorBlobLocatorProcessor.Blob b : blobs) {
             RotatedRect boxFit = b.getBoxFit();
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-            SampleCenter.x= (boxFit.center.x);
+            SampleCenter.x = (boxFit.center.x);
             SampleCenter.y = (boxFit.center.y);
             SampleCenter.h = (boxFit.angle);
         }
@@ -101,7 +101,7 @@ public class Blob {
         return SampleCenter;
     }
 
-    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets){
+    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets) {
         double CamYOffset = 1;
         double CamXOffset = 1;
         double CamZOffset = 10;
@@ -110,12 +110,12 @@ public class Blob {
         CameraOffsets.add(0, CamXOffset);
         CameraOffsets.add(1, CamYOffset);
         CameraOffsets.add(2, CamZOffset);
-        double CamAngle = Math.tanh(CamYOffset/CamXOffset);
+        double CamAngle = Math.tanh(CamYOffset / CamXOffset);
         CameraOffsets.add(3, CamAngle);
         return CameraOffsets;
     }
 
-    public ArrayList<Double> VectorToRobot(ArrayList<Double> VectorToRobot, double RobotX, double RobotY, double RobotHeading){
+    public ArrayList<Double> VectorToRobot(ArrayList<Double> VectorToRobot, double RobotX, double RobotY, double RobotHeading) {
 
         VectorToRobot.add(0, RobotX);
         VectorToRobot.add(1, RobotY);
@@ -123,11 +123,11 @@ public class Blob {
         return VectorToRobot;
     }
 
-    public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector){
-        double anglecamera =  45;
+    public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector) {
+        double anglecamera = 45;
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
-        double MagOffset= Math.sqrt(Math.pow(2,CameraOffsets.get(0)) + Math.pow(2,CameraOffsets.get(1)));
-        Vector3D VectorToCam = new Vector3D(MagOffset* Math.cos(angle),MagOffset* Math.sin(angle), CameraOffsets.get(2));
+        double MagOffset = Math.sqrt(Math.pow(2, CameraOffsets.get(0)) + Math.pow(2, CameraOffsets.get(1)));
+        Vector3D VectorToCam = new Vector3D(MagOffset * Math.cos(angle), MagOffset * Math.sin(angle), CameraOffsets.get(2));
         //VectorCam.add(0, MagOffset* Math.cos(angle));
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
@@ -135,31 +135,41 @@ public class Blob {
         return VectorToCam;
     }
 
-    public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, ArrayList<Double> camera, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose){
+    public class CameraData {
+        int xResolution;
+        int yResolution;
+        Vector3D positionOnRobot;
+        double headingAngleOffset;
+        double pitchAngle;
+    }
+
+    public SparkFunOTOS.Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D samplePose, SparkFunOTOS.Pose2D robotPose) {
         double HFOV = 70.42;
         double VFOV = 43.3;
-        double HAngle ;
-        double VAngle ;
+
+        double VAngle;
         double SampleDistanceFromCam;
         double SampleLRFromCam;
         //angle of pixel from center
-        HAngle = ((sampleCenter.x + (camera.get(0)/4) - (camera.get(0)/2))) / ((camera.get(0)/2) * HFOV/2);
-        VAngle = ((sampleCenter.y + (camera.get(1)/4) - (camera.get(1)/2))) / ((camera.get(1)/2) * VFOV/2);
+        double screenCordX = sampleCenter.x + cameraData.xResolution / 4.0 - cameraData.xResolution / 2.0;
+        double normalizedScreenCordX = screenCordX / (cameraData.xResolution / 2.0);
+        double HAngle = normalizedScreenCordX * (HFOV / 2);
+        VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * VFOV / 2);
 
-        VAngle += camera.get(2);
+        VAngle += cameraData.pitchAngle;
         SampleDistanceFromCam = Math.cos(Math.toRadians(VAngle)) * vectorToCam.getZ();
         double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
-        SampleLRFromCam = Math.tan(Math.toRadians(HAngle))* CameraLenseToSample;
+        SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
         // vector rotation
-        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) - SampleLRFromCam *Math.sin(Math.toRadians(robotPose.h + 90));
-        samplePose.y = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) + SampleLRFromCam *Math.sin(Math.toRadians(robotPose.h + 90));
+        samplePose.x = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) - SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
+        samplePose.y = SampleDistanceFromCam * Math.cos(Math.toRadians(robotPose.h + 90)) + SampleLRFromCam * Math.sin(Math.toRadians(robotPose.h + 90));
         samplePose.h = sampleCenter.h;
-        opMode.telemetry.addData("hangle",  HAngle);
-        opMode.telemetry.addData("hvngle",  VAngle);
+        opMode.telemetry.addData("hangle", HAngle);
+        opMode.telemetry.addData("hvngle", VAngle);
         samplePose.x += vectorToCam.getX();
         samplePose.y += vectorToCam.getY();
 
-        return  samplePose;
+        return samplePose;
     }
 
 }
