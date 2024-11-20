@@ -346,12 +346,15 @@ public abstract class ControlAxis {  //schrödinger's code
                     break;
                 }
                 MotionState targetMotionState = activeTrajectory.sampleTrajectory();
-                setTargetPosition(targetMotionState.position);
-                targetVelocity = targetMotionState.velocity;
-                targetAcceleration = targetMotionState.acceleration;
 
-                updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
+                opMode.telemetry.addData("targetPosition", targetPosition);
                 break;
+//                setTargetPosition(targetMotionState.position);
+//                targetVelocity = targetMotionState.velocity;
+//                targetAcceleration = targetMotionState.acceleration;
+//
+//                updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
+//                break;
 
             case testing:
         }
