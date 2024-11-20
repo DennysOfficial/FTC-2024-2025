@@ -110,6 +110,9 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
+    /**
+     * doesn't reset target position or anything like that
+     */
     public void setControlModeUnsafe(ControlMode controlMode) {
         this.controlMode = controlMode;
     }
@@ -339,7 +342,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case trajectoryControl:
                 if (!activeTrajectory.isActive()) {
-                    controlMode = defaultControlMode;
+                    setControlModeUnsafe(defaultControlMode);
                     break;
                 }
                 MotionState targetMotionState = activeTrajectory.sampleTrajectory();
