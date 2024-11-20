@@ -274,7 +274,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     Trajectory activeTrajectory;
 
-    public void LinearMoveToPosition(double targetPosition, double duration) {
+    public void linearMoveToPosition(double targetPosition, double duration) {
         activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
