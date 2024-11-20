@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
@@ -36,15 +37,15 @@ public class Auto_Test_02Z extends OpMode{
     private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint =    new Point(36,72, Point.CARTESIAN);
-    private final Point rungpoint1 =   new Point(36,69, Point.CARTESIAN);
+    private final Point rungpoint =    new Point(39,72, Point.CARTESIAN);
+    private final Point rungpoint1 =   new Point(39,69, Point.CARTESIAN);
     private final Point curvepoint =   new Point(12,72, Point.CARTESIAN);
     private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
     private final Point pickuppoint =  new Point(12,36, Point.CARTESIAN);// TODO: Make this more specific
 
 
     // List of paths the robot takes
-    private Path toRungStart, toPickup, toRung2, toObserve;
+    private PathChain toRungStart, toPickup, toRung2, toObserve;
 
     // Other misc. stuff
     private Follower follower;
@@ -56,18 +57,74 @@ public class Auto_Test_02Z extends OpMode{
 
     double deltaTime;
 
+    @Override
+    public void init() {
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(startPose);
+
+
+    }
+
+
+
     public void buildPaths() {
-        toRungStart = new Path(new BezierLine(new Point(startPose), rungpoint));
-        toRungStart.setConstantHeadingInterpolation(Math.toRadians(0));
 
-        toPickup = new Path(new BezierCurve(rungpoint, curvepoint, pickuppoint));
-        toPickup.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
+        // Initialize our lift
+        RobotConfig activeConfig = new RobotConfig(this);
 
-        toRung2 = new Path(new BezierCurve(pickuppoint, curvepoint, rungpoint1));
-        toRung2.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0));
+        Lift lift = new Lift(this, activeConfig, runtime);
 
-        toObserve = new Path(new BezierCurve(rungpoint1, curvepoint, observepoint));
-        toObserve.setConstantHeadingInterpolation(Math.toRadians(0));
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
+
+        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
+
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+
+        //Pincher pincher = new Pincher(this,activeConfig);
+
+        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+
+
+        RobotConfig config = new RobotConfig(this);
+
+        toRungStart = follower.pathBuilder()
+                .addPath(new BezierLine (new Point(startPose), rungpoint))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0, () -> {
+                    lift.setTargetPosition(8.8);
+                    spinyBit.setTargetPosition(0);
+                })
+                .addParametricCallback(1, () -> {
+                    lift.setTargetPosition(0);
+                })
+                .build();
+
+
+        toPickup = follower.pathBuilder()
+                .addPath(new BezierCurve(rungpoint, curvepoint, pickuppoint))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
+                .addParametricCallback(1, () -> {
+                    spinyBit.setTargetPosition(80);
+                    //TODO: Pick up specimen, idk I just work here
+                })
+                .build();
+
+
+        toRung2 = follower.pathBuilder()
+                .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
+                .addParametricCallback(0, () -> {
+                    lift.setTargetPosition(8.8);
+                    spinyBit.setTargetPosition(0);
+                })
+                .addParametricCallback(1, () -> {
+                    lift.setTargetPosition(0);
+                })
+                .build();
+
+
+        toObserve = follower.pathBuilder()
+                .addPath(new BezierCurve(rungpoint1, curvepoint, observepoint))
+                .build();
     }
 
     public void autonomousPathUpdate() {
@@ -139,29 +196,7 @@ public class Auto_Test_02Z extends OpMode{
         telemetry.update();
     }
 
-    @Override
-    public void init() {
-        follower = new Follower(hardwareMap);
-        follower.setStartingPose(startPose);
 
-        // Initialize our lift
-        RobotConfig activeConfig = new RobotConfig(this);
-
-        Lift lift = new Lift(this, activeConfig, runtime);
-
-        lift.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
-
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        //Pincher pincher = new Pincher(this,activeConfig);
-
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
-
-
-        RobotConfig config = new RobotConfig(this);
-    }
 
     @Override
     public void start() {
