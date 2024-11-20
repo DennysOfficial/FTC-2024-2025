@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.LinearTrajectory;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.MotionState;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.SinusoidalTrajectory;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Trajectory;
@@ -73,6 +74,8 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case trajectoryControl:
+                if (activeTrajectory == null || !activeTrajectory.isActive())
+                    break;
                 setTargetPosition(getPosition());
                 targetVelocity = 0;
                 targetAcceleration = 0;
@@ -268,7 +271,13 @@ public abstract class ControlAxis {  //schrödinger's code
 
     Trajectory activeTrajectory;
 
-    public void smoothMoveToPosition(double targetPosition, double duration) {
+    public void LinearMoveToPosition(double targetPosition, double duration) {
+        activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
+        setControlMode(ControlMode.trajectoryControl);
+    }
+
+    public void fancyMoveToPosition(double targetPosition, double duration) {
+        activeTrajectory = new SinusoidalTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
@@ -322,10 +331,12 @@ public abstract class ControlAxis {  //schrödinger's code
             case torqueControl:
                 motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
                 break;
+
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
                 motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
                 break;
+
             case trajectoryControl:
                 if (!activeTrajectory.isActive()) {
                     controlMode = defaultControlMode;
