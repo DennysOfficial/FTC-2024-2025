@@ -39,9 +39,9 @@ public class FollowerConstants {
 
     // Translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.1,
+            0.15,
             0,
-            0,
+            0.015,
             0);
 
     // Translational Integral
@@ -57,9 +57,9 @@ public class FollowerConstants {
 
     // Heading error PIDF coefficients
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
-            1,
+            4,
             0,
-            0,
+            0.15,
             0);
 
     // Feed forward constant added on to the heading PIDF
@@ -68,9 +68,9 @@ public class FollowerConstants {
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.025,
+            0.008,
             0,
-            0.00001,
+            0.0008,
             0.6,
             0);
 
@@ -162,13 +162,13 @@ public class FollowerConstants {
 
     // the limit at which the translational PIDF switches between the main and secondary translational PIDFs,
     // if the secondary PID is active
-    public static double translationalPIDFSwitch = 3;
+    public static double translationalPIDFSwitch = -3;
 
     // Secondary translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.3,
+            0.5,
             0,
-            0.01,
+            0.05,
             0);
 
     // Secondary translational Integral value
@@ -183,7 +183,7 @@ public class FollowerConstants {
 
 
     // the limit at which the heading PIDF switches between the main and secondary heading PIDFs
-    public static double headingPIDFSwitch = Math.PI/20;
+    public static double headingPIDFSwitch = -Math.PI/20;
 
     // Secondary heading error PIDF coefficients
     public static CustomPIDFCoefficients secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(
@@ -197,7 +197,7 @@ public class FollowerConstants {
 
 
     // the limit at which the heading PIDF switches between the main and secondary drive PIDFs
-    public static double drivePIDFSwitch = 20;
+    public static double drivePIDFSwitch = -20;
 
     // Secondary drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
