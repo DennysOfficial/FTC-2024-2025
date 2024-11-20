@@ -76,20 +76,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(this, activeConfig, runtime);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig, runtime);
 
-        Pivot spinnyBit = new Pivot(this, activeConfig, runtime);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig, runtime);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
-        final ControlAxis.ControlMode defaultLiftControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
-
-        lift.setControlMode(defaultLiftControlMode);
-
-        final ControlAxis.ControlMode defaultPivotControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
-
-        spinnyBit.setControlMode(defaultPivotControlMode);
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -114,11 +107,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             telemetry.addData("pivotMotorR", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.rightPivot).getCurrentPosition());
             telemetry.addData("pivotMotorL", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.leftPivot).getCurrentPosition());
 
-
-            if (activeConfig.inputMap.getUnAbort()) {
-                lift.setControlMode(defaultLiftControlMode);
-                spinnyBit.setControlMode(defaultPivotControlMode);
-            }
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -168,7 +156,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.setTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
-                spinnyBit.setControlModeUnsafe(defaultPivotControlMode);
+                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             lift.update();
             spinnyBit.update();

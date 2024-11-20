@@ -2,19 +2,17 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components;
 
 import android.util.Range;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.MotionState;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.SinusoidalTrajectory;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Trajectory;
 
 public abstract class ControlAxis {  //schrödinger's code
 
@@ -49,6 +47,9 @@ public abstract class ControlAxis {  //schrödinger's code
     // control mode stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     private ControlMode controlMode = ControlMode.disabled;
 
+    public ControlMode defaultControlMode;
+
+
     public enum ControlMode {
         disabled,
         torqueControl,
@@ -56,6 +57,7 @@ public abstract class ControlAxis {  //schrödinger's code
         velocityControl,
         gamePadVelocityControl,
         gamePadTorqueControl,
+        trajectoryControl,
         testing
     }
 
@@ -70,6 +72,15 @@ public abstract class ControlAxis {  //schrödinger's code
                 motors.setPower(0);
                 break;
 
+            case trajectoryControl:
+                setTargetPosition(getPosition());
+                targetVelocity = 0;
+                targetAcceleration = 0;
+                this.controlMode = controlMode;
+                motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                break;
+
             case gamePadVelocityControl:
             case velocityControl:
                 setTargetPosition(getPosition());
@@ -77,7 +88,6 @@ public abstract class ControlAxis {  //schrödinger's code
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
-
 
             case positionControl:
                 this.controlMode = ControlMode.positionControl;
@@ -194,24 +204,19 @@ public abstract class ControlAxis {  //schrödinger's code
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    double targetVelocity;
+    public double targetVelocity;
 
     public double getVelocityTPS() {
         return positionDerivatives.getVelocity() / unitsPerEncoderCount;
-    }
-
-    public double getTargetVelocity() {
-        return targetVelocity;
-    }
-
-    public void setTargetVelocity(double targetVelocity) {
-        this.targetVelocity = targetVelocity;
     }
 
     void updateVelocityControl() {
         setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
         updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
+
+    // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    protected double targetAcceleration = 0;
 
 
     // Torque stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -240,10 +245,12 @@ public abstract class ControlAxis {  //schrödinger's code
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-    public ControlAxis(OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ReadOnlyRuntime runtime) {
+    public ControlAxis(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ReadOnlyRuntime runtime) {
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
+        this.defaultControlMode = defaultControlMode;
+        this.controlMode = defaultControlMode;
 
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
@@ -255,6 +262,14 @@ public abstract class ControlAxis {  //schrödinger's code
         initMotors();
 
         positionDerivatives = new PositionDerivatives(getPosition());
+    }
+
+    // trajectory stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
+    Trajectory activeTrajectory;
+
+    public void smoothMoveToPosition(double targetPosition, double duration) {
+        setControlMode(ControlMode.trajectoryControl);
     }
 
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -277,6 +292,10 @@ public abstract class ControlAxis {  //schrödinger's code
         updateDeltaTime();
         positionDerivatives.update(getPosition(), deltaTime);
 
+        if (config.inputMap.getUnAbort())
+            controlMode = defaultControlMode;
+
+
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
 
@@ -284,6 +303,7 @@ public abstract class ControlAxis {  //schrödinger's code
             motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motors.setPower(0);
         }
+
 
         switch (getControlMode()) {
             case gamePadVelocityControl:
@@ -305,6 +325,18 @@ public abstract class ControlAxis {  //schrödinger's code
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
                 motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
+                break;
+            case trajectoryControl:
+                if (!activeTrajectory.isActive()) {
+                    controlMode = defaultControlMode;
+                    break;
+                }
+                MotionState targetMotionState = activeTrajectory.sampleTrajectory();
+                setTargetPosition(targetMotionState.position);
+                targetVelocity = targetMotionState.velocity;
+                targetAcceleration = targetMotionState.acceleration;
+
+                updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
                 break;
 
             case testing:

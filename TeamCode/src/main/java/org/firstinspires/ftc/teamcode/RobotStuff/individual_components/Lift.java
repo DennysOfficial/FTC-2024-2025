@@ -98,8 +98,8 @@ public class Lift extends ControlAxis {
     }
 
 
-    public Lift(OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
-        super(opMode, config, "Lift", "inches", 27.0 / 4300.0, runtime);
+    public Lift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
+        super(defaultControlMode, opMode, config, "Lift", "inches", 27.0 / 4300.0, runtime);
 
         softLimits = new Range<>(0.5, 31.0);
 
