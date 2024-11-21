@@ -41,7 +41,7 @@ public class Auto_Test_02Z extends OpMode{
     private final Point rungpoint1 =   new Point(39,69, Point.CARTESIAN);
     private final Point curvepoint =   new Point(12,72, Point.CARTESIAN);
     private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(12,36, Point.CARTESIAN);// TODO: Make this more specific
+    private final Point pickuppoint =  new Point(15.5,41, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -55,8 +55,25 @@ public class Auto_Test_02Z extends OpMode{
 
     double deltaTime;
 
+    Lift lift;
+    Pivot spinyBit;
+    ActiveIntake intake;
+    RobotConfig config;
+
     @Override
     public void init() {
+        config = new RobotConfig(this);
+
+        lift = new Lift(this, config, runtime);
+        spinyBit = new Pivot(this, config, runtime);
+        intake = new ActiveIntake(this, config);
+
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+
+        lift.assignPivot(spinyBit);
+        spinyBit.assignLift(lift);
+
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
     }
@@ -78,11 +95,13 @@ public class Auto_Test_02Z extends OpMode{
 
         toRung2 = follower.pathBuilder()
                 .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
+                .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0))
                 .build();
 
 
         toObserve = follower.pathBuilder()
                 .addPath(new BezierCurve(rungpoint1, curvepoint, observepoint))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
     }
 
@@ -96,8 +115,8 @@ public class Auto_Test_02Z extends OpMode{
                 // If not, move onto the next state
                 // We are done with the program
                 if (!follower.isBusy()) {
-                    currentState = State.IDLE;
-                    //follower.followPath(toPickup);
+                    currentState = State.TO_PICKUP;
+                    follower.followPath(toPickup);
                 }
                 break;
 
