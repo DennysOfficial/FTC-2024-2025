@@ -50,11 +50,6 @@ public class Auto_Test_02Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    RobotConfig config;
-    Pivot spinyBit;
-    Lift lift;
-    ActiveIntake intake;
-
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -64,26 +59,6 @@ public class Auto_Test_02Z extends OpMode{
     public void init() {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
-
-        // Initialize our lift
-        RobotConfig activeConfig = new RobotConfig(this);
-
-        lift = new Lift(this, activeConfig, runtime);
-
-        lift.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        spinyBit = new Pivot(this, activeConfig, runtime);
-
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        //Pincher pincher = new Pincher(this,activeConfig);
-
-        intake = new ActiveIntake(this, activeConfig);
-
-        config = new RobotConfig(this);
-
-        lift.assignPivot(spinyBit);
-        spinyBit.assignLift(lift);
     }
 
 
@@ -92,35 +67,17 @@ public class Auto_Test_02Z extends OpMode{
 
         toRungStart = follower.pathBuilder()
                 .addPath(new BezierLine (new Point(startPose), rungpoint))
-                .addParametricCallback(0, () -> {
-                    lift.setTargetPosition(8.8);
-                    spinyBit.setTargetPosition(0);
-                })
-                .addParametricCallback(1, () -> {
-                    lift.setTargetPosition(0);
-                })
                 .build();
 
 
         toPickup = follower.pathBuilder()
                 .addPath(new BezierCurve(rungpoint, curvepoint, pickuppoint))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
-                .addParametricCallback(1, () -> {
-                    spinyBit.setTargetPosition(80);
-                    //TODO: Pick up specimen, idk I just work here
-                })
                 .build();
 
 
         toRung2 = follower.pathBuilder()
                 .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
-                .addParametricCallback(0, () -> {
-                    lift.setTargetPosition(8.8);
-                    spinyBit.setTargetPosition(0);
-                })
-                .addParametricCallback(1, () -> {
-                    lift.setTargetPosition(0);
-                })
                 .build();
 
 
