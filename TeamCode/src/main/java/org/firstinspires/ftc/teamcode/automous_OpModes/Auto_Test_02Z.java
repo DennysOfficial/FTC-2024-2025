@@ -50,7 +50,10 @@ public class Auto_Test_02Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    RobotConfig activeConfig = new RobotConfig(this);
+    RobotConfig config;
+    Pivot spinyBit;
+    Lift lift;
+    ActiveIntake intake;
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -62,34 +65,33 @@ public class Auto_Test_02Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
+        // Initialize our lift
+        RobotConfig activeConfig = new RobotConfig(this);
 
+        lift = new Lift(this, activeConfig, runtime);
+
+        lift.setControlMode(ControlAxis.ControlMode.positionControl);
+
+        spinyBit = new Pivot(this, activeConfig, runtime);
+
+        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+
+        //Pincher pincher = new Pincher(this,activeConfig);
+
+        intake = new ActiveIntake(this, activeConfig);
+
+        config = new RobotConfig(this);
+
+        lift.assignPivot(spinyBit);
+        spinyBit.assignLift(lift);
     }
 
 
 
     public void buildPaths() {
 
-        // Initialize our lift
-        RobotConfig activeConfig = new RobotConfig(this);
-
-        Lift lift = new Lift(this, activeConfig, runtime);
-
-        lift.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
-
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        //Pincher pincher = new Pincher(this,activeConfig);
-
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
-
-
-        RobotConfig config = new RobotConfig(this);
-
         toRungStart = follower.pathBuilder()
                 .addPath(new BezierLine (new Point(startPose), rungpoint))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     lift.setTargetPosition(8.8);
                     spinyBit.setTargetPosition(0);
@@ -137,8 +139,8 @@ public class Auto_Test_02Z extends OpMode{
                 // If not, move onto the next state
                 // We are done with the program
                 if (!follower.isBusy()) {
-                    currentState = State.TO_PICKUP;
-                    follower.followPath(toPickup);
+                    currentState = State.IDLE;
+                    //follower.followPath(toPickup);
                 }
                 break;
 
@@ -186,6 +188,8 @@ public class Auto_Test_02Z extends OpMode{
     @Override
     public void loop() {
         follower.update();
+        //lift.update();
+        //spinyBit.update();
 
         autonomousPathUpdate();
 
