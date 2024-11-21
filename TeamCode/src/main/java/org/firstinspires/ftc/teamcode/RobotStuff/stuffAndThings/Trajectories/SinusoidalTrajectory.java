@@ -40,7 +40,6 @@ public class SinusoidalTrajectory implements Trajectory {
         motionState.position = startPosition + interpolationAmount * averageVelocity;
         motionState.velocity = averageVelocity / 2 * Math.sin(theta);
         motionState.acceleration = averageVelocity / 2 * Math.cos(theta);
-        motionState.jerk = -averageVelocity / 2 * Math.sin(theta);
 
         return motionState;
     }

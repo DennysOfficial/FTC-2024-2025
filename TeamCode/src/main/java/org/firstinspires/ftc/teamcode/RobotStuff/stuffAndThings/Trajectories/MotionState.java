@@ -1,45 +1,44 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class MotionState {
 
-    double position = 0;
+    public double position = 0;
 
-    double velocity = 0;
+    public double velocity = 0;
 
-    double acceleration = 0;
+    public double acceleration = 0;
 
-    double jerk = 0;
 
-    public MotionState(double position, double velocity, double acceleration, double jerk){
+    public MotionState(double position, double velocity, double acceleration) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.jerk = jerk;
     }
-    public MotionState(double position, double velocity, double acceleration){
-        this.position = position;
-        this.velocity = velocity;
-        this.acceleration = acceleration;
-        this.jerk = 0;
-    }
-    public MotionState(double position, double velocity){
+
+    public MotionState(double position, double velocity) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = 0;
-        this.jerk = 0;
     }
-    public MotionState(double position){
+
+    public MotionState(double position) {
         this.position = position;
         this.velocity = 0;
         this.acceleration = 0;
-        this.jerk = 0;
     }
 
-    public MotionState(){
+    public MotionState() {
         this.position = Double.NaN;
         this.velocity = 0;
         this.acceleration = 0;
-        this.jerk = 0;
+    }
+
+    public static void telemetryMotionState(Telemetry telemetry, MotionState motionState, String name) {
+        telemetry.addData(name + " position", motionState.position);
+        telemetry.addData(name + " velocity", motionState.velocity);
+        telemetry.addData(name + " acceleration", motionState.acceleration);
     }
 
 }

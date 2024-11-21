@@ -38,11 +38,12 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig, runtime);
 
-        Lift lift = new Lift(this, activeConfig, runtime);
-        lift.setControlMode(ControlAxis.ControlMode.torqueControl);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig, runtime);
+
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -59,7 +60,7 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
             activeConfig.sensorData.update();
 
-            spinyBit.update();
+            spinnyBit.update();
             lift.update();
 
 

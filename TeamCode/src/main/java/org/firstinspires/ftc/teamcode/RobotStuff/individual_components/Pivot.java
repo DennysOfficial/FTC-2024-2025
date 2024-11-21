@@ -69,7 +69,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
     double getVelocityFeedforwardCoefficient() {
-        if(lift == null)
+        if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
         return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.getPosition() / extendedLiftPosition);
     }
@@ -111,8 +111,8 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
 
-    public Pivot(OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
-        super(opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
+    public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
+        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
 
         softLimits = new Range<>(-40.0, 86.9);
     }
