@@ -104,9 +104,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            telemetry.addData("pivotMotorR", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.rightPivot).getCurrentPosition());
-            telemetry.addData("pivotMotorL", hardwareMap.get(DcMotorEx.class, activeConfig.deviceConfig.leftPivot).getCurrentPosition());
-
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -158,7 +155,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.setTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
