@@ -37,14 +37,14 @@ public class Auto_Test_02Z extends OpMode{
 
     State currentState = State.IDLE;
 
-    private final Pose startPose = new Pose(2,72, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint =    new Point(39,72, Point.CARTESIAN);
-    private final Point rungpoint1 =   new Point(39,69, Point.CARTESIAN);
-    private final Point curvepoint =   new Point(12,72, Point.CARTESIAN);
+    private final Point rungpoint =    new Point(32,72, Point.CARTESIAN);
+    private final Point rungpoint1 =   new Point(32,69, Point.CARTESIAN);
+    private final Point curvepoint =   new Point(15,72, Point.CARTESIAN);
     private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(15.5,41, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point pickuppoint =  new Point(10,41, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
