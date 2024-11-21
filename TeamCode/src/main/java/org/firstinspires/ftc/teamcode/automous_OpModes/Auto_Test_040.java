@@ -182,13 +182,13 @@ public class Auto_Test_040 extends OpMode{
         // Initialize our lift
         RobotConfig activeConfig = new RobotConfig(this);
 
-        Lift lift = new Lift(this, activeConfig, runtime);
+        //Lift lift = new Lift(this, activeConfig, runtime);
 
-        lift.setControlMode(ControlAxis.ControlMode.positionControl);
+        //lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        Pivot spinyBit = new Pivot(this, activeConfig, runtime);
+        //Pivot spinyBit = new Pivot(this, activeConfig, runtime);
 
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+        //spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
         //Pincher pincher = new Pincher(this,activeConfig);
 

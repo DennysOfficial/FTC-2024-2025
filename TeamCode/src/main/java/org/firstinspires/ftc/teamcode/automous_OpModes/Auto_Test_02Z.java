@@ -29,12 +29,15 @@ public class Auto_Test_02Z extends OpMode{
         TO_PICKUP,
         TO_RUNG_2,
         TO_OBSERVE,
+        LIFT1,
+        LIFT2,
+        INTAKE1,
         IDLE            // Our bot will enter the IDLE state when done
     }
 
     State currentState = State.IDLE;
 
-    private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(2,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
     private final Point rungpoint =    new Point(39,72, Point.CARTESIAN);
@@ -64,12 +67,9 @@ public class Auto_Test_02Z extends OpMode{
     public void init() {
         config = new RobotConfig(this);
 
-        lift = new Lift(this, config, runtime);
-        spinyBit = new Pivot(this, config, runtime);
+        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config, runtime);
+        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config, runtime);
         intake = new ActiveIntake(this, config);
-
-        lift.setControlMode(ControlAxis.ControlMode.positionControl);
-        spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
 
         lift.assignPivot(spinyBit);
         spinyBit.assignLift(lift);
@@ -84,6 +84,10 @@ public class Auto_Test_02Z extends OpMode{
 
         toRungStart = follower.pathBuilder()
                 .addPath(new BezierLine (new Point(startPose), rungpoint))
+                .addTemporalCallback(0, () -> {
+                    spinyBit.setTargetPosition(0);
+                    lift.setTargetPosition(9.5);
+                })
                 .build();
 
 
@@ -96,6 +100,10 @@ public class Auto_Test_02Z extends OpMode{
         toRung2 = follower.pathBuilder()
                 .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0))
+                .addTemporalCallback(0, () -> {
+                    spinyBit.setTargetPosition(0);
+                    lift.setTargetPosition(9.5);
+                })
                 .build();
 
 
@@ -115,17 +123,37 @@ public class Auto_Test_02Z extends OpMode{
                 // If not, move onto the next state
                 // We are done with the program
                 if (!follower.isBusy()) {
-                    currentState = State.TO_PICKUP;
-                    follower.followPath(toPickup);
+                    currentState = State.LIFT1;
                 }
                 break;
+
+            case LIFT1:
+                lift.setTargetPosition(0);
+                if (lift.getPosition() <= 1) {
+                    currentState = State.TO_PICKUP;
+                    follower.followPath(toPickup);
+
+                }
+                break;
+
 
             case TO_PICKUP:
                 // Check if the drive class is busy turning
                 // If not, move onto the next state
                 // We are done with the program
                 if (!follower.isBusy()) {
+                    currentState = State.INTAKE1;
+                }
+                break;
 
+            case INTAKE1:
+
+                spinyBit.setTargetPosition(90);
+                intake.intake();
+                double time = runtime.seconds();
+
+                if (time + 0.5 <= runtime.seconds() && spinyBit.getPosition() == 90) {
+                    intake.stop();
                     currentState = State.TO_RUNG_2;
                     follower.followPath(toRung2);
                 }
@@ -136,7 +164,14 @@ public class Auto_Test_02Z extends OpMode{
                 // If not, move onto the next state
                 // We are done with the program
                 if (!follower.isBusy()) {
+                    currentState = State.LIFT2;
+                }
+                break;
 
+            case LIFT2:
+                lift.setTargetPosition(0);
+
+                if (lift.getPosition() <= 1) {
                     currentState = State.TO_OBSERVE;
                     follower.followPath(toObserve);
                 }
@@ -153,7 +188,6 @@ public class Auto_Test_02Z extends OpMode{
                 break;
 
             case IDLE:
-
                 // Do nothing in IDLE
                 // currentState does not change once in IDLE
                 // This concludes the autonomous program
@@ -164,8 +198,8 @@ public class Auto_Test_02Z extends OpMode{
     @Override
     public void loop() {
         follower.update();
-        //lift.update();
-        //spinyBit.update();
+        lift.update();
+        spinyBit.update();
 
         autonomousPathUpdate();
 
