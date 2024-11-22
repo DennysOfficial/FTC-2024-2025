@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name = "SoupcOpMode_0-2-Z 0.0.0")
+@Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2")
 public class Auto_Test_02Z extends OpMode{
 
     enum State {
@@ -40,11 +40,11 @@ public class Auto_Test_02Z extends OpMode{
     private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint =    new Point(32,72, Point.CARTESIAN);
-    private final Point rungpoint1 =   new Point(32,69, Point.CARTESIAN);
+    private final Point rungpoint =    new Point(33,72, Point.CARTESIAN);
+    private final Point rungpoint1 =   new Point(33,69, Point.CARTESIAN);
     private final Point curvepoint =   new Point(15,72, Point.CARTESIAN);
     private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(12,41, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point pickuppoint =  new Point(14.5,43, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -57,6 +57,7 @@ public class Auto_Test_02Z extends OpMode{
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
+    int y = 0;
 
     Lift lift;
     Pivot spinyBit;
@@ -151,12 +152,13 @@ public class Auto_Test_02Z extends OpMode{
                 spinyBit.setTargetPosition(90);
 
                 if (spinyBit.getPosition() >= 87.5) {
+                    if (y == 0) {
+                        time = runtime.seconds();
+                        time = time + 0.5;
+                        y = 1;
+                    }
                     intake.intake();
-
-                    double time = runtime.seconds();
-
-                    if (time + 0.5 <= runtime.seconds()) {
-
+                    if (time <= runtime.seconds()) {
                         intake.stop();
                         currentState = State.TO_RUNG_2;
                         follower.followPath(toRung2);
@@ -202,6 +204,8 @@ public class Auto_Test_02Z extends OpMode{
 
     @Override
     public void loop() {
+        deltaTime = frameTimer.seconds();
+        frameTimer.reset();
         follower.update();
         lift.update();
         spinyBit.update();
@@ -212,6 +216,9 @@ public class Auto_Test_02Z extends OpMode{
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("deltaTime", deltaTime);
+        telemetry.addData("runTime", runtime);
+        telemetry.addData("waitTime", time);
         telemetry.update();
     }
 
