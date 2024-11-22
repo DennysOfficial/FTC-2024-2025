@@ -116,14 +116,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
             if(gamepad2.b){
-                spinnyBit.linearMoveToPosition(69,4.20);
+                spinnyBit.linearMoveToPosition(10,1.5);
+                lift.linearMoveToPosition(9,1.5);
             }
 
             if (gamepad2.x) {
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 15)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), -10, 1);
-
+                spinnyBit.fancyMoveToPosition(10,1.5);
+                lift.fancyMoveToPosition(9,1.5);
             }
 
             if (gamepad2.y) {
@@ -161,7 +160,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.torqueControl)
+            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             lift.update();

@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories;
 
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
@@ -33,13 +34,14 @@ public class SinusoidalTrajectory implements Trajectory {
         MotionState motionState = new MotionState();
 
         double theta = (runtime.seconds() - startTime) / duration * Math.PI;
+        //telemetry.addData("theta", theta);
         double interpolationAmount = 0.5 - Math.cos(theta) / 2;
+        //telemetry.addData("interpolation amount", interpolationAmount);
+        double distance = endPosition - startPosition;
 
-        double averageVelocity = (endPosition - startPosition) / duration;
-
-        motionState.position = startPosition + interpolationAmount * averageVelocity;
-        motionState.velocity = averageVelocity / 2 * Math.sin(theta);
-        motionState.acceleration = averageVelocity / 2 * Math.cos(theta);
+        motionState.position = startPosition + interpolationAmount * distance;
+        motionState.velocity = distance / 2 * Math.sin(theta);
+        motionState.acceleration = distance / 2 * Math.cos(theta);
 
         return motionState;
     }
