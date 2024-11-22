@@ -267,18 +267,22 @@ public abstract class ControlAxis {  //schrödinger's code
     Trajectory activeTrajectory;
 
     public void linearMoveToPosition(double targetPosition, double duration) {
+        if (activeTrajectory != null && activeTrajectory.isActive())
+            return;
         opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
         activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
     public void fancyMoveToPosition(double targetPosition, double duration) {
+        if (activeTrajectory != null && activeTrajectory.isActive())
+            return;
         activeTrajectory = new SinusoidalTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
-    public boolean trajectoryBusy() {
-        return (activeTrajectory == null || !activeTrajectory.isActive());
+    public boolean isBusy(){
+        return activeTrajectory == null || activeTrajectory.isActive();
     }
 
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
