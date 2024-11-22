@@ -301,7 +301,8 @@ public abstract class ControlAxis {  //schrödinger's code
             controlMode = defaultControlMode;
 
         if (controlMode == ControlMode.trajectoryControl) {
-            if (Math.abs(getInput()) > config.getAutoAbortThreshold()) ;
+            if (Math.abs(getInput()) > config.getAutoAbortThreshold())
+                controlMode = defaultControlMode;
         }
 
 
