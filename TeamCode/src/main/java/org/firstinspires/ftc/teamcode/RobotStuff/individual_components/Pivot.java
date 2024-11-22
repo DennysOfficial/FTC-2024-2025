@@ -119,6 +119,9 @@ public class Pivot extends ControlAxis { //schrödinger's code
 
     @Override
     public void setTargetPosition(double targetPosition) {
+        if (targetPosition == getTargetPosition())
+            return;
+
         if (lift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
