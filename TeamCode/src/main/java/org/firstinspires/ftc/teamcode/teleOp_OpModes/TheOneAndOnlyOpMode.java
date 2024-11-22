@@ -118,8 +118,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
             if (gamepad2.x) {
-                spinnyBit.fancyMoveToPosition(10,1);
-                lift.fancyMoveToPosition(9,1 );
+                spinnyBit.fancyMoveToPosition(16,1);
+                lift.fancyMoveToPosition(12.5,1 );
             }
 
             if (gamepad2.y) {
