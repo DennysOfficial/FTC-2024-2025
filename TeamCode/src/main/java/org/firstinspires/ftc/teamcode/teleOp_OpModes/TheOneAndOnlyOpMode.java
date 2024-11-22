@@ -115,19 +115,16 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
 
-            if(gamepad2.b){
-                spinnyBit.linearMoveToPosition(10,1.5);
-                lift.linearMoveToPosition(9,1.5);
-            }
+
 
             if (gamepad2.x) {
-                spinnyBit.fancyMoveToPosition(10,1.5);
-                lift.fancyMoveToPosition(9,1.5);
+                spinnyBit.fancyMoveToPosition(10,1);
+                lift.fancyMoveToPosition(9,1 );
             }
 
             if (gamepad2.y) {
                 if (lift.getPosition() < 10)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), -18, 1);
+                    spinnyBit.fancyMoveToPosition(-18,1);
 
 
                 if (spinnyBit.getPosition() < 40)
@@ -135,12 +132,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             }
 
+
             if (gamepad2.a) {
                 if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), 0, 0.5);
+                    spinnyBit.fancyMoveToPosition(0,1);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
-                    pivotControl.smoothMove(spinnyBit.getPosition(), 71, 1);
+                    spinnyBit.fancyMoveToPosition(71,1);
             }
 
 
