@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.LinearTrajectory;
@@ -267,6 +267,7 @@ public abstract class ControlAxis {  //schrödinger's code
     Trajectory activeTrajectory;
 
     public void linearMoveToPosition(double targetPosition, double duration) {
+        opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
         activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
@@ -299,17 +300,20 @@ public abstract class ControlAxis {  //schrödinger's code
         if (config.inputMap.getUnAbort())
             controlMode = defaultControlMode;
 
+        if (controlMode == ControlMode.trajectoryControl) {
+            if (Math.abs(getInput()) > config.getAutoAbortThreshold()) ;
+        }
+
 
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
 
-        if (controlMode == ControlMode.disabled) {
-            motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors.setPower(0);
-        }
-
-
         switch (getControlMode()) {
+            case disabled:
+                motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motors.setPower(0);
+                break;
+
             case gamePadVelocityControl:
                 targetVelocity = getInput() * getVelocityControlMaxRate();
                 updateVelocityControl();
@@ -341,9 +345,9 @@ public abstract class ControlAxis {  //schrödinger's code
 
                 MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
 
-//                setTargetPosition(targetMotionState.position);
-//                targetVelocity = targetMotionState.velocity;
-//                targetAcceleration = targetMotionState.acceleration;
+                setTargetPosition(targetMotionState.position);
+                targetVelocity = targetMotionState.velocity;
+                targetAcceleration = targetMotionState.acceleration;
 
                 updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
                 break;
