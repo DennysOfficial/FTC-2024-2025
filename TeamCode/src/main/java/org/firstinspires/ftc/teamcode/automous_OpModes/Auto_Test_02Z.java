@@ -98,8 +98,8 @@ public class Auto_Test_02Z extends OpMode{
         toRungStart = follower.pathBuilder()
                 .addPath(new BezierLine (new Point(startPose), rungpoint))
                 .addTemporalCallback(0, () -> {
-                    spinyBit.fancyMoveToPosition(0, 0.5);
-                    lift.fancyMoveToPosition(9.5, 0.5);
+                    spinyBit.fancyMoveToPosition(0, 1.5);
+                    lift.fancyMoveToPosition(9.5, 1.5);
                 })
                 .build();
 
@@ -114,8 +114,8 @@ public class Auto_Test_02Z extends OpMode{
                 .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0))
                 .addTemporalCallback(0, () -> {
-                    spinyBit.fancyMoveToPosition(0, 0.5);
-                    lift.fancyMoveToPosition(9.5, 0.5);
+                    spinyBit.fancyMoveToPosition(0, 1.5);
+                    lift.fancyMoveToPosition(9.5, 1.5);
                 })
                 .build();
 
@@ -141,7 +141,7 @@ public class Auto_Test_02Z extends OpMode{
                 break;
 
             case LIFT1:
-                lift.fancyMoveToPosition(0, 0.5);
+                lift.setTargetPosition(0);
                 if (lift.getPosition() <= 1) {
                     currentState = State.TO_PICKUP;
                     follower.followPath(toPickup);
