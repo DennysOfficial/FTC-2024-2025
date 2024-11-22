@@ -267,6 +267,7 @@ public abstract class ControlAxis {  //schrödinger's code
     Trajectory activeTrajectory;
 
     public void linearMoveToPosition(double targetPosition, double duration) {
+        opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
         activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
@@ -298,6 +299,10 @@ public abstract class ControlAxis {  //schrödinger's code
 
         if (config.inputMap.getUnAbort())
             controlMode = defaultControlMode;
+
+        if (controlMode == ControlMode.trajectoryControl) {
+            if (Math.abs(getInput()) > config.getAutoAbortThreshold()) ;
+        }
 
 
         if (config.inputMap.getAbort())
@@ -340,9 +345,9 @@ public abstract class ControlAxis {  //schrödinger's code
 
                 MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
 
-//                setTargetPosition(targetMotionState.position);
-//                targetVelocity = targetMotionState.velocity;
-//                targetAcceleration = targetMotionState.acceleration;
+                setTargetPosition(targetMotionState.position);
+                targetVelocity = targetMotionState.velocity;
+                targetAcceleration = targetMotionState.acceleration;
 
                 updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
                 break;

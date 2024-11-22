@@ -34,7 +34,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -49,9 +48,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "Testing", group = "Linear OpMode")
 //@Disabled
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+public class Testing extends LinearOpMode {
 
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
@@ -114,6 +113,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             activeConfig.sensorData.update();
 
+            if(gamepad2.b){
+                spinnyBit.linearMoveToPosition(0,2);
+                lift.linearMoveToPosition(9,2);
+            }
 
             if (gamepad2.x) {
                 lift.setTargetPosition(0);
@@ -153,7 +156,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.torqueControl)
+            } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             lift.update();
