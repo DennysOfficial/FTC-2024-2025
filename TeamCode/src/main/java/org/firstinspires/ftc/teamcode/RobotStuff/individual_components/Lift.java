@@ -111,9 +111,9 @@ public class Lift extends ControlAxis {
         if (pivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        double upperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
-        upperLimit = Math.abs(upperLimit);
-        targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, upperLimit);
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
+        dynamicUpperLimit = Math.abs(dynamicUpperLimit);
+        targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 
         //opMode.telemetry.addData("liftDynamicLimit", upperLimit);
 

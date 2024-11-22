@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
