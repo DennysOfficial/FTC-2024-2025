@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Bez
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Timer;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -62,6 +63,8 @@ public class Auto_Test_02Z extends OpMode{
     Pivot spinyBit;
     ActiveIntake intake;
     RobotConfig config;
+
+    Timer timerThingy;
 
     @Override
     public void init() {
@@ -151,7 +154,7 @@ public class Auto_Test_02Z extends OpMode{
                 spinyBit.setTargetPosition(90);
 
                 if (spinyBit.getPosition() >= 87.5) {
-                    intake.intake();
+                    intake.intakeForDuration(2);
 
                     double time = runtime.seconds();
 
@@ -202,9 +205,14 @@ public class Auto_Test_02Z extends OpMode{
 
     @Override
     public void loop() {
+        deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
+        telemetry.addData("deltaTime", deltaTime);
+        frameTimer.reset();
+
         follower.update();
         lift.update();
         spinyBit.update();
+        intake.update();
 
         autonomousPathUpdate();
 
