@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Timer;
 
 public class ActiveIntake {
 
@@ -30,6 +31,20 @@ public class ActiveIntake {
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
     }
 
+    Timer stopTimer = null;
+    Timer closeFlapTimer = null;
+
+    public void update() {
+        if (stopTimer != null && stopTimer.done()) {
+            stopTimer = null;
+            stop();
+        }
+
+        if (closeFlapTimer != null && closeFlapTimer.done()) {
+            closeFlapTimer = null;
+            closeFlap();
+        }
+    }
 
     public void directControl() {
         wheelControl();
@@ -52,21 +67,38 @@ public class ActiveIntake {
             flapServo.setPosition(flapOpen);
     }
 
-    public void intake(){
+    public void intake() {
         spinnyServo.setPower(intakeSpeed);
     }
-    public void outtake(){
+
+
+    public void intakeForDuration(double durationSeconds) {
+        intake();
+        stopTimer = new Timer(durationSeconds);
+    }
+
+    public void outtake() {
         spinnyServo.setPower(outtakeSpeed);
     }
-    public void stop(){
+
+    public void outtakeForDuration(double durationSeconds) {
+        outtake();
+        stopTimer = new Timer(durationSeconds);
+    }
+
+    public void stop() {
         spinnyServo.setPower(0);
     }
 
-    public void openFlap(){
+    public void openFlap() {
         flapServo.setPosition(flapOpen);
     }
 
-    public void closeFlap(){
+    public void openFlapForDuration(double durationSeconds) {
+        openFlap();
+    }
+
+    public void closeFlap() {
         flapServo.setPosition(flapClosed);
     }
 
