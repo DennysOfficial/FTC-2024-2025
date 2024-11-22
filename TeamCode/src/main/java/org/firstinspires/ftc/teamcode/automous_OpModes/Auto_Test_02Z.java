@@ -44,7 +44,7 @@ public class Auto_Test_02Z extends OpMode{
     private final Point rungpoint1 =   new Point(32,69, Point.CARTESIAN);
     private final Point curvepoint =   new Point(15,72, Point.CARTESIAN);
     private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(10,41, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point pickuppoint =  new Point(12,41, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -149,13 +149,18 @@ public class Auto_Test_02Z extends OpMode{
             case INTAKE1:
 
                 spinyBit.setTargetPosition(90);
-                intake.intake();
-                double time = runtime.seconds();
 
-                if (time + 0.5 <= runtime.seconds() && spinyBit.getPosition() == 90) {
-                    intake.stop();
-                    currentState = State.TO_RUNG_2;
-                    follower.followPath(toRung2);
+                if (spinyBit.getPosition() >= 87.5) {
+                    intake.intake();
+
+                    double time = runtime.seconds();
+
+                    if (time + 0.5 <= runtime.seconds()) {
+
+                        intake.stop();
+                        currentState = State.TO_RUNG_2;
+                        follower.followPath(toRung2);
+                    }
                 }
                 break;
 
