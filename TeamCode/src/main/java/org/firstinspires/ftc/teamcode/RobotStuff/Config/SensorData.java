@@ -14,7 +14,7 @@ public class SensorData {
     }
 
     public void update() {
-        //updateBatteryVoltage();
+        updateBatteryVoltage();
     }
 
     void updateBatteryVoltage() {

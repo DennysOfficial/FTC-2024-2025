@@ -1,33 +1,28 @@
 package org.firstinspires.ftc.teamcode.automous_OpModes;
 
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
-import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.List;
 
-@Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2")
-public class Auto_Test_02Z extends OpMode{
+@Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2 Test")
+public class Auto_Test_02Z_noLift extends OpMode{
 
     enum State {
         TO_RUNG_START,
@@ -47,11 +42,11 @@ public class Auto_Test_02Z extends OpMode{
     private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint =    new Point(33,72, Point.CARTESIAN);
-    private final Point rungpoint1 =   new Point(33,69, Point.CARTESIAN);
-    private final Point curvepoint =   new Point(15,72, Point.CARTESIAN);
-    private final Point observepoint = new Point( 9, 9, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(14.5,43, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point rungpoint =    new Point(  38,72, Point.CARTESIAN);
+    private final Point rungpoint1 =   new Point(  38,69, Point.CARTESIAN);
+    private final Point curvepoint =   new Point(  15,72, Point.CARTESIAN);
+    private final Point observepoint = new Point(  10,10, Point.CARTESIAN);
+    private final Point pickuppoint =  new Point(15.5,43, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -65,31 +60,14 @@ public class Auto_Test_02Z extends OpMode{
 
     double deltaTime;
 
-    Lift lift;
-    Pivot spinyBit;
-    ActiveIntake intake;
-    RobotConfig config;
-
     @Override
     public void init() {
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
-
 
         allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
-
-        config = new RobotConfig(this);
-
-        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config, runtime);
-        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config, runtime);
-        intake = new ActiveIntake(this, config);
-
-        lift.assignPivot(spinyBit);
-        spinyBit.assignLift(lift);
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
@@ -130,17 +108,16 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.LIFT1;
-                    lift.setTargetPosition(0);
                 }
                 break;
 
             case LIFT1:
 
-                if (lift.getPosition() <= 1) {
+
                     currentState = State.TO_PICKUP;
                     follower.followPath(toPickup);
 
-                }
+
                 break;
 
 
@@ -148,42 +125,30 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.INTAKE1;
-                    spinyBit.fancyMoveToPosition(90, 1);
-                    time = runtime.seconds() + 0.5;
                 }
                 break;
 
             case INTAKE1:
 
-                if (spinyBit.getPosition() >= 87.5) {
-                    intake.intake();
 
-                    if (time <= runtime.seconds()) {
-
-                        intake.stop();
                         currentState = State.TO_RUNG_2;
                         follower.followPath(toRung2);
-
-                        spinyBit.fancyMoveToPosition(5, 1.5);
-                        lift.fancyMoveToPosition(9.5, 1.5);
-                    }
-                }
                 break;
 
             case TO_RUNG_2:
 
+
+
                 if (!follower.isBusy()) {
                     currentState = State.LIFT2;
-                    lift.setTargetPosition(0);
                 }
                 break;
 
             case LIFT2:
 
-                if (lift.getPosition() <= 1) {
+
                     currentState = State.TO_OBSERVE;
                     follower.followPath(toObserve);
-                }
                 break;
 
             case TO_OBSERVE:
@@ -208,10 +173,7 @@ public class Auto_Test_02Z extends OpMode{
 
         deltaTime = frameTimer.seconds();
         frameTimer.reset();
-
         follower.update();
-        lift.update();
-        spinyBit.update();
 
         autonomousPathUpdate();
 
@@ -234,9 +196,6 @@ public class Auto_Test_02Z extends OpMode{
         frameTimer.reset();
         currentState = State.TO_RUNG_START;
         follower.followPath(toRungStart);
-
-        spinyBit.fancyMoveToPosition(5, 1.5);
-        lift.fancyMoveToPosition(9.5, 1.5);
     }
 
     @Override
