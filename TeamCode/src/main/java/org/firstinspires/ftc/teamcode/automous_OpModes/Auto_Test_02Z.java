@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.automous_OpModes;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -72,6 +74,9 @@ public class Auto_Test_02Z extends OpMode{
     @Override
     public void init() {
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
+
+
         allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
@@ -97,10 +102,6 @@ public class Auto_Test_02Z extends OpMode{
 
         toRungStart = follower.pathBuilder()
                 .addPath(new BezierLine (new Point(startPose), rungpoint))
-                .addTemporalCallback(0, () -> {
-                    spinyBit.fancyMoveToPosition(0, 1.5);
-                    lift.fancyMoveToPosition(9.5, 1.5);
-                })
                 .build();
 
 
@@ -113,10 +114,6 @@ public class Auto_Test_02Z extends OpMode{
         toRung2 = follower.pathBuilder()
                 .addPath(new BezierCurve(pickuppoint, curvepoint, rungpoint1))
                 .setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0))
-                .addTemporalCallback(0, () -> {
-                    spinyBit.fancyMoveToPosition(0, 1.5);
-                    lift.fancyMoveToPosition(9.5, 1.5);
-                })
                 .build();
 
 
@@ -174,6 +171,9 @@ public class Auto_Test_02Z extends OpMode{
                         intake.stop();
                         currentState = State.TO_RUNG_2;
                         follower.followPath(toRung2);
+
+                        spinyBit.fancyMoveToPosition(0, 1.5);
+                        lift.fancyMoveToPosition(9.5, 1.5);
                     }
                 }
                 break;
@@ -248,6 +248,9 @@ public class Auto_Test_02Z extends OpMode{
         frameTimer.reset();
         currentState = State.TO_RUNG_START;
         follower.followPath(toRungStart);
+
+        spinyBit.fancyMoveToPosition(0, 1.5);
+        lift.fancyMoveToPosition(9.5, 1.5);
     }
 
     @Override
