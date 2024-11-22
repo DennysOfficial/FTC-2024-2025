@@ -281,6 +281,10 @@ public abstract class ControlAxis {  //schrödinger's code
         setControlMode(ControlMode.trajectoryControl);
     }
 
+    public boolean isBusy(){
+        return activeTrajectory == null || activeTrajectory.isActive();
+    }
+
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
     abstract void miscUpdate();

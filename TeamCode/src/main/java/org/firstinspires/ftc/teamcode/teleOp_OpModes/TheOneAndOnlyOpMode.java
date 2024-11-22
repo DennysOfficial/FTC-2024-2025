@@ -76,13 +76,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig, runtime);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig, runtime);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig, runtime);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig, runtime);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
-
 
 
         //Pincher pincher = new Pincher(this,activeConfig);
@@ -115,16 +114,17 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
 
-
-
             if (gamepad2.x) {
-                spinnyBit.fancyMoveToPosition(16,1);
-                lift.fancyMoveToPosition(12.5,1 );
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(16, 1);
+                if (!lift.isBusy())
+                    lift.fancyMoveToPosition(12.5, 1);
             }
 
             if (gamepad2.y) {
                 if (lift.getPosition() < 10)
-                    spinnyBit.fancyMoveToPosition(-18,1);
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(-18, 1);
 
 
                 if (spinnyBit.getPosition() < 40)
@@ -135,12 +135,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.a) {
                 if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    spinnyBit.fancyMoveToPosition(0,1);
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(0, 1);
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 14)
-                    spinnyBit.fancyMoveToPosition(71,1);
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(71, 1);
             }
-
 
 
             if (pivotControl.isBusy())
