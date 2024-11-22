@@ -303,13 +303,12 @@ public abstract class ControlAxis {  //schrödinger's code
         if (config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
 
-        if (controlMode == ControlMode.disabled) {
-            motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motors.setPower(0);
-        }
-
-
         switch (getControlMode()) {
+            case disabled:
+                motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                motors.setPower(0);
+                break;
+
             case gamePadVelocityControl:
                 targetVelocity = getInput() * getVelocityControlMaxRate();
                 updateVelocityControl();
