@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import java.util.List;
 
 @Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2 Test")
-public class Auto_Test_02Z_noLift extends OpMode{
+public class Auto_Test_02Z_noLift extends OpMode {
 
     enum State {
         TO_RUNG_START,
@@ -39,14 +39,14 @@ public class Auto_Test_02Z_noLift extends OpMode{
 
     List<LynxModule> allHubs;
 
-    private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(9, 72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint =    new Point(  38,72, Point.CARTESIAN);
-    private final Point rungpoint1 =   new Point(  38,69, Point.CARTESIAN);
-    private final Point curvepoint =   new Point(  15,72, Point.CARTESIAN);
-    private final Point observepoint = new Point(  10,10, Point.CARTESIAN);
-    private final Point pickuppoint =  new Point(15.5,43, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point rungpoint = new Point(38, 72, Point.CARTESIAN);
+    private final Point rungpoint1 = new Point(38, 69, Point.CARTESIAN);
+    private final Point curvepoint = new Point(15, 72, Point.CARTESIAN);
+    private final Point observepoint = new Point(10, 10, Point.CARTESIAN);
+    private final Point pickuppoint = new Point(15.5, 43, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -74,11 +74,10 @@ public class Auto_Test_02Z_noLift extends OpMode{
     }
 
 
-
     public void buildPaths() {
 
         toRungStart = follower.pathBuilder()
-                .addPath(new BezierLine (new Point(startPose), rungpoint))
+                .addPath(new BezierLine(new Point(startPose), rungpoint))
                 .build();
 
 
@@ -114,8 +113,8 @@ public class Auto_Test_02Z_noLift extends OpMode{
             case LIFT1:
 
 
-                    currentState = State.TO_PICKUP;
-                    follower.followPath(toPickup);
+                currentState = State.TO_PICKUP;
+                follower.followPath(toPickup);
 
 
                 break;
@@ -131,12 +130,11 @@ public class Auto_Test_02Z_noLift extends OpMode{
             case INTAKE1:
 
 
-                        currentState = State.TO_RUNG_2;
-                        follower.followPath(toRung2);
+                currentState = State.TO_RUNG_2;
+                follower.followPath(toRung2);
                 break;
 
             case TO_RUNG_2:
-
 
 
                 if (!follower.isBusy()) {
@@ -147,8 +145,8 @@ public class Auto_Test_02Z_noLift extends OpMode{
             case LIFT2:
 
 
-                    currentState = State.TO_OBSERVE;
-                    follower.followPath(toObserve);
+                currentState = State.TO_OBSERVE;
+                follower.followPath(toObserve);
                 break;
 
             case TO_OBSERVE:
@@ -167,15 +165,20 @@ public class Auto_Test_02Z_noLift extends OpMode{
     @Override
     public void loop() {
 
+        double lastTime = 0;
+        deltaTime = frameTimer.seconds();
+        frameTimer.reset();
+
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
+        telemetry.addData("1", -lastTime + (lastTime = frameTimer.seconds()));
 
-        deltaTime = frameTimer.seconds();
-        frameTimer.reset();
         follower.update();
+        telemetry.addData("2", -lastTime + (lastTime = frameTimer.seconds()));
 
         autonomousPathUpdate();
+        telemetry.addData("3", -lastTime + (lastTime = frameTimer.seconds()));
 
         telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());
@@ -184,9 +187,9 @@ public class Auto_Test_02Z_noLift extends OpMode{
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
+        telemetry.addData("4", -lastTime + (lastTime = frameTimer.seconds()));
         telemetry.update();
     }
-
 
 
     @Override
