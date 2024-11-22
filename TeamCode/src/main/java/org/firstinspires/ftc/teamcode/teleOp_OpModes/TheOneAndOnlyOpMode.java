@@ -157,7 +157,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled)
+            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.torqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             lift.update();
