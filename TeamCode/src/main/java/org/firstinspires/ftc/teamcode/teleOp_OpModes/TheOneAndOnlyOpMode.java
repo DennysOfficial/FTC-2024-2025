@@ -115,6 +115,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
 
+            if(gamepad2.b){
+                spinnyBit.linearMoveToPosition(69,4.20);
+            }
+
             if (gamepad2.x) {
                 lift.setTargetPosition(0);
                 if (lift.getPosition() < 15)
