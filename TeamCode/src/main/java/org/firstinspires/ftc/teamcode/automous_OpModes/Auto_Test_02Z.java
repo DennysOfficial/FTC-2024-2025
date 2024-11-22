@@ -146,6 +146,7 @@ public class Auto_Test_02Z extends OpMode{
                 // We are done with the program
                 if (!follower.isBusy()) {
                     currentState = State.INTAKE1;
+                    timerThingy = null;
                 }
                 break;
 
@@ -153,13 +154,14 @@ public class Auto_Test_02Z extends OpMode{
 
                 spinyBit.setTargetPosition(90);
 
-                if (spinyBit.getPosition() >= 87.5) {
-                    intake.intakeForDuration(2);
+                if (spinyBit.getPosition() >= 80) {
+                    intake.intake();
 
-                    double time = runtime.seconds();
+                    if(timerThingy == null)
+                        timerThingy = new Timer(1);
 
-                    if (time + 0.5 <= runtime.seconds()) {
-
+                    if (timerThingy.done()) {
+                        timerThingy = null;
                         intake.stop();
                         currentState = State.TO_RUNG_2;
                         follower.followPath(toRung2);
