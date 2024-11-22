@@ -144,6 +144,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     pivotControl.smoothMove(spinnyBit.getPosition(), 71, 1);
             }
 
+
+
             if (pivotControl.isBusy())
                 spinnyBit.setTargetPosition(pivotControl.update());
 
@@ -152,6 +154,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.setTargetPosition(spinnyBit.getPosition());
             }
 
+
+            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
