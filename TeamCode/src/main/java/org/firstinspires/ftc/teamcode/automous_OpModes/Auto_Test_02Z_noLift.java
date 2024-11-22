@@ -172,13 +172,16 @@ public class Auto_Test_02Z_noLift extends OpMode {
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
-        telemetry.addData("1", -lastTime + (lastTime = frameTimer.seconds()));
+        telemetry.addData("1", frameTimer.seconds());
+
 
         follower.update();
-        telemetry.addData("2", -lastTime + (lastTime = frameTimer.seconds()));
+        telemetry.addData("2", frameTimer.seconds());
+
 
         autonomousPathUpdate();
-        telemetry.addData("3", -lastTime + (lastTime = frameTimer.seconds()));
+        telemetry.addData("3", frameTimer.seconds());
+
 
         telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());
@@ -187,7 +190,7 @@ public class Auto_Test_02Z_noLift extends OpMode {
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
-        telemetry.addData("4", -lastTime + (lastTime = frameTimer.seconds()));
+        telemetry.addData("4", frameTimer.seconds());
         telemetry.update();
     }
 
