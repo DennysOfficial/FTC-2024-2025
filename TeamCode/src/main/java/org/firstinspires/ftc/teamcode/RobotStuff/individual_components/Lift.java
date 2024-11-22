@@ -108,6 +108,9 @@ public class Lift extends ControlAxis {
 
     @Override
     public void setTargetPosition(double targetPosition) {
+        if (targetPosition == getTargetPosition())
+            return;
+
         if (pivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
