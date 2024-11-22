@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MultiTorqueMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.LinearTrajectory;
