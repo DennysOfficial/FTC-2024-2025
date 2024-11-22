@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.automous_OpModes;
 
 
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,6 +22,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.util.List;
+
 @Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2")
 public class Auto_Test_02Z extends OpMode{
 
@@ -36,6 +39,8 @@ public class Auto_Test_02Z extends OpMode{
     }
 
     State currentState = State.IDLE;
+
+    List<LynxModule> allHubs;
 
     private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
@@ -66,6 +71,13 @@ public class Auto_Test_02Z extends OpMode{
 
     @Override
     public void init() {
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         config = new RobotConfig(this);
 
         lift = new Lift(ControlAxis.ControlMode.positionControl,this, config, runtime);
@@ -204,6 +216,11 @@ public class Auto_Test_02Z extends OpMode{
 
     @Override
     public void loop() {
+
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         deltaTime = frameTimer.seconds();
         frameTimer.reset();
         follower.update();
