@@ -22,11 +22,11 @@ public class StopWatch {
     }
 
     public double getTimeMilli() {
-        return (double) (startTimeNano - System.nanoTime()) / ElapsedTime.MILLIS_IN_NANO;
+        return (startTimeNano - System.nanoTime()) / (double) ElapsedTime.MILLIS_IN_NANO;
     }
 
     public double getTimeSeconds() {
-        return (double) (startTimeNano - System.nanoTime()) / ElapsedTime.SECOND_IN_NANO;
+        return (startTimeNano - System.nanoTime()) / (double) ElapsedTime.SECOND_IN_NANO;
     }
 
     public void addTimeToTelemetryAndReset(Telemetry telemetry, String timeName) {
