@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.automous_OpModes;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,6 +22,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
+import java.util.List;
+
 @Autonomous(name = "SquareTest")
 public class Auto_Test_Square extends OpMode{
 
@@ -28,6 +33,14 @@ public class Auto_Test_Square extends OpMode{
     }
 
     State currentState = State.IDLE;
+
+    Lift lift;
+    Pivot spinyBit;
+    ActiveIntake intake;
+
+    RobotConfig config;
+
+    List<LynxModule> allHubs;
 
     //Points of Interest
     private final Pose startPose =        new Pose( 9,72, Math.toRadians(270));  // This is where the robot starts
@@ -51,7 +64,6 @@ public class Auto_Test_Square extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    RobotConfig activeConfig = new RobotConfig(this);
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -97,7 +109,17 @@ public class Auto_Test_Square extends OpMode{
 
     @Override
     public void loop() {
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
+        deltaTime = frameTimer.seconds();
+        frameTimer.reset();
+
         follower.update();
+        lift.update();
+        spinyBit.update();
+        intake.update();
 
         autonomousPathUpdate();
 
@@ -113,23 +135,23 @@ public class Auto_Test_Square extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(new Pose(0,0, Math.toRadians(0)));
 
-        // Initialize our lift
-        RobotConfig activeConfig = new RobotConfig(this);
-
-        //Lift lift = new Lift(this, activeConfig, runtime);
-
-        //lift.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        //Pivot spinyBit = new Pivot(this, activeConfig, runtime);
-
-        //spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
-
-        //Pincher pincher = new Pincher(this,activeConfig);
-
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
 
-        RobotConfig config = new RobotConfig(this);
+        allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
+        config = new RobotConfig(this);
+
+        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config, runtime);
+        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config, runtime);
+        intake = new ActiveIntake(this, config);
+
+        lift.assignPivot(spinyBit);
+        spinyBit.assignLift(lift);
     }
 
     @Override

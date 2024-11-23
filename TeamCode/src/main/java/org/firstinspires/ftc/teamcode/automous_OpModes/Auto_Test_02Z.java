@@ -26,8 +26,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.List;
 
-@Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2")
-public class Auto_Test_02Z extends OpMode {
+@Autonomous(name = "SoupcOpMode_0-2-Z 1.1.3")
+public class Auto_Test_02Z extends OpMode{
 
     enum State {
         TO_RUNG_START,
@@ -41,6 +41,18 @@ public class Auto_Test_02Z extends OpMode {
     }
 
     State currentState = State.IDLE;
+
+    boolean a = true;
+    boolean b = true;
+    boolean c = true;
+    boolean d = true;
+    boolean e = true;
+    boolean f = true;
+    boolean g = true;
+    boolean h = true;
+    boolean i = true;
+    boolean j = true;
+    boolean k = true;
 
     List<LynxModule> allHubs;
 
@@ -94,6 +106,7 @@ public class Auto_Test_02Z extends OpMode {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
     }
+
 
 
     public void buildPaths() {
@@ -154,18 +167,21 @@ public class Auto_Test_02Z extends OpMode {
 
             case INTAKE1:
 
-                if (spinyBit.getPosition() >= 87.5) {
-                    intake.intake();
-
-                    if (time <= runtime.seconds()) {
-
-                        intake.stop();
-                        currentState = State.TO_RUNG_2;
-                        follower.followPath(toRung2);
-
-                        spinyBit.fancyMoveToPosition(5, 1.5);
-                        lift.fancyMoveToPosition(9.5, 1.5);
+                if (spinyBit.getPosition() >= 80) {
+                    if (c) {
+                        intake.intakeForDuration(0.5);
+                        c = false;
                     }
+                }
+                if (spinyBit.getPosition() >= 87.5) {
+                    currentState = State.TO_RUNG_2;
+                    follower.followPath(toRung2);
+                    if (d) {
+                        spinyBit.fancyMoveToPosition(7, 1.5);
+                        lift.fancyMoveToPosition(10.5, 1);
+                        d = false;
+                    }
+
                 }
                 break;
 
@@ -211,6 +227,8 @@ public class Auto_Test_02Z extends OpMode {
         telemetry.addData("1", frameTimer.seconds());
 
 
+        intake.closeFlap();
+
         follower.update();
         telemetry.addData("2", frameTimer.seconds());
         lift.update();
@@ -218,8 +236,11 @@ public class Auto_Test_02Z extends OpMode {
         spinyBit.update();
         telemetry.addData("4", frameTimer.seconds());
 
+
         autonomousPathUpdate();
         telemetry.addData("5", frameTimer.seconds());
+
+        intake.update();
 
         telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());
@@ -228,9 +249,9 @@ public class Auto_Test_02Z extends OpMode {
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
-        telemetry.addData("6", frameTimer.seconds());
         telemetry.update();
     }
+
 
 
     @Override
@@ -241,8 +262,8 @@ public class Auto_Test_02Z extends OpMode {
         currentState = State.TO_RUNG_START;
         follower.followPath(toRungStart);
 
-        spinyBit.fancyMoveToPosition(5, 1.5);
-        lift.fancyMoveToPosition(9.5, 1.5);
+        spinyBit.fancyMoveToPosition(7, 1.5);
+        lift.fancyMoveToPosition(10.5, 1);
     }
 
     @Override
