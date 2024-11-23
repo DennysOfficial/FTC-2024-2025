@@ -20,15 +20,15 @@ public class StopWatch {
     }
 
     public long getTimeNano() {
-        return startTimeNano - System.nanoTime();
+        return System.nanoTime() - startTimeNano;
     }
 
     public double getTimeMilli() {
-        return (startTimeNano - System.nanoTime()) / (double) ElapsedTime.MILLIS_IN_NANO;
+        return (System.nanoTime() - startTimeNano) / (double) ElapsedTime.MILLIS_IN_NANO;
     }
 
     public double getTimeSeconds() {
-        return (startTimeNano - System.nanoTime()) / (double) ElapsedTime.SECOND_IN_NANO;
+        return (System.nanoTime()- startTimeNano) / (double) ElapsedTime.SECOND_IN_NANO;
     }
 
     public void addTimeToTelemetryAndReset(Telemetry telemetry, String timeName) {

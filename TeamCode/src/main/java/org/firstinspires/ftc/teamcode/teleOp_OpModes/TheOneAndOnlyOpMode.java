@@ -46,6 +46,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
@@ -57,6 +58,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
     private final ElapsedTime frameTimer = new ElapsedTime();
+
+    StopWatch stopWatch = new StopWatch();
 
     @Override
     public void runOpMode() {
@@ -102,6 +105,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            stopWatch.reset();
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -162,11 +167,19 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
+            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop beginning Time -------------------------------");
+
             lift.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop lift update Time -----------------------------");
+
             spinnyBit.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop pivot update Time ----------------------------");
+
             activeDriveMode.updateDrive(deltaTime);
+            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop drive update Time ----------------------------");
 
             intake.directControl();
+
 
             //telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
