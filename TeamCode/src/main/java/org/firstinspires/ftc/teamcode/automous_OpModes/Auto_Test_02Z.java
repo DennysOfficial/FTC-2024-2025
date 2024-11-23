@@ -119,7 +119,7 @@ public class Auto_Test_02Z extends OpMode{
         toPickup = follower.pathBuilder()
                 .addPath(new BezierCurve(rungpoint, curvepoint, pickuppoint))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
-                .build();
+                .build(); //y
 
 
         toRung2 = follower.pathBuilder()
