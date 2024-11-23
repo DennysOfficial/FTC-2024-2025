@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
@@ -145,6 +146,7 @@ public abstract class ControlAxis {  //schrödinger's code
      * @param feedforward ALREADY HAS STATIC FEEDFORWARD
      */
     protected void updatePositionPID(double targetPosition, double feedforward) {
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID");
         updatePIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
@@ -152,6 +154,7 @@ public abstract class ControlAxis {  //schrödinger's code
         targetTorque += getStaticFeedforward(targetTorque);
 
         motors.setTorque(targetTorque, 0);
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID");
         //motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
@@ -299,7 +302,12 @@ public abstract class ControlAxis {  //schrödinger's code
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
     }
 
+    StopWatch updateStopwatch = new StopWatch();
+
     public void update() {
+        updateStopwatch.reset();
+        updateStopwatch.debug = config.debugConfig.getTimeBreakdownDebug();
+
         updateDeltaTime();
 
 
@@ -363,7 +371,9 @@ public abstract class ControlAxis {  //schrödinger's code
             case testing:
                 break;
         }
+
         miscUpdate();
         debugUpdate();
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of update");
     }
 }

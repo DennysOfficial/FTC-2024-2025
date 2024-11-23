@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class StopWatch {
 
+    public boolean debug = true;
+
     public long startTimeNano;
 
     public StopWatch() {
@@ -30,6 +32,8 @@ public class StopWatch {
     }
 
     public void addTimeToTelemetryAndReset(Telemetry telemetry, String timeName) {
+        if(!debug)
+            return;
         telemetry.addData(timeName, getTimeMilli());
         reset();
     }
