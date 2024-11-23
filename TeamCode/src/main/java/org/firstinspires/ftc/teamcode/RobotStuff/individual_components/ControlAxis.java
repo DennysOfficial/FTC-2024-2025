@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.LinearTrajectory;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.MotionState;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.SinusoidalTrajectory;
@@ -137,8 +136,12 @@ public abstract class ControlAxis {  //schrödinger's code
 
     abstract double getKd();
 
-    void updatePIDCoefficients() {
+    void updateCustomPIDCoefficients() {
         positionPID.setCoefficients(getKp(), getKi(), getKd());
+    }
+
+    void updateBuiltInPIDCoefficients() {
+        positionPID.setCoefficients(getKp() * unitsPerEncoderCount, getKi() * unitsPerEncoderCount, getKd() * unitsPerEncoderCount);
     }
 
     /**
@@ -148,7 +151,7 @@ public abstract class ControlAxis {  //schrödinger's code
      */
     protected void updatePositionPID(double targetPosition, double feedforward) {
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID time");
-        updatePIDCoefficients();
+        updateCustomPIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID time");
@@ -157,6 +160,8 @@ public abstract class ControlAxis {  //schrödinger's code
 
         motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
+
+        motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
         //motors.setPower(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
