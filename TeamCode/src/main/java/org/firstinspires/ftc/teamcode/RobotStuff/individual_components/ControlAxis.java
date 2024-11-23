@@ -150,11 +150,12 @@ public abstract class ControlAxis {  //schrödinger's code
         updatePIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID");
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
 
         motors.setTorque(targetTorque, 0);
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID");
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque");
         //motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
