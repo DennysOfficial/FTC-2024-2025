@@ -127,12 +127,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
 
             if (gamepad2.y) {
-                if (lift.getPosition() < 10)
+                if (lift.getPosition() < 15)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(-18, 1);
 
 
-                if (spinnyBit.getPosition() < 40)
+                if (spinnyBit.getPosition() < 50)
                     lift.setTargetPosition(33);
 
             }

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiTorqueMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
@@ -41,7 +42,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     // motor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-    protected MultiTorqueMotor motors;
+    protected MultiMotor motors;
 
     protected abstract void initMotors();
 
@@ -154,9 +155,9 @@ public abstract class ControlAxis {  //schrödinger's code
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
 
-        motors.setTorque(targetTorque, 0);
+        motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
-        //motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
+        //motors.setPower(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -344,12 +345,12 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case torqueControl:
-                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), 0);
+                motors.setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
-                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), 0);
+                motors.setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 
             case trajectoryControl:
