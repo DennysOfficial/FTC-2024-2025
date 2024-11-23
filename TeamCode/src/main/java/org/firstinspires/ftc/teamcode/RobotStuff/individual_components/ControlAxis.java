@@ -312,7 +312,7 @@ public abstract class ControlAxis {  //schrödinger's code
         updateDeltaTime();
 
 
-        if (config.inputMap.getUnAbort())
+        if (config.inputMap != null && config.inputMap.getUnAbort())
             controlMode = defaultControlMode;
 
         if (controlMode == ControlMode.trajectoryControl) {
@@ -321,7 +321,7 @@ public abstract class ControlAxis {  //schrödinger's code
         }
 
 
-        if (config.inputMap.getAbort())
+        if (config.inputMap != null && config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
 
         switch (getControlMode()) {
