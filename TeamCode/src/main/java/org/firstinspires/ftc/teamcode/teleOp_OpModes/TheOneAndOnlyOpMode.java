@@ -76,9 +76,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig, runtime);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig, runtime);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
@@ -168,7 +168,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             intake.directControl();
 
-            telemetry.addData("Run Time: ", runtime.toString());
+            //telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
     }

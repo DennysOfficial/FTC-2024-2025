@@ -146,16 +146,16 @@ public abstract class ControlAxis {  //schrödinger's code
      * @param feedforward ALREADY HAS STATIC FEEDFORWARD
      */
     protected void updatePositionPID(double targetPosition, double feedforward) {
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID");
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID time");
         updatePIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID");
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID time");
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
 
         motors.setTorque(targetTorque, 0);
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque");
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
         //motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
@@ -250,7 +250,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-    public ControlAxis(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount, ReadOnlyRuntime runtime) {
+    public ControlAxis(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, String axisName, String unitName, double unitsPerEncoderCount) {
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
@@ -375,6 +375,6 @@ public abstract class ControlAxis {  //schrödinger's code
 
         miscUpdate();
         debugUpdate();
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of update");
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of Control axis update time");
     }
 }
