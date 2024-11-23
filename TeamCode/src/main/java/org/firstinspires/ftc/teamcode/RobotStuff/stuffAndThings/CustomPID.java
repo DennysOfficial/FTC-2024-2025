@@ -44,6 +44,11 @@ public class CustomPID {
 
     public double runPID(double targetPosition, double actualPosition, double deltaTime) {
 
+        if (Double.isNaN(previousActualPosition)) {
+            previousActualPosition = actualPosition;
+            return 0;
+        }
+
         return runPID(targetPosition, actualPosition, deltaTime, (previousActualPosition - (previousActualPosition = actualPosition)) / deltaTime);
     }
 

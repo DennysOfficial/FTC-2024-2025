@@ -111,8 +111,8 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
 
-    public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config, ReadOnlyRuntime runtime) {
-        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg, runtime);
+    public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
+        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-40.0, 86.9);
     }
@@ -141,7 +141,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
 
     double calculateTorqueGravity(double liftExtension) {
         double interpolationAmount = liftExtension / extendedLiftPosition;
-        opMode.telemetry.addData("interpolation amount", interpolationAmount);
+        //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }

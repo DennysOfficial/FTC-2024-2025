@@ -53,4 +53,10 @@ public class DebugConfig {
         return controlModeDebug;
     }
 
+    public static boolean timeBreakdownDebug = true;
+
+    public boolean getTimeBreakdownDebug() {
+        return timeBreakdownDebug;
+    }
+
 }
