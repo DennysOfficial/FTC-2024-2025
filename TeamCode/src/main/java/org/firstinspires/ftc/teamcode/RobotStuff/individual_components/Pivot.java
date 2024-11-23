@@ -141,7 +141,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
 
     double calculateTorqueGravity(double liftExtension) {
         double interpolationAmount = liftExtension / extendedLiftPosition;
-        opMode.telemetry.addData("interpolation amount", interpolationAmount);
+        //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
         return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
