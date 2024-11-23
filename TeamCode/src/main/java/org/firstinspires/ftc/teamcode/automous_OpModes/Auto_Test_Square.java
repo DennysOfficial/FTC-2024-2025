@@ -146,8 +146,8 @@ public class Auto_Test_Square extends OpMode{
 
         config = new RobotConfig(this);
 
-        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config, runtime);
-        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config, runtime);
+        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config);
+        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
         intake = new ActiveIntake(this, config);
 
         lift.assignPivot(spinyBit);

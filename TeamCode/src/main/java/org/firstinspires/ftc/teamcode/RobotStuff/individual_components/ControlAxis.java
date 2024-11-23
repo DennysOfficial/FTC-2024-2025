@@ -285,7 +285,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public boolean isBusy() {
-        return !(activeTrajectory == null || activeTrajectory.isActive());
+        return activeTrajectory != null && activeTrajectory.isActive();
     }
 
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/

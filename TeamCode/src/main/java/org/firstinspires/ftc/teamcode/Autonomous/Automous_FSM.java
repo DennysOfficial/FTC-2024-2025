@@ -67,13 +67,13 @@ public class Automous_FSM extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         // Initialize our lift
         RobotConfig activeConfig = new RobotConfig(this);
-        Lift lift = new Lift(ControlAxis.ControlMode.positionControl,this, activeConfig, runtime);
+        Lift lift = new Lift(ControlAxis.ControlMode.positionControl,this, activeConfig);
         
         
 
 
 
-        Pivot spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, activeConfig, runtime);
+        Pivot spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, activeConfig);
 
 
 
