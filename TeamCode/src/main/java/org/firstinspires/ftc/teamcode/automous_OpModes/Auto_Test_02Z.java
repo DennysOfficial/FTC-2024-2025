@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
@@ -56,14 +57,14 @@ public class Auto_Test_02Z extends OpMode{
 
     List<LynxModule> allHubs;
 
-    private final Pose startPose = new Pose(9, 72, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private final Point rungpoint = new Point(38, 72, Point.CARTESIAN);
-    private final Point rungpoint1 = new Point(38, 69, Point.CARTESIAN);
-    private final Point curvepoint = new Point(15, 72, Point.CARTESIAN);
-    private final Point observepoint = new Point(10, 10, Point.CARTESIAN);
-    private final Point pickuppoint = new Point(15.5, 43, Point.CARTESIAN); // TODO: Make this more specific
+    private final Point rungpoint =    new Point(38,72, Point.CARTESIAN);
+    private final Point rungpoint1 =   new Point(38,69, Point.CARTESIAN);
+    private final Point curvepoint =   new Point(15,72, Point.CARTESIAN);
+    private final Point observepoint = new Point( 10, 10, Point.CARTESIAN);
+    private final Point pickuppoint =  new Point(15.5,43, Point.CARTESIAN); // TODO: Make this more specific
 
 
     // List of paths the robot takes
@@ -96,8 +97,8 @@ public class Auto_Test_02Z extends OpMode{
 
         config = new RobotConfig(this);
 
-        lift = new Lift(ControlAxis.ControlMode.positionControl, this, config, runtime);
-        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl, this, config, runtime);
+        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config);
+        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
         intake = new ActiveIntake(this, config);
 
         lift.assignPivot(spinyBit);
@@ -112,7 +113,7 @@ public class Auto_Test_02Z extends OpMode{
     public void buildPaths() {
 
         toRungStart = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(startPose), rungpoint))
+                .addPath(new BezierLine (new Point(startPose), rungpoint))
                 .build();
 
 
@@ -142,7 +143,10 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.LIFT1;
+                    if (a) {
                     lift.setTargetPosition(0);
+                    a = false;
+                    }
                 }
                 break;
 
@@ -160,8 +164,11 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.INTAKE1;
-                    spinyBit.fancyMoveToPosition(90, 1);
-                    time = runtime.seconds() + 0.5;
+                    if (b) {
+                        spinyBit.fancyMoveToPosition(95, 0.85);
+                        b = false;
+                    }
+                    follower.holdPoint(new BezierPoint(pickuppoint), Math.toRadians(270));
                 }
                 break;
 
@@ -189,7 +196,10 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.LIFT2;
-                    lift.setTargetPosition(0);
+                    if (e) {
+                        lift.setTargetPosition(0);
+                        e = false;
+                    }
                 }
                 break;
 
@@ -217,30 +227,21 @@ public class Auto_Test_02Z extends OpMode{
     @Override
     public void loop() {
 
-        double lastTime = 0;
-        deltaTime = frameTimer.seconds();
-        frameTimer.reset();
-
         for (LynxModule hub : allHubs) {
             hub.clearBulkCache();
         }
-        telemetry.addData("1", frameTimer.seconds());
 
+        deltaTime = frameTimer.seconds();
+        frameTimer.reset();
 
         intake.closeFlap();
 
         follower.update();
-        telemetry.addData("2", frameTimer.seconds());
         lift.update();
-        telemetry.addData("3", frameTimer.seconds());
         spinyBit.update();
-        telemetry.addData("4", frameTimer.seconds());
-
+        intake.update();
 
         autonomousPathUpdate();
-        telemetry.addData("5", frameTimer.seconds());
-
-        intake.update();
 
         telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());
