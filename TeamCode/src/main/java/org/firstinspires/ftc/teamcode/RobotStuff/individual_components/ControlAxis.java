@@ -365,6 +365,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case testing:
+                break;
         }
         miscUpdate();
         debugUpdate();
