@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierCurve;
+import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.Autonomous.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
@@ -26,7 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import java.util.List;
 
-@Autonomous(name = "SoupcOpMode_0-2-Z 1.0.2")
+@Autonomous(name = "SoupcOpMode_0-2-Z 1.1.3")
 public class Auto_Test_02Z extends OpMode{
 
     enum State {
@@ -41,6 +42,18 @@ public class Auto_Test_02Z extends OpMode{
     }
 
     State currentState = State.IDLE;
+
+    boolean a = true;
+    boolean b = true;
+    boolean c = true;
+    boolean d = true;
+    boolean e = true;
+    boolean f = true;
+    boolean g = true;
+    boolean h = true;
+    boolean i = true;
+    boolean j = true;
+    boolean k = true;
 
     List<LynxModule> allHubs;
 
@@ -130,7 +143,10 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.LIFT1;
+                    if (a) {
                     lift.setTargetPosition(0);
+                    a = false;
+                    }
                 }
                 break;
 
@@ -148,25 +164,31 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.INTAKE1;
-                    spinyBit.fancyMoveToPosition(90, 1);
-                    time = runtime.seconds() + 0.5;
+                    if (b) {
+                        spinyBit.fancyMoveToPosition(95, 0.85);
+                        b = false;
+                    }
+                    follower.holdPoint(new BezierPoint(pickuppoint), Math.toRadians(270));
                 }
                 break;
 
             case INTAKE1:
 
-                if (spinyBit.getPosition() >= 87.5) {
-                    intake.intake();
-
-                    if (time <= runtime.seconds()) {
-
-                        intake.stop();
-                        currentState = State.TO_RUNG_2;
-                        follower.followPath(toRung2);
-
-                        spinyBit.fancyMoveToPosition(5, 1.5);
-                        lift.fancyMoveToPosition(9.5, 1.5);
+                if (spinyBit.getPosition() >= 80) {
+                    if (c) {
+                        intake.intakeForDuration(0.5);
+                        c = false;
                     }
+                }
+                if (spinyBit.getPosition() >= 87.5) {
+                    currentState = State.TO_RUNG_2;
+                    follower.followPath(toRung2);
+                    if (d) {
+                        spinyBit.fancyMoveToPosition(7, 1.5);
+                        lift.fancyMoveToPosition(10.5, 1);
+                        d = false;
+                    }
+
                 }
                 break;
 
@@ -174,7 +196,10 @@ public class Auto_Test_02Z extends OpMode{
 
                 if (!follower.isBusy()) {
                     currentState = State.LIFT2;
-                    lift.setTargetPosition(0);
+                    if (e) {
+                        lift.setTargetPosition(0);
+                        e = false;
+                    }
                 }
                 break;
 
@@ -209,9 +234,12 @@ public class Auto_Test_02Z extends OpMode{
         deltaTime = frameTimer.seconds();
         frameTimer.reset();
 
+        intake.closeFlap();
+
         follower.update();
         lift.update();
         spinyBit.update();
+        intake.update();
 
         autonomousPathUpdate();
 
@@ -235,8 +263,8 @@ public class Auto_Test_02Z extends OpMode{
         currentState = State.TO_RUNG_START;
         follower.followPath(toRungStart);
 
-        spinyBit.fancyMoveToPosition(5, 1.5);
-        lift.fancyMoveToPosition(9.5, 1.5);
+        spinyBit.fancyMoveToPosition(7, 1.5);
+        lift.fancyMoveToPosition(10.5, 1);
     }
 
     @Override
