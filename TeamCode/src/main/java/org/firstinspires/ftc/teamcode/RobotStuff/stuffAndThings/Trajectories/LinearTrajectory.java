@@ -2,10 +2,12 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories;
 
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
-public class LinearTrajectory implements Trajectory {
+public class LinearTrajectory extends Trajectory {
 
     public final double startTime;
     public final double duration;
@@ -14,14 +16,12 @@ public class LinearTrajectory implements Trajectory {
     public double startPosition;
     public double endPosition;
 
-    ReadOnlyRuntime runtime;
 
-    public LinearTrajectory(ReadOnlyRuntime runtime, double startPosition, double endPosition, double durationSeconds) {
-        this.runtime = runtime;
+    public LinearTrajectory(double startPosition, double endPosition, double durationSeconds) {
 
         this.duration = durationSeconds;
 
-        startTime = runtime.seconds();
+        startTime = getTimeSeconds();
         endTime = startTime + durationSeconds;
 
         this.startPosition = startPosition;
@@ -29,10 +29,11 @@ public class LinearTrajectory implements Trajectory {
     }
 
 
+
     public MotionState sampleTrajectory() {
         MotionState motionState = new MotionState();
 
-        double interpolationAmount = (runtime.seconds() - startTime) / duration;
+        double interpolationAmount = (getTimeSeconds() - startTime) / duration;
 
         motionState.position = MathStuff.lerp(startPosition, endPosition, interpolationAmount);
         motionState.velocity = (endPosition - startPosition) / duration;
@@ -41,6 +42,6 @@ public class LinearTrajectory implements Trajectory {
     }
 
     public boolean isActive() {
-        return (runtime.seconds() >= startTime && runtime.seconds() < endTime);
+        return (getTimeSeconds() >= startTime && getTimeSeconds() < endTime);
     }
 }

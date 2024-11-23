@@ -4,6 +4,7 @@ import android.util.Range;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
@@ -17,7 +18,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Tra
 
 public abstract class ControlAxis {  //schrödinger's code
 
-    ReadOnlyRuntime runtime;
     double deltaTime = 0;
 
     protected PositionDerivatives positionDerivatives;
@@ -151,25 +151,28 @@ public abstract class ControlAxis {  //schrödinger's code
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
 
-        motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
+        motors.setTorque(targetTorque, 0);
+        //motors.setTorque(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
     }
 
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     abstract double getStaticFeedforward(double targetDirection);
 
     public double staticFrictionForce(double targetDirection, double staticFrictionComp, double staticThresholdUnitsPerSec) {
-        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
-            return 0;
-
-        return staticFrictionComp * Math.copySign(1, -targetDirection);
+        return 0; //TODO fix
+//        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
+//            return 0;
+//
+//        return staticFrictionComp * Math.copySign(1, -targetDirection);
     }
 
     abstract double getVelocityFeedforward();
 
     public double kineticFrictionForce(double targetDirection, double kineticFrictionComp, double staticThresholdUnitsPerSec) {
-        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
-            return 0;
-        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
+        return 0; //TODO fix??
+//        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
+//            return 0;
+//        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
     }
 
     abstract double getAccelerationFeedforward();
@@ -213,7 +216,7 @@ public abstract class ControlAxis {  //schrödinger's code
     public double targetVelocity;
 
     public double getVelocityTPS() {
-        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
+        return 0;//positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
     void updateVelocityControl() {
@@ -233,12 +236,12 @@ public abstract class ControlAxis {  //schrödinger's code
 
     void updateDeltaTime() {
         if (previousTime == 0) {
-            previousTime = runtime.seconds();
+            previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO);
             deltaTime = 0;
             return;
         }
 
-        deltaTime = -1 * previousTime + (previousTime = runtime.seconds());
+        deltaTime = -1 * previousTime + (previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO));
     }
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -252,7 +255,6 @@ public abstract class ControlAxis {  //schrödinger's code
 
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
-        this.runtime = runtime;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
 
@@ -270,14 +272,14 @@ public abstract class ControlAxis {  //schrödinger's code
         if (activeTrajectory != null && activeTrajectory.isActive())
             return;
         opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
-        activeTrajectory = new LinearTrajectory(runtime, getPosition(), targetPosition, duration);
+        activeTrajectory = new LinearTrajectory(getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
     public void fancyMoveToPosition(double targetPosition, double duration) {
         if (activeTrajectory != null && activeTrajectory.isActive())
             return;
-        activeTrajectory = new SinusoidalTrajectory(runtime, getPosition(), targetPosition, duration);
+        activeTrajectory = new SinusoidalTrajectory(getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
@@ -303,7 +305,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     public void update() {
         updateDeltaTime();
-        positionDerivatives.update(getPosition(), deltaTime);
+
 
         if (config.inputMap.getUnAbort())
             controlMode = defaultControlMode;
@@ -337,12 +339,12 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case torqueControl:
-                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
+                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), 0);
                 break;
 
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
-                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), getVelocityTPS());
+                motors.setTorque(targetTorque + getStaticFeedforward(targetTorque), 0);
                 break;
 
             case trajectoryControl:
@@ -353,7 +355,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 }
                 MotionState targetMotionState = activeTrajectory.sampleTrajectory();
 
-                MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
+                //MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
 
                 setTargetPosition(targetMotionState.position);
                 targetVelocity = targetMotionState.velocity;
