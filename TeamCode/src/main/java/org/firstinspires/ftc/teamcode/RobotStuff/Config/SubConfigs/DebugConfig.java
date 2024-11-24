@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class DebugConfig {
 
-    public static boolean allPositionDebug = true;
+    public static boolean allPositionDebug = false;
 
     public boolean getAllPositionDebug() {
         return allPositionDebug;
@@ -47,7 +47,7 @@ public class DebugConfig {
         return PIDDebug;
     }
 
-    public static boolean controlModeDebug = true;
+    public static boolean controlModeDebug = false;
 
     public boolean getControlModeDebug() {
         return controlModeDebug;

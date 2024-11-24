@@ -230,8 +230,8 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     void updateVelocityControl() {
-        setTargetPosition(getTargetPosition() + targetVelocity * deltaTime);
-        updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+        setTargetPosition(targetPosition + targetVelocity * deltaTime);
+        updatePositionPID(targetPosition , getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -326,11 +326,10 @@ public abstract class ControlAxis {  //schrödinger's code
                 controlMode = defaultControlMode;
         }
 
-
         if (config.inputMap != null && config.inputMap.getAbort())
             controlMode = ControlMode.disabled;
 
-        switch (getControlMode()) {
+        switch (controlMode) {
             case disabled:
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 motors.setPower(0);
