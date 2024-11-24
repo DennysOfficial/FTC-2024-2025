@@ -84,7 +84,7 @@ public class Lift extends ControlAxis {
         if (pivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(pivot.cachedCurrentPosition)) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(pivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class Lift extends ControlAxis {
         if (pivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.cachedCurrentPosition)) - config.getRetractedLiftLengthInch();
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 

@@ -36,26 +36,26 @@ public class Pivot extends ControlAxis { //schrödinger's code
     double getKp() {
         if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KpRetracted, KpExtended, lift.cachedCurrentPosition / extendedLiftPosition);
+        return MathStuff.lerp(KpRetracted, KpExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKi() {
         if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KiRetracted, KiExtended, lift.cachedCurrentPosition / extendedLiftPosition);
+        return MathStuff.lerp(KiRetracted, KiExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     double getKd() {
         if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KdRetracted, KdExtended, lift.cachedCurrentPosition / extendedLiftPosition);
+        return MathStuff.lerp(KdRetracted, KdExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     @Override
     double getStaticFeedforward(double targetDirection) {
         if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return calculateTorqueGravity(lift.cachedCurrentPosition);
+        return calculateTorqueGravity(lift.getPosition());
     }
 
     @Override
@@ -71,7 +71,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     double getVelocityFeedforwardCoefficient() {
         if (lift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.cachedCurrentPosition / extendedLiftPosition);
+        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.getPosition() / extendedLiftPosition);
     }
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
@@ -125,7 +125,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
         if (lift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.cachedCurrentPosition));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
@@ -143,7 +143,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
         double interpolationAmount = liftExtension / extendedLiftPosition;
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
-        return Math.sin(Math.toRadians(cachedCurrentPosition)) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 
 }
