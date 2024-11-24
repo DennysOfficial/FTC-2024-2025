@@ -14,37 +14,23 @@ public class PositionDerivatives {
         return acceleration;
     }
 
-
-    double jerk = 0;
-
-    public double getJerk() {
-        return jerk;
-    }
-
-
-    double previousAngle;
+    double previousPosition;
     double previousVelocity = 0;
-    double previousAcceleration = 0;
-
     public PositionDerivatives(double startingPosition) {
-        previousAngle = startingPosition;
+        previousPosition = startingPosition;
     }
 
     public void update(double position, double deltaTime) {
         updateVelocity(position, deltaTime);
         updateAcceleration(deltaTime);
-        updateJerk(deltaTime);
     }
 
     void updateVelocity(double position, double deltaTime) {
-        velocity = -(previousAngle - (previousAngle = position)) / deltaTime;
+        velocity = -(previousPosition - (previousPosition = position)) / deltaTime;
     }
 
     void updateAcceleration(double deltaTime) {
         acceleration = -(previousVelocity - (previousVelocity = velocity)) / deltaTime;
     }
 
-    void updateJerk(double deltaTime) {
-        jerk = -(previousAcceleration - (previousAcceleration = acceleration)) / deltaTime;
-    }
 }

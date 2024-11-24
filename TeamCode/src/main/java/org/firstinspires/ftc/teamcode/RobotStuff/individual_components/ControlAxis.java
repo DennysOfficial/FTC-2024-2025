@@ -161,28 +161,25 @@ public abstract class ControlAxis {  //schrödinger's code
         motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
 
-        motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
-        //motors.setPower(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
+        //motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
     }
 
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     abstract double getStaticFeedforward(double targetDirection);
 
     public double staticFrictionForce(double targetDirection, double staticFrictionComp, double staticThresholdUnitsPerSec) {
-        return 0; //TODO fix
-//        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
-//            return 0;
-//
-//        return staticFrictionComp * Math.copySign(1, -targetDirection);
+        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
+            return 0;
+
+        return staticFrictionComp * Math.copySign(1, -targetDirection);
     }
 
     abstract double getVelocityFeedforward();
 
     public double kineticFrictionForce(double targetDirection, double kineticFrictionComp, double staticThresholdUnitsPerSec) {
-        return 0; //TODO fix??
-//        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
-//            return 0;
-//        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
+        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
+            return 0;
+        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
     }
 
     abstract double getAccelerationFeedforward();
@@ -206,8 +203,21 @@ public abstract class ControlAxis {  //schrödinger's code
     /**
      * returns the current position of the axis in the designated units
      */
-    public double getPosition() {
+    public double getNonCachedPosition() {
         return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
+    }
+
+    double cachedPosition;
+
+    public void updateCachedPosition() {
+        cachedPosition = getNonCachedPosition();
+    }
+
+    /**
+     * returns the current position of the axis in the designated units
+     */
+    public double getPosition() {
+        return cachedPosition;
     }
 
     /**
@@ -226,12 +236,12 @@ public abstract class ControlAxis {  //schrödinger's code
     public double targetVelocity;
 
     public double getVelocityTPS() {
-        return 0;//positionDerivatives.getVelocity() / unitsPerEncoderCount;
+        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
     void updateVelocityControl() {
         setTargetPosition(targetPosition + targetVelocity * deltaTime);
-        updatePositionPID(targetPosition , getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+        updatePositionPID(targetPosition, getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -270,7 +280,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
         initPid();
         initMotors();
-
+        updateCachedPosition();
         positionDerivatives = new PositionDerivatives(getPosition());
     }
 
@@ -290,7 +300,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public boolean isBusy() {
-        return !(activeTrajectory == null || activeTrajectory.isActive());
+        return activeTrajectory != null && activeTrajectory.isActive();
     }
 
     // update stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -316,6 +326,9 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.debug = config.debugConfig.getTimeBreakdownDebug();
 
         updateDeltaTime();
+        updateCachedPosition();
+        positionDerivatives.update(getPosition(), deltaTime);
+
 
 
         if (config.inputMap != null && config.inputMap.getUnAbort())
