@@ -37,7 +37,7 @@ public class Auto_Test_02Z extends OpMode{
         LIFT1,
         LIFT2,
         INTAKE1,
-        IDLE            // Our bot will enter the IDLE state when done
+        IDLE            // Our bot will enter the IDLE state when done?
     }
 
     State currentState = State.IDLE;
