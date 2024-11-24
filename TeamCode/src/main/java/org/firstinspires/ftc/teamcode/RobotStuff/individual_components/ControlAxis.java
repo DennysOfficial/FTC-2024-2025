@@ -20,8 +20,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Tra
 public abstract class ControlAxis {  //schrödinger's code
 
     double deltaTime = 0;
-    
-    double cachedCurrentPosition = 0;
 
     protected PositionDerivatives positionDerivatives;
 
@@ -79,7 +77,7 @@ public abstract class ControlAxis {  //schrödinger's code
             case trajectoryControl:
                 if (activeTrajectory == null || !activeTrajectory.isActive())
                     break;
-                setTargetPosition(cachedCurrentPosition);
+                setTargetPosition(getPosition());
                 targetVelocity = 0;
                 targetAcceleration = 0;
                 this.controlMode = controlMode;
@@ -89,7 +87,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                setTargetPosition(cachedCurrentPosition);
+                setTargetPosition(getPosition());
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -155,8 +153,7 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID time");
         updateCustomPIDCoefficients();
 
-        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "update PID coefficients");
-        targetTorque = positionPID.runPID(targetPosition, cachedCurrentPosition, deltaTime);
+        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID time");
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
@@ -164,28 +161,25 @@ public abstract class ControlAxis {  //schrödinger's code
         motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
 
-        motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
-        //motors.setPower(targetTorque, positionDerivatives.getVelocity() / unitsPerEncoderCount);
+        //motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
     }
 
     // feedforward stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     abstract double getStaticFeedforward(double targetDirection);
 
     public double staticFrictionForce(double targetDirection, double staticFrictionComp, double staticThresholdUnitsPerSec) {
-        return 0; //TODO fix
-//        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
-//            return 0;
-//
-//        return staticFrictionComp * Math.copySign(1, -targetDirection);
+        if (Math.abs(positionDerivatives.getVelocity()) > staticThresholdUnitsPerSec)
+            return 0;
+
+        return staticFrictionComp * Math.copySign(1, -targetDirection);
     }
 
     abstract double getVelocityFeedforward();
 
     public double kineticFrictionForce(double targetDirection, double kineticFrictionComp, double staticThresholdUnitsPerSec) {
-        return 0; //TODO fix??
-//        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
-//            return 0;
-//        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
+        if (Math.abs(positionDerivatives.getVelocity()) <= staticThresholdUnitsPerSec)
+            return 0;
+        return kineticFrictionComp * Math.copySign(1, positionDerivatives.getVelocity());
     }
 
     abstract double getAccelerationFeedforward();
@@ -209,18 +203,31 @@ public abstract class ControlAxis {  //schrödinger's code
     /**
      * returns the current position of the axis in the designated units
      */
-    public double getPosition() {
+    public double getNonCachedPosition() {
         return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
+    }
+
+    double cachedPosition;
+
+    public void updateCachedPosition() {
+        cachedPosition = getNonCachedPosition();
+    }
+
+    /**
+     * returns the current position of the axis in the designated units
+     */
+    public double getPosition() {
+        return cachedPosition;
     }
 
     /**
      * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe idk bro
      */
     void adjustOffsetForPhysicalLimits() {
-        if (cachedCurrentPosition > physicalLimits.getUpper()) {
-            positionOffset -= cachedCurrentPosition - physicalLimits.getUpper();
-        } else if (cachedCurrentPosition < physicalLimits.getLower()) {
-            positionOffset -= cachedCurrentPosition - physicalLimits.getLower();
+        if (getPosition() > physicalLimits.getUpper()) {
+            positionOffset -= getPosition() - physicalLimits.getUpper();
+        } else if (getPosition() < physicalLimits.getLower()) {
+            positionOffset -= getPosition() - physicalLimits.getLower();
         }
     }
 
@@ -229,12 +236,12 @@ public abstract class ControlAxis {  //schrödinger's code
     public double targetVelocity;
 
     public double getVelocityTPS() {
-        return 0;//positionDerivatives.getVelocity() / unitsPerEncoderCount;
+        return positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
     void updateVelocityControl() {
         setTargetPosition(targetPosition + targetVelocity * deltaTime);
-        updatePositionPID(targetPosition , getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+        updatePositionPID(targetPosition, getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -273,8 +280,8 @@ public abstract class ControlAxis {  //schrödinger's code
 
         initPid();
         initMotors();
-
-        positionDerivatives = new PositionDerivatives(cachedCurrentPosition);
+        updateCachedPosition();
+        positionDerivatives = new PositionDerivatives(getPosition());
     }
 
     // trajectory stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -283,12 +290,12 @@ public abstract class ControlAxis {  //schrödinger's code
 
     public void linearMoveToPosition(double targetPosition, double duration) {
         opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
-        activeTrajectory = new LinearTrajectory(cachedCurrentPosition, targetPosition, duration);
+        activeTrajectory = new LinearTrajectory(getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
     public void fancyMoveToPosition(double targetPosition, double duration) {
-        activeTrajectory = new SinusoidalTrajectory(cachedCurrentPosition, targetPosition, duration);
+        activeTrajectory = new SinusoidalTrajectory(getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
@@ -309,7 +316,7 @@ public abstract class ControlAxis {  //schrödinger's code
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
         if (config.debugConfig.getAllPositionDebug())
-            opMode.telemetry.addData(axisName + " position " + unitName, cachedCurrentPosition);
+            opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
     }
 
     StopWatch updateStopwatch = new StopWatch();
@@ -317,9 +324,11 @@ public abstract class ControlAxis {  //schrödinger's code
     public void update() {
         updateStopwatch.reset();
         updateStopwatch.debug = config.debugConfig.getTimeBreakdownDebug();
-        cachedCurrentPosition = getPosition();
 
         updateDeltaTime();
+        updateCachedPosition();
+        positionDerivatives.update(getPosition(), deltaTime);
+
 
 
         if (config.inputMap != null && config.inputMap.getUnAbort())
