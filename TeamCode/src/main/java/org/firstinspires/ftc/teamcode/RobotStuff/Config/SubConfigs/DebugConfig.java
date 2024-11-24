@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class DebugConfig {
 
-    public static boolean allPositionDebug = false;
+    public static boolean allPositionDebug = true;
 
     public boolean getAllPositionDebug() {
         return allPositionDebug;
@@ -53,7 +53,7 @@ public class DebugConfig {
         return controlModeDebug;
     }
 
-    public static boolean timeBreakdownDebug = true;
+    public static boolean timeBreakdownDebug = false;
 
     public boolean getTimeBreakdownDebug() {
         return timeBreakdownDebug;

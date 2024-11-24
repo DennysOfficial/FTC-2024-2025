@@ -105,6 +105,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         while (opModeIsActive()) {
 
             stopWatch.reset();
+            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -159,16 +160,16 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
-            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop beginning Time -------------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
             lift.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop lift update Time -----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
 
             spinnyBit.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop pivot update Time ----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
-            stopWatch.addTimeToTelemetryAndReset(telemetry,"main loop drive update Time ----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             intake.directControl();
 
