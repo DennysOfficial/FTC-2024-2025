@@ -183,9 +183,9 @@ public class Auto_Test_040 extends OpMode{
 
         //lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        //Pivot spinyBit = new Pivot(this, activeConfig, runtime);
+        //Pivot pivot = new Pivot(this, activeConfig, runtime);
 
-        //spinyBit.setControlMode(ControlAxis.ControlMode.positionControl);
+        //pivot.setControlMode(ControlAxis.ControlMode.positionControl);
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
