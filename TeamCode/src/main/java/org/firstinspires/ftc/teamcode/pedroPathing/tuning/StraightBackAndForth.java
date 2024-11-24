@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 public class StraightBackAndForth extends OpMode {
     private Telemetry telemetryA;
 
-    public static double DISTANCE = 40;
+    public static double DISTANCE = 20;
 
     private boolean forward = true;
 
@@ -50,6 +50,7 @@ public class StraightBackAndForth extends OpMode {
 
         forwards = new Path(new BezierLine(new Point(0, 0, Point.CARTESIAN), new Point(DISTANCE, 0, Point.CARTESIAN)));
         forwards.setConstantHeadingInterpolation(0);
+
         backwards = new Path(new BezierLine(new Point(DISTANCE, 0, Point.CARTESIAN), new Point(0, 0, Point.CARTESIAN)));
         backwards.setConstantHeadingInterpolation(0);
 
