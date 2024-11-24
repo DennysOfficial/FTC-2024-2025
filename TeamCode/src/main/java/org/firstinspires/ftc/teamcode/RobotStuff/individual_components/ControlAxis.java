@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Tra
 public abstract class ControlAxis {  //schrödinger's code
 
     double deltaTime = 0;
+    
+    double cachedCurrentPosition = 0;
 
     protected PositionDerivatives positionDerivatives;
 
@@ -77,7 +79,7 @@ public abstract class ControlAxis {  //schrödinger's code
             case trajectoryControl:
                 if (activeTrajectory == null || !activeTrajectory.isActive())
                     break;
-                setTargetPosition(getPosition());
+                setTargetPosition(cachedCurrentPosition);
                 targetVelocity = 0;
                 targetAcceleration = 0;
                 this.controlMode = controlMode;
@@ -87,7 +89,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                setTargetPosition(getPosition());
+                setTargetPosition(cachedCurrentPosition);
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -153,7 +155,8 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID time");
         updateCustomPIDCoefficients();
 
-        double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
+        updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "update PID coefficients");
+        targetTorque = positionPID.runPID(targetPosition, cachedCurrentPosition, deltaTime);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID time");
         targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
@@ -214,10 +217,10 @@ public abstract class ControlAxis {  //schrödinger's code
      * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe idk bro
      */
     void adjustOffsetForPhysicalLimits() {
-        if (getPosition() > physicalLimits.getUpper()) {
-            positionOffset -= getPosition() - physicalLimits.getUpper();
-        } else if (getPosition() < physicalLimits.getLower()) {
-            positionOffset -= getPosition() - physicalLimits.getLower();
+        if (cachedCurrentPosition > physicalLimits.getUpper()) {
+            positionOffset -= cachedCurrentPosition - physicalLimits.getUpper();
+        } else if (cachedCurrentPosition < physicalLimits.getLower()) {
+            positionOffset -= cachedCurrentPosition - physicalLimits.getLower();
         }
     }
 
@@ -271,7 +274,7 @@ public abstract class ControlAxis {  //schrödinger's code
         initPid();
         initMotors();
 
-        positionDerivatives = new PositionDerivatives(getPosition());
+        positionDerivatives = new PositionDerivatives(cachedCurrentPosition);
     }
 
     // trajectory stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -280,12 +283,12 @@ public abstract class ControlAxis {  //schrödinger's code
 
     public void linearMoveToPosition(double targetPosition, double duration) {
         opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
-        activeTrajectory = new LinearTrajectory(getPosition(), targetPosition, duration);
+        activeTrajectory = new LinearTrajectory(cachedCurrentPosition, targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
     public void fancyMoveToPosition(double targetPosition, double duration) {
-        activeTrajectory = new SinusoidalTrajectory(getPosition(), targetPosition, duration);
+        activeTrajectory = new SinusoidalTrajectory(cachedCurrentPosition, targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
 
@@ -306,7 +309,7 @@ public abstract class ControlAxis {  //schrödinger's code
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
         if (config.debugConfig.getAllPositionDebug())
-            opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
+            opMode.telemetry.addData(axisName + " position " + unitName, cachedCurrentPosition);
     }
 
     StopWatch updateStopwatch = new StopWatch();
@@ -314,6 +317,7 @@ public abstract class ControlAxis {  //schrödinger's code
     public void update() {
         updateStopwatch.reset();
         updateStopwatch.debug = config.debugConfig.getTimeBreakdownDebug();
+        cachedCurrentPosition = getPosition();
 
         updateDeltaTime();
 

@@ -114,6 +114,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             for (LynxModule hub : allHubs) {
                 hub.clearBulkCache();
             }
+
+
             activeConfig.sensorData.update();
 
 
