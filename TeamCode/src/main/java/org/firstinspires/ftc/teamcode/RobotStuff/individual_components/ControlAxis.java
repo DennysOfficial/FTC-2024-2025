@@ -231,7 +231,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     void updateVelocityControl() {
         setTargetPosition(targetPosition + targetVelocity * deltaTime);
-        updatePositionPID(targetPosition, getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+        updatePositionPID(targetPosition , getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
