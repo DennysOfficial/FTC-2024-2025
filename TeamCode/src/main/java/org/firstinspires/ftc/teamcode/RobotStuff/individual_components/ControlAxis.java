@@ -308,15 +308,20 @@ public abstract class ControlAxis {  //schrödinger's code
     abstract void miscUpdate();
 
     protected void debugUpdate() {
-        //opMode.telemetry.addData()
-
-        //adjustOffsetForPhysicalLimits();
-
         if (config.debugConfig.getControlModeDebug())
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
+        if (config.debugConfig.positionDerivativesDebug())
+            opMode.telemetry.addData(axisName + " motorPower", motors.getPower());
+
+
         if (config.debugConfig.getAllPositionDebug())
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
+
+        if (config.debugConfig.positionDerivativesDebug()) {
+            opMode.telemetry.addData(axisName + " velocity " + unitName + "/sec", positionDerivatives.getVelocity());
+            opMode.telemetry.addData(axisName + " acceleration " + unitName + "/sec^2", positionDerivatives.getAcceleration());
+        }
     }
 
     StopWatch updateStopwatch = new StopWatch();
@@ -330,17 +335,16 @@ public abstract class ControlAxis {  //schrödinger's code
         positionDerivatives.update(getPosition(), deltaTime);
 
 
-
         if (config.inputMap != null && config.inputMap.getUnAbort())
-            controlMode = defaultControlMode;
+            setControlMode(defaultControlMode);
 
         if (controlMode == ControlMode.trajectoryControl) {
             if (Math.abs(getInput()) > config.getAutoAbortThreshold())
-                controlMode = defaultControlMode;
+                setControlMode(defaultControlMode);
         }
 
         if (config.inputMap != null && config.inputMap.getAbort())
-            controlMode = ControlMode.disabled;
+            setControlMode(ControlMode.disabled);
 
         switch (controlMode) {
             case disabled:

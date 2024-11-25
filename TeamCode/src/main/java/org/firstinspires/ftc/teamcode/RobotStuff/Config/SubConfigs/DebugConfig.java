@@ -11,29 +11,20 @@ public class DebugConfig {
         return allPositionDebug;
     }
 
-    public static boolean pivotPositionAndDerivatives = false;
 
-    public boolean pivotPositionAndDerivativesDebug() {
-        return pivotPositionAndDerivatives;
+    public static boolean positionDerivatives = false;
+
+    public boolean positionDerivativesDebug() {
+        return positionDerivatives;
     }
 
-    public static boolean pivotTorqueDebug = false;
 
-    public boolean pivotTorqueDebug() {
-        return pivotTorqueDebug;
+    public static boolean motorPowerDebug = false;
+
+    public boolean getMotorPowerDebug() {
+        return motorPowerDebug;
     }
 
-    public static boolean liftPositionAndDerivatives = false;
-
-    public boolean liftPositionAndDerivativesDebug() {
-        return liftPositionAndDerivatives;
-    }
-
-    public static boolean liftTorqueDebug = false;
-
-    public boolean liftTorqueDebug() {
-        return liftTorqueDebug;
-    }
 
     public static boolean inputDebug = false;
 
@@ -41,17 +32,20 @@ public class DebugConfig {
         return inputDebug;
     }
 
+
     public static boolean PIDDebug = false;
 
     public boolean getPIDDebug() {
         return PIDDebug;
     }
 
+
     public static boolean controlModeDebug = false;
 
     public boolean getControlModeDebug() {
         return controlModeDebug;
     }
+
 
     public static boolean timeBreakdownDebug = false;
 
