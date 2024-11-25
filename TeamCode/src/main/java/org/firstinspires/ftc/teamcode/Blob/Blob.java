@@ -104,7 +104,7 @@ public class Blob {
     public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets) {
         double CamYOffset = 1;
         double CamXOffset = 1;
-        double CamZOffset = 10;
+        double CamZOffset = 13;
 
 
         CameraOffsets.add(0, CamXOffset);
@@ -156,11 +156,16 @@ public class Blob {
         //VAngle = (sampleCenter.y + (cameraData.yResolution / 4.0) - (cameraData.yResolution / 2.0)) / ((cameraData.yResolution / 2.0) * cameraData.VFOV / 2);
         opMode.telemetry.addData("vAngle", VAngle);
         VAngle += cameraData.pitchAngle;
+        opMode.telemetry.addData("vAngle", VAngle);
         //this not work
-        SampleDistanceFromCam = vectorToCam.getZ()/ Math.tan(Math.toRadians(VAngle))  ;
-        //double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
-        SampleLRFromCam = SampleDistanceFromCam /Math.tan(Math.toRadians(HAngle));
-        //SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
+        //SampleDistanceFromCam = vectorToCam.getZ() * Math.tan(Math.toDegrees(VAngle))*-1  ;
+        SampleDistanceFromCam = Math.sin(Math.toRadians(VAngle))/ Math.sin(Math.toRadians(90-VAngle)) *vectorToCam.getZ();
+        opMode.telemetry.addData("SampleD", SampleDistanceFromCam);
+
+        // double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
+        // SampleLRFromCam = SampleDistanceFromCam * Math.tan(Math.toRadians(HAngle));
+        SampleLRFromCam = Math.sin(Math.toRadians(HAngle))/ Math.sin(Math.toRadians(90 -HAngle)) * SampleDistanceFromCam;
+        // SampleLRFromCam = Math.tan(Math.toRadians(HAngle)) * CameraLenseToSample;
         // vector rotation
         opMode.telemetry.addData("thing",SampleDistanceFromCam);
         opMode.telemetry.addData("thing2",SampleLRFromCam);

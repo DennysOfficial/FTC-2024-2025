@@ -18,7 +18,7 @@ public class OPBLOB extends LinearOpMode {
         String PixelColor = "Blue";
         double XCameraResolutionHeight = 640;
         double YCameraResolutionWidth = 480;
-        double CameraAngle = 30;
+        double CameraAngle = 54;
 
         CameraData cameraData = new CameraData();
         cameraData.xResolution = (int)XCameraResolutionHeight;
