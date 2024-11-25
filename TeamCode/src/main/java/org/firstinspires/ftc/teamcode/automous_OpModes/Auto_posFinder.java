@@ -9,30 +9,33 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 
 import java.util.List;
 
-@Disabled
-@Autonomous(name = "SoupcOpMode")
-public class Auto_Test_Template extends OpMode{
+@Autonomous(name = "SoupcOpMode Position Finder")
+public class Auto_posFinder extends OpMode{
 
     // TODO: Put paths here
-    enum State {
 
-        IDLE
-    }
-
-    State currentState = State.IDLE;
 
     List<LynxModule> allHubs;
+
+    double posX = 9;
+    double posY = 72;
+    double headingDeg = 0;
+
+    double liftPos = 0;
+    double pivotPos = 0;
 
     private final Pose startPose = new Pose(9,72, Math.toRadians(0));  // This is where the robot starts
 
@@ -53,7 +56,7 @@ public class Auto_Test_Template extends OpMode{
     double deltaTime;
 
     Lift lift;
-    Pivot pivot;
+    Pivot spinyBit;
     ActiveIntake intake;
     RobotConfig config;
 
@@ -72,11 +75,11 @@ public class Auto_Test_Template extends OpMode{
         config = new RobotConfig(this);
 
         lift = new Lift(ControlAxis.ControlMode.positionControl,this, config);
-        pivot = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
+        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
         intake = new ActiveIntake(this, config);
 
-        lift.assignPivot(pivot);
-        pivot.assignLift(lift);
+        lift.assignPivot(spinyBit);
+        spinyBit.assignLift(lift);
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
@@ -90,12 +93,9 @@ public class Auto_Test_Template extends OpMode{
 
     public void autonomousPathUpdate() {
         // TODO: Put instructions in the switchcase
-        switch (currentState) {
-
-            case IDLE:
-                // This concludes the autonomous program
-                break;
-        }
+        follower.holdPoint(new BezierPoint(new Point(posX, posY, Point.CARTESIAN)), Math.toRadians(headingDeg));
+        lift.setTargetPosition(liftPos);
+        spinyBit.setTargetPosition(pivotPos);
     }
 
     @Override
@@ -112,12 +112,11 @@ public class Auto_Test_Template extends OpMode{
 
         follower.update();
         lift.update();
-        pivot.update();
+        spinyBit.update();
         intake.update();
 
         autonomousPathUpdate();
 
-        telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());

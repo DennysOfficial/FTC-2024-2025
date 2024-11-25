@@ -257,10 +257,10 @@ public class funny extends OpMode {
         //telemetry.addData("path state", currentState);
         //telemetry.addData("x", follower.getPose().getX());
         //telemetry.addData("y", follower.getPose().getY());
-//        telemetry.addData("heading", follower.getPose().getHeading());
+        //telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("deltaTime", deltaTime);
-//        telemetry.addData("runTime", runtime);
-//        telemetry.addData("waitTime", time);
+        //telemetry.addData("runTime", runtime);
+        //telemetry.addData("waitTime", time);
         telemetry.update();
     }
 
