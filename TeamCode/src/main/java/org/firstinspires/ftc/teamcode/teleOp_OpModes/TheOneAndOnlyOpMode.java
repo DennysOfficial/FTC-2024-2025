@@ -55,8 +55,6 @@ import java.util.List;
 public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
-
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     StopWatch stopWatch = new StopWatch();
@@ -87,21 +85,13 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         lift.assignPivot(spinnyBit);
 
 
-        //Pincher pincher = new Pincher(this,activeConfig);
-
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
-        Animator pivotControl = new Animator(runtime, this, activeConfig, spinnyBit, lift);
-
-
         waitForStart();
-        runtime.reset();
         frameTimer.reset();
 
         double deltaTime = 0;
-
-        double predictedPivotTargetPosition = spinnyBit.getTargetPosition();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -150,17 +140,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
 
 
-            if (pivotControl.isBusy())
-                spinnyBit.setTargetPosition(pivotControl.update());
-
-            if (pivotControl.isBusy() && Math.abs(activeConfig.inputMap.getPivotStick()) > activeConfig.getAutoAbortThreshold()) {
-                pivotControl.abort();
-                spinnyBit.setTargetPosition(spinnyBit.getPosition());
-            }
-
-
             // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !pivotControl.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
                 spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
@@ -182,7 +163,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             intake.directControl();
 
 
-            //telemetry.addData("Run Time: ", runtime.toString());
             telemetry.update();
         }
     }
