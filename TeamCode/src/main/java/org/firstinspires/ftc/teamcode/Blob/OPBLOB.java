@@ -20,6 +20,7 @@ public class OPBLOB extends LinearOpMode {
         double YCameraResolutionWidth = 480;
         double CameraAngle = 54;
 
+
         CameraData cameraData = new CameraData();
         cameraData.xResolution = (int)XCameraResolutionHeight;
         cameraData.yResolution = (int)YCameraResolutionWidth;

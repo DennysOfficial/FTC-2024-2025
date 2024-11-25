@@ -162,6 +162,7 @@ public class Blob {
         SampleDistanceFromCam = Math.sin(Math.toRadians(VAngle))/ Math.sin(Math.toRadians(90-VAngle)) *vectorToCam.getZ();
         opMode.telemetry.addData("SampleD", SampleDistanceFromCam);
 
+
         // double CameraLenseToSample = Math.sqrt(Math.pow(2, SampleDistanceFromCam) + Math.pow(2, vectorToCam.getZ()));
         // SampleLRFromCam = SampleDistanceFromCam * Math.tan(Math.toRadians(HAngle));
         SampleLRFromCam = Math.sin(Math.toRadians(HAngle))/ Math.sin(Math.toRadians(90 -HAngle)) * SampleDistanceFromCam;
