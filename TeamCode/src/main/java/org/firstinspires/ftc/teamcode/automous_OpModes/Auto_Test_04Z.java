@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import java.util.List;
 
-@Autonomous(name = "SoupcOpMode_0-4-Z 0.0.0")
+@Autonomous(name = "SoupcOpMode_0-4-Z 0.0.1")
 public class Auto_Test_04Z extends OpMode{
 
 
@@ -47,16 +47,16 @@ public class Auto_Test_04Z extends OpMode{
     private final Pose startPose = new Pose(9,66, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private Point rungpoint1 =        new Point(38,66, Point.CARTESIAN);
-    private Point rungpoint2 =        new Point(38,69, Point.CARTESIAN);
-    private Point rungpoint3 =        new Point(38,72, Point.CARTESIAN);
-    private Point rungpoint4 =        new Point(38,75, Point.CARTESIAN);
+    private Point rungpoint1 =        new Point(36,66, Point.CARTESIAN);
+    private Point rungpoint2 =        new Point(36.25,71, Point.CARTESIAN);
+    private Point rungpoint3 =        new Point(36.25,75, Point.CARTESIAN);
+    private Point rungpoint4 =        new Point(36.25,78, Point.CARTESIAN);
 
-    private Point samplepoint1 =       new Point(60,24, Point.CARTESIAN);
-    private Point samplepoint2 =       new Point(60,13, Point.CARTESIAN);
+    private Point samplepoint1 =       new Point(60,25, Point.CARTESIAN);
+    private Point samplepoint2 =       new Point(60,14, Point.CARTESIAN);
 
-    private Point linepoint1 =         new Point(18,24, Point.CARTESIAN);
-    private Point linepoint2 =         new Point(18,13, Point.CARTESIAN);
+    private Point linepoint1 =         new Point(32,25, Point.CARTESIAN);
+    private Point linepoint2 =         new Point(32,14, Point.CARTESIAN);
 
     private Point pickuppoint =       new Point(10,43, Point.CARTESIAN); //TODO: Make this more accurate
 
@@ -166,11 +166,13 @@ public class Auto_Test_04Z extends OpMode{
 
         switch (currentState) {
             case TO_RUNG1:
-                lift.setTargetPosition(10.5);
-                pivot.fancyMoveToPosition(7, 1.5);
-                if (!follower.isBusy()) {
+                lift.setTargetPosition(11.5);
+                pivot.setTargetPosition(15);
+                if (follower.atParametricEnd()) {
+                    telemetry.addLine("im here");
                     lift.setTargetPosition(0);
-                    if (!lift.isBusy()) {
+                    if (lift.getPosition() <= 1) {
+                        telemetry.addLine("im here 2");
                         currentState = State.MOVE_SAMPLES;
                         follower.followPath(moveSamples);
                     }
@@ -179,9 +181,9 @@ public class Auto_Test_04Z extends OpMode{
 
             case MOVE_SAMPLES:
 
-                if (!follower.isBusy()) {
-                    pivot.fancyMoveToPosition(95, 1);
-                    if (!pivot.isBusy()) {
+                if (follower.atParametricEnd()) {
+                    pivot.setTargetPosition(90);
+                    if (pivot.getPosition() >= 87.5) {
                         intake.intakeForDuration(0.5);
                         currentState = State.TO_RUNG2;
                         follower.followPath(toRung2);
@@ -190,11 +192,11 @@ public class Auto_Test_04Z extends OpMode{
                 break;
 
             case TO_RUNG2:
-                pivot.fancyMoveToPosition(7, 1.5);
-                lift.setTargetPosition(10.5);
-                if (!follower.isBusy()) {
+                pivot.setTargetPosition(13);
+                lift.setTargetPosition(11.5);
+                if (follower.atParametricEnd()) {
                     lift.setTargetPosition(0);
-                    if (!lift.isBusy()) {
+                    if (lift.getPosition() <= 1) {
                         currentState = State.TO_PICKUP2;
                         follower.followPath(toPickup2);
                     }
@@ -203,9 +205,9 @@ public class Auto_Test_04Z extends OpMode{
 
             case TO_PICKUP2:
 
-                if (!follower.isBusy()) {
-                    pivot.fancyMoveToPosition(95, 1);
-                    if (!pivot.isBusy()) {
+                if (follower.atParametricEnd()) {
+                    pivot.setTargetPosition(90);
+                    if (pivot.getPosition() >= 87.5) {
                         intake.intakeForDuration(0.5);
                         currentState = State.TO_RUNG3;
                         follower.followPath(toRung3);
@@ -214,11 +216,11 @@ public class Auto_Test_04Z extends OpMode{
                 break;
 
             case TO_RUNG3:
-                pivot.fancyMoveToPosition(7, 1.5);
-                lift.setTargetPosition(10.5);
-                if (!follower.isBusy()) {
+                pivot.setTargetPosition(13);
+                lift.setTargetPosition(11.5);
+                if (follower.atParametricEnd()) {
                     lift.setTargetPosition(0);
-                    if (!lift.isBusy()) {
+                    if (lift.getPosition() <= 1) {
                         currentState = State.TO_PICKUP3;
                         follower.followPath(toPickup3);
                     }
@@ -227,9 +229,9 @@ public class Auto_Test_04Z extends OpMode{
 
             case TO_PICKUP3:
 
-                if (!follower.isBusy()) {
-                    pivot.fancyMoveToPosition(95, 1);
-                    if (!pivot.isBusy()) {
+                if (follower.atParametricEnd()) {
+                    pivot.setTargetPosition(90);
+                    if (pivot.getPosition() >= 87.5) {
                         intake.intakeForDuration(0.5);
                         currentState = State.TO_RUNG4;
                         follower.followPath(toRung4);
@@ -238,11 +240,11 @@ public class Auto_Test_04Z extends OpMode{
                 break;
 
             case TO_RUNG4:
-                pivot.fancyMoveToPosition(7, 1.5);
-                lift.setTargetPosition(10.5);
-                if (!follower.isBusy()) {
+                pivot.setTargetPosition(13);
+                lift.setTargetPosition(11.5);
+                if (follower.atParametricEnd()) {
                     lift.setTargetPosition(0);
-                    if (!lift.isBusy()) {
+                    if (lift.getPosition() <= 1) {
                         currentState = State.TO_OBSERVE;
                         follower.followPath(toObserve);
                     }
@@ -251,7 +253,7 @@ public class Auto_Test_04Z extends OpMode{
 
             case TO_OBSERVE:
 
-                if (!follower.isBusy()) {
+                if (follower.atParametricEnd()) {
                     currentState = State.IDLE;
                 }
 

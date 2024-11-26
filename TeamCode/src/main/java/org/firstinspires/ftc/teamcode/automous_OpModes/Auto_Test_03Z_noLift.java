@@ -49,9 +49,9 @@ public class Auto_Test_03Z_noLift extends OpMode{
     private Point rungpoint2 =        new Point(38,69, Point.CARTESIAN);
     private Point rungpoint3 =        new Point(38,72, Point.CARTESIAN);
 
-    private Point samplepoint =       new Point(60,24, Point.CARTESIAN);
+    private Point samplepoint =       new Point(60,25, Point.CARTESIAN);
 
-    private Point linepoint =         new Point(18,24, Point.CARTESIAN);
+    private Point linepoint =         new Point(22,25, Point.CARTESIAN);
 
     private Point pickuppoint =       new Point(10,43, Point.CARTESIAN); //TODO: Make this more accurate
 
