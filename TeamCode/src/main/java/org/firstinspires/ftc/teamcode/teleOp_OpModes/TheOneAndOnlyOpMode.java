@@ -35,6 +35,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -54,6 +55,8 @@ import java.util.List;
 //@Disabled y
 public class TheOneAndOnlyOpMode extends LinearOpMode {
 
+    DcMotorEx liftHang;
+
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
@@ -63,6 +66,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        liftHang = hardwareMap.get(DcMotorEx.class, "LiftL");
+        //liftHang.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -149,7 +155,17 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                         spinnyBit.fancyMoveToPosition(71, 1);
             }
 
+            if (gamepad2.dpad_up) {
+                liftHang.setPower(1);
+            }
 
+            if (gamepad2.dpad_down) {
+                liftHang.setPower(-1);
+            }
+
+            if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                liftHang.setPower(0);
+            }
 
             // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
@@ -172,6 +188,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             intake.directControl();
+
 
 
             //telemetry.addData("Run Time: ", runtime.toString());

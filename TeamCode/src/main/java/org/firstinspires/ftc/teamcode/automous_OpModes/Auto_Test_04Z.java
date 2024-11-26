@@ -48,17 +48,17 @@ public class Auto_Test_04Z extends OpMode{
 
     //Points of Interest
     private Point rungpoint1 =        new Point(36,66, Point.CARTESIAN);
-    private Point rungpoint2 =        new Point(36.25,71, Point.CARTESIAN);
-    private Point rungpoint3 =        new Point(36.25,75, Point.CARTESIAN);
-    private Point rungpoint4 =        new Point(36.25,78, Point.CARTESIAN);
+    private Point rungpoint2 =        new Point(36,71, Point.CARTESIAN);
+    private Point rungpoint3 =        new Point(36,75, Point.CARTESIAN);
+    private Point rungpoint4 =        new Point(36,78, Point.CARTESIAN);
 
-    private Point samplepoint1 =       new Point(60,25, Point.CARTESIAN);
-    private Point samplepoint2 =       new Point(60,14, Point.CARTESIAN);
+    private Point samplepoint1 =       new Point(60,25.5, Point.CARTESIAN);
+    private Point samplepoint2 =       new Point(60,15.5, Point.CARTESIAN);
 
-    private Point linepoint1 =         new Point(32,25, Point.CARTESIAN);
-    private Point linepoint2 =         new Point(32,14, Point.CARTESIAN);
+    private Point linepoint1 =         new Point(32,25.5, Point.CARTESIAN);
+    private Point linepoint2 =         new Point(32,15.5, Point.CARTESIAN);
 
-    private Point pickuppoint =       new Point(10,43, Point.CARTESIAN); //TODO: Make this more accurate
+    private Point pickuppoint =       new Point(17,45, Point.CARTESIAN); //TODO: Make this more accurate
 
     private Point observepoint =      new Point(10,10, Point.CARTESIAN);
 
@@ -69,7 +69,8 @@ public class Auto_Test_04Z extends OpMode{
     private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
     private Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
 
-    private Point pickupcurvepoint =  new Point(48,48, Point.CARTESIAN);
+    private Point pickupcurvepoint1 =  new Point(48,48, Point.CARTESIAN);
+    private Point pickupcurvepoint2 =  new Point(24,60, Point.CARTESIAN);
 
 
 
@@ -124,7 +125,7 @@ public class Auto_Test_04Z extends OpMode{
         toRung3 = new Path(new BezierCurve(pickuppoint, curvepoint, rungpoint3));
         toRung4 = new Path(new BezierCurve(pickuppoint, curvepoint, rungpoint4));
 
-        toPickup1 = new Path(new BezierCurve(linepoint2, pickupcurvepoint, pickuppoint));
+        toPickup1 = new Path(new BezierCurve(linepoint2, pickupcurvepoint1, pickupcurvepoint2, pickuppoint));
         toPickup2 = new Path(new BezierCurve(rungpoint2, curvepoint, pickuppoint));
         toPickup3 = new Path(new BezierCurve(rungpoint3, curvepoint, pickuppoint));
 
@@ -132,7 +133,7 @@ public class Auto_Test_04Z extends OpMode{
         toSample2 = new Path(new BezierCurve(linepoint1, samplecurvepoint3, samplepoint2));
 
         toline1 = new Path(new BezierLine(samplepoint1, linepoint1));
-        toline1 = new Path(new BezierLine(samplepoint2, linepoint2));
+        toline2 = new Path(new BezierLine(samplepoint2, linepoint2));
 
         toObserve = new Path(new BezierCurve(rungpoint4, curvepoint, observepoint));
 
@@ -167,7 +168,7 @@ public class Auto_Test_04Z extends OpMode{
         switch (currentState) {
             case TO_RUNG1:
                 lift.setTargetPosition(11.5);
-                pivot.setTargetPosition(15);
+                pivot.setTargetPosition(12);
                 if (follower.atParametricEnd()) {
                     telemetry.addLine("im here");
                     lift.setTargetPosition(0);
@@ -240,7 +241,7 @@ public class Auto_Test_04Z extends OpMode{
                 break;
 
             case TO_RUNG4:
-                pivot.setTargetPosition(13);
+                pivot.setTargetPosition(14);
                 lift.setTargetPosition(11.5);
                 if (follower.atParametricEnd()) {
                     lift.setTargetPosition(0);
