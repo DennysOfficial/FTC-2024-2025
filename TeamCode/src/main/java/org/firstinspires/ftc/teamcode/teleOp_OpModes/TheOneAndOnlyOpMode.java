@@ -34,18 +34,15 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -77,12 +74,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldLift oldLift = new OldLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldPivot spinnyBit = new OldPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(oldLift);
+        oldLift.assignPivot(spinnyBit);
 
 
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
@@ -113,28 +110,28 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             if (gamepad2.x) {
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(16, 1);
-                if (!lift.isBusy())
-                    lift.fancyMoveToPosition(12.5, 1);
+                if (!oldLift.isBusy())
+                    oldLift.fancyMoveToPosition(12.5, 1);
             }
 
             if (gamepad2.y) {
-                if (lift.getPosition() < 15)
+                if (oldLift.getPosition() < 15)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(-18, 1);
 
 
                 if (spinnyBit.getPosition() < 50)
-                    lift.setTargetPosition(33);
+                    oldLift.setTargetPosition(33);
 
             }
 
 
             if (gamepad2.a) {
-                if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
+                if (oldLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(0, 1);
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 14)
+                oldLift.setTargetPosition(0);
+                if (oldLift.getPosition() < 14)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(71, 1);
             }
@@ -151,7 +148,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            lift.update();
+            oldLift.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
 
             spinnyBit.update();

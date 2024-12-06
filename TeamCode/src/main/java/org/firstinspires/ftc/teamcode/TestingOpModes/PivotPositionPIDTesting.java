@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
@@ -38,12 +38,12 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        OldLift oldLift = new OldLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
+        OldPivot spinnyBit = new OldPivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(oldLift);
+        oldLift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -61,7 +61,7 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
             activeConfig.sensorData.update();
 
             spinnyBit.update();
-            lift.update();
+            oldLift.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());

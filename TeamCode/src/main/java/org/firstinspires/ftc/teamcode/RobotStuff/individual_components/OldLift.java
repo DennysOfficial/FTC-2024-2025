@@ -8,20 +8,18 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
-public class Lift extends ControlAxis {
+public class OldLift extends ControlAxis {
 
-    Pivot pivot;
+    OldPivot oldPivot;
 
-    public void assignPivot(Pivot pivot) {
-        if (pivot == null)
+    public void assignPivot(OldPivot oldPivot) {
+        if (oldPivot == null)
             throw new NullPointerException("the pivot you tried to assign is null you goober");
-        this.pivot = pivot;
+        this.oldPivot = oldPivot;
     }
 
     public static double gCompMultiplier = 0.1;
@@ -81,10 +79,10 @@ public class Lift extends ControlAxis {
 
     @Override
     double getStaticFeedforward(double targetDirection) {
-        if (pivot == null)
+        if (oldPivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(pivot.getPosition())) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(oldPivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
@@ -98,7 +96,7 @@ public class Lift extends ControlAxis {
     }
 
 
-    public Lift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
+    public OldLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
         softLimits = new Range<>(0.5, 31.0);
@@ -111,10 +109,10 @@ public class Lift extends ControlAxis {
         if (targetPosition == getTargetPosition())
             return;
 
-        if (pivot == null)
+        if (oldPivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(oldPivot.getPosition())) - config.getRetractedLiftLengthInch();
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 

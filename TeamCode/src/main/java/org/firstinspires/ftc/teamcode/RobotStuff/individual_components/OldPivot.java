@@ -11,17 +11,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
-public class Pivot extends ControlAxis { //schrödinger's code
+public class OldPivot extends ControlAxis { //schrödinger's code
 
-    Lift lift;
+    OldLift oldLift;
 
-    public void assignLift(Lift lift) {
-        if (lift == null)
+    public void assignLift(OldLift oldLift) {
+        if (oldLift == null)
             throw new NullPointerException("the lift you tried to assign is null you goober");
-        this.lift = lift;
+        this.oldLift = oldLift;
     }
 
     static final int encoderCountsPerRevMotor = 28;
@@ -34,28 +33,28 @@ public class Pivot extends ControlAxis { //schrödinger's code
     public static double retractedGComp = 0.12;
 
     double getKp() {
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KpRetracted, KpExtended, lift.getPosition() / extendedLiftPosition);
+        return MathStuff.lerp(KpRetracted, KpExtended, oldLift.getPosition() / extendedLiftPosition);
     }
 
     double getKi() {
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KiRetracted, KiExtended, lift.getPosition() / extendedLiftPosition);
+        return MathStuff.lerp(KiRetracted, KiExtended, oldLift.getPosition() / extendedLiftPosition);
     }
 
     double getKd() {
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(KdRetracted, KdExtended, lift.getPosition() / extendedLiftPosition);
+        return MathStuff.lerp(KdRetracted, KdExtended, oldLift.getPosition() / extendedLiftPosition);
     }
 
     @Override
     double getStaticFeedforward(double targetDirection) {
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return calculateTorqueGravity(lift.getPosition());
+        return calculateTorqueGravity(oldLift.getPosition());
     }
 
     @Override
@@ -69,9 +68,9 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
     double getVelocityFeedforwardCoefficient() {
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, lift.getPosition() / extendedLiftPosition);
+        return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, oldLift.getPosition() / extendedLiftPosition);
     }
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
@@ -111,7 +110,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
 
-    public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
+    public OldPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-40.0, 86.9);
@@ -122,10 +121,10 @@ public class Pivot extends ControlAxis { //schrödinger's code
         if (targetPosition == getTargetPosition())
             return;
 
-        if (lift == null)
+        if (oldLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + oldLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
