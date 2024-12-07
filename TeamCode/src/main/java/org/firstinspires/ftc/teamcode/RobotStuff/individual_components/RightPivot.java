@@ -15,9 +15,9 @@ public class RightPivot extends ControlAxis{
     //GO TODO
     RightLift rightLift;
     public void assignLift(RightLift rightLift) {
-        if (this.rightLift == null)
+        if (rightLift == null)
             throw new NullPointerException("the lift you tried to assign is null you goober");
-        this.rightLift = this.rightLift;
+        this.rightLift = rightLift;
     }
     @Override
     float getInput() {
