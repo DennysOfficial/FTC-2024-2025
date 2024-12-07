@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.automous_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
+@Disabled
 @Autonomous(name = "SoupcOpMode_0-4-0 0.1.0")
 public class Auto_Test_040 extends OpMode{
 

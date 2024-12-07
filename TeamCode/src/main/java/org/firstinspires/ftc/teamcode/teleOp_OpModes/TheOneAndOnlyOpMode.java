@@ -57,6 +57,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
     DcMotorEx liftHang;
 
+    DcMotorEx pivotL;
+    DcMotorEx pivotR;
+
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
@@ -68,6 +71,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
     public void runOpMode() {
 
         liftHang = hardwareMap.get(DcMotorEx.class, "LiftL");
+
+        pivotL = hardwareMap.get(DcMotorEx.class, "PivotL");
+        pivotR = hardwareMap.get(DcMotorEx.class, "PivotR");
         //liftHang.setDirection(DcMotorSimple.Direction.REVERSE);
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -192,6 +198,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
             //telemetry.addData("Run Time: ", runtime.toString());
+            telemetry.addData("Left Pivot Position: ", pivotL.getCurrentPosition());
+            telemetry.addData("Right Pivot Position: ", pivotR.getCurrentPosition());
             telemetry.update();
         }
     }
