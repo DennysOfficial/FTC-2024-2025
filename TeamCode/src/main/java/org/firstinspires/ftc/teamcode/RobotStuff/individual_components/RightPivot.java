@@ -4,15 +4,15 @@ import android.util.Range;
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-
+@Config
 public class RightPivot extends ControlAxis{
-    //GO TODO
     RightLift rightLift;
     public void assignLift(RightLift rightLift) {
         if (rightLift == null)
@@ -43,7 +43,7 @@ public class RightPivot extends ControlAxis{
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
         motors.setTargetPosition(0);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -106,7 +106,7 @@ public class RightPivot extends ControlAxis{
     double getStaticFeedforward(double targetDirection) {
         if (rightLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return calculateTorqueGravity(rightLift.getPosition());
+        return -calculateTorqueGravity(rightLift.getPosition());
     }
 
     @Override
