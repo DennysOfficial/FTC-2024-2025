@@ -11,14 +11,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
-@Config
-@Disabled
+//@Disabled
 public class RightLiftGCompCalibration extends LinearOpMode {
 
 
@@ -37,12 +36,12 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        OldLift oldLift = new OldLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        OldPivot spinnyBit = new OldPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        spinnyBit.assignLift(oldLift);
-        oldLift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -59,7 +58,7 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
             activeConfig.sensorData.update();
 
-            oldLift.update();
+            rightLift.update();
 
             spinnyBit.update();
 
