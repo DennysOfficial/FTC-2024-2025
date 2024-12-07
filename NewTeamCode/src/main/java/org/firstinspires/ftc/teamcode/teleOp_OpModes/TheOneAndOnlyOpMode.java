@@ -42,8 +42,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
@@ -76,12 +74,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldLift oldLift = new OldLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldPivot spinnyBit = new OldPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(oldLift);
+        oldLift.assignPivot(spinnyBit);
 
 
         ActiveIntake intake = new ActiveIntake(this, activeConfig);
@@ -108,35 +106,35 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             activeConfig.sensorData.update();
 
-//
-//            if (gamepad2.x) {
-//                if (!spinnyBit.isBusy())
-//                    spinnyBit.fancyMoveToPosition(16, 1);
-//                if (!rightLift.isBusy())
-//                    rightLift.fancyMoveToPosition(12.5, 1);
-//            }
-//
-//            if (gamepad2.y) {
-//                if (rightLift.getPosition() < 15)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(-18, 1);
-//
-//
-//                if (spinnyBit.getPosition() < 50)
-//                    rightLift.setTargetPosition(33);
-//
-//            }
-//
-//
-//            if (gamepad2.a) {
-//                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(0, 1);
-//                rightLift.setTargetPosition(0);
-//                if (rightLift.getPosition() < 14)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(71, 1);
-//            }
+
+            if (gamepad2.x) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(16, 1);
+                if (!oldLift.isBusy())
+                    oldLift.fancyMoveToPosition(12.5, 1);
+            }
+
+            if (gamepad2.y) {
+                if (oldLift.getPosition() < 15)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(-18, 1);
+
+
+                if (spinnyBit.getPosition() < 50)
+                    oldLift.setTargetPosition(33);
+
+            }
+
+
+            if (gamepad2.a) {
+                if (oldLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(0, 1);
+                oldLift.setTargetPosition(0);
+                if (oldLift.getPosition() < 14)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(71, 1);
+            }
 
 
             // make the arm smack into the ground and intake
@@ -148,11 +146,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
-
-
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            rightLift.update();
+            oldLift.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
 
             spinnyBit.update();

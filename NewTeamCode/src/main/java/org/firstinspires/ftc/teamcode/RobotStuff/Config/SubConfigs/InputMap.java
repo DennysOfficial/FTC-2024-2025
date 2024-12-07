@@ -25,20 +25,12 @@ public class InputMap {
         return gamepad1.right_stick_x;
     }
 
-    public double getRightLiftStick() {
+    public double getLiftStick() {
         return -1 * gamepad2.left_stick_y;
     }
 
-    public double getLeftLiftStick() {
-        return 0;
-    }
-
-    public double getRightPivotStick() {
+    public double getPivotStick() {
         return -1 * gamepad2.right_stick_y;
-    }
-
-    public double getLeftPivotStick() {
-        return 0;
     }
 
     public boolean getPinchButton() {
@@ -69,9 +61,7 @@ public class InputMap {
         return gamepad1.left_trigger > 0.5;
     }
 
-    public boolean getBrake() {
-        return gamepad1.right_trigger > 0.5;
-    }
+    public boolean getBrake(){return gamepad1.right_trigger > 0.5;}
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 

@@ -21,7 +21,7 @@ public class RightPivot extends ControlAxis{
     }
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightPivotStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getPivotStick();
     }
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
@@ -59,7 +59,7 @@ public class RightPivot extends ControlAxis{
         if (rightLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedRadius + rightLift.getPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + rightLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
