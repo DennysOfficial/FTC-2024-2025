@@ -70,21 +70,17 @@ public class RightLift extends ControlAxis {
     @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
-        // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
-        //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
 
 
     @Override
     double getStaticFeedforward(double targetDirection) {
-        if (oldPivot == null)
+        if (rightPivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(oldPivot.getPosition())) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(rightPivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
@@ -111,10 +107,10 @@ public class RightLift extends ControlAxis {
         if (targetPosition == getTargetPosition())
             return;
 
-        if (oldPivot == null)
+        if (rightPivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(oldPivot.getPosition())) - config.getRetractedLiftLengthInch();
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getPosition())) - config.getRetractedLiftLengthInch();
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 
