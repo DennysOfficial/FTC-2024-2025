@@ -147,16 +147,17 @@ public abstract class ControlAxis {  //schrödinger's code
     /**
      * ALREADY HAS STATIC FEEDFORWARD
      *
-     * @param feedforward ALREADY HAS STATIC FEEDFORWARD
+     * @param nonStaticFeedforward ALREADY HAS STATIC FEEDFORWARD
      */
-    protected void updatePositionPID(double targetPosition, double feedforward) {
+    protected void updatePositionPID(double targetPosition, double nonStaticFeedforward) {
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "stuff before updating position PID time");
         updateCustomPIDCoefficients();
 
         double targetTorque = positionPID.runPID(targetPosition, getPosition(), deltaTime);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "Position PID time");
-        targetTorque += feedforward;
         targetTorque += getStaticFeedforward(targetTorque);
+        targetTorque += nonStaticFeedforward;
+
 
         motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
@@ -295,6 +296,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void fancyMoveToPosition(double targetPosition, double duration) {
+        opMode.telemetry.addData("sending " + axisName + " to ", targetPosition);
         activeTrajectory = new SinusoidalTrajectory(getPosition(), targetPosition, duration);
         setControlMode(ControlMode.trajectoryControl);
     }
@@ -308,15 +310,20 @@ public abstract class ControlAxis {  //schrödinger's code
     abstract void miscUpdate();
 
     protected void debugUpdate() {
-        //opMode.telemetry.addData()
-
-        //adjustOffsetForPhysicalLimits();
-
         if (config.debugConfig.getControlModeDebug())
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
+        if (config.debugConfig.positionDerivativesDebug())
+            opMode.telemetry.addData(axisName + " motorPower", motors.getPower());
+
+
         if (config.debugConfig.getAllPositionDebug())
             opMode.telemetry.addData(axisName + " position " + unitName, getPosition());
+
+        if (config.debugConfig.positionDerivativesDebug()) {
+            opMode.telemetry.addData(axisName + " velocity " + unitName + "/sec", positionDerivatives.getVelocity());
+            opMode.telemetry.addData(axisName + " acceleration " + unitName + "/sec^2", positionDerivatives.getAcceleration());
+        }
     }
 
     StopWatch updateStopwatch = new StopWatch();
@@ -330,17 +337,16 @@ public abstract class ControlAxis {  //schrödinger's code
         positionDerivatives.update(getPosition(), deltaTime);
 
 
-
         if (config.inputMap != null && config.inputMap.getUnAbort())
-            controlMode = defaultControlMode;
+            setControlMode(defaultControlMode);
 
         if (controlMode == ControlMode.trajectoryControl) {
             if (Math.abs(getInput()) > config.getAutoAbortThreshold())
-                controlMode = defaultControlMode;
+                setControlMode(defaultControlMode);
         }
 
         if (config.inputMap != null && config.inputMap.getAbort())
-            controlMode = ControlMode.disabled;
+            setControlMode(ControlMode.disabled);
 
         switch (controlMode) {
             case disabled:
@@ -384,7 +390,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 targetVelocity = targetMotionState.velocity;
                 targetAcceleration = targetMotionState.acceleration;
 
-                updatePositionPID(getTargetPosition(), getStaticFeedforward(targetVelocity) + getVelocityFeedforward() + getAccelerationFeedforward());
+                updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
                 break;
 
             case testing:

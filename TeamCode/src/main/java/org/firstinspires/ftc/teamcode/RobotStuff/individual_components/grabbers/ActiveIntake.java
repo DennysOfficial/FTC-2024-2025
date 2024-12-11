@@ -62,9 +62,13 @@ public class ActiveIntake {
     }
 
     public void flapControl() {
-        flapServo.setPosition(flapClosed);
-        if (config.inputMap.getFlapButton())
+
+        if (config.inputMap.getFlapButton()) {
             flapServo.setPosition(flapOpen);
+            return;
+        }
+
+        flapServo.setPosition(flapClosed);
     }
 
     public void intake() {

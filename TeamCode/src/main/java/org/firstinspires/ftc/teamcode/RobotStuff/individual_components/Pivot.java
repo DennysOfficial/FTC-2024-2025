@@ -117,15 +117,17 @@ public class Pivot extends ControlAxis { //schrödinger's code
         softLimits = new Range<>(-40.0, 86.9);
     }
 
+    double previousTargetLiftPosition = Double.NaN;
+
     @Override
     public void setTargetPosition(double targetPosition) {
-        if (targetPosition == getTargetPosition())
+        if (targetPosition == getTargetPosition() && previousTargetLiftPosition == (previousTargetLiftPosition = lift.getTargetPosition()))
             return;
 
         if (lift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + lift.getTargetPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
