@@ -117,9 +117,11 @@ public class Pivot extends ControlAxis { //schrödinger's code
         softLimits = new Range<>(-40.0, 86.9);
     }
 
+    double previousTargetLiftPosition = Double.NaN;
+
     @Override
     public void setTargetPosition(double targetPosition) {
-        if (targetPosition == getTargetPosition())
+        if (targetPosition == getTargetPosition() && previousTargetLiftPosition == (previousTargetLiftPosition = lift.getTargetPosition()))
             return;
 
         if (lift == null)
