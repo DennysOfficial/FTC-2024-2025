@@ -108,35 +108,37 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             activeConfig.sensorData.update();
 
-//
-//            if (gamepad2.x) {
-//                if (!spinnyBit.isBusy())
-//                    spinnyBit.fancyMoveToPosition(16, 1);
-//                if (!rightLift.isBusy())
-//                    rightLift.fancyMoveToPosition(12.5, 1);
-//            }
-//
-//            if (gamepad2.y) {
-//                if (rightLift.getPosition() < 15)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(-18, 1);
-//
-//
-//                if (spinnyBit.getPosition() < 50)
-//                    rightLift.setTargetPosition(33);
-//
-//            }
-//
-//
-//            if (gamepad2.a) {
-//                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(0, 1);
-//                rightLift.setTargetPosition(0);
-//                if (rightLift.getPosition() < 14)
-//                    if (!spinnyBit.isBusy())
-//                        spinnyBit.fancyMoveToPosition(71, 1);
-//            }
+
+            if (gamepad2.x) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(16, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(12.5, 1);
+            }
+
+            if (gamepad2.y) {
+                if (rightLift.getPosition() < 15)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(-18, 0.69);
+
+
+                if (spinnyBit.getPosition() < 70)
+                    rightLift.setTargetPosition(33);
+
+            }
+
+
+            if (gamepad2.a) {
+                rightLift.setTargetPosition(0);
+
+                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(0, 1);
+
+                if (rightLift.getPosition() < 20)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(71, 1);
+            }
 
 
             // make the arm smack into the ground and intake

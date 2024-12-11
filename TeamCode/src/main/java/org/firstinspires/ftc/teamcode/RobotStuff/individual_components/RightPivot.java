@@ -30,7 +30,7 @@ public class RightPivot extends ControlAxis{
 
     static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
-    public static double retractedGComp = 0.12;
+    public static double retractedGComp = 0.05;
 
     @Override
     float getVelocityControlMaxRate() {
@@ -51,7 +51,7 @@ public class RightPivot extends ControlAxis{
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-40.0, 86.9);
+        softLimits = new Range<>(-40.0, 97.0);
     }
     public void setTargetPosition(double targetPosition){
         if (targetPosition == getTargetPosition())

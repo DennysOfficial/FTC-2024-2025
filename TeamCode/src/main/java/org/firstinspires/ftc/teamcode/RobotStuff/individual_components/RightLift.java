@@ -26,7 +26,7 @@ public class RightLift extends ControlAxis {
 
     public static double gCompMultiplier = 0.1;
 
-    public static double Kp = 0.8;
+    public static double Kp = 0.5;
     public static double Ki = 0.02;
     public static double Kd = 0.03;
 
@@ -80,7 +80,7 @@ public class RightLift extends ControlAxis {
         if (rightPivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) - Math.cos(Math.toRadians(rightPivot.getPosition())) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) + Math.cos(Math.toRadians(rightPivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class RightLift extends ControlAxis {
     public RightLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Lift", "inches", (19.25-55)/(-44-2560));
 
-        softLimits = new Range<>(0.5, 31.0);
+        softLimits = new Range<>(0.5, 34.69);
 
         physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }
