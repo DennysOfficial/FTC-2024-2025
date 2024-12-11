@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -18,7 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
 //@Disabled
-public class RightLiftGCompCalibration extends LinearOpMode {
+public class RightStuffGCompCalibration extends LinearOpMode {
 
 
 private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
