@@ -106,15 +106,16 @@ public class Lift extends ControlAxis {
         physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }
 
+    double previousTargetPivotPosition = Double.NaN;
     @Override
     public void setTargetPosition(double targetPosition) {
-        if (targetPosition == getTargetPosition())
+        if (targetPosition == getTargetPosition() && previousTargetPivotPosition == (previousTargetPivotPosition = pivot.getTargetPosition()))
             return;
 
         if (pivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getPosition())) - config.getRetractedLiftLengthInch();
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(pivot.getTargetPosition())) - config.getRetractedLiftLengthInch();
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 
