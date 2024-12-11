@@ -9,10 +9,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.teamcode.individual_components.Pivot;
 public class LiftPositionPIDCalibration extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -36,14 +37,12 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(this, activeConfig);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        lift.setControlMode(ControlAxis.ControlMode.directControl);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        Pivot spinyBit = new Pivot(this, activeConfig);
-
-        spinyBit.setControlMode(ControlAxis.ControlMode.directTorqueControl);
-
+        spinnyBit.assignLift(lift);
+        lift.assignPivot(spinnyBit);
 
         waitForStart();
         runtime.reset();
@@ -59,9 +58,9 @@ public class LiftPositionPIDCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            lift.update(deltaTime, lift.getPosition());
+            lift.update();
 
-            spinyBit.update(deltaTime, spinyBit.getPosition());
+            spinnyBit.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());
