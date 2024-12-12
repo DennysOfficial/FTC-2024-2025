@@ -53,13 +53,13 @@ public class Auto_Test_04Z extends OpMode{
     private Point rungpoint3 =        new Point(33,76, Point.CARTESIAN);
     private Point rungpoint4 =        new Point(33,82, Point.CARTESIAN);
 
-    private Point samplepoint1 =      new Point(60,25.5, Point.CARTESIAN);
-    private Point samplepoint2 =      new Point(60,15.5, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    private Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
 
-    private Point linepoint1 =        new Point(32,25.5, Point.CARTESIAN);
+    private Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
     private Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
 
-    private Point pickuppoint =       new Point(15,42, Point.CARTESIAN); //TODO: Make this more accurate
+    private Point pickuppoint =       new Point(15,38, Point.CARTESIAN); //TODO: Make this more accurate
 
     private Point observepoint =      new Point(10,10, Point.CARTESIAN);
 
@@ -191,9 +191,9 @@ public class Auto_Test_04Z extends OpMode{
             case TO_RUNG1:
                 lift.setTargetPosition(liftPosRung);
                 pivot.setTargetPosition(pivotPosRung);
-                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 1.7) {
+                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 1.75) {
                     telemetry.addLine("im here");
-                    lift.setTargetPosition(6);
+                    lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
                         pathTimer.resetTimer();
                         telemetry.addLine("im here 2");
@@ -208,7 +208,7 @@ public class Auto_Test_04Z extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 12.5) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 12) {
                         intake.intakeForDuration(0.5);
                         pathTimer.resetTimer();
                         currentState = State.TO_RUNG2;
@@ -220,7 +220,7 @@ public class Auto_Test_04Z extends OpMode{
                 lift.setTargetPosition(liftPosRung);
                 pivot.setTargetPosition(pivotPosRung);
                 if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
-                    lift.setTargetPosition(6);
+                    lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
                         intake.outtakeForDuration(0.75);
                         pathTimer.resetTimer();
@@ -234,7 +234,7 @@ public class Auto_Test_04Z extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3.5) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3) {
                         intake.intakeForDuration(0.5);
                         pathTimer.resetTimer();
                         currentState = State.TO_RUNG3;
@@ -245,9 +245,9 @@ public class Auto_Test_04Z extends OpMode{
 
             case TO_RUNG3:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung);
+                pivot.setTargetPosition(pivotPosRung + 1);
                 if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
-                    lift.setTargetPosition(6);
+                    lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
                         intake.outtakeForDuration(0.75);
                         pathTimer.resetTimer();
@@ -261,7 +261,7 @@ public class Auto_Test_04Z extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3.5) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3) {
                         intake.intakeForDuration(0.5);
                         pathTimer.resetTimer();
                         currentState = State.TO_RUNG4;
@@ -272,7 +272,7 @@ public class Auto_Test_04Z extends OpMode{
 
             case TO_RUNG4:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung);
+                pivot.setTargetPosition(pivotPosRung + 1);
                 if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
                     lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {

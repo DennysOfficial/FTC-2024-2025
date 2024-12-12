@@ -51,7 +51,7 @@ public class Auto_Test_40Z extends OpMode{
     private Point spikepoint2 =        new Point(30,135, Point.CARTESIAN);
     private Point spikepoint3 =        new Point(66,132, Point.CARTESIAN);
 
-    private Point basketpoint =        new Point(9,112, Point.CARTESIAN);
+    private Point basketpoint =        new Point(9,128, Point.CARTESIAN);
 
     private Point barpoint =           new Point(60,98, Point.CARTESIAN);
 
@@ -64,7 +64,7 @@ public class Auto_Test_40Z extends OpMode{
     private Follower follower;
 
     double liftPosBasket = 33;
-    double PIVOT_POS = -10;
+    double PIVOT_POS = -5;
     double pivotPosSpike = 90;
 
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
@@ -107,7 +107,6 @@ public class Auto_Test_40Z extends OpMode{
     }
 
 
-
     public void buildPaths() {
 
         toBasket1 = new Path(new BezierLine(new Point(startPose), basketpoint));
@@ -122,17 +121,17 @@ public class Auto_Test_40Z extends OpMode{
         toBar = new Path(new BezierCurve(basketpoint, barcurvepoint, barpoint));
 
 
-        toBar.setConstantHeadingInterpolation(270);
+        toBar.setConstantHeadingInterpolation(Math.toRadians(270));
 
-        toBasket1.setConstantHeadingInterpolation(270);
+        toBasket1.setConstantHeadingInterpolation(Math.toRadians(270));
 
-        toBasket2.setLinearHeadingInterpolation(0, 270);
-        toBasket3.setLinearHeadingInterpolation(0, 270);
-        toBasket4.setLinearHeadingInterpolation(0, 270);
+        toBasket2.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
+        toBasket3.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
+        toBasket4.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
 
-        toSpike1.setLinearHeadingInterpolation(270, 0);
-        toSpike2.setLinearHeadingInterpolation(270, 0);
-        toSpike3.setLinearHeadingInterpolation(270, 0);
+        toSpike1.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0));
+        toSpike2.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0));
+        toSpike3.setLinearHeadingInterpolation(Math.toRadians(270), Math.toRadians(0));
     }
 
     public void autonomousPathUpdate() {
@@ -140,7 +139,7 @@ public class Auto_Test_40Z extends OpMode{
         switch (currentState) {
 
             case TO_BASKET1:
-                if (follower.atParametricEnd() && lift.getPosition() >= 32.5) {
+                if (!follower.isBusy() && lift.getPosition() >= 31.5) {
                     pivot.setTargetPosition(PIVOT_POS);
                         if(pivot.getPosition() <= -9.7) {
                             intake.openFlap();
@@ -159,7 +158,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_SPIKE1:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     pivot.setTargetPosition(90);
                     if (pivot.getPosition() >= 87.5 || pathTimer.getElapsedTimeSeconds() >= 3.5) {
                         intake.intakeForDuration(0.5);
@@ -173,7 +172,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_BASKET2:
-                if (follower.atParametricEnd() && lift.getPosition() >= 32.5) {
+                if (!follower.isBusy() && lift.getPosition() >= 31.5) {
                     pivot.setTargetPosition(PIVOT_POS);
                     if(pivot.getPosition() <= -9.7) {
                         intake.openFlap();
@@ -192,7 +191,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_SPIKE2:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     pivot.setTargetPosition(90);
                     if (pivot.getPosition() >= 87.5 || pathTimer.getElapsedTimeSeconds() >= 3.5) {
                         intake.intakeForDuration(0.5);
@@ -206,7 +205,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_BASKET3:
-                if (follower.atParametricEnd() && lift.getPosition() >= 32.5) {
+                if (!follower.isBusy() && lift.getPosition() >= 31.5) {
                     pivot.setTargetPosition(PIVOT_POS);
                     if(pivot.getPosition() <= -9.7) {
                         intake.openFlap();
@@ -224,7 +223,7 @@ public class Auto_Test_40Z extends OpMode{
                 }
                 break;
             case TO_SPIKE3:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     pivot.setTargetPosition(90);
                     if (pivot.getPosition() >= 87.5 || pathTimer.getElapsedTimeSeconds() >= 3.5) {
                         intake.intakeForDuration(0.5);
@@ -238,7 +237,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_BASKET4:
-                if (follower.atParametricEnd() && lift.getPosition() >= 32.5) {
+                if (!follower.isBusy() && lift.getPosition() >= 31.5) {
                     pivot.setTargetPosition(PIVOT_POS);
                     if(pivot.getPosition() <= -9.7) {
                         intake.openFlap();
@@ -257,7 +256,7 @@ public class Auto_Test_40Z extends OpMode{
                 break;
 
             case TO_BAR:
-                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 4)  {
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 4)  {
                     currentState = State.IDLE;
                 }
 
@@ -288,9 +287,10 @@ public class Auto_Test_40Z extends OpMode{
         autonomousPathUpdate();
 
         telemetry.addData("path state", currentState);
+        telemetry.addData("path state", follower.getCurrentPath());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("heading", Math.toRadians(follower.getPose().getHeading()));
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
