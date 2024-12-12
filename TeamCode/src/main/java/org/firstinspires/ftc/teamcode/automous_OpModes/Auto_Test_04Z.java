@@ -53,11 +53,11 @@ public class Auto_Test_04Z extends OpMode{
     private Point rungpoint3 =        new Point(33,76, Point.CARTESIAN);
     private Point rungpoint4 =        new Point(33,82, Point.CARTESIAN);
 
-    private Point samplepoint1 =       new Point(60,25.5, Point.CARTESIAN);
-    private Point samplepoint2 =       new Point(60,15.5, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(60,25.5, Point.CARTESIAN);
+    private Point samplepoint2 =      new Point(60,15.5, Point.CARTESIAN);
 
-    private Point linepoint1 =         new Point(32,25.5, Point.CARTESIAN);
-    private Point linepoint2 =         new Point(32,15.5, Point.CARTESIAN);
+    private Point linepoint1 =        new Point(32,25.5, Point.CARTESIAN);
+    private Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
 
     private Point pickuppoint =       new Point(15,42, Point.CARTESIAN); //TODO: Make this more accurate
 
