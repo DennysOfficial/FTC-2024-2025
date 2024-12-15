@@ -275,8 +275,6 @@ public abstract class ControlAxis {  //schrödinger's code
         this.unitsPerEncoderCount = unitsPerEncoderCount;
         this.defaultControlMode = defaultControlMode;
 
-
-
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
         initMotors();
 
