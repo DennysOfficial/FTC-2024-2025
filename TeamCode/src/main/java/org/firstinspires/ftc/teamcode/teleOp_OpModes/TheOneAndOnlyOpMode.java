@@ -61,14 +61,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
-
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
@@ -106,7 +106,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             for (LynxModule hub : allHubs) {
                 hub.clearBulkCache();
             }
-            activeConfig.sensorData.update();
+            activeConfig.sensorData.update(); // bulk caching
 
 
             if (gamepad2.x) {
@@ -138,7 +138,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 if (rightLift.getPosition() < 20)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(71, 1);
-            }
+            }// presets
 
 
             // make the arm smack into the ground and intake
@@ -148,7 +148,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
+                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
 
 
 

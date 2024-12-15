@@ -2,10 +2,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories;
 
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
-
 public class SinusoidalTrajectory extends Trajectory {
 
     public final double startTime;

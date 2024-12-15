@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -13,7 +12,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
 @TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
@@ -21,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 public class LiftPositionPIDTesting extends LinearOpMode {
 
 
-private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
+private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
