@@ -271,17 +271,19 @@ public abstract class ControlAxis {  //schrödinger's code
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
-        this.defaultControlMode = defaultControlMode;
-        this.controlMode = defaultControlMode;
-
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
+        this.defaultControlMode = defaultControlMode;
+
+
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
+        initMotors();
+
+        updateCachedPosition();
+        setControlMode(defaultControlMode);
 
         initPid();
-        initMotors();
-        updateCachedPosition();
         positionDerivatives = new PositionDerivatives(getPosition());
     }
 
