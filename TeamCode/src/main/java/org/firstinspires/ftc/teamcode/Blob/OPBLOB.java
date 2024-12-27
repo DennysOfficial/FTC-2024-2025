@@ -39,13 +39,13 @@ public class OPBLOB extends LinearOpMode {
         ArrayList<Double> CameraOffsets = new ArrayList<>();
         //loop all bellow
 
-        while (opModeIsActive()) {
+        while (opModeIsActive() || opModeInInit()) {
             SampleCenter = NewBlob.GetSampleCenter(colorLocator);
 
             //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
             //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
-            CameraOffsets = NewBlob.CameraOffsetSetup(CameraOffsets);
+            CameraOffsets = NewBlob.CameraOffsetSetup(CameraOffsets, cameraData);
 
             VectorToCam = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose);
 

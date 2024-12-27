@@ -10,4 +10,11 @@ public class CameraData {
     double pitchAngle;
     double HFOV = 70.42;
     double VFOV = 43.3;
+
+    double xOffset = 0;
+
+    double yOffset = 0;
+    double zOffset = 0;
+
+
 }

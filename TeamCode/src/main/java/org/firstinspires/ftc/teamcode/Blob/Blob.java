@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.Blob;
 
 //import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.opMode;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import android.util.Size;
 
 //import com.acmerobotics.roadrunner.Vector2dDual;
@@ -15,6 +11,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import org.firstinspires.ftc.vision.opencv.ColorRange;
@@ -92,19 +91,23 @@ public class Blob {
             RotatedRect boxFit = b.getBoxFit();
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
+            List<Pose2D> poses = new ArrayList<>();
+            poses.add(new Pose2D(DistanceUnit.INCH, SampleCenter.x,SampleCenter.y, AngleUnit.RADIANS, SampleCenter.h));
             SampleCenter.x = (boxFit.center.x);
             SampleCenter.y = (boxFit.center.y);
             SampleCenter.h = (boxFit.angle);
+
+
         }
         //opMode.telemetry.update();
         //sleep(50);
         return SampleCenter;
     }
 
-    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets) {
-        double CamYOffset = 1;
-        double CamXOffset = 1;
-        double CamZOffset = 13;
+    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets, CameraData cameraData) {
+        double CamYOffset = cameraData.yOffset;
+        double CamXOffset = cameraData.xOffset;
+        double CamZOffset = cameraData.zOffset;
 
 
         CameraOffsets.add(0, CamXOffset);
@@ -124,7 +127,7 @@ public class Blob {
     }
 
     public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector) {
-        double anglecamera = 45;
+
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
         double MagOffset = Math.sqrt(Math.pow(2, CameraOffsets.get(0)) + Math.pow(2, CameraOffsets.get(1)));
         Vector3D VectorToCam = new Vector3D(MagOffset * Math.sin(angle), MagOffset * Math.cos(angle), CameraOffsets.get(2));
