@@ -47,7 +47,7 @@ public class OPBLOB extends LinearOpMode {
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
         //SparkFunOTOS.Pose2D SamplePose = new SparkFunOTOS.Pose2D();
         SparkFunOTOS.Pose2D EachPose = new SparkFunOTOS.Pose2D();
-        ArrayList<Double> CameraOffsets = new ArrayList<>();
+        //ArrayList<Double> CameraOffsets = new ArrayList<>();
         List<Pose2D> AllSampleGobalPositons = new ArrayList<>();
 
         //AllSamplePoses = NewBlob.GetSampleCenter(colorLocator, AllSamplePoses);
@@ -64,7 +64,7 @@ public class OPBLOB extends LinearOpMode {
             //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
             NewBlob.CameraOffsetSetup(cameraData);
-            cameraData.positionOnRobot = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, RobotPose, cameraData);
+            cameraData.positionOnRobot = NewBlob.CamOffsetVectorFromOrgin(RobotPose, cameraData);
 
             //loop through all of the different poses of the samples get a pose of each then add to a list
             for (Pose2D pose : poses){
@@ -89,10 +89,10 @@ public class OPBLOB extends LinearOpMode {
             telemetry.addData("Vectortocam", cameraData.positionOnRobot.getY());
             telemetry.addData("Vectortocam", cameraData.positionOnRobot.getZ());
 
-            telemetry.addData("CameraX" , (CameraOffsets.get(0)));
-            telemetry.addData("Cameray" , (CameraOffsets.get(1)));
-            telemetry.addData("Cameraz" , (CameraOffsets.get(2)));
-            telemetry.addData("Camerah" , (CameraOffsets.get(3)));
+            telemetry.addData("CameraX" , cameraData.xOffset);
+            telemetry.addData("Cameray" , cameraData.yOffset);
+            telemetry.addData("Cameraz" , cameraData.zOffset);
+            telemetry.addData("Camerah" , cameraData.CameraOffsetAngle);
             //telemetry.addData("x", SamplePose.x);
             //telemetry.addData("y", SamplePose.y);
 

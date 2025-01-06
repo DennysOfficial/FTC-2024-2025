@@ -131,7 +131,7 @@ public class Blob {
         return VectorToRobot;
     }
 
-    public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector,  CameraData cameraData) {
+    public Vector3D CamOffsetVectorFromOrgin( SparkFunOTOS.Pose2D Vector,  CameraData cameraData) {
 
         cameraData.headingAngleOffset = Math.toRadians(cameraData.CameraOffsetAngle) + Math.toRadians(Vector.h);
         double MagOffset = Math.sqrt(Math.pow(2, cameraData.xOffset) + Math.pow(2, cameraData.yOffset));
@@ -139,7 +139,7 @@ public class Blob {
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return new Vector3D(MagOffset * Math.sin(cameraData.headingAngleOffset + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset + Vector.y), CameraOffsets.get(2));
+        return new Vector3D(MagOffset * Math.sin(cameraData.headingAngleOffset + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset + Vector.y), cameraData.zOffset);
     }
 
 
