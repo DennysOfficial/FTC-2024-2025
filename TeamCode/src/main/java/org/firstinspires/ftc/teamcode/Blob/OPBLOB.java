@@ -4,9 +4,13 @@ import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
@@ -36,23 +40,42 @@ public class OPBLOB extends LinearOpMode {
 
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
         SparkFunOTOS.Pose2D SamplePose = new SparkFunOTOS.Pose2D();
+        SparkFunOTOS.Pose2D EachPose = new SparkFunOTOS.Pose2D();
         ArrayList<Double> CameraOffsets = new ArrayList<>();
+
+        List<Pose2D> AllSamplePoses = new ArrayList<>();
+        AllSamplePoses = NewBlob.GetSampleCenter(colorLocator, AllSamplePoses);
         //loop all bellow
 
         while (opModeIsActive() || opModeInInit()) {
-            SampleCenter = NewBlob.GetSampleCenter(colorLocator);
+            //SampleCenter = NewBlob.GetSampleCenter(colorLocator, poses);
+
+            List<Pose2D> poses = new ArrayList<>();
+            poses = NewBlob.GetSampleCenter(colorLocator, poses);
+
 
             //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
             //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
             CameraOffsets = NewBlob.CameraOffsetSetup(CameraOffsets, cameraData);
 
-            VectorToCam = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, SamplePose);
+            VectorToCam = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, RobotPose);
 
-            SamplePose = NewBlob.SampleLocation(SampleCenter, VectorToCam, cameraData, SamplePose, RobotPose);
+            //loop through all of the different poses of the samples get a pose of each then add to a list
+            for (Pose2D pose : poses){
+                EachPose.x = pose.getX(DistanceUnit.INCH);
+                EachPose.y = pose.getY(DistanceUnit.INCH);
+                EachPose.h = pose.getHeading(AngleUnit.RADIANS);
 
-            telemetry.addData("Sample center", SampleCenter.x);
-            telemetry.addData("Sample center", SampleCenter.y);
+                SamplePose = NewBlob.SampleLocation(EachPose, VectorToCam, cameraData, SamplePose, RobotPose);
+                AllSamplePoses.
+
+
+            }
+
+
+            //telemetry.addData("Sample center", poses.
+            //telemetry.addData("Sample center", poses.y);
             telemetry.addData("Vectortocam", VectorToCam.getX());
             telemetry.addData("Vectortocam", VectorToCam.getY());
             telemetry.addData("Vectortocam", VectorToCam.getZ());

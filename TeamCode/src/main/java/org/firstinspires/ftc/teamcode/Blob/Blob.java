@@ -78,7 +78,7 @@ public class Blob {
         return colorLocator;
     }
 
-    public SparkFunOTOS.Pose2D GetSampleCenter(ColorBlobLocatorProcessor colorLocator) {
+    public List<Pose2D> GetSampleCenter(ColorBlobLocatorProcessor colorLocator, List<Pose2D> poses) {
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
@@ -91,17 +91,17 @@ public class Blob {
             RotatedRect boxFit = b.getBoxFit();
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
-            List<Pose2D> poses = new ArrayList<>();
+            //List<Pose2D> poses = new ArrayList<>();
             poses.add(new Pose2D(DistanceUnit.INCH, SampleCenter.x,SampleCenter.y, AngleUnit.RADIANS, SampleCenter.h));
-            SampleCenter.x = (boxFit.center.x);
-            SampleCenter.y = (boxFit.center.y);
-            SampleCenter.h = (boxFit.angle);
+            //SampleCenter.x = (boxFit.center.x);
+            //SampleCenter.y = (boxFit.center.y);
+            //SampleCenter.h = (boxFit.angle);
 
 
         }
         //opMode.telemetry.update();
         //sleep(50);
-        return SampleCenter;
+        return poses;
     }
 
     public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets, CameraData cameraData) {
@@ -130,12 +130,11 @@ public class Blob {
 
         double angle = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
         double MagOffset = Math.sqrt(Math.pow(2, CameraOffsets.get(0)) + Math.pow(2, CameraOffsets.get(1)));
-        Vector3D VectorToCam = new Vector3D(MagOffset * Math.sin(angle), MagOffset * Math.cos(angle), CameraOffsets.get(2));
         //VectorCam.add(0, MagOffset* Math.cos(angle));
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return VectorToCam;
+        return new Vector3D(MagOffset * Math.sin(angle), MagOffset * Math.cos(angle), CameraOffsets.get(2));
     }
 
 
