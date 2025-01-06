@@ -12,8 +12,6 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-
 @TeleOp(name = "OPMODE", group = "Linear OpMode")
 
 public class OPBLOB extends LinearOpMode {
@@ -84,7 +82,7 @@ public class OPBLOB extends LinearOpMode {
             //List<Pose2D> newSamplelist = new ArrayList<>();
             //newSamplelist = BSample.NewListOfSamples(AllSampleGobalPositons);
             BSample.NewListOfSamples(AllSampleGobalPositons);
-            BSample.normToRobot(RobotPose);
+            BSample.normToSubCorner(RobotPose);
 
 
 

@@ -17,6 +17,8 @@ public class BestSampleToPickUpAlgorithm {
 
     int listLength;
 
+    double xDistanceFrom00toSub = 56.5;
+    double yDistanceFrom00toSub = 48;
 
 
     public BestSampleToPickUpAlgorithm(LinearOpMode opMode) {
@@ -24,30 +26,30 @@ public class BestSampleToPickUpAlgorithm {
     }
 
 
-    public List<Pose2D> NewListOfSamples(List<Pose2D> allSampleGobalPositons){
+    public void NewListOfSamples(List<Pose2D> allSampleGobalPositons){
 
         //List<Pose2D> deepCopy = new ArrayList<>();
         for (Pose2D pose : allSampleGobalPositons) {
             deepCopy.add(new Pose2D(DistanceUnit.INCH, pose.getX(DistanceUnit.INCH), pose.getY(DistanceUnit.INCH), AngleUnit.RADIANS, pose.getHeading(AngleUnit.RADIANS)));
         }
 
-        return deepCopy;
     }
 
-    public void normToRobot(SparkFunOTOS.Pose2D robotPose){
+    public void normToSubCorner(SparkFunOTOS.Pose2D robotPose){
 
          listLength = deepCopy.size();
          int i = 0;
 
          for (Pose2D pose : deepCopy){
 
-             deepCopy.set(i, new Pose2D(DistanceUnit.INCH, pose.getX(DistanceUnit.INCH)- robotPose.x,pose.getY(DistanceUnit.INCH)- robotPose.y, AngleUnit.RADIANS, pose.getHeading(AngleUnit.RADIANS)));
+             deepCopy.set(i, new Pose2D(DistanceUnit.INCH, pose.getX(DistanceUnit.INCH)- xDistanceFrom00toSub,pose.getY(DistanceUnit.INCH)- yDistanceFrom00toSub, AngleUnit.RADIANS, pose.getHeading(AngleUnit.RADIANS)));
 
              i += 1;
          }
 
-
     }
+
+
 
 
 }
