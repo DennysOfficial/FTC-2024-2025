@@ -104,18 +104,23 @@ public class Blob {
         return poses;
     }
 
-    public ArrayList<Double> CameraOffsetSetup(ArrayList<Double> CameraOffsets, CameraData cameraData) {
-        double CamYOffset = cameraData.yOffset;
-        double CamXOffset = cameraData.xOffset;
-        double CamZOffset = cameraData.zOffset;
+    public void CameraOffsetSetup(CameraData cameraData) {
+        double OtosToLiftPivotX = 0; // measured
+        double OtosToLiftPivotY = 0; // measured
+        double OtosToLiftPivotZ = 0; // measured
+        double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension;
+        double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension;
 
+        cameraData.yOffset = CamYOffset + OtosToLiftPivotY;
+        cameraData.zOffset = CamZOffset + OtosToLiftPivotZ;
 
-        CameraOffsets.add(0, CamXOffset);
-        CameraOffsets.add(1, CamYOffset);
-        CameraOffsets.add(2, CamZOffset);
-        double CamAngle = Math.toDegrees(Math.tanh(CamXOffset / CamYOffset));
-        CameraOffsets.add(3, CamAngle);
-        return CameraOffsets;
+        cameraData.xOffset = OtosToLiftPivotX;
+
+        //CameraOffsets.add(0, cameraData.xOffset);
+        //CameraOffsets.add(1, cameraData.yOffset);
+        //CameraOffsets.add(2, cameraData.zOffset);
+        cameraData.CameraOffsetAngle = Math.toDegrees(Math.tanh(cameraData.xOffset / cameraData.yOffset));
+        //CameraOffsets.add(3, cameraData.CameraOffsetAngle);
     }
 
     public ArrayList<Double> VectorToRobot(ArrayList<Double> VectorToRobot, double RobotX, double RobotY, double RobotHeading) {
@@ -128,13 +133,13 @@ public class Blob {
 
     public Vector3D CamOffsetVectorFromOrgin(ArrayList<Double> CameraOffsets, SparkFunOTOS.Pose2D Vector,  CameraData cameraData) {
 
-        cameraData.headingAngleOffset = Math.toRadians(CameraOffsets.get(3)) + Math.toRadians(Vector.h);
-        double MagOffset = Math.sqrt(Math.pow(2, CameraOffsets.get(0)) + Math.pow(2, CameraOffsets.get(1)));
+        cameraData.headingAngleOffset = Math.toRadians(cameraData.CameraOffsetAngle) + Math.toRadians(Vector.h);
+        double MagOffset = Math.sqrt(Math.pow(2, cameraData.xOffset) + Math.pow(2, cameraData.yOffset));
         //VectorCam.add(0, MagOffset* Math.cos(angle));
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return new Vector3D(MagOffset * Math.sin(cameraData.headingAngleOffset), MagOffset * Math.cos(cameraData.headingAngleOffset), CameraOffsets.get(2));
+        return new Vector3D(MagOffset * Math.sin(cameraData.headingAngleOffset + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset + Vector.y), CameraOffsets.get(2));
     }
 
 

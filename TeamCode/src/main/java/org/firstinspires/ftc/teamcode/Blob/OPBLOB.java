@@ -19,6 +19,9 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 public class OPBLOB extends LinearOpMode {
     public void runOpMode() {
 
+        double liftAngle = 0;
+        double liftExtension = 0;
+
         String PixelColor = "Blue";
         double XCameraResolutionHeight = 640;
         double YCameraResolutionWidth = 480;
@@ -26,9 +29,12 @@ public class OPBLOB extends LinearOpMode {
 
 
         CameraData cameraData = new CameraData();
+
+        cameraData.liftAngle = liftAngle;
+        cameraData.liftExtension =liftExtension;
         cameraData.xResolution = (int)XCameraResolutionHeight;
         cameraData.yResolution = (int)YCameraResolutionWidth;
-        cameraData.pitchAngle = CameraAngle;
+        cameraData.pitchAngle = CameraAngle + cameraData.liftAngle;
 
 
         Blob NewBlob = new Blob(this);
@@ -57,7 +63,7 @@ public class OPBLOB extends LinearOpMode {
             //ArrayList<Double> VectorToRobot = new ArrayList<Double>();
             //NewBlob.VectorToRobot(VectorToRobot, RobotX,  RobotY, RobotHeading);
 
-            CameraOffsets = NewBlob.CameraOffsetSetup(CameraOffsets, cameraData);
+            NewBlob.CameraOffsetSetup(cameraData);
             cameraData.positionOnRobot = NewBlob.CamOffsetVectorFromOrgin(CameraOffsets, RobotPose, cameraData);
 
             //loop through all of the different poses of the samples get a pose of each then add to a list
