@@ -29,6 +29,7 @@ public class OPBLOB extends LinearOpMode {
 
 
         CameraData cameraData = new CameraData();
+        BestSampleToPickUpAlgorithm BSample = new BestSampleToPickUpAlgorithm(this);
 
         cameraData.liftAngle = liftAngle;
         cameraData.liftExtension =liftExtension;
@@ -79,6 +80,7 @@ public class OPBLOB extends LinearOpMode {
 
             // no clue if this works or how it works
             AllSampleGobalPositons.forEach(component -> telemetry.addLine(component.toString()));
+
 
 
 
