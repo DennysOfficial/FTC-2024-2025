@@ -43,7 +43,7 @@ public class BestSampleToPickUpAlgorithm {
         }
     }
 
-    public void difference(List<Pose2D> deepCopy){
+    public void difference(){
         // If the list is empty or has only one element, no duplicates possible
         if (deepCopy == null || deepCopy.size() <= 1) {
             return;

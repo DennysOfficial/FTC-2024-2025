@@ -77,12 +77,14 @@ public class OPBLOB extends LinearOpMode {
             }
 
             // no clue if this works or how it works
-            AllSampleGobalPositons.forEach(component -> telemetry.addLine(component.toString()));
+            //AllSampleGobalPositons.forEach(component -> telemetry.addLine(component.toString()));
 
             //List<Pose2D> newSamplelist = new ArrayList<>();
             //newSamplelist = BSample.NewListOfSamples(AllSampleGobalPositons);
             BSample.NewListOfSamples(AllSampleGobalPositons);
             BSample.normToSubCorner(RobotPose);
+            BSample.difference();
+            BSample.deepCopy.forEach(component -> telemetry.addLine(component.toString()));
 
 
 
