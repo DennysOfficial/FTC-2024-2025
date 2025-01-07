@@ -53,7 +53,7 @@ public class Blob {
                 colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.BLUE)
                         .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                        .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                         .setDrawContours(true)                        // Show contours on the Stream Preview
                         .setBlurSize(5)                               // Smooth the transitions between different colors in image
 
@@ -92,7 +92,7 @@ public class Blob {
             opMode.telemetry.addLine(String.format("%5d  %4.2f   %5.2f  (%3d,%3d)",
                     b.getContourArea(), b.getDensity(), b.getAspectRatio(), (int) boxFit.center.x, (int) boxFit.center.y));
             //List<Pose2D> poses = new ArrayList<>();
-            poses.add(new Pose2D(DistanceUnit.INCH, SampleCenter.x,SampleCenter.y, AngleUnit.RADIANS, SampleCenter.h));
+            poses.add(new Pose2D(DistanceUnit.INCH, boxFit.center.x,boxFit.center.y, AngleUnit.RADIANS, boxFit.angle));
             //SampleCenter.x = (boxFit.center.x);
             //SampleCenter.y = (boxFit.center.y);
             //SampleCenter.h = (boxFit.angle);
