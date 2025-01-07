@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
@@ -33,10 +34,8 @@ public class Auto_Test_04Z_1 extends OpMode{
         TO_RUNG2,
         TO_RUNG3,
         TO_RUNG4,
-        TO_RUNG5,
         TO_PICKUP2,
         TO_PICKUP3,
-        TO_PICKUP4,
         TO_OBSERVE,
         MOVE_SAMPLES,
         IDLE
@@ -46,48 +45,44 @@ public class Auto_Test_04Z_1 extends OpMode{
 
     List<LynxModule> allHubs;
 
-    private final Pose startPose = new Pose(9,64, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(9,64.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    private Point rungpoint1 =        new Point(33,64, Point.CARTESIAN);
-    private Point rungpoint2 =        new Point(33,68, Point.CARTESIAN);
-    private Point rungpoint3 =        new Point(33,72, Point.CARTESIAN);
-    private Point rungpoint4 =        new Point(33,76, Point.CARTESIAN);
-    private Point rungpoint5 =        new Point(33,80, Point.CARTESIAN);
+    private Point rungpoint1 =        new Point(32.75,64.5, Point.CARTESIAN);
+    private Point rungpoint2 =        new Point(32.75,70, Point.CARTESIAN);
+    private Point rungpoint3 =        new Point(33,76, Point.CARTESIAN);
+    private Point rungpoint4 =        new Point(33,82, Point.CARTESIAN);
 
-    private Point samplepoint1 =       new Point(60,25.5, Point.CARTESIAN);
-    private Point samplepoint2 =       new Point(60,15.5, Point.CARTESIAN);
-    private Point samplepoint3 =       new Point(60,10, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    private Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
 
+    private Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
+    private Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
 
-    private Point linepoint1 =         new Point(35,25.5, Point.CARTESIAN);
-    private Point linepoint2 =         new Point(35,15.5, Point.CARTESIAN);
-    private Point linepoint3 =         new Point(35,9.5, Point.CARTESIAN);
+    private Point pickuppoint =       new Point(15,38, Point.CARTESIAN); //TODO: Make this more accurate
 
-    private Point pickuppoint =       new Point(17,41, Point.CARTESIAN); //TODO: Make this more accurate
-
-    private Point observepoint =      new Point(10,9.5, Point.CARTESIAN);
+    private Point observepoint =      new Point(10,10, Point.CARTESIAN);
 
 
-    private Point curvepoint =        new Point(28,69, Point.CARTESIAN);
+    private Point curvepoint =        new Point(15,60, Point.CARTESIAN);
 
     private Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
     private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
     private Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
 
-    private Point pickupcurvepoint =  new Point(33,41, Point.CARTESIAN);
+    private Point pickupcurvepoint1 =  new Point(48,48, Point.CARTESIAN);
+    private Point pickupcurvepoint2 =  new Point(24,60, Point.CARTESIAN);
 
 
 
-
-    public Path toRung1, toRung2, toRung3, toRung4, toSample1, toSample2, toSample3, toLine1, toLine2, toLine3, toPickup1, toPickup2, toPickup3, toObserve;
+    public Path toRung1, toRung2, toRung3, toRung4, toSample1, toSample2, toline1, toline2, toPickup1, toPickup2, toPickup3, toObserve;
     public PathChain moveSamples;
 
     // Other misc. stuff
     private Follower follower;
 
-    double liftPosRung = 13.5;
-    double pivotPosRung = 25;
+    double liftPosRung = 14;
+    double pivotPosRung = 20.25;
 
     double pivotPosObs = 90;
 
@@ -101,8 +96,12 @@ public class Auto_Test_04Z_1 extends OpMode{
     ActiveIntake intake;
     RobotConfig config;
 
+    private Timer pathTimer;
+
     @Override
     public void init() {
+
+        pathTimer = new Timer();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
@@ -136,17 +135,15 @@ public class Auto_Test_04Z_1 extends OpMode{
         toRung3 = new Path(new BezierCurve(pickuppoint, curvepoint, rungpoint3));
         toRung4 = new Path(new BezierCurve(pickuppoint, curvepoint, rungpoint4));
 
-        toPickup1 = new Path(new BezierCurve(linepoint3, pickupcurvepoint, pickuppoint));
+        toPickup1 = new Path(new BezierCurve(linepoint2, pickupcurvepoint1, pickupcurvepoint2, pickuppoint));
         toPickup2 = new Path(new BezierCurve(rungpoint2, curvepoint, pickuppoint));
         toPickup3 = new Path(new BezierCurve(rungpoint3, curvepoint, pickuppoint));
 
         toSample1 = new Path(new BezierCurve(rungpoint1, samplecurvepoint1, samplecurvepoint2, samplepoint1));
         toSample2 = new Path(new BezierCurve(linepoint1, samplecurvepoint3, samplepoint2));
-        toSample3 = new Path(new BezierCurve(linepoint2, samplecurvepoint3, samplepoint3));
 
-        toLine1 = new Path(new BezierLine(samplepoint1, linepoint1));
-        toLine2 = new Path(new BezierLine(samplepoint2, linepoint2));
-        toLine3 = new Path(new BezierLine(samplepoint3, linepoint3));
+        toline1 = new Path(new BezierLine(samplepoint1, linepoint1));
+        toline2 = new Path(new BezierLine(samplepoint2, linepoint2));
 
         toObserve = new Path(new BezierCurve(rungpoint4, curvepoint, observepoint));
 
@@ -159,32 +156,29 @@ public class Auto_Test_04Z_1 extends OpMode{
         toPickup2.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
         toPickup3.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270));
 
-        toRung1.setPathEndTranslationalConstraint(0.25);
-        toRung2.setPathEndTranslationalConstraint(0.25);
-        toRung3.setPathEndTranslationalConstraint(0.25);
-        toRung4.setPathEndTranslationalConstraint(0.25);
-
-        toPickup2.setZeroPowerAccelerationMultiplier(7);
-        toPickup3.setZeroPowerAccelerationMultiplier(7);
-
-        toPickup2.setPathEndTimeoutConstraint(250);
-        toPickup3.setPathEndTimeoutConstraint(250);
-
         toObserve.setConstantHeadingInterpolation(Math.toRadians(0));
+
+        toPickup2.setZeroPowerAccelerationMultiplier(4);
+        toPickup3.setZeroPowerAccelerationMultiplier(4);
+
+        toPickup2.setPathEndTranslationalConstraint(0.075);
+        toPickup3.setPathEndTranslationalConstraint(0.075);
+
+        toPickup2.setPathEndHeadingConstraint(0.006);
+        toPickup3.setPathEndHeadingConstraint(0.006);
+
+        toPickup2.setPathEndTimeoutConstraint(750);
+        toPickup3.setPathEndTimeoutConstraint(750);
 
 
         moveSamples = follower.pathBuilder()
                 .addPath(toSample1)
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(180))
-                .addPath(toLine1)
+                .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(toSample2)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(toLine2)
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(toSample3)
-                .setConstantHeadingInterpolation(Math.toRadians(180))
-                .addPath(toLine3)
+                .addPath(toline2)
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .addPath(toPickup1)
                 .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(270))
@@ -196,11 +190,14 @@ public class Auto_Test_04Z_1 extends OpMode{
         switch (currentState) {
             case TO_RUNG1:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung - 3.75);
-                if (follower.atParametricEnd()) {
+                if (lift.getPosition() >= 3){
+                    pivot.setTargetPosition(pivotPosRung);
+                }
+                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 1.75) {
                     telemetry.addLine("im here");
                     lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
+                        pathTimer.resetTimer();
                         telemetry.addLine("im here 2");
                         intake.outtakeForDuration(0.75);
                         currentState = State.MOVE_SAMPLES;
@@ -213,21 +210,24 @@ public class Auto_Test_04Z_1 extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 12) {
                         intake.intakeForDuration(0.5);
+                        pathTimer.resetTimer();
                         currentState = State.TO_RUNG2;
                         follower.followPath(toRung2);
                     }
                 }
                 break;
-
             case TO_RUNG2:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung);
-                if (follower.atParametricEnd()) {
+                if (lift.getPosition() >= 3){
+                    pivot.setTargetPosition(pivotPosRung);
+                }
+                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
                     lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
                         intake.outtakeForDuration(0.75);
+                        pathTimer.resetTimer();
                         currentState = State.TO_PICKUP2;
                         follower.followPath(toPickup2);
                     }
@@ -238,8 +238,9 @@ public class Auto_Test_04Z_1 extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3) {
                         intake.intakeForDuration(0.5);
+                        pathTimer.resetTimer();
                         currentState = State.TO_RUNG3;
                         follower.followPath(toRung3);
                     }
@@ -248,11 +249,14 @@ public class Auto_Test_04Z_1 extends OpMode{
 
             case TO_RUNG3:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung);
-                if (follower.atParametricEnd()) {
+                if (lift.getPosition() >= 3){
+                    pivot.setTargetPosition(pivotPosRung);
+                }
+                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
                     lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
                         intake.outtakeForDuration(0.75);
+                        pathTimer.resetTimer();
                         currentState = State.TO_PICKUP3;
                         follower.followPath(toPickup3);
                     }
@@ -263,8 +267,9 @@ public class Auto_Test_04Z_1 extends OpMode{
 
                 if (follower.atParametricEnd()) {
                     pivot.setTargetPosition(pivotPosObs);
-                    if (pivot.getPosition() >= 87) {
+                    if (pivot.getPosition() >= 87 || pathTimer.getElapsedTimeSeconds() >= 3) {
                         intake.intakeForDuration(0.5);
+                        pathTimer.resetTimer();
                         currentState = State.TO_RUNG4;
                         follower.followPath(toRung4);
                     }
@@ -273,10 +278,13 @@ public class Auto_Test_04Z_1 extends OpMode{
 
             case TO_RUNG4:
                 lift.setTargetPosition(liftPosRung);
-                pivot.setTargetPosition(pivotPosRung);
-                if (follower.atParametricEnd()) {
+                if (lift.getPosition() >= 3){
+                    pivot.setTargetPosition(pivotPosRung);
+                }
+                if (follower.atParametricEnd() || pathTimer.getElapsedTimeSeconds() >= 3) {
                     lift.setTargetPosition(0);
                     if (lift.getPosition() <= 1) {
+                        pathTimer.resetTimer();
                         currentState = State.TO_OBSERVE;
                         follower.followPath(toObserve);
                     }
@@ -291,6 +299,7 @@ public class Auto_Test_04Z_1 extends OpMode{
 
             case IDLE:
                 // This concludes the autonomous program
+                // Team 14988 couldn't stand bees
                 break;
         }
     }
@@ -332,6 +341,7 @@ public class Auto_Test_04Z_1 extends OpMode{
         deltaTime = 0;
         frameTimer.reset();
         // Put first path instead of brackets
+        pathTimer.resetTimer();
         currentState = State.TO_RUNG1;
         follower.followPath(toRung1);
     }
