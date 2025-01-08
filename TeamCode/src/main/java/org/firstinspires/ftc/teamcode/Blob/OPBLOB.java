@@ -25,7 +25,7 @@ public class OPBLOB {
 
 
 
-        realOpMode newthing = new realOpMode();
+
 
         CameraData cameraData = new CameraData();
         BestSampleToPickUpAlgorithm BSample = new BestSampleToPickUpAlgorithm();

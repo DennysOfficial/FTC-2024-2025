@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BestSampleToPickUpAlgorithm {
-    LinearOpMode opMode;
+    //LinearOpMode opMode;
 
     List<Pose2D> deepCopy = new ArrayList<>();
 
@@ -21,9 +21,9 @@ public class BestSampleToPickUpAlgorithm {
     double yDistanceFrom00toSub = 48;
     double positionTolerance = 0.05;
 
-    public BestSampleToPickUpAlgorithm() {
-        this.opMode = opMode;
-    }
+    //public BestSampleToPickUpAlgorithm() {
+    //    this.opMode = opMode;
+    //}
 
     public void NewListOfSamples(List<Pose2D> allSampleGobalPositons){
         //List<Pose2D> deepCopy = new ArrayList<>();
