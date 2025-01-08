@@ -21,7 +21,7 @@ public class BestSampleToPickUpAlgorithm {
     double yDistanceFrom00toSub = 48;
     double positionTolerance = 0.05;
 
-    public BestSampleToPickUpAlgorithm(LinearOpMode opMode) {
+    public BestSampleToPickUpAlgorithm() {
         this.opMode = opMode;
     }
 
