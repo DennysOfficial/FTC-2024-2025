@@ -87,7 +87,7 @@ public class Blob {
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-        ColorBlobLocatorProcessor.Util.filterByArea(500, 3000, blobs);
+        ColorBlobLocatorProcessor.Util.filterByArea(50, 3000, blobs);
 
         opMode.telemetry.addLine(" Area Density Aspect  Center");
 
