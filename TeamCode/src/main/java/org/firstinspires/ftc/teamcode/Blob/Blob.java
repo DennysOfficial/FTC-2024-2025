@@ -192,12 +192,12 @@ public class Blob {
         opMode.telemetry.addData("hAngle", HAngle);
         opMode.telemetry.addData("x", sampleX);
         opMode.telemetry.addData("y", sampleY);
-        opMode.telemetry.addData("xx", vectorToCam.getX());
-        opMode.telemetry.addData("yy", vectorToCam.getY());
+        opMode.telemetry.addData("xx", cameraData.xOffset);
+        opMode.telemetry.addData("yy", cameraData.yOffset);
         opMode.telemetry.addData("y", vectorToCam.getZ());
 
-        //sampleX += vectorToCam.getX();
-        //sampleY += vectorToCam.getY();
+        sampleX += cameraData.xOffset;
+        sampleY += cameraData.yOffset;
 
 
 
