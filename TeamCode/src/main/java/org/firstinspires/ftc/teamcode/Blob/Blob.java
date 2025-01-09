@@ -82,6 +82,7 @@ public class Blob {
         return colorLocator;
     }
 
+
     public List<Pose2D> GetSampleCenter(ColorBlobLocatorProcessor colorLocator, List<Pose2D> poses) {
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 

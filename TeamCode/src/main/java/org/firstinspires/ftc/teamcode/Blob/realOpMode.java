@@ -22,6 +22,7 @@ public class realOpMode extends LinearOpMode {
 
         OPBLOB thing = new OPBLOB(this);
 
+
         // this RobotPose needs to be updated with robot pose from otos or roadrunner or whatever
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
 

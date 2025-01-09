@@ -79,6 +79,7 @@ public class OPBLOB {
 
 
 
+
         opMode.telemetry.addData("Vectortocam", cameraData.positionOnRobot.getX());
         opMode.telemetry.addData("Vectortocam", cameraData.positionOnRobot.getY());
         opMode.telemetry.addData("Vectortocam", cameraData.positionOnRobot.getZ());

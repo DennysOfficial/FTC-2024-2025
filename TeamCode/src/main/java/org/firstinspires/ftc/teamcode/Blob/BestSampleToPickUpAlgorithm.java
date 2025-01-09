@@ -41,6 +41,7 @@ public class BestSampleToPickUpAlgorithm {
             i += 1;
         }
 
+
     }
 
     public void difference(){
