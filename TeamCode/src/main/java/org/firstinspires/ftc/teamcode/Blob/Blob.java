@@ -112,9 +112,10 @@ public class Blob {
     public void CameraOffsetSetup(CameraData cameraData) {
         double OtosToLiftPivotX = 0; // measured
         double OtosToLiftPivotY = 0; // measured
-        double OtosToLiftPivotZ = 8; // measured
-        double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension;
-        double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension;
+        double OtosToLiftPivotZ = 8;// measured
+        double distanceFromAxisCamIsMounted = 0;
+        double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
+        double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
 
         cameraData.yOffset = CamYOffset + OtosToLiftPivotY;
         cameraData.zOffset = CamZOffset + OtosToLiftPivotZ;
@@ -144,7 +145,7 @@ public class Blob {
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return new Vector3D(MagOffset * Math.sin(cameraData.headingAngleOffset + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset + Vector.y), cameraData.zOffset);
+        return new Vector3D((MagOffset * Math.sin(cameraData.headingAngleOffset) + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset) + Vector.y, cameraData.zOffset);
     }
 
 
@@ -192,12 +193,12 @@ public class Blob {
         opMode.telemetry.addData("hAngle", HAngle);
         opMode.telemetry.addData("x", sampleX);
         opMode.telemetry.addData("y", sampleY);
-        opMode.telemetry.addData("xx", cameraData.xOffset);
-        opMode.telemetry.addData("yy", cameraData.yOffset);
+        opMode.telemetry.addData("xx", vectorToCam.getX());
+        opMode.telemetry.addData("yy", vectorToCam.getY());
         opMode.telemetry.addData("y", vectorToCam.getZ());
 
-        sampleX += cameraData.xOffset;
-        sampleY += cameraData.yOffset;
+        sampleX += vectorToCam.getX();
+        sampleY += vectorToCam.getY();
 
 
 

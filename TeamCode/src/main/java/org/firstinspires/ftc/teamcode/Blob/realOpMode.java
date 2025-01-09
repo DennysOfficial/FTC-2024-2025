@@ -14,7 +14,7 @@ public class realOpMode extends LinearOpMode {
         double XCameraResolutionHeight = 320;
         double YCameraResolutionWidth = 240;
         double CameraAngle = 54;
-        double liftAngle = 0;
+        double liftAngle = 90;
         double liftExtension = 0;
         String PixelColor = "Blue";
 
@@ -36,7 +36,7 @@ public class realOpMode extends LinearOpMode {
 
         thing.OPBlob(colorLocator, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
 
-        sleep(3000);
+        sleep(30);
 
         }
     }
