@@ -63,8 +63,11 @@ public class OPBLOB {
             EachPose.y = pose.getY(DistanceUnit.INCH);
             EachPose.h = pose.getHeading(AngleUnit.RADIANS);
 
+            double[] numbers;
 
-            AllSampleGobalPositons.add(NewBlob.SampleLocation(EachPose, cameraData.positionOnRobot, cameraData, RobotPose));
+            numbers = NewBlob.SampleLocation(EachPose, cameraData.positionOnRobot, cameraData, RobotPose);
+            opMode.telemetry.addData(" ", numbers[0]);
+            AllSampleGobalPositons.add(new Pose2D(DistanceUnit.INCH,numbers[0],numbers[1],AngleUnit.RADIANS,numbers[2]));
 
         }
 

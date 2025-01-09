@@ -87,7 +87,7 @@ public class Blob {
         SparkFunOTOS.Pose2D SampleCenter = new SparkFunOTOS.Pose2D();
 
         List<ColorBlobLocatorProcessor.Blob> blobs = colorLocator.getBlobs();
-        ColorBlobLocatorProcessor.Util.filterByArea(50, 3000, blobs);
+        ColorBlobLocatorProcessor.Util.filterByArea(80, 5000, blobs);
 
         opMode.telemetry.addLine(" Area Density Aspect  Center");
 
@@ -149,7 +149,7 @@ public class Blob {
 
 
 
-    public Pose2D SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D robotPose) {
+    public double[] SampleLocation(SparkFunOTOS.Pose2D sampleCenter, Vector3D vectorToCam, CameraData cameraData, SparkFunOTOS.Pose2D robotPose) {
 
         //double VAngle;
         double SampleDistanceFromCam;
@@ -192,13 +192,16 @@ public class Blob {
         opMode.telemetry.addData("hAngle", HAngle);
         opMode.telemetry.addData("x", sampleX);
         opMode.telemetry.addData("y", sampleY);
+        opMode.telemetry.addData("xx", vectorToCam.getX());
+        opMode.telemetry.addData("yy", vectorToCam.getY());
+        opMode.telemetry.addData("y", vectorToCam.getZ());
 
-        sampleX += vectorToCam.getX();
-        sampleY += vectorToCam.getY();
+        //sampleX += vectorToCam.getX();
+        //sampleY += vectorToCam.getY();
 
 
 
-        return new Pose2D(DistanceUnit.INCH, sampleX, sampleY, AngleUnit.RADIANS, sampleH);
+        return new double[]{sampleX, sampleY, sampleH};
     }
 
 }
