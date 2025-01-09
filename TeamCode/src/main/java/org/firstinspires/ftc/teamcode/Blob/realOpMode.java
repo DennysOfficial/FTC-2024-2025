@@ -11,8 +11,8 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 public class realOpMode extends LinearOpMode {
     public void runOpMode() {
 
-        double XCameraResolutionHeight = 640;
-        double YCameraResolutionWidth = 480;
+        double XCameraResolutionHeight = 320;
+        double YCameraResolutionWidth = 240;
         double CameraAngle = 54;
         double liftAngle = 0;
         double liftExtension = 0;
