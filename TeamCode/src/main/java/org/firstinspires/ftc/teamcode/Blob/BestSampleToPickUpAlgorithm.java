@@ -40,6 +40,7 @@ public class BestSampleToPickUpAlgorithm {
             deepCopy.set(i, new Pose2D(DistanceUnit.INCH, pose.getX(DistanceUnit.INCH)- xDistanceFrom00toSub,pose.getY(DistanceUnit.INCH)- yDistanceFrom00toSub, AngleUnit.RADIANS, pose.getHeading(AngleUnit.RADIANS)));
             i += 1;
         }
+
     }
 
     public void difference(){

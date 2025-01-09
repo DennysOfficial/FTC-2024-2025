@@ -38,6 +38,7 @@ public class OPBLOB {
 
         Blob NewBlob = new Blob(opMode);
 
+
         //SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
 
         SparkFunOTOS.Pose2D EachPose = new SparkFunOTOS.Pose2D();
@@ -47,6 +48,7 @@ public class OPBLOB {
 
 
         List<Pose2D> poses = new ArrayList<>();
+
         poses = NewBlob.GetSampleCenter(colorLocator, poses);
 
 

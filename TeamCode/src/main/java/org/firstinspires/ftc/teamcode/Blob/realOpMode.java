@@ -26,12 +26,12 @@ public class realOpMode extends LinearOpMode {
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
 
 
+        ColorBlobLocatorProcessor colorLocator ;
 
+        //waitForStart();
+        colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
 
-        waitForStart();
-        ColorBlobLocatorProcessor colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
-
-        while (opModeIsActive() || opModeInInit()){
+        while (opModeInInit()){
 
         thing.OPBlob(colorLocator, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
 

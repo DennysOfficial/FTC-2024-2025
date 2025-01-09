@@ -36,11 +36,11 @@ public class Blob {
     public ColorBlobLocatorProcessor CameraSetUp(String PixelColor, int XCameraResolutionHeight, int YCameraResolutionWidth) {
 
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-        //        .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
-        //        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-        //        .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
-        //        .setDrawContours(true)                        // Show contours on the Stream Preview
-        //        .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
+                .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setDrawContours(true)                        // Show contours on the Stream Preview
+                .setBlurSize(5)                               // Smooth the transitions between different colors in image
                 .build();
 
         switch (PixelColor) {
@@ -111,7 +111,7 @@ public class Blob {
     public void CameraOffsetSetup(CameraData cameraData) {
         double OtosToLiftPivotX = 0; // measured
         double OtosToLiftPivotY = 0; // measured
-        double OtosToLiftPivotZ = 0; // measured
+        double OtosToLiftPivotZ = 8; // measured
         double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension;
         double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension;
 
