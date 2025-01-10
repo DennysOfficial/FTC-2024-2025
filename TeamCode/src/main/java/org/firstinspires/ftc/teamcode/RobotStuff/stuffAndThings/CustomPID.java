@@ -42,14 +42,14 @@ public class CustomPID {
     }
 
 
-    public double runPID(double targetPosition, double actualPosition, double deltaTime) {
+    public double runPID(double targetValue, double actualValue, double deltaTime) {
 
         if (Double.isNaN(previousActualPosition)) {
-            previousActualPosition = actualPosition;
+            previousActualPosition = actualValue;
             return 0;
         }
 
-        return runPID(targetPosition, actualPosition, deltaTime, (previousActualPosition - (previousActualPosition = actualPosition)) / deltaTime);
+        return runPID(targetValue, actualValue, deltaTime, (previousActualPosition - (previousActualPosition = actualValue)) / deltaTime);
     }
 
     public double runPID(double targetValue, double actualValue, double deltaTime, double dValueDT) {

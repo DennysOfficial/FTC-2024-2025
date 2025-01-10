@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = " and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "servo tester", group = "Linear OpMode")
 //@Disabled
 public class servoThing extends LinearOpMode {
 
@@ -64,12 +64,14 @@ public class servoThing extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
-            telemetry.addData(" eltaTime", deltaTime);
+            //telemetry.addData(" deltaTime", deltaTime);
             frameTimer.reset();
 
             targetPostion += gamepad1.left_stick_y * deltaTime* servoSenstivty;
             targetPostion = MathUtils.clamp(targetPostion, 0, 1);
             coolSampleGrab.setPosition(targetPostion);
+
+            telemetry.addData(" servo position  = %f", targetPostion);
 
 
         }
