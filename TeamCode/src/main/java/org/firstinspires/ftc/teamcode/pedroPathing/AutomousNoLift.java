@@ -4,19 +4,19 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.ArrayList;
 
 
-public class Automous{
+public class AutomousNoLift {
 
     private Follower follower;
 
@@ -40,7 +40,7 @@ public class Automous{
     /**
      * A class for easily storing and executing autonomous routines.
      */
-    public Automous(OpMode opmode, Lift lift, Pivot pivot, ActiveIntake activeIntake, RobotConfig robotConfig, Follower follower) {
+    public AutomousNoLift(OpMode opmode, Lift lift, Pivot pivot, ActiveIntake activeIntake, RobotConfig robotConfig, Follower follower) {
         currentOpMode = opmode;
         this.lift = lift;
         this.pivot = pivot;
@@ -81,15 +81,15 @@ public class Automous{
                 if (current.usesSpecimenLift()) {
                     //Specimen lift code fo brr
                 } else {
-                    lift.setTargetPosition(current.getLiftPos());
-                    pivot.setTargetPosition(current.getPivotPos());
+                    //lift.setTargetPosition(current.getLiftPos());
+                    //pivot.setTargetPosition(current.getPivotPos());
                 }
             }
         }
 
         if (currentPath.getPath() != null && follower.atParametricEnd() || currentPath.getTimeout() <= pathTimer.getElapsedTimeSeconds()) {
-            pivot.setTargetPosition(currentPath.getPPA());
-            lift.setTargetPosition(currentPath.getLPA());
+            //pivot.setTargetPosition(currentPath.getPPA());
+            //lift.setTargetPosition(currentPath.getLPA());
             //Specimen lift code go brr
             listPointer = listPointer + 1;
             pathTimer.resetTimer();

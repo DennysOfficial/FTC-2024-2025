@@ -6,12 +6,14 @@ public class LiftTimeStamp {
     double time;
     int path;
     boolean beenRun = false;
+    boolean useSpecimenLift;
 
-    public LiftTimeStamp(double pivotPos, double liftPos, double time, int path) {
+    public LiftTimeStamp(double pivotPos, double liftPos, double time, int path, boolean useSpecimenLift) {
         this.liftPos = liftPos;
         this.pivotPos = pivotPos;
         this.time = time;
         this.path = path;
+        this.useSpecimenLift = useSpecimenLift;
     }
 
     public void setLiftPos(double liftPos) {
@@ -44,6 +46,10 @@ public class LiftTimeStamp {
 
     public int getPath() {
         return path;
+    }
+
+    public boolean usesSpecimenLift() {
+        return useSpecimenLift;
     }
 
     public boolean hasBeenRun() {

@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 public class PathDirectory {
 
-    private double PPS;
-    private double LPS;
+    private double PPA;
+    private double LPA;
 
     private PathChain path;
 
@@ -16,45 +14,45 @@ public class PathDirectory {
 
     private double timeout;
 
-    public PathDirectory(double pivotPosStart, double liftPosStart, PathChain path, double pivotPosEnd, double liftPosEnd, double timeout) {
-        setPSS(pivotPosStart);
-        setLSS(liftPosStart);
+    public PathDirectory(double pivotPosSample, double liftPosSample, PathChain path, double pivotPosSpecimen, double liftPosSpecimen, double timeout) {
+        setPPA(pivotPosSample);
+        setLPA(liftPosSample);
         setPath(path);
-        setPSE(pivotPosEnd);
-        setLSE(liftPosEnd);
+        setPPE(pivotPosSpecimen);
+        setLPE(liftPosSpecimen);
         setTimeout(timeout);
     }
 
-    public void setPSS(double PPS) {
-        this.PPS = PPS;
+    public void setPPA(double PPA) {
+        this.PPA = PPA;
     }
 
-    public void setLSS(double LPS) {
-        this.LPS = LPS;
+    public void setLPA(double LPA) {
+        this.LPA = LPA;
     }
 
     public void setPath(PathChain path) {
         this.path = path;
     }
 
-    public void setPSE(double PSE) {
-        this.PPE = PSE;
-    }
-
-    public void setLSE(double LSE) {
-        this.LPE = LSE;
-    }
-
     public void setTimeout(double timeout) {
         this.timeout = timeout;
     }
 
-    public double getPPS() {
-        return PPS;
+    public void setPPE(double PPE) {
+        this.PPE = PPE;
     }
 
-    public double getLPS() {
-        return LPS;
+    public void setLPE(double LPE) {
+        this.LPE = LPE;
+    }
+
+    public double getPPA() {
+        return PPA;
+    }
+
+    public double getLPA() {
+        return LPA;
     }
 
     public PathChain getPath() {

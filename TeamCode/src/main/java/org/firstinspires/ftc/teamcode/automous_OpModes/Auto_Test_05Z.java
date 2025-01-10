@@ -15,11 +15,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
+import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.TimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
@@ -71,11 +73,6 @@ public class Auto_Test_05Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    double liftPosRung = 13.5;
-    double pivotPosRung = 25;
-
-    double pivotPosObs = 90;
-
     private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -86,7 +83,7 @@ public class Auto_Test_05Z extends OpMode{
     ActiveIntake intake;
     RobotConfig config;
 
-    Automous automous;
+    AutomousNoLift automous; //CHANGE THIS WHEN NEW ROBOT
 
     @Override
     public void init() {
@@ -112,7 +109,7 @@ public class Auto_Test_05Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new Automous(this, lift, pivot, intake, config, follower);
+        automous = new AutomousNoLift(this, lift, pivot, intake, config, follower);
     }
 
 
@@ -123,99 +120,134 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
         toRung2 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint1, rungPoint2)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toRung3 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint3)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toRung4 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint4)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toRung5 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint5)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
 
         toSample1 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint1, samplePoint1)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toSample2 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(samplePoint1,samplePoint2)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toSample3 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(samplePoint2,samplePoint2)))
-                .setLinearHeadingInterpolation(0, 340)
+                .addPath(new Path(new BezierPoint(samplePoint2)))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(340))
                 .build();
 
 
         toPickup1 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(samplePoint2, pickupPoint1)))
-                .setLinearHeadingInterpolation(340, 0)
+                .setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(0))
                 .build();
         toPickup2 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toPickup3 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3, pickupPoint2)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         toPickup4 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4, pickupPoint2)))
-                .setConstantHeadingInterpolation(0)
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
 
         toPark = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint5, parkPoint)))
-                .setLinearHeadingInterpolation(0, 240)
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(240))
                 .build();
 
         //TODO: Lift values are ESTIMATES, any comments in this codeblock are spots where lift code is needed
-        automous.addPath(25, 10, toRung1, 0, 0, 5); //1
-        automous.addPath(0, 0, toSample1, 90, 10, 5); //2
-        automous.addPath(90, 10, null, 0, 0, 5); //3
+        automous.addPath(0, 0, toRung1, 25, 10, 5); //1
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go brr
+            //Specimen wrist go brr (move to scoring position)
+        }, 0, 1));
+        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0, 1, true));
+        automous.addPath(90, 10, toSample1, 0, 0, 5); //2
+        automous.addLiftTimeStamp(new LiftTimeStamp(0,0, 2, 2, true));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to collecting position)
+        }, 1, 2));
+        automous.addPath(0, 0, null, 0, 0, 5); //3
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3, false));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            intake.intakeForDuration(0.5);
         }, 1, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go spit
+            intake.openFlap();
+            intake.intakeForDuration(0.5);
         }, 5, 3));
         automous.addPath(0, 0, toSample2, 90, 10, 5); //4
-        automous.addPath(90, 10, null, 0, 0, 5); //5
+        automous.addPath(0, 0, null, 0, 0, 5); //5
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5, false));
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go brr
+            intake.intakeForDuration(0.5);
         }, 1, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go spit
+            intake.openFlap();
+            intake.intakeForDuration(0.5);
         }, 5, 5));
         automous.addPath(0, 0, toSample3, 90, 10, 5); //6
-        automous.addPath(90, 10, null, 0, 0, 5); //7
+        automous.addPath(0, 0, null, 0, 0, 5); //7
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7, false));
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go brr
+            intake.intakeForDuration(0.5);
         }, 1, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
-            //intake go spit
+            intake.openFlap();
+            intake.intakeForDuration(0.5);
         }, 5, 7));
         automous.addPath(0, 0, toPickup1, 0, 0, 5); //8
-        automous.addPath(0, 0, toRung2, 0, 0, 5); //9
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 9));
+        automous.addPath(0, 0, toRung2, 25, 10, 5); //9
+        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 9, true));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to scoring position)
+        }, 0.5, 9));
         automous.addPath(0, 0, toPickup2, 0, 0, 5);//10
-        automous.addPath(0, 0, toRung3, 0, 0, 5); //11
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 11));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to collecting position)
+        }, 1, 10));
+        automous.addPath(0, 0, toRung3, 25, 10, 5); //11
+        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 11, true));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to scoring position)
+        },0.5, 11));
         automous.addPath(0, 0, toPickup3, 0, 0, 5);//12
-        automous.addPath(0, 0, toRung4, 0, 0, 5); //13
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 13));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to collecting position)
+        }, 1, 12));
+        automous.addPath(0, 0, toRung4, 25, 10, 5); //13
+        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 13, true));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to scoring position)
+        }, 0.5, 13));
         automous.addPath(0, 0, toPickup4, 0, 0, 5);//14
-        automous.addPath(0, 0, toRung5, 0, 0, 5); //15
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 15));
-        automous.addPath(0, 0, toPark, 90, 33, 5);//16
-        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to collecting position)
+        }, 1, 14));
+        automous.addPath(0, 0, toRung5, 25, 10, 5); //15
+        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 15, true));
+        automous.addTimeStamp(new TimeStamp(() -> {
+            //Specimen wrist go brr (move to scoring position)
+        }, 0.5, 15));
+        automous.addPath(90, 33, toPark, 0, 0, 5);//16
+        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16, false));
     }
 
     @Override
