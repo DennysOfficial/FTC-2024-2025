@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.automous_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -206,6 +206,7 @@ public class Auto_Test_40Z extends OpMode{
 
     @Override
     public void stop() {
+        follower.breakFollowing();
     }
 }
 

@@ -340,6 +340,7 @@ public class Auto_Test_04Z extends OpMode{
 
     @Override
     public void stop() {
+        follower.breakFollowing();
     }
 }
 

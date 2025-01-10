@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.automous_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
-import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.TimeStamp;
@@ -288,6 +287,7 @@ public class Auto_Test_05Z extends OpMode{
 
     @Override
     public void stop() {
+        follower.breakFollowing();
     }
 }
 
