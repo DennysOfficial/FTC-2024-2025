@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.TestingOpModes.IntakeTest;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -62,6 +64,8 @@ public class IntakeTestingThing extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
+
         RobotConfig config = new RobotConfig(this);
 
         motor1 = hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightLift);
@@ -76,8 +80,8 @@ public class IntakeTestingThing extends LinearOpMode {
         double motor1Pos = motor1.getCurrentPosition();
         double motor2Pos = motor2.getCurrentPosition();
 
-        PositionDerivatives motor1PDs = new PositionDerivatives(motor1Pos);
-        PositionDerivatives motor2PDs = new PositionDerivatives(motor2Pos);
+        PositionDerivatives motor1PDs = new PositionDerivatives(motor1Pos * IntakeTestConfig.motor1GearRatio);
+        PositionDerivatives motor2PDs = new PositionDerivatives(motor2Pos * IntakeTestConfig.motor2GearRatio);
 
 
         double motor1Power = 0;
@@ -111,8 +115,8 @@ public class IntakeTestingThing extends LinearOpMode {
             motor1Pos = motor1.getCurrentPosition();
             motor2Pos = motor2.getCurrentPosition();
 
-            motor1PDs.update(motor1Pos, deltaTime);
-            motor2PDs.update(motor2Pos, deltaTime);
+            motor1PDs.update(motor1Pos * IntakeTestConfig.motor1GearRatio, deltaTime);
+            motor2PDs.update(motor2Pos * IntakeTestConfig.motor2GearRatio, deltaTime);
 
             if (config.inputMap == null || !config.inputMap.getIntakeButton()) {
                 motor1Power = 0;
@@ -120,11 +124,11 @@ public class IntakeTestingThing extends LinearOpMode {
                 continue;
             }
 
-            motor1VelocityPID.setCoefficients(IntakeTestConfig.motor1Kp,IntakeTestConfig.motor1Ki,IntakeTestConfig.motor1Kd);
-            motor2VelocityPID.setCoefficients(IntakeTestConfig.motor2Kp,IntakeTestConfig.motor2Ki,IntakeTestConfig.motor2Kd);
+            motor1VelocityPID.setCoefficients(IntakeTestConfig.motor1Kp, IntakeTestConfig.motor1Ki, IntakeTestConfig.motor1Kd);
+            motor2VelocityPID.setCoefficients(IntakeTestConfig.motor2Kp, IntakeTestConfig.motor2Ki, IntakeTestConfig.motor2Kd);
 
-            motor1Power = motor1VelocityPID.runPID(IntakeTestConfig.motor1TargetVelocityRPM, motor1PDs.getVelocity() * IntakeTestConfig.motor1GearRatio, deltaTime);
-            motor2Power = motor2VelocityPID.runPID(IntakeTestConfig.motor2TargetVelocityRPM, motor2PDs.getVelocity() * IntakeTestConfig.motor2GearRatio, deltaTime);
+            motor1Power = motor1VelocityPID.runPID(IntakeTestConfig.motor1TargetVelocityRPM, motor1PDs.getVelocity(), deltaTime);
+            motor2Power = motor2VelocityPID.runPID(IntakeTestConfig.motor2TargetVelocityRPM, motor2PDs.getVelocity(), deltaTime);
 
 
         }
