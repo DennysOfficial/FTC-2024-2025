@@ -31,5 +31,6 @@ public class DeviceConfig {
     public final String intakeMotor = "suck";
 
     public final String flapServo = "Flap";
+    public final String wristServo = "Wrist";
 
 }

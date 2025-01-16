@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Timer;
-
+@Config
 public class ActiveIntakeMotor {
 
     OpMode opMode;
@@ -16,6 +17,10 @@ public class ActiveIntakeMotor {
     DcMotor spinnyMotor;
 
     Servo flapServo;
+
+    Servo wristServo;
+
+    public static float wristServoPosition = 0;
 
     float intakeSpeed = -1;
     float outtakeSpeed = 1;
@@ -29,6 +34,7 @@ public class ActiveIntakeMotor {
         this.config = config;
         spinnyMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.intakeMotor);
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
+        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
     }
 
     Timer stopTimer = null;
@@ -49,6 +55,7 @@ public class ActiveIntakeMotor {
     public void directControl() {
         wheelControl();
         flapControl();
+        wristServo.setPosition(wristServoPosition);
     }
 
     public void wheelControl() {
