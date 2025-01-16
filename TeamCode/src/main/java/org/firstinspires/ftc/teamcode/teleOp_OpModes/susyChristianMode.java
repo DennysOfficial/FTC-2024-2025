@@ -40,10 +40,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -79,11 +82,20 @@ public class susyChristianMode extends LinearOpMode {
 
         RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        LeftPivot spinnyBitL = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
         spinnyBit.assignLift(rightLift);
         rightLift.assignPivot(spinnyBit);
 
+        spinnyBitL.assignLift(leftLift);
+        leftLift.assignPivot(spinnyBitL);
+
 
         ActiveIntakeMotor intake = new ActiveIntakeMotor(this, activeConfig);
+
+        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
 
         waitForStart();
@@ -137,7 +149,19 @@ public class susyChristianMode extends LinearOpMode {
                 if (rightLift.getPosition() < 20)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(71, 1);
-            }// presets
+            }
+
+            if (gamepad2.dpad_up) {
+                grabber.Score();
+                leftLift.setTargetPosition(0);
+                spinnyBitL.setTargetPosition(0);
+            }
+
+            if (gamepad2.dpad_down) {
+                grabber.Collect();
+                leftLift.setTargetPosition(0);
+                spinnyBitL.setTargetPosition(0);
+            }
 
 
             // make the arm smack into the ground and intake
