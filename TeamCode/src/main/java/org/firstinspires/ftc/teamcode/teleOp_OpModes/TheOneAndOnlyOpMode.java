@@ -42,9 +42,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -84,7 +82,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         rightLift.assignPivot(spinnyBit);
 
 
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+        ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();

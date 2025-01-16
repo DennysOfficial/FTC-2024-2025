@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Timer;
 
-public class ActiveIntake {
+public class ActiveIntakeServo {
 
     OpMode opMode;
     RobotConfig config;
@@ -24,10 +24,10 @@ public class ActiveIntake {
     double flapClosed = 0.9;
 
 
-    public ActiveIntake(OpMode opMode, RobotConfig config) {
+    public ActiveIntakeServo(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
-        spinnyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.grabberServo);
+        spinnyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.intakeServo);
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
     }
 
