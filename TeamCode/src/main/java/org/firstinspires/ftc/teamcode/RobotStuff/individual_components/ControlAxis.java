@@ -87,7 +87,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                setTargetPosition(getPosition());
+                targetPosition = Double.NaN;
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -335,6 +335,9 @@ public abstract class ControlAxis {  //schrödinger's code
         updateDeltaTime();
         updateCachedPosition();
         positionDerivatives.update(getPosition(), deltaTime);
+
+        if(Double.isNaN(targetPosition))
+            setTargetPosition(getPosition());
 
 
         if (config.inputMap != null && config.inputMap.getUnAbort())
