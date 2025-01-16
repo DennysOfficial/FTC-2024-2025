@@ -24,12 +24,12 @@ public class PassiveGrabber {
     }
 
     public void Score() {
-        wristPos = 0.12;
+        wristPos = 0.8;
         elbowPos = 0.3;
     }
 
     public void Collect() {
-        wristPos = 0.8;
+        wristPos = 0.12;
     }
 
     public void setPosition(double elbowPos, double wristPos) {
