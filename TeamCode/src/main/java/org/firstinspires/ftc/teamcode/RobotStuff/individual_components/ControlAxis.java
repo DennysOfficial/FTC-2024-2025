@@ -222,7 +222,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     /**
-     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe idk bro
+     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts, maybe, idk bro
      */
     void adjustOffsetForPhysicalLimits() {
         if (getPosition() > physicalLimits.getUpper()) {
