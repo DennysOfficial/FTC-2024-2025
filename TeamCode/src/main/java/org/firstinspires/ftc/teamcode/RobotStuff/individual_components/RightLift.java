@@ -95,7 +95,7 @@ public class RightLift extends ControlAxis {
 
 
     public RightLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "Lift", "inches", (19.25-55)/(-44-2560));
+        super(defaultControlMode, opMode, config, "RightLift", "inches", (19.25-55)/(-44-2560));
 
         softLimits = new Range<>(0.5, 34.69);
 

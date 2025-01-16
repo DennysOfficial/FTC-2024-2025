@@ -50,7 +50,7 @@ public class LeftPivot extends ControlAxis{
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
+        super(defaultControlMode, opMode, config, "LeftPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-40.0, 97.0);
     }

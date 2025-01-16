@@ -49,7 +49,7 @@ public class RightPivot extends ControlAxis{
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
+        super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-40.0, 97.0);
     }
