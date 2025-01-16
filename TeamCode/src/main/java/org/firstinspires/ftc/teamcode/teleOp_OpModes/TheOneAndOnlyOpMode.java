@@ -44,6 +44,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
@@ -84,8 +85,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
+        double e;
 
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+
+        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
 
         waitForStart();
@@ -140,6 +143,29 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
 
 
+            if (gamepad2.dpad_up) {
+                grabber.Score();
+                spinnyBit.fancyMoveToPosition(21.15, 0.5);
+                lift.setTargetPosition(5.12);
+            }
+
+
+            if (gamepad2.dpad_down) {
+                grabber.Collect();
+            }
+
+
+            if (gamepad2.dpad_left) {
+                e = grabber.getElbowPos();
+                grabber.setElbowPos(e + 0.01);
+            }
+
+            if (gamepad2.dpad_right) {
+                e = grabber.getElbowPos();
+                grabber.setElbowPos(e - 0.01);
+            }
+
+
             // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
@@ -160,7 +186,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            intake.directControl();
+            grabber.Update();
+
+            telemetry.addData("ElbowPos:", grabber.getElbowPos());
 
 
             telemetry.update();

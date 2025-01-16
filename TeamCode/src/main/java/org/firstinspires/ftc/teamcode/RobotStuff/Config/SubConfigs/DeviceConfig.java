@@ -31,4 +31,8 @@ public class DeviceConfig {
 
     public final String flapServo = "Flap";
 
+    public final String elbowServo = "Elbow";
+
+    public final String wristServo = "Wrist";
+
 }

@@ -279,7 +279,7 @@ public abstract class ControlAxis {  //schrödinger's code
         initMotors();
 
         updateCachedPosition();
-        setControlMode(defaultControlMode);
+        setControlModeUnsafe(defaultControlMode);
 
         initPid();
         positionDerivatives = new PositionDerivatives(getPosition());
