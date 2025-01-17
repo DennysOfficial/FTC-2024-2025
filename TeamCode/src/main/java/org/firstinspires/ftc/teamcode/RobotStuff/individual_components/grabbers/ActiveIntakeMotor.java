@@ -22,11 +22,11 @@ public class ActiveIntakeMotor {
 
     public static float wristServoPosition = 0;
 
-    float intakeSpeed = -1;
-    float outtakeSpeed = 1;
+    public static float intakeSpeed = -1;
+    public static float outtakeSpeed = 1;
 
-    double flapOpen = 0;
-    double flapClosed = 0.9;
+    public static double flapOpen = 0;
+    public static double flapClosed = 0.9;
 
 
     public ActiveIntakeMotor(OpMode opMode, RobotConfig config) {
