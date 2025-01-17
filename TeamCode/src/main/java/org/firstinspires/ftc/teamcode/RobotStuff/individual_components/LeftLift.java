@@ -14,14 +14,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 @Config
 public class LeftLift extends ControlAxis {
 
-    RightPivot rightPivot;
+    LeftPivot leftPivot;
 
     final double retractedRadius = 10;
 
-    public void assignPivot(RightPivot rightPivot) {
-        if (rightPivot == null)
+    public void assignPivot(LeftPivot leftPivot) {
+        if (leftPivot == null)
             throw new NullPointerException("the pivot you tried to assign is null you goober");
-        this.rightPivot = rightPivot;
+        this.leftPivot = leftPivot;
     }
 
     public static double gCompMultiplier = 0.1;
@@ -77,10 +77,10 @@ public class LeftLift extends ControlAxis {
 
     @Override
     double getStaticFeedforward(double targetDirection) {
-        if (rightPivot == null)
+        if (leftPivot == null)
             throw new NullPointerException("run the assign pivot method before running anything else");
 
-        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) + Math.cos(Math.toRadians(rightPivot.getPosition())) * gCompMultiplier;
+        return staticFrictionForce(targetDirection, staticFrictionCoefficient, staticThreshold) + Math.cos(Math.toRadians(leftPivot.getPosition())) * gCompMultiplier;
     }
 
     @Override
@@ -105,13 +105,13 @@ public class LeftLift extends ControlAxis {
     double previousRightPivotTargetPosition = Double.NaN;
     @Override
     public void setTargetPosition(double targetPosition) {
-        if (rightPivot == null)
+        if (leftPivot == null)
             throw new NullPointerException("run the assign pivot method before setting target position");
 
-        if (targetPosition == getTargetPosition() && previousRightPivotTargetPosition == (previousRightPivotTargetPosition = rightPivot.getTargetPosition()))
+        if (targetPosition == getTargetPosition() && previousRightPivotTargetPosition == (previousRightPivotTargetPosition = leftPivot.getTargetPosition()))
             return;
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getTargetPosition())) - retractedRadius;
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(leftPivot.getTargetPosition())) - retractedRadius;
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 
