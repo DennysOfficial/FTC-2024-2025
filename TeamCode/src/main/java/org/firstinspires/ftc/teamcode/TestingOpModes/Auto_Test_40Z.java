@@ -152,7 +152,7 @@ public class Auto_Test_40Z extends OpMode{
                 .addPath(new BezierCurve(scorePoint, barPointControl, barPoint))
                 .setConstantHeadingInterpolation(Math.toRadians(270))
                 .build();
-        //TODO: Lift values are ESTIMATES, any comments in this codeblock are spots where lift code is needed
+        //TODO: Lift values are ESTIMATES
 
         automous.addPath(-10, 33, toScore1, 0, 2); //1 - Score first sample
 
@@ -186,7 +186,7 @@ public class Auto_Test_40Z extends OpMode{
 
         automous.addPath(-10, 33, toScore3, 0, 3); //7 - Score third sample
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 7, false));
+        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 7, false)); //Put arm in scoring position
 
 
         automous.addPath(90, 5, toSample3, 0, 3); //8 - Collect fourth sample
