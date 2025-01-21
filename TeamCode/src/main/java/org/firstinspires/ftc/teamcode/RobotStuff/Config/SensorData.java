@@ -31,7 +31,7 @@ public class SensorData {
         return null;
     }
     VoltageSensor batteryVoltageSensor;
-    double batteryVoltage = 12;
+    double batteryVoltage;
     public double getBatteryVoltage() {
         return batteryVoltage;
     }

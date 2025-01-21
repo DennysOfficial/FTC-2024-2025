@@ -2,14 +2,16 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
@@ -20,9 +22,15 @@ public class Automous{
 
     private Follower follower;
 
-    Lift lift;
-    Pivot pivot;
-    ActiveIntake intake;
+    LeftLift leftLift;
+    LeftPivot leftPivot;
+
+    RightLift rightLift;
+    RightPivot rightPivot;
+
+    ActiveIntakeMotor intake;
+    PassiveGrabber grabber;
+
     RobotConfig config;
 
     ArrayList<PathDirectory> pathDirectory = new ArrayList<PathDirectory>(0);
@@ -40,10 +48,12 @@ public class Automous{
     /**
      * A class for easily storing and executing autonomous routines.
      */
-    public Automous(OpMode opmode, Lift lift, Pivot pivot, ActiveIntake activeIntake, RobotConfig robotConfig, Follower follower) {
+    public Automous(OpMode opmode, LeftLift leftLift, LeftPivot leftPivot, RightLift rightLift, RightPivot rightPivot, ActiveIntakeMotor activeIntake, PassiveGrabber grabber, RobotConfig robotConfig, Follower follower) {
         currentOpMode = opmode;
-        this.lift = lift;
-        this.pivot = pivot;
+        this.leftLift = leftLift;
+        this.leftPivot = leftPivot;
+        this.rightLift = rightLift;
+        this.rightPivot = rightPivot;
         intake = activeIntake;
         config = robotConfig;
         this.follower = follower;
@@ -51,15 +61,14 @@ public class Automous{
 
     /**
      * Add a path to storage, to be run later.
-     * @param pivotPosSample Pivot position at the beginning of the path. Note that the pivot will only start moving to this position at the start of the path and may take some time to reach it.
-     * @param liftPosSample Lift position at the beginning of the path. Note that the lift will only start moving to this position at the start of the path and may take some time to reach it.
+     * @param pivotPosSample Pivot position at the end of the path. Note that the pivot will only start moving to this position at the end of the path and may take some time to reach it.
+     * @param liftPosSample Lift position at the end of the path. Note that the lift will only start moving to this position at the end of the path and may take some time to reach it.
      * @param path The path for the robot to follow.
-     * @param pivotPosSpecimen Pivot position at the end of the path. Note that the pivot will only start moving to this position at the end of the path and may take some time to reach it.
-     * @param liftPosSpecimen Lift position at the end of the path. Note that the lift will only start moving to this position at the end of the path and may take some time to reach it.
+     * @param armPosSpecimen 0 = Rest, 1 = Collect, 2 = Score.
      * @param timeout Time in seconds to move on to the next path. It is a failsafe to ensure that the rest of the routine is not compromised upon failure to reach the target point.
      */
-    public void addPath(double pivotPosSample, double liftPosSample, PathChain path, double pivotPosSpecimen, double liftPosSpecimen, double timeout) {
-        pathDirectory.add(new PathDirectory(pivotPosSample, liftPosSample, path, pivotPosSpecimen, liftPosSpecimen, timeout));
+    public void addPath(double pivotPosSample, double liftPosSample, PathChain path, int armPosSpecimen, double timeout) {
+        pathDirectory.add(new PathDirectory(pivotPosSample, liftPosSample, path, armPosSpecimen, timeout));
     }
 
     //TODO: Resolve placeholder comments
@@ -79,17 +88,33 @@ public class Automous{
         for (LiftTimeStamp current : liftTimeStamps) {
             if (current.getTime() <= pathTimer.getElapsedTimeSeconds() && !current.hasBeenRun() && current.getPath() == listPointer + 1) {
                 if (current.usesSpecimenLift()) {
-                    //Specimen lift code fo brr
+                    switch (currentPath.getArmPosSpecimen()) {
+                        case 0:
+                            rightLift.setTargetPosition(0);
+                            rightPivot.setTargetPosition(0);
+                            grabber.Rest();
+                            break;
+                        case 1:
+                            rightLift.setTargetPosition(0);
+                            rightPivot.setTargetPosition(0);
+                            grabber.Collect();
+                            break;
+                        case 2:
+                            rightLift.setTargetPosition(0);
+                            rightPivot.setTargetPosition(0);
+                            grabber.Score();
+                            break;
+                    }
                 } else {
-                    lift.setTargetPosition(current.getLiftPos());
-                    pivot.setTargetPosition(current.getPivotPos());
+                    leftLift.setTargetPosition(current.getLiftPos());
+                    leftPivot.setTargetPosition(current.getPivotPos());
                 }
             }
         }
 
         if (currentPath.getPath() != null && follower.atParametricEnd() || currentPath.getTimeout() <= pathTimer.getElapsedTimeSeconds()) {
-            pivot.setTargetPosition(currentPath.getPPA());
-            lift.setTargetPosition(currentPath.getLPA());
+            leftLift.setTargetPosition(currentPath.getPPA());
+            leftPivot.setTargetPosition(currentPath.getLPA());
             //Specimen lift code go brr
             listPointer = listPointer + 1;
             pathTimer.resetTimer();
@@ -113,8 +138,8 @@ public class Automous{
 
     public void update() {
         follower.update();
-        lift.update();
-        pivot.update();
+        leftLift.update();
+        leftPivot.update();
         intake.update();
     }
 

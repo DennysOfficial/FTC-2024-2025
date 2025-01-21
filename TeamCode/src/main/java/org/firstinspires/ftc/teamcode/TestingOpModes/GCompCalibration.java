@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
@@ -37,9 +37,9 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftLift lift = new LeftLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);

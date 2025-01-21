@@ -27,8 +27,14 @@ public class DeviceConfig {
 
     public final String rightLift = "LiftR";
 
-    public final String grabberServo = "Pinch";
+    public final String intakeServo = "suck";
+    public final String intakeMotor = "suck";
 
     public final String flapServo = "Flap";
+    public final String wristServo = "Wrist";
+
+    public final String elbowServo = "Elbow";
+    public final String spWristServo = "SpWrist";
+
 
 }

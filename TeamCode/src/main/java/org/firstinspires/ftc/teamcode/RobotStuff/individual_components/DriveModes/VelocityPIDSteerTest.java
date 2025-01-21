@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 
-@Config
+//@Config
 public class VelocityPIDSteerTest extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = -0.0025;

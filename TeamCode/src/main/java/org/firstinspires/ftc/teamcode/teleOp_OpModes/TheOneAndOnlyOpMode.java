@@ -35,17 +35,15 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
@@ -91,9 +89,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        LeftLift lift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
@@ -101,7 +99,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+        ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
 

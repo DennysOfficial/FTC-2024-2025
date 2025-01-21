@@ -10,11 +10,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
-import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
+import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.TimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -77,12 +81,17 @@ public class Auto_Test_05Z extends OpMode{
 
     double deltaTime;
 
-    Lift lift;
-    Pivot pivot;
-    ActiveIntake intake;
+    LeftLift leftLift;
+    LeftPivot leftPivot;
+    ActiveIntakeMotor intake;
+
+    RightLift rightLift;
+    RightPivot rightPivot;
+    PassiveGrabber grabber;
+
     RobotConfig config;
 
-    AutomousNoLift automous; //CHANGE THIS WHEN NEW ROBOT
+    Automous automous; //CHANGE THIS WHEN NEW ROBOT
 
     @Override
     public void init() {
@@ -98,17 +107,21 @@ public class Auto_Test_05Z extends OpMode{
 
         config = new RobotConfig(this);
 
-        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config);
-        pivot = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
-        intake = new ActiveIntake(this, config);
+        leftLift = new LeftLift(ControlAxis.ControlMode.positionControl,this, config);
+        leftPivot = new LeftPivot(ControlAxis.ControlMode.positionControl,this, config);
+        intake = new ActiveIntakeMotor(this, config);
 
-        lift.assignPivot(pivot);
-        pivot.assignLift(lift);
+        rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
+        rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
+        grabber = new PassiveGrabber(this, config);
+
+        leftLift.assignPivot(leftPivot);
+        leftPivot.assignLift(leftLift);
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new AutomousNoLift(this, lift, pivot, intake, config, follower);
+        automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
     }
 
 
@@ -173,79 +186,88 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         //TODO: Lift values are ESTIMATES, any comments in this codeblock are spots where lift code is needed
-        automous.addPath(0, 0, toRung1, 25, 10, 5); //1
+        automous.addPath(0, 0, toRung1, 2, 5); //1
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to scoring position)
+            grabber.Score();
+            ScorePos();
         }, 0, 1));
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0, 1, true));
-        automous.addPath(90, 10, toSample1, 0, 0, 5); //2
-        automous.addLiftTimeStamp(new LiftTimeStamp(0,0, 2, 2, true));
+        automous.addPath(90, 10, toSample1, 0, 5); //2
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to collecting position)
+            grabber.Collect();
+            CollectPos();
         }, 1, 2));
-        automous.addPath(0, 0, null, 0, 0, 5); //3
+        automous.addPath(0, 0, null, 1, 5); //3
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3, false));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
+            intake.activate();
         }, 1, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
+            intake.stow();
         }, 5, 3));
-        automous.addPath(0, 0, toSample2, 90, 10, 5); //4
-        automous.addPath(0, 0, null, 0, 0, 5); //5
+        automous.addPath(0, 0, toSample2, 1, 5); //4
+        automous.addPath(0, 0, null, 1, 5); //5
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5, false));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
+            intake.activate();
         }, 1, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
+            intake.stow();
         }, 5, 5));
-        automous.addPath(0, 0, toSample3, 90, 10, 5); //6
-        automous.addPath(0, 0, null, 0, 0, 5); //7
+        automous.addPath(0, 0, toSample3, 1, 5); //6
+        automous.addPath(0, 0, null, 1, 5); //7
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7, false));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
+            intake.activate();
         }, 1, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
+            intake.stow();
         }, 5, 7));
-        automous.addPath(0, 0, toPickup1, 0, 0, 5); //8
-        automous.addPath(0, 0, toRung2, 25, 10, 5); //9
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 9, true));
+        automous.addPath(0, 0, toPickup1, 2, 5); //8
+        automous.addPath(0, 0, toRung2, 2, 5); //9
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to scoring position)
+            grabber.Score();
+            ScorePos();
         }, 0.5, 9));
-        automous.addPath(0, 0, toPickup2, 0, 0, 5);//10
+        automous.addPath(0, 0, toPickup2, 2, 5);//10
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to collecting position)
+            grabber.Collect();
+            CollectPos();
         }, 1, 10));
-        automous.addPath(0, 0, toRung3, 25, 10, 5); //11
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 11, true));
+        automous.addPath(0, 0, toRung3, 2, 5); //11
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to scoring position)
+            grabber.Score();
+            ScorePos();
         },0.5, 11));
-        automous.addPath(0, 0, toPickup3, 0, 0, 5);//12
+        automous.addPath(0, 0, toPickup3, 2, 5);//12
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to collecting position)
+            grabber.Collect();
+            CollectPos();
         }, 1, 12));
-        automous.addPath(0, 0, toRung4, 25, 10, 5); //13
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 13, true));
+        automous.addPath(0, 0, toRung4, 2, 5); //13
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to scoring position)
+            grabber.Score();
+            ScorePos();
         }, 0.5, 13));
-        automous.addPath(0, 0, toPickup4, 0, 0, 5);//14
+        automous.addPath(0, 0, toPickup4, 2, 5);//14
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to collecting position)
+            grabber.Collect();
+            CollectPos();
         }, 1, 14));
-        automous.addPath(0, 0, toRung5, 25, 10, 5); //15
-        automous.addLiftTimeStamp(new LiftTimeStamp(25, 10, 0.5, 15, true));
+        automous.addPath(0, 0, toRung5, 2, 5); //15
         automous.addTimeStamp(new TimeStamp(() -> {
-            //Specimen wrist go brr (move to scoring position)
+            grabber.Score();
+            ScorePos();
         }, 0.5, 15));
-        automous.addPath(90, 33, toPark, 0, 0, 5);//16
+        automous.addPath(90, 33, toPark, 1, 5);//16
         automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16, false));
     }
 
@@ -272,6 +294,21 @@ public class Auto_Test_05Z extends OpMode{
         telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
         telemetry.update();
+    }
+
+    public void ScorePos() {
+        rightLift.setTargetPosition(0);
+        rightPivot.setTargetPosition(0);
+    }
+
+    public void CollectPos() {
+        rightLift.setTargetPosition(0);
+        rightPivot.setTargetPosition(0);
+    }
+
+    public void RestPos() {
+        rightLift.setTargetPosition(0);
+        rightPivot.setTargetPosition(0);
     }
 
 

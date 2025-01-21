@@ -87,7 +87,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                setTargetPosition(getPosition());
+                targetPosition = Double.NaN;
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -222,7 +222,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     /**
-     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe idk bro
+     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts, maybe, idk bro
      */
     void adjustOffsetForPhysicalLimits() {
         if (getPosition() > physicalLimits.getUpper()) {
@@ -271,17 +271,17 @@ public abstract class ControlAxis {  //schrödinger's code
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
-        this.defaultControlMode = defaultControlMode;
-        this.controlMode = defaultControlMode;
-
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
+        this.defaultControlMode = defaultControlMode;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
+        initMotors();
+
+        updateCachedPosition();
+        setControlMode(defaultControlMode);
 
         initPid();
-        initMotors();
-        updateCachedPosition();
         positionDerivatives = new PositionDerivatives(getPosition());
     }
 
@@ -335,6 +335,9 @@ public abstract class ControlAxis {  //schrödinger's code
         updateDeltaTime();
         updateCachedPosition();
         positionDerivatives.update(getPosition(), deltaTime);
+
+        if(Double.isNaN(targetPosition))
+            setTargetPosition(getPosition());
 
 
         if (config.inputMap != null && config.inputMap.getUnAbort())

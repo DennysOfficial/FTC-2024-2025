@@ -9,17 +9,15 @@ public class PathDirectory {
 
     private PathChain path;
 
-    private double PPE;
-    private double LPE;
+    private int armPosSpecimen;
 
     private double timeout;
 
-    public PathDirectory(double pivotPosSample, double liftPosSample, PathChain path, double pivotPosSpecimen, double liftPosSpecimen, double timeout) {
+    public PathDirectory(double pivotPosSample, double liftPosSample, PathChain path, int armPosSpecimen, double timeout) {
         setPPA(pivotPosSample);
         setLPA(liftPosSample);
         setPath(path);
-        setPPE(pivotPosSpecimen);
-        setLPE(liftPosSpecimen);
+        setArmPosSpecimen(armPosSpecimen);
         setTimeout(timeout);
     }
 
@@ -39,12 +37,8 @@ public class PathDirectory {
         this.timeout = timeout;
     }
 
-    public void setPPE(double PPE) {
-        this.PPE = PPE;
-    }
-
-    public void setLPE(double LPE) {
-        this.LPE = LPE;
+    public void setArmPosSpecimen(int armPosSpecimen) {
+        this.armPosSpecimen = armPosSpecimen;
     }
 
     public double getPPA() {
@@ -59,12 +53,8 @@ public class PathDirectory {
         return path;
     }
 
-    public double getPPE() {
-        return PPE;
-    }
-
-    public double getLPE() {
-        return LPE;
+    public int getArmPosSpecimen() {
+        return armPosSpecimen;
     }
 
     public double getTimeout() {

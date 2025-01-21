@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -78,9 +78,9 @@ public class funny extends OpMode {
 
     double deltaTime;
 
-    Lift lift;
-    Pivot spinyBit;
-    ActiveIntake intake;
+    LeftLift lift;
+    LeftPivot spinyBit;
+    ActiveIntakeServo intake;
     RobotConfig config;
 
     @Override
@@ -97,9 +97,9 @@ public class funny extends OpMode {
 
         config = new RobotConfig(this);
 
-        lift = new Lift(ControlAxis.ControlMode.positionControl, this, config);
-        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl, this, config);
-        intake = new ActiveIntake(this, config);
+        lift = new LeftLift(ControlAxis.ControlMode.positionControl, this, config);
+        spinyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, config);
+        intake = new ActiveIntakeServo(this, config);
 
         lift.assignPivot(spinyBit);
         spinyBit.assignLift(lift);
@@ -246,7 +246,7 @@ public class funny extends OpMode {
         stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
 
         spinyBit.update();
-        stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
+        stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop leftPivot update Time ----------------------------");
 
         follower.update();
         stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop follower update Time ----------------------------");

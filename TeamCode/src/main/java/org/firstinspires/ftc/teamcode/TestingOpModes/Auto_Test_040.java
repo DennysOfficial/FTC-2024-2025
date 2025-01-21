@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -14,7 +15,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Disabled
@@ -185,13 +185,13 @@ public class Auto_Test_040 extends OpMode{
 
         //lift.setControlMode(ControlAxis.ControlMode.positionControl);
 
-        //Pivot pivot = new Pivot(this, activeConfig, runtime);
+        //Pivot leftPivot = new Pivot(this, activeConfig, runtime);
 
-        //pivot.setControlMode(ControlAxis.ControlMode.positionControl);
+        //leftPivot.setControlMode(ControlAxis.ControlMode.positionControl);
 
         //Pincher pincher = new Pincher(this,activeConfig);
 
-        ActiveIntake intake = new ActiveIntake(this, activeConfig);
+        ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         RobotConfig config = new RobotConfig(this);

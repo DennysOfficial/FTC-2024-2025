@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
@@ -54,9 +54,9 @@ public class Auto_posFinder extends OpMode{
 
     double deltaTime;
 
-    Lift lift;
-    Pivot spinyBit;
-    ActiveIntake intake;
+    LeftLift lift;
+    LeftPivot spinyBit;
+    ActiveIntakeServo intake;
     RobotConfig config;
 
     @Override
@@ -73,9 +73,9 @@ public class Auto_posFinder extends OpMode{
 
         config = new RobotConfig(this);
 
-        lift = new Lift(ControlAxis.ControlMode.positionControl,this, config);
-        spinyBit = new Pivot(ControlAxis.ControlMode.positionControl,this, config);
-        intake = new ActiveIntake(this, config);
+        lift = new LeftLift(ControlAxis.ControlMode.positionControl,this, config);
+        spinyBit = new LeftPivot(ControlAxis.ControlMode.positionControl,this, config);
+        intake = new ActiveIntakeServo(this, config);
 
         lift.assignPivot(spinyBit);
         spinyBit.assignLift(lift);
