@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
+import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.TimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -83,7 +84,7 @@ public class Auto_Test_40Z extends OpMode{
 
     RobotConfig config;
 
-    Automous automous; //CHANGE THIS WHEN NEW ROBOT
+    AutomousNoLift automous; //CHANGE THIS WHEN NEW ROBOT
 
     @Override
     public void init() {
@@ -113,7 +114,7 @@ public class Auto_Test_40Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
+        automous = new AutomousNoLift(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
     }
 
 
@@ -156,7 +157,7 @@ public class Auto_Test_40Z extends OpMode{
 
         automous.addPath(-10, 33, toScore1, 0, 2); //1 - Score first sample
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 0, 1, false)); //Put arm in scoring position
+        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 0, 1)); //Put arm in scoring position
 
 
         automous.addPath(90, 5, toSample1, 0, 3); //2 - Collect second sample
@@ -171,7 +172,7 @@ public class Auto_Test_40Z extends OpMode{
 
         automous.addPath(-10, 33, toScore2, 0, 3); //4 - Score second sample
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 4, false)); //Put arm in scoring position
+        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 4)); //Put arm in scoring position
 
 
         automous.addPath(90, 5, toSample2, 0, 3); //5 - Collect third sample
@@ -186,7 +187,7 @@ public class Auto_Test_40Z extends OpMode{
 
         automous.addPath(-10, 33, toScore3, 0, 3); //7 - Score third sample
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 7, false)); //Put arm in scoring position
+        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 7)); //Put arm in scoring position
 
 
         automous.addPath(90, 5, toSample3, 0, 3); //8 - Collect fourth sample
@@ -201,12 +202,12 @@ public class Auto_Test_40Z extends OpMode{
 
         automous.addPath(-10, 33, toScore4, 0, 3); //10 - Score fourth sample
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 10, false)); //Put arm in scoring position
+        automous.addLiftTimeStamp(new LiftTimeStamp(-10, 33, 1, 10)); //Put arm in scoring position
 
 
         automous.addPath(5, 5, toBar, 0, 4); //11 - Move to bar
 
-        automous.addLiftTimeStamp(new LiftTimeStamp(5, 5, 2, 11, false)); //Touch bar with arm
+        automous.addLiftTimeStamp(new LiftTimeStamp(5, 5, 2, 11)); //Touch bar with arm
     }
 
     @Override

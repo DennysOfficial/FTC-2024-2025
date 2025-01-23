@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
+import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.TimeStamp;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -91,7 +92,7 @@ public class Auto_Test_05Z extends OpMode{
 
     RobotConfig config;
 
-    Automous automous; //CHANGE THIS WHEN NEW ROBOT
+    AutomousNoLift automous; //CHANGE THIS WHEN NEW ROBOT
 
     @Override
     public void init() {
@@ -121,7 +122,7 @@ public class Auto_Test_05Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
+        automous = new AutomousNoLift(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
     }
 
 
@@ -197,7 +198,7 @@ public class Auto_Test_05Z extends OpMode{
             CollectPos();
         }, 1, 2));
         automous.addPath(0, 0, null, 1, 5); //3
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3, false));
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
             intake.activate();
@@ -209,7 +210,7 @@ public class Auto_Test_05Z extends OpMode{
         }, 5, 3));
         automous.addPath(0, 0, toSample2, 1, 5); //4
         automous.addPath(0, 0, null, 1, 5); //5
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5, false));
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
             intake.activate();
@@ -221,7 +222,7 @@ public class Auto_Test_05Z extends OpMode{
         }, 5, 5));
         automous.addPath(0, 0, toSample3, 1, 5); //6
         automous.addPath(0, 0, null, 1, 5); //7
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7, false));
+        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
             intake.activate();
@@ -268,7 +269,7 @@ public class Auto_Test_05Z extends OpMode{
             ScorePos();
         }, 0.5, 15));
         automous.addPath(90, 33, toPark, 1, 5);//16
-        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16, false));
+        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
     }
 
     @Override

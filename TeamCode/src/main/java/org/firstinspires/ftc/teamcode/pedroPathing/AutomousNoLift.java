@@ -3,22 +3,21 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.ArrayList;
 
 
-public class Automous{
+public class AutomousNoLift {
 
     private Follower follower;
 
@@ -48,7 +47,7 @@ public class Automous{
     /**
      * A class for easily storing and executing autonomous routines.
      */
-    public Automous(OpMode opmode, LeftLift leftLift, LeftPivot leftPivot, RightLift rightLift, RightPivot rightPivot, ActiveIntakeMotor activeIntake, PassiveGrabber grabber, RobotConfig robotConfig, Follower follower) {
+    public AutomousNoLift(OpMode opmode, LeftLift leftLift, LeftPivot leftPivot, RightLift rightLift, RightPivot rightPivot, ActiveIntakeMotor activeIntake, PassiveGrabber grabber, RobotConfig robotConfig, Follower follower) {
         currentOpMode = opmode;
         this.leftLift = leftLift;
         this.leftPivot = leftPivot;
@@ -75,45 +74,22 @@ public class Automous{
     public void routine() {
         currentPath = pathDirectory.get(listPointer);
 
-        switch (currentPath.getArmPosSpecimen()) {
-            case 0:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Rest();
-                break;
-            case 1:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Collect();
-                break;
-            case 2:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Score();
-                break;
-        }
-
         if (currentPath.getPath() != null) {
             follower.followPath(currentPath.getPath());
         }
 
         for (TimeStamp current : timeStamps) {
             if (current.getTime() <= pathTimer.getElapsedTimeSeconds() && !current.hasBeenRun() && current.getPath() == listPointer + 1) {
-                current.run();
+                //current.run();
             }
         }
 
         for (LiftTimeStamp current : liftTimeStamps) {
             if (current.getTime() <= pathTimer.getElapsedTimeSeconds() && !current.hasBeenRun() && current.getPath() == listPointer + 1) {
-                leftLift.setTargetPosition(current.getLiftPos());
-                leftPivot.setTargetPosition(current.getPivotPos());
-
             }
         }
 
         if (currentPath.getPath() != null && follower.atParametricEnd() || currentPath.getTimeout() <= pathTimer.getElapsedTimeSeconds()) {
-            leftLift.setTargetPosition(currentPath.getPPA());
-            leftPivot.setTargetPosition(currentPath.getLPA());
             //Specimen lift code go brr
             listPointer = listPointer + 1;
             pathTimer.resetTimer();
