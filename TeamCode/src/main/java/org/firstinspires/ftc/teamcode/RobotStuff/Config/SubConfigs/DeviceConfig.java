@@ -8,7 +8,7 @@ public class DeviceConfig {
 
 
     public final String frontLeftDrive = "FL";
-    public final DcMotorSimple.Direction frontLeftDriveDir = DcMotorSimple.Direction.FORWARD;
+    public final DcMotorSimple.Direction frontLeftDriveDir = DcMotorSimple.Direction.REVERSE;
 
 
     public final String backRightDrive = "BR";
@@ -16,10 +16,14 @@ public class DeviceConfig {
 
 
     public final String backLeftDrive = "BL";
-    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.REVERSE;
+    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.FORWARD;
 
 
     public final String leftPivot = "PivotL";
+    public final String leftPivotServo1 = "PivotL1";
+    public final String leftPivotServo2 = "PivotL2";
+
+    public final String leftPivotEncoder = frontRightDrive;
 
     public final String rightPivot = "PivotR";
 
