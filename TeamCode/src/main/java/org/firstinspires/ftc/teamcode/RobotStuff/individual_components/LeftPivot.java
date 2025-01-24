@@ -6,6 +6,7 @@ import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,18 +17,19 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
 public class LeftPivot extends ControlAxis {
 
-    Servo servo1;
-    Servo servo2;
+    CRServo servo1;
+    CRServo servo2;
 
     DcMotor encoderMotor;
 
     @Override
     void setPower(double power) {
-
+        servo1.setPower(power);
+        servo2.setPower(power);
     }
 
     @Override
-            int getEncoder(){
+    int getEncoder() {
         return encoderMotor.getCurrentPosition();
     }
 
@@ -66,8 +68,8 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     protected void initMotors() {
-        servo1 = opMode.hardwareMap.get(Servo.class, config.deviceConfig.leftPivotServo1);
-        servo2 = opMode.hardwareMap.get(Servo.class, config.deviceConfig.leftPivotServo2);
+        servo1 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo1);
+        servo2 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo2);
         encoderMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.leftPivotEncoder);
     }
 

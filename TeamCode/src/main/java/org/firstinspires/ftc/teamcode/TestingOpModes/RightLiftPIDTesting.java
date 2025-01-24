@@ -14,12 +14,12 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 
 
-@TeleOp(name = "Pivot Pid Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
 @Disabled
-public class PivotPositionPIDTesting extends LinearOpMode {
+public class RightLiftPIDTesting extends LinearOpMode {
 
 
-    private final ElapsedTime runtime = new ElapsedTime();
+private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -31,17 +31,15 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
-
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
         spinnyBit.assignLift(rightLift);
         rightLift.assignPivot(spinnyBit);
-
 
         waitForStart();
         runtime.reset();
@@ -57,8 +55,9 @@ public class PivotPositionPIDTesting extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            spinnyBit.update();
             rightLift.update();
+
+            spinnyBit.update();
 
 
             telemetry.addData("Run Time: ", runtime.toString());
