@@ -69,7 +69,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.FORWARD);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -95,9 +95,9 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", (19.25-55)/(-44-2560));
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 1);
 
-        softLimits = new Range<>(0.5, 34.69);
+        //softLimits = new Range<>(0.5, 34.69);
 
         physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }

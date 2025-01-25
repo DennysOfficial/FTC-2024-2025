@@ -40,6 +40,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
@@ -81,6 +83,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         spinnyBit.assignLift(rightLift);
         rightLift.assignPivot(spinnyBit);
 
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
+
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
+
+        otherSpinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(otherSpinnyBit);
 
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
@@ -107,22 +115,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
+
             if (gamepad2.x) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(16, 1);
+                    spinnyBit.fancyMoveToPosition(-10, 3);
                 if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(12.5, 1);
-            }
-
-            if (gamepad2.y) {
-                if (rightLift.getPosition() < 15)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(-18, 0.69);
-
-
-                if (spinnyBit.getPosition() < 70)
-                    rightLift.setTargetPosition(33);
-
+                    rightLift.fancyMoveToPosition(12.5, 3);
             }
 
 
@@ -131,11 +129,11 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
                 if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
                     if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 1);
+                        spinnyBit.fancyMoveToPosition(0, 3);
 
                 if (rightLift.getPosition() < 20)
                     if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 1);
+                        spinnyBit.fancyMoveToPosition(71, 3);
             }// presets
 
 

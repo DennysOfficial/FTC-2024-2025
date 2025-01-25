@@ -8,7 +8,7 @@ public class DeviceConfig {
 
 
     public final String frontLeftDrive = "FL";
-    public final DcMotorSimple.Direction frontLeftDriveDir = DcMotorSimple.Direction.REVERSE;
+    public final DcMotorSimple.Direction frontLeftDriveDir = DcMotorSimple.Direction.FORWARD;
 
 
     public final String backRightDrive = "BR";
