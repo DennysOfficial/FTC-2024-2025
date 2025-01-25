@@ -24,8 +24,8 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     void setPower(double power) {
-        servo1.setPower(power);
-        servo2.setPower(power);
+        servo1.setPower(-power);
+        servo2.setPower(-power);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class LeftPivot extends ControlAxis {
 
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
+    static final double finalGearRatio = 1. / 10.; // rotations of final over rotations of encoder
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 

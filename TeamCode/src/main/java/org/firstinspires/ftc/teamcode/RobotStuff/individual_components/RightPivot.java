@@ -43,7 +43,7 @@ public class RightPivot extends ControlAxis{
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
+        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
 
         motors.setTargetPosition(0);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
