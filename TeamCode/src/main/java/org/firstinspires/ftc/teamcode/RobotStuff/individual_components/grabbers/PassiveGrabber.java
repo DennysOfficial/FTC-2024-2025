@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+@Config
 public class PassiveGrabber {
 
     Servo elbow;
@@ -13,8 +15,16 @@ public class PassiveGrabber {
     OpMode opmode;
     RobotConfig config;
 
-    double elbowPos = 0.12;
-    double wristPos = 0;
+    public static double elbowPosRest = 0.15;
+    public static double wristPosRest = 0.83;
+
+    public static double elbowPosRest1 = 0.5;
+
+    public static double wristPosScore = 0.83;
+    public static double elbowPosScore = 0.46;
+
+    public static double wristPosCollect = 0.16;
+    public static double elbowPosCollect = 0.57;
 
     public PassiveGrabber(OpMode opmode, RobotConfig config) {
         this.opmode = opmode;
@@ -24,47 +34,42 @@ public class PassiveGrabber {
     }
 
     public void Score() {
-        wristPos = 0.8;
-        elbowPos = 0.3;
+        wrist.setPosition(wristPosScore);
+        elbow.setPosition(elbowPosScore);
     }
 
     public void Collect() {
-        wristPos = 0.12;
+        wrist.setPosition(wristPosCollect);
+        elbow.setPosition(elbowPosCollect);
+    }
+
+    public void Rest() {
+        wrist.setPosition(wristPosRest);
+        elbow.setPosition(elbowPosRest);
     }
 
     public void setPosition(double elbowPos, double wristPos) {
-        this.elbowPos = elbowPos;
-        this.wristPos = wristPos;
+        wrist.setPosition(wristPos);
+        elbow.setPosition(elbowPos);
     }
 
     public void setElbowPos(double elbowPos) {
-        if (elbowPos >= 1) {
-            elbowPos = 1;
-        } else if (elbowPos <= 0) {
-            elbowPos = 0;
-        }
-        this.elbowPos = elbowPos;
+        elbow.setPosition(elbowPos);
     }
 
     public void setWristPos(double wristPos) {
-        if (wristPos >= 1) {
-            wristPos = 1;
-        } else if (wristPos <= 0) {
-            wristPos = 0;
-        }
-        this.wristPos = wristPos;
+        wrist.setPosition(wristPos);
     }
 
     public double getElbowPos() {
-        return elbowPos;
+        return elbow.getPosition();
     }
 
     public double getWristPos() {
-        return wristPos;
+        return wrist.getPosition();
     }
 
-    public void Update() {
-        elbow.setPosition(elbowPos);
-        wrist.setPosition(wristPos);
+    public double getElbowPosRest1() {
+        return elbowPosRest1;
     }
 }
