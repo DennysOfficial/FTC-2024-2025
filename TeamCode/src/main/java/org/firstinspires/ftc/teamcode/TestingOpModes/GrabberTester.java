@@ -29,12 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import androidx.core.math.MathUtils;
-
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -67,9 +63,13 @@ public class GrabberTester extends LinearOpMode {
 
         LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
 
-        LeftPivot spinnyBitL = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
+        LeftPivot leftPivot = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
 
-        PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, spinnyBitL);
+        leftLift.assignPivot(leftPivot);
+
+        leftPivot.assignLift(leftLift);
+
+        PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
         waitForStart();
 
         int lastInput = 1;
