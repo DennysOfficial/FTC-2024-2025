@@ -70,9 +70,8 @@ public class GrabberTester extends LinearOpMode {
         leftPivot.assignLift(leftLift);
 
         PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
-        waitForStart();
 
-        int lastInput = 1;
+        waitForStart();
 
         while (opModeIsActive()) {
             if (gamepad2.dpad_up) {
@@ -87,5 +86,6 @@ public class GrabberTester extends LinearOpMode {
                 grabber.Rest();
             }
         }
+
     }
 }
