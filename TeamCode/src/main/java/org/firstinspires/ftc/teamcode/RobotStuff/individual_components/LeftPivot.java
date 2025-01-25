@@ -47,7 +47,7 @@ public class LeftPivot extends ControlAxis {
     }
 
 
-    static final int encoderCountsPerRevMotor = 28;
+    static final int encoderCountsPerRevMotor = 8192;
     static final double finalGearRatio = 1. / 10.; // rotations of final over rotations of encoder
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
@@ -76,7 +76,7 @@ public class LeftPivot extends ControlAxis {
     public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-40.0, 97.0);
+        softLimits = new Range<>(-80.0, 50.0);
     }
 
     double previousRightLiftTargetPosition = Double.NaN;
@@ -99,14 +99,14 @@ public class LeftPivot extends ControlAxis {
 
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0;
+    public static double KpRetracted = 0.05;
     public static double KiRetracted = 0;
-    public static double KdRetracted = 0;
+    public static double KdRetracted = 0.0015;
 
     public static double velocityFeedforwardCoefficientExtended = 0;
-    public static double KpExtended = 0;
+    public static double KpExtended = 0.05;
     public static double KiExtended = 0;
-    public static double KdExtended = 0;
+    public static double KdExtended = 0.0045;
 
     @Override
     double getKp() {

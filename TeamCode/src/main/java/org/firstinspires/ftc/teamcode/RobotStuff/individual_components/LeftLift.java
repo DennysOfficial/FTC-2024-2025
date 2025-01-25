@@ -24,7 +24,7 @@ public class LeftLift extends ControlAxis {
         this.leftPivot = leftPivot;
     }
 
-    public static double gCompMultiplier = 0.1;
+    public static double gCompMultiplier = -0.069;
 
     public static double Kp = 0;
     public static double Ki = 0;
@@ -54,7 +54,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightLiftStick();
+        return (config.inputMap == null) ? 0 : (float) -config.inputMap.getRightLiftStick();
     }
 
     @Override
@@ -95,11 +95,11 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", 1);
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25/4056);
 
-        //softLimits = new Range<>(0.5, 34.69);
+        softLimits = new Range<>(0.5, 20.0);
 
-        physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
+        physicalLimits = new Range<>(0.0, 25.25);
     }
 
     double previousRightPivotTargetPosition = Double.NaN;
