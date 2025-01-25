@@ -16,7 +16,7 @@ public class DeviceConfig {
 
 
     public final String backLeftDrive = "BL";
-    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.FORWARD;
+    public final DcMotorSimple.Direction backLeftDriveDir = DcMotorSimple.Direction.REVERSE;
 
 
     public final String leftPivot = "PivotL";

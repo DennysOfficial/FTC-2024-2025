@@ -82,7 +82,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         rightLift.assignPivot(spinnyBit);
 
 
-        ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
+        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
@@ -161,7 +161,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            intake.directControl();
+            //intake.directControl();
 
 
             telemetry.update();

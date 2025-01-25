@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 
 
-@TeleOp(name = "Pivot Pid Test: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Right Pivot Pid", group = "Linear OpMode")
 @Disabled
 public class RightPivotPIDTesting extends LinearOpMode {
 

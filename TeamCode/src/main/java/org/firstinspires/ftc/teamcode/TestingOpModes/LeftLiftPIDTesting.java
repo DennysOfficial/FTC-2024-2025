@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
 
-@TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Left Lift PID", group = "Linear OpMode")
 //@Disabled
 public class LeftLiftPIDTesting extends LinearOpMode {
 

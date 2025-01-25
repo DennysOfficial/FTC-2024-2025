@@ -16,7 +16,6 @@ public class BasicMechanumDrive extends DriveModeBase {
 
     public BasicMechanumDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
