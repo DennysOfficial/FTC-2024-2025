@@ -86,6 +86,5 @@ public class GrabberTester extends LinearOpMode {
                 grabber.Rest();
             }
         }
-
     }
 }
