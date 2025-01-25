@@ -95,7 +95,7 @@ public class susyChristianMode extends LinearOpMode {
 
         ActiveIntakeMotor intake = new ActiveIntakeMotor(this, activeConfig);
 
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
+        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, leftLift, spinnyBitL);
 
 
         waitForStart();
