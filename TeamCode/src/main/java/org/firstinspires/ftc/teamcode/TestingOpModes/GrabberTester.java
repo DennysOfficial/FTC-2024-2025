@@ -38,6 +38,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 
 @TeleOp(name = "Grabber Tester", group = "Linear OpMode")
@@ -62,7 +65,11 @@ public class GrabberTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         RobotConfig config = new RobotConfig(this);
 
-        PassiveGrabber grabber = new PassiveGrabber(this, config);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
+
+        LeftPivot spinnyBitL = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
+
+        PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, spinnyBitL);
         waitForStart();
 
         int lastInput = 1;
