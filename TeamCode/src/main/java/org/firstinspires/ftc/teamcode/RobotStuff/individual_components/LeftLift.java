@@ -26,9 +26,9 @@ public class LeftLift extends ControlAxis {
 
     public static double gCompMultiplier = -0.069;
 
-    public static double Kp = 0;
+    public static double Kp = -2;
     public static double Ki = 0;
-    public static double Kd = 0;
+    public static double Kd = -0.03;
 
     public static double staticFrictionCoefficient = 0;
     public static double kineticFrictionCoefficient = 0;
@@ -54,7 +54,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) -config.inputMap.getRightLiftStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightLiftStick();
     }
 
     @Override
