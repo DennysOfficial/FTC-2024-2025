@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.Left;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
 
-@TeleOp(name = "Right gravity Compensation calibration: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Left Pivot PID", group = "Linear OpMode")
 //@Disabled
-public class RightStuffGCompCalibration extends LinearOpMode {
+public class LeftPivotPIDTesting extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -33,12 +33,12 @@ public class RightStuffGCompCalibration extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -55,7 +55,7 @@ public class RightStuffGCompCalibration extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            rightLift.update();
+            leftLift.update();
 
             spinnyBit.update();
 

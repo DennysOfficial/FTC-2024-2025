@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.Left;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -13,9 +13,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
 
-@TeleOp(name = "Left Pivot PID", group = "Linear OpMode")
+@TeleOp(name = "Left Lift PID", group = "Linear OpMode")
 //@Disabled
-public class LeftPivotPIDTesting extends LinearOpMode {
+public class LeftLiftPIDTesting extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -33,9 +33,9 @@ public class LeftPivotPIDTesting extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
+        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
         spinnyBit.assignLift(leftLift);
         leftLift.assignPivot(spinnyBit);

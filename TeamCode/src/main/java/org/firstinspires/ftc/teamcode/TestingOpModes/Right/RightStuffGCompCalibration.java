@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.Right;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 
 
-@TeleOp(name = "Left Lift PID", group = "Linear OpMode")
+@TeleOp(name = "Right gravity Compensation calibration: OpMode", group = "Linear OpMode")
 //@Disabled
-public class LeftLiftPIDTesting extends LinearOpMode {
+public class RightStuffGCompCalibration extends LinearOpMode {
 
 
     private final ElapsedTime runtime = new ElapsedTime();
@@ -33,12 +33,12 @@ public class LeftLiftPIDTesting extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        spinnyBit.assignLift(leftLift);
-        leftLift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -55,7 +55,7 @@ public class LeftLiftPIDTesting extends LinearOpMode {
 
             activeConfig.sensorData.update();
 
-            leftLift.update();
+            rightLift.update();
 
             spinnyBit.update();
 
