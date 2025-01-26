@@ -55,10 +55,11 @@ public class GrabberTester extends LinearOpMode {
      * @throws InterruptedException When the OpMode is stopped while calling a method
      *                              that can throw {@link InterruptedException}
      */
-    double targetPostion;
-    private final ElapsedTime frameTimer = new ElapsedTime();
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+
         RobotConfig config = new RobotConfig(this);
 
         LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, config);
@@ -70,6 +71,9 @@ public class GrabberTester extends LinearOpMode {
         leftPivot.assignLift(leftLift);
 
         PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
+
+        leftLift.setTargetPosition(0);
+        leftPivot.setTargetPosition(-80);
 
         waitForStart();
 
