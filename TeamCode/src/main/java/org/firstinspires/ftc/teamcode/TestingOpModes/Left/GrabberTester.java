@@ -71,6 +71,9 @@ public class GrabberTester extends LinearOpMode {
 
         PassiveGrabber grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
 
+        leftLift.setTargetPosition(0);
+        leftPivot.setTargetPosition(-80);
+
         waitForStart();
 
         while (opModeIsActive()) {
