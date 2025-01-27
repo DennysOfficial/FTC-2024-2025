@@ -6,26 +6,49 @@ import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 @Config
-public class LeftPivot extends ControlAxis{
+public class LeftPivot extends ControlAxis {
+
+    CRServo servo1;
+    CRServo servo2;
+
+    DcMotor encoderMotor;
+
+    @Override
+    void setPower(double power) {
+        servo1.setPower(-power);
+        servo2.setPower(-power);
+    }
+
+    @Override
+    int getEncoder() {
+        return encoderMotor.getCurrentPosition();
+    }
+
     LeftLift leftLift;
+
     public void assignLift(LeftLift leftLift) {
         if (leftLift == null)
             throw new NullPointerException("the lift you tried to assign is null you goober");
         this.leftLift = leftLift;
     }
+
     @Override
     float getInput() {
         return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightPivotStick();
     }
-    static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
+
+
+    static final int encoderCountsPerRevMotor = 8192;
+    static final double finalGearRatio = 1. / 10.; // rotations of final over rotations of encoder
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
@@ -35,7 +58,8 @@ public class LeftPivot extends ControlAxis{
 
     @Override
     float getVelocityControlMaxRate() {
-        return config.sensitivities.getPivotRate();}
+        return config.sensitivities.getPivotRate();
+    }
 
     @Override
     float getTorqueControlSensitivity() {
@@ -44,19 +68,20 @@ public class LeftPivot extends ControlAxis{
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
-
-        motors.setTargetPosition(0);
-        motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        servo1 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo1);
+        servo2 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo2);
+        encoderMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.leftPivotEncoder);
     }
+
     public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-40.0, 97.0);
+        softLimits = new Range<>(-80.0, 50.0);
     }
 
     double previousRightLiftTargetPosition = Double.NaN;
-    public void setTargetPosition(double targetPosition){
+
+    public void setTargetPosition(double targetPosition) {
         if (leftLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
@@ -73,16 +98,15 @@ public class LeftPivot extends ControlAxis{
     }
 
 
-
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0.1;
-    public static double KiRetracted = 0.01;
-    public static double KdRetracted = 0.005;
+    public static double KpRetracted = 0.05;
+    public static double KiRetracted = 0;
+    public static double KdRetracted = 0.0015;
 
     public static double velocityFeedforwardCoefficientExtended = 0;
-    public static double KpExtended = 0.1;
-    public static double KiExtended = 0.01;
-    public static double KdExtended = 0.005;
+    public static double KpExtended = 0.05;
+    public static double KiExtended = 0;
+    public static double KdExtended = 0.0045;
 
     @Override
     double getKp() {
@@ -122,6 +146,7 @@ public class LeftPivot extends ControlAxis{
     double getAccelerationFeedforward() {
         return 0;
     }
+
     double getVelocityFeedforwardCoefficient() {
         if (leftLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
@@ -132,6 +157,7 @@ public class LeftPivot extends ControlAxis{
     void miscUpdate() {
 
     }
+
     double calculateTorqueGravity(double liftExtension) {
         double interpolationAmount = liftExtension / extendedLiftPosition;
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);

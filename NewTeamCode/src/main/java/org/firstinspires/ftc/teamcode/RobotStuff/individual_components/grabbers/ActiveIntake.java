@@ -1,40 +1,34 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Timer;
-@Config
-public class ActiveIntakeMotor {
+
+public class ActiveIntakeServo {
 
     OpMode opMode;
     RobotConfig config;
 
 
-    DcMotor spinnyMotor;
+    CRServo spinnyServo;
 
     Servo flapServo;
 
-    Servo wristServo;
+    float intakeSpeed = -1;
+    float outtakeSpeed = 1;
 
-    public static float wristServoPosition = 0;
-
-    public static float intakeSpeed = -1;
-    public static float outtakeSpeed = 1;
-
-    public static double flapOpen = 0;
-    public static double flapClosed = 0.9;
+    double flapOpen = 0;
+    double flapClosed = 0.9;
 
 
-    public ActiveIntakeMotor(OpMode opMode, RobotConfig config) {
+    public ActiveIntakeServo(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
-        spinnyMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.intakeMotor);
+        spinnyServo = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.intakeServo);
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
-        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
     }
 
     Timer stopTimer = null;
@@ -55,17 +49,16 @@ public class ActiveIntakeMotor {
     public void directControl() {
         wheelControl();
         flapControl();
-        wristServo.setPosition(wristServoPosition);
     }
 
     public void wheelControl() {
-        spinnyMotor.setPower(0);
+        spinnyServo.setPower(0);
 
         if (config.inputMap.getIntakeButton())
-            spinnyMotor.setPower(intakeSpeed);
+            spinnyServo.setPower(intakeSpeed);
 
         else if (config.inputMap.getOuttakeButton())
-            spinnyMotor.setPower(outtakeSpeed);
+            spinnyServo.setPower(outtakeSpeed);
     }
 
     public void flapControl() {
@@ -79,7 +72,7 @@ public class ActiveIntakeMotor {
     }
 
     public void intake() {
-        spinnyMotor.setPower(intakeSpeed);
+        spinnyServo.setPower(intakeSpeed);
     }
 
 
@@ -89,7 +82,7 @@ public class ActiveIntakeMotor {
     }
 
     public void outtake() {
-        spinnyMotor.setPower(outtakeSpeed);
+        spinnyServo.setPower(outtakeSpeed);
     }
 
     public void outtakeForDuration(double durationSeconds) {
@@ -98,7 +91,7 @@ public class ActiveIntakeMotor {
     }
 
     public void stop() {
-        spinnyMotor.setPower(0);
+        spinnyServo.setPower(0);
     }
 
     public void openFlap() {

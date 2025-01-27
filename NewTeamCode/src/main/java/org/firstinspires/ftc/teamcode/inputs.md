@@ -46,9 +46,9 @@ A: Go to preset position\
 B: Unbound
 
 ### Dpad
-Up: Specimen lift scoring position
+Up: Unbound\
 Left: Lift abort\
-Down: Specimen lift collecting position
+Down: Unbound\
 Right: Lift unabort
 
 ### Triggers & Bumpers

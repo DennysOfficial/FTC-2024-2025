@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.Right;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -11,18 +10,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 
 
-@TeleOp(name = "Lift Position Pid Test: OpMode", group = "Linear OpMode")
-@Config
+@TeleOp(name = "Right Lift Pid", group = "Linear OpMode")
 @Disabled
-public class LiftPositionPIDCalibration extends LinearOpMode {
+public class RightLiftPIDTesting extends LinearOpMode {
 
 
-private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
+private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -37,12 +34,12 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        LeftLift lift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
-        LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
 
         waitForStart();
         runtime.reset();
@@ -58,7 +55,7 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
             activeConfig.sensorData.update();
 
-            lift.update();
+            rightLift.update();
 
             spinnyBit.update();
 

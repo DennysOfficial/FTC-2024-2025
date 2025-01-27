@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.Left;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,16 +11,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 
-@TeleOp(name = "gravity Compensation calibration: OpMode", group = "Linear OpMode")
-@Config
-@Disabled
-public class GCompCalibration extends LinearOpMode {
+@TeleOp(name = "Left Lift PID", group = "Linear OpMode")
+//@Disabled
+public class LeftLiftPIDTesting extends LinearOpMode {
 
 
-private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
+    private final ElapsedTime runtime = new ElapsedTime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     @Override
@@ -37,12 +33,12 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        LeftLift lift = new LeftLift(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl,this, activeConfig);
 
         LeftPivot spinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadTorqueControl,this, activeConfig);
 
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(spinnyBit);
 
 
         waitForStart();
@@ -59,7 +55,7 @@ private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
 
             activeConfig.sensorData.update();
 
-            lift.update();
+            leftLift.update();
 
             spinnyBit.update();
 

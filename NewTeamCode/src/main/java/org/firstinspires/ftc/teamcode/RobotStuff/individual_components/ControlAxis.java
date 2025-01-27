@@ -45,14 +45,6 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected abstract void initMotors();
 
-    int getEncoder(){
-        return motors.getCurrentPosition();
-    }
-
-    void setPower(double power){
-        motors.setPower(power);
-    }
-
 
     // control mode stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     private ControlMode controlMode = ControlMode.disabled;
@@ -79,7 +71,7 @@ public abstract class ControlAxis {  //schrödinger's code
             case disabled:
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                setPower(0);
+                motors.setPower(0);
                 break;
 
             case trajectoryControl:
@@ -95,7 +87,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                targetPosition = Double.NaN;
+                setTargetPosition(getPosition());
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -167,7 +159,7 @@ public abstract class ControlAxis {  //schrödinger's code
         targetTorque += nonStaticFeedforward;
 
 
-        setPower(targetTorque);
+        motors.setPower(targetTorque);
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "set torque time");
 
         //motors.setTargetPosition((int) (targetPosition / unitsPerEncoderCount));
@@ -213,7 +205,7 @@ public abstract class ControlAxis {  //schrödinger's code
      * returns the current position of the axis in the designated units
      */
     public double getNonCachedPosition() {
-        return getEncoder() * unitsPerEncoderCount + positionOffset;
+        return motors.getCurrentPosition() * unitsPerEncoderCount + positionOffset;
     }
 
     double cachedPosition;
@@ -230,7 +222,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     /**
-     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts, maybe, idk bro
+     * adjusts the position offset so that the current position doesn't extend past what the physical mechanism is known to be capable of. Mainly compensating for belt skipping on the lifts maybe idk bro
      */
     void adjustOffsetForPhysicalLimits() {
         if (getPosition() > physicalLimits.getUpper()) {
@@ -279,17 +271,17 @@ public abstract class ControlAxis {  //schrödinger's code
         this.opMode = opMode;
         this.config = config;
         this.axisName = axisName;
+        this.defaultControlMode = defaultControlMode;
+        this.controlMode = defaultControlMode;
+
         this.unitName = unitName;
         this.unitsPerEncoderCount = unitsPerEncoderCount;
-        this.defaultControlMode = defaultControlMode;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
-        initMotors();
-
-        updateCachedPosition();
-        setControlMode(defaultControlMode);
 
         initPid();
+        initMotors();
+        updateCachedPosition();
         positionDerivatives = new PositionDerivatives(getPosition());
     }
 
@@ -344,9 +336,6 @@ public abstract class ControlAxis {  //schrödinger's code
         updateCachedPosition();
         positionDerivatives.update(getPosition(), deltaTime);
 
-        if(Double.isNaN(targetPosition))
-            setTargetPosition(getPosition());
-
 
         if (config.inputMap != null && config.inputMap.getUnAbort())
             setControlMode(defaultControlMode);
@@ -362,7 +351,7 @@ public abstract class ControlAxis {  //schrödinger's code
         switch (controlMode) {
             case disabled:
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-                setPower(0);
+                motors.setPower(0);
                 break;
 
             case gamePadVelocityControl:
@@ -379,12 +368,12 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case torqueControl:
-                setPower(targetTorque + getStaticFeedforward(targetTorque));
+                motors.setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
-                setPower(targetTorque + getStaticFeedforward(targetTorque));
+                motors.setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 
             case trajectoryControl:

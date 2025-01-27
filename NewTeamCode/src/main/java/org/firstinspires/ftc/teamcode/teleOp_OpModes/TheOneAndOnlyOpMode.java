@@ -40,11 +40,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -61,14 +59,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
+
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
@@ -76,21 +74,15 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldLift oldLift = new OldLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        OldPivot spinnyBit = new OldPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
+        spinnyBit.assignLift(oldLift);
+        oldLift.assignPivot(spinnyBit);
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
 
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
-
-        otherSpinnyBit.assignLift(leftLift);
-        leftLift.assignPivot(otherSpinnyBit);
-
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
+        ActiveIntake intake = new ActiveIntake(this, activeConfig);
 
 
         waitForStart();
@@ -112,29 +104,37 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             for (LynxModule hub : allHubs) {
                 hub.clearBulkCache();
             }
-            activeConfig.sensorData.update(); // bulk caching
-
+            activeConfig.sensorData.update();
 
 
             if (gamepad2.x) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-10, 3);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(12.5, 3);
+                    spinnyBit.fancyMoveToPosition(16, 1);
+                if (!oldLift.isBusy())
+                    oldLift.fancyMoveToPosition(12.5, 1);
+            }
+
+            if (gamepad2.y) {
+                if (oldLift.getPosition() < 15)
+                    if (!spinnyBit.isBusy())
+                        spinnyBit.fancyMoveToPosition(-18, 1);
+
+
+                if (spinnyBit.getPosition() < 50)
+                    oldLift.setTargetPosition(33);
+
             }
 
 
             if (gamepad2.a) {
-                rightLift.setTargetPosition(0);
-
-                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
+                if (oldLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
                     if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 3);
-
-                if (rightLift.getPosition() < 20)
+                        spinnyBit.fancyMoveToPosition(0, 1);
+                oldLift.setTargetPosition(0);
+                if (oldLift.getPosition() < 14)
                     if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 3);
-            }// presets
+                        spinnyBit.fancyMoveToPosition(71, 1);
+            }
 
 
             // make the arm smack into the ground and intake
@@ -144,13 +144,11 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
             } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
+                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            rightLift.update();
+            oldLift.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
 
             spinnyBit.update();
@@ -159,7 +157,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            //intake.directControl();
+            intake.directControl();
 
 
             telemetry.update();

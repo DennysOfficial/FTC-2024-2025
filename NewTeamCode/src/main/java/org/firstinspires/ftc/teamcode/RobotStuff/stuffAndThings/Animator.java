@@ -6,8 +6,8 @@ import androidx.core.math.MathUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.OldPivot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public class Animator {
     OpMode opMode;
     RobotConfig config;
 
-    LeftPivot spinyBit;
-    LeftLift lift;
+    OldPivot spinyBit;
+    OldLift oldLift;
 
     double startPosition;
     double endPosition;
@@ -38,13 +38,13 @@ public class Animator {
     List<animation> animationQueue = new ArrayList<>();
 
 
-    public Animator(ReadOnlyRuntime runtime, OpMode opMode, RobotConfig config, LeftPivot spinyBit, LeftLift lift) {
+    public Animator(ReadOnlyRuntime runtime, OpMode opMode, RobotConfig config, OldPivot spinyBit, OldLift oldLift) {
         this.runtime = runtime;
         this.opMode = opMode;
         this.config = config;
 
         this.spinyBit = spinyBit;
-        this.lift = lift;
+        this.oldLift = oldLift;
     }
 
     /**

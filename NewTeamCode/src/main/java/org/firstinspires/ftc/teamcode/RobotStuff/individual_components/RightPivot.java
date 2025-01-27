@@ -4,24 +4,24 @@ import android.util.Range;
 
 import androidx.core.math.MathUtils;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-@Config
+
 public class RightPivot extends ControlAxis{
+    //GO TODO
     RightLift rightLift;
     public void assignLift(RightLift rightLift) {
-        if (rightLift == null)
+        if (this.rightLift == null)
             throw new NullPointerException("the lift you tried to assign is null you goober");
-        this.rightLift = rightLift;
+        this.rightLift = this.rightLift;
     }
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightPivotStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getPivotStick();
     }
     static final int encoderCountsPerRevMotor = 28;
     static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
@@ -30,7 +30,7 @@ public class RightPivot extends ControlAxis{
 
     static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
-    public static double retractedGComp = 0.05;
+    public static double retractedGComp = 0.12;
 
     @Override
     float getVelocityControlMaxRate() {
@@ -49,20 +49,17 @@ public class RightPivot extends ControlAxis{
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
+        super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-40.0, 97.0);
+        softLimits = new Range<>(-40.0, 86.9);
     }
-
-    double previousRightLiftTargetPosition = Double.NaN;
     public void setTargetPosition(double targetPosition){
+        if (targetPosition == getTargetPosition())
+            return;
         if (rightLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        if (targetPosition == getTargetPosition() && previousRightLiftTargetPosition == (previousRightLiftTargetPosition = rightLift.getTargetPosition()))
-            return;
-
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedRadius + rightLift.getTargetPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (config.getRetractedLiftLengthInch() + rightLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
@@ -109,7 +106,7 @@ public class RightPivot extends ControlAxis{
     double getStaticFeedforward(double targetDirection) {
         if (rightLift == null)
             throw new NullPointerException("run the assign lift method before running anything else");
-        return -calculateTorqueGravity(rightLift.getPosition());
+        return calculateTorqueGravity(rightLift.getPosition());
     }
 
     @Override

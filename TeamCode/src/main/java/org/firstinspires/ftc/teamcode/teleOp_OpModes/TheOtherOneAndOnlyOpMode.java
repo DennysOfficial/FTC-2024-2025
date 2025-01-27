@@ -44,14 +44,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "The Other One and Only OpMode", group = "Linear OpMode")
 //@Disabled
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+public class TheOtherOneAndOnlyOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -76,19 +76,21 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        //RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        //RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
+        //spinnyBit.assignLift(rightLift);
+        //rightLift.assignPivot(spinnyBit);
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
+
+        PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
 
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
@@ -114,47 +116,15 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             activeConfig.sensorData.update(); // bulk caching
 
+            otherSpinnyBit.update();
+            leftLift.update();
 
-
-            if (gamepad2.x) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-10, 3);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(12.5, 3);
-            }
-
-
-            if (gamepad2.a) {
-                rightLift.setTargetPosition(0);
-
-                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 3);
-
-                if (rightLift.getPosition() < 20)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 3);
-            }// presets
-
-
-            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
-
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            rightLift.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
-
-            spinnyBit.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
+            if(gamepad2.b)
+                dohicky.Collect();
+            if(gamepad2.y)
+                dohicky.Rest();
+            if(gamepad2.x)
+                dohicky.Score();
 
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
