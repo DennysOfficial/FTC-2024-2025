@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAx
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -86,7 +85,6 @@ public class Auto_Test_04Z_1 extends OpMode{
 
     double pivotPosObs = 90;
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -328,7 +326,6 @@ public class Auto_Test_04Z_1 extends OpMode{
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("deltaTime", deltaTime);
-        telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
         telemetry.update();
     }

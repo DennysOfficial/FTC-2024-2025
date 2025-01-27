@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Disabled
 @Autonomous(name = "SoupcOpMode_0-4-0 0.1.0")
@@ -55,7 +54,6 @@ public class Auto_Test_040 extends OpMode{
 
     RobotConfig activeConfig = new RobotConfig(this);
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;

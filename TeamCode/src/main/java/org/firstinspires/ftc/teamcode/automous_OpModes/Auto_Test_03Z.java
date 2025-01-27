@@ -21,7 +21,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 import java.util.List;
 
@@ -75,7 +74,6 @@ public class Auto_Test_03Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -249,7 +247,6 @@ public class Auto_Test_03Z extends OpMode{
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("deltaTime", deltaTime);
-        telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
         telemetry.update();
     }

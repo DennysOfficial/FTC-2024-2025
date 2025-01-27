@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivo
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
@@ -69,7 +68,6 @@ public class Auto_Test_40Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -106,7 +104,7 @@ public class Auto_Test_40Z extends OpMode{
 
         rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
         rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
-        grabber = new PassiveGrabber(this, config);
+        grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
 
         leftLift.assignPivot(leftPivot);
         leftPivot.assignLift(leftLift);
@@ -230,7 +228,6 @@ public class Auto_Test_40Z extends OpMode{
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("deltaTime", deltaTime);
-        telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
         telemetry.update();
     }

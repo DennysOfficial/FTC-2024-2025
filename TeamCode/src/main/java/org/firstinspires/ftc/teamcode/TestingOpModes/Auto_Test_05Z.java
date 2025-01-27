@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivo
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.LiftTimeStamp;
@@ -77,7 +76,6 @@ public class Auto_Test_05Z extends OpMode{
     // Other misc. stuff
     private Follower follower;
 
-    private final ReadOnlyRuntime runtime = new ReadOnlyRuntime();
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     double deltaTime;
@@ -114,7 +112,7 @@ public class Auto_Test_05Z extends OpMode{
 
         rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
         rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
-        grabber = new PassiveGrabber(this, config);
+        grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
 
         leftLift.assignPivot(leftPivot);
         leftPivot.assignLift(leftLift);
@@ -201,36 +199,30 @@ public class Auto_Test_05Z extends OpMode{
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
-            intake.activate();
         }, 1, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
-            intake.stow();
         }, 5, 3));
         automous.addPath(0, 0, toSample2, 1, 5); //4
         automous.addPath(0, 0, null, 1, 5); //5
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
-            intake.activate();
         }, 1, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
-            intake.stow();
         }, 5, 5));
         automous.addPath(0, 0, toSample3, 1, 5); //6
         automous.addPath(0, 0, null, 1, 5); //7
         automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
-            intake.activate();
         }, 1, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.openFlap();
             intake.intakeForDuration(0.5);
-            intake.stow();
         }, 5, 7));
         automous.addPath(0, 0, toPickup1, 2, 5); //8
         automous.addPath(0, 0, toRung2, 2, 5); //9
@@ -292,7 +284,6 @@ public class Auto_Test_05Z extends OpMode{
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
         telemetry.addData("deltaTime", deltaTime);
-        telemetry.addData("runTime", runtime);
         telemetry.addData("waitTime", time);
         telemetry.update();
     }
