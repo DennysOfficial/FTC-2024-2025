@@ -39,9 +39,9 @@ public class FollowerConstants {
 
     // Translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients translationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.3,
+            0.15,
             0,
-            0.08,
+            0.01,
             0);
 
     // Translational Integral
@@ -57,9 +57,9 @@ public class FollowerConstants {
 
     // Heading error PIDF coefficients
     public static CustomPIDFCoefficients headingPIDFCoefficients = new CustomPIDFCoefficients(
-            4,
+            1.5,
             0,
-            0.4,
+            0.1,
             0);
 
     // Feed forward constant added on to the heading PIDF
@@ -68,9 +68,9 @@ public class FollowerConstants {
 
     // Drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients drivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.007,
+            0.01,
             0,
-            0.0025,
+            0.003,
             0.6,
             0);
 
@@ -166,9 +166,9 @@ public class FollowerConstants {
 
     // Secondary translational PIDF coefficients (don't use integral)
     public static CustomPIDFCoefficients secondaryTranslationalPIDFCoefficients = new CustomPIDFCoefficients(
-            0.17,
+            0.15,
             0,
-            0.015,
+            0.007,
             0);
 
     // Secondary translational Integral value
@@ -187,9 +187,9 @@ public class FollowerConstants {
 
     // Secondary heading error PIDF coefficients
     public static CustomPIDFCoefficients secondaryHeadingPIDFCoefficients = new CustomPIDFCoefficients(
-            3,
+            2.5,
             0,
-            0.08,
+            0.05,
             0);
 
     // Feed forward constant added on to the secondary heading PIDF
@@ -201,10 +201,10 @@ public class FollowerConstants {
 
     // Secondary drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            0.005,
+            1,
             0,
-            0.000005,
-            0.6,
+            0.5,
+            0,
             0);
 
     // Feed forward constant added on to the secondary drive PIDF
