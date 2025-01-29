@@ -201,9 +201,9 @@ public class FollowerConstants {
 
     // Secondary drive PIDF coefficients
     public static CustomFilteredPIDFCoefficients secondaryDrivePIDFCoefficients = new CustomFilteredPIDFCoefficients(
-            1,
+            0.01,
             0,
-            0.5,
+            0.0003,
             0,
             0);
 

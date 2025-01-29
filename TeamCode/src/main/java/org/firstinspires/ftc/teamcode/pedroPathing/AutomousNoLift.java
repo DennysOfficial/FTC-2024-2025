@@ -118,7 +118,7 @@ public class AutomousNoLift {
         intake.update();
     }
 
-    public void resetTimer() {
+    public void resetPathTimer() {
         pathTimer.resetTimer();
     }
 }

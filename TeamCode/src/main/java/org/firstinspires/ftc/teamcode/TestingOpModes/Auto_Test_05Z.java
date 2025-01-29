@@ -188,9 +188,8 @@ public class Auto_Test_05Z extends OpMode{
         automous.addPath(0, 0, toRung1, 2, 5); //1
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
-            ScorePos();
         }, 0, 1));
-        automous.addPath(90, 10, toSample1, 0, 5); //2
+        /*automous.addPath(90, 10, toSample1, 0, 5); //2
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Collect();
             CollectPos();
@@ -261,7 +260,7 @@ public class Auto_Test_05Z extends OpMode{
             ScorePos();
         }, 0.5, 15));
         automous.addPath(90, 33, toPark, 1, 5);//16
-        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
+        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));*/
     }
 
     @Override
@@ -286,21 +285,6 @@ public class Auto_Test_05Z extends OpMode{
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("waitTime", time);
         telemetry.update();
-    }
-
-    public void ScorePos() {
-        rightLift.setTargetPosition(0);
-        rightPivot.setTargetPosition(0);
-    }
-
-    public void CollectPos() {
-        rightLift.setTargetPosition(0);
-        rightPivot.setTargetPosition(0);
-    }
-
-    public void RestPos() {
-        rightLift.setTargetPosition(0);
-        rightPivot.setTargetPosition(0);
     }
 
 
