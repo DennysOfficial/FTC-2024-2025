@@ -20,13 +20,16 @@ public class ActiveIntakeMotor {
 
     Servo wristServo;
 
-    public static float wristServoPosition = 0;
+    public static double wristUp = 0.1;
+    public static double wristDown = 0.1;
 
     public static float intakeSpeed = -1;
     public static float outtakeSpeed = 1;
 
     public static double flapOpen = 0;
     public static double flapClosed = 0.9;
+
+
 
 
     public ActiveIntakeMotor(OpMode opMode, RobotConfig config) {
@@ -54,8 +57,11 @@ public class ActiveIntakeMotor {
 
     public void directControl() {
         wheelControl();
-        flapControl();
-        wristServo.setPosition(wristServoPosition);
+        //flapControl();
+        if(config.inputMap.getIntakeWristDown())
+            wristServo.setPosition(wristDown);
+        else
+            wristServo.setPosition(wristUp);
     }
 
     public void wheelControl() {

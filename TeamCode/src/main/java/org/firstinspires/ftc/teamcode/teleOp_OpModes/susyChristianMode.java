@@ -75,7 +75,7 @@ public class susyChristianMode extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        //DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
         RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
@@ -120,50 +120,6 @@ public class susyChristianMode extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-            if (gamepad2.x) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(16, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(12.5, 1);
-            }
-
-            if (gamepad2.y) {
-                if (rightLift.getPosition() < 15)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(-18, 0.69);
-
-
-                if (spinnyBit.getPosition() < 70)
-                    rightLift.setTargetPosition(33);
-
-            }
-
-
-            if (gamepad2.a) {
-                rightLift.setTargetPosition(0);
-
-                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 1);
-
-                if (rightLift.getPosition() < 20)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 1);
-            }
-
-            if (gamepad2.dpad_up) {
-                grabber.Score();
-                leftLift.setTargetPosition(0);
-                spinnyBitL.setTargetPosition(0);
-            }
-
-            if (gamepad2.dpad_down) {
-                grabber.Collect();
-                leftLift.setTargetPosition(0);
-                spinnyBitL.setTargetPosition(0);
-            }
-
-
             // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
@@ -183,7 +139,7 @@ public class susyChristianMode extends LinearOpMode {
             spinnyBit.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
-            //activeDriveMode.updateDrive(deltaTime);
+            activeDriveMode.updateDrive(deltaTime);
             //stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             intake.directControl();
