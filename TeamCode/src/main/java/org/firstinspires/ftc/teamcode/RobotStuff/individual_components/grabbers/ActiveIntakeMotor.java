@@ -23,11 +23,11 @@ public class ActiveIntakeMotor {
     public static double wristUp = 0.1;
     public static double wristDown = 0.1;
 
-    public static float intakeSpeed = -1;
-    public static float outtakeSpeed = 1;
+    static float intakeSpeed = -1;
+    static float outtakeSpeed = 1;
 
-    public static double flapOpen = 0;
-    public static double flapClosed = 0.9;
+    static double flapOpen = 0;
+    static double flapClosed = 0.9;
 
 
 
