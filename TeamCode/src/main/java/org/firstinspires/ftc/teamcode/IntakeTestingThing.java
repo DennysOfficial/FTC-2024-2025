@@ -68,8 +68,8 @@ public class IntakeTestingThing extends LinearOpMode {
 
         RobotConfig config = new RobotConfig(this);
 
-        motor1 = hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightLift);
-        motor2 = hardwareMap.get(DcMotorEx.class, config.deviceConfig.rightPivot);
+        motor1 = hardwareMap.get(DcMotorEx.class, "intake1");
+        motor2 = hardwareMap.get(DcMotorEx.class, "intake2");
 
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
