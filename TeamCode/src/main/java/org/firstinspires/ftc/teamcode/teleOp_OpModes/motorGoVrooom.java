@@ -122,23 +122,6 @@ public class motorGoVrooom extends LinearOpMode {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity  = imu.getGravity();
 
-        telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
-
         waitForStart();
         frameTimer.reset();
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
@@ -150,6 +133,10 @@ public class motorGoVrooom extends LinearOpMode {
 
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+
+            telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle));
+            telemetry.addData("roll", formatAngle(angles.angleUnit, angles.secondAngle));
+            telemetry.addData("pitch", formatAngle(angles.angleUnit, angles.thirdAngle));
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
