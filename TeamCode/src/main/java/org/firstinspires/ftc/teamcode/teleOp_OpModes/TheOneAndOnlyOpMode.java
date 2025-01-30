@@ -126,17 +126,17 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(50, 3);
+                    spinnyBit.fancyMoveToPosition(74, 1);
                 if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 3);
+                    rightLift.fancyMoveToPosition(0, 0.75);
             }
 
 
             if (gamepad2.b) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-20, 3);
+                    spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 3);
+                    rightLift.fancyMoveToPosition(0, 0.75);
             }// presets
 
             if(gamepad2.x){
