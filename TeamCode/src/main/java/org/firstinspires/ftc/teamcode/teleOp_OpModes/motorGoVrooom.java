@@ -96,7 +96,6 @@ public class motorGoVrooom extends LinearOpMode { // this is basically theothero
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
         IMU.initialize(hardwareMap);
-        IMU.composeTelemetry(telemetry);
 
         waitForStart();
         frameTimer.reset();
@@ -110,6 +109,8 @@ public class motorGoVrooom extends LinearOpMode { // this is basically theothero
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
+            IMU.updateIMU(telemetry);
+            IMU.returnIMU(telemetry);
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
