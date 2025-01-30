@@ -34,23 +34,6 @@ import java.util.List;
 @Autonomous(name = "SoupcOpMode_0-5-Z 2.0.0")
 public class Auto_Test_05Z extends OpMode{
 
-
-    enum State {
-        TO_RUNG1,
-        TO_RUNG2,
-        TO_RUNG3,
-        TO_RUNG4,
-        TO_RUNG5,
-        TO_PICKUP2,
-        TO_PICKUP3,
-        TO_PICKUP4,
-        TO_OBSERVE,
-        MOVE_SAMPLES,
-        IDLE
-    }
-
-    State currentState = State.IDLE;
-
     List<LynxModule> allHubs;
 
     private final Pose startPose = new Pose(9,64.5, Math.toRadians(0));  // This is where the robot starts
@@ -90,7 +73,7 @@ public class Auto_Test_05Z extends OpMode{
 
     RobotConfig config;
 
-    AutomousNoLift automous; //CHANGE THIS WHEN NEW ROBOT
+    Automous automous; //CHANGE THIS WHEN NEW ROBOT
 
     @Override
     public void init() {
@@ -120,7 +103,7 @@ public class Auto_Test_05Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new AutomousNoLift(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
+        automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
     }
 
 
@@ -189,13 +172,12 @@ public class Auto_Test_05Z extends OpMode{
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
         }, 0, 1));
-        /*automous.addPath(90, 10, toSample1, 0, 5); //2
+        automous.addPath(90, 10, toSample1, 0, 5); //2
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Collect();
-            CollectPos();
         }, 1, 2));
         automous.addPath(0, 0, null, 1, 5); //3
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 3));
+        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 3));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
         }, 1, 3));
@@ -205,7 +187,7 @@ public class Auto_Test_05Z extends OpMode{
         }, 5, 3));
         automous.addPath(0, 0, toSample2, 1, 5); //4
         automous.addPath(0, 0, null, 1, 5); //5
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 5));
+        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 5));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
         }, 1, 5));
@@ -214,8 +196,8 @@ public class Auto_Test_05Z extends OpMode{
             intake.intakeForDuration(0.5);
         }, 5, 5));
         automous.addPath(0, 0, toSample3, 1, 5); //6
-        automous.addPath(0, 0, null, 1, 5); //7
-        automous.addLiftTimeStamp(new LiftTimeStamp(0, 0, 4, 7));
+        automous.addPath(-90, 0, null, 1, 5); //7
+        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 7));
         automous.addTimeStamp(new TimeStamp(() -> {
             intake.intakeForDuration(0.5);
         }, 1, 7));
@@ -223,44 +205,37 @@ public class Auto_Test_05Z extends OpMode{
             intake.openFlap();
             intake.intakeForDuration(0.5);
         }, 5, 7));
-        automous.addPath(0, 0, toPickup1, 2, 5); //8
-        automous.addPath(0, 0, toRung2, 2, 5); //9
+        automous.addPath(-90, 0, toPickup1, 2, 5); //8
+        automous.addPath(-90, 0, toRung2, 2, 5); //9
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
-            ScorePos();
         }, 0.5, 9));
-        automous.addPath(0, 0, toPickup2, 2, 5);//10
+        automous.addPath(-90, 0, toPickup2, 2, 5);//10
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Collect();
-            CollectPos();
         }, 1, 10));
-        automous.addPath(0, 0, toRung3, 2, 5); //11
+        automous.addPath(-90, 0, toRung3, 2, 5); //11
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
-            ScorePos();
         },0.5, 11));
-        automous.addPath(0, 0, toPickup3, 2, 5);//12
+        automous.addPath(-90, 0, toPickup3, 2, 5);//12
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Collect();
-            CollectPos();
         }, 1, 12));
-        automous.addPath(0, 0, toRung4, 2, 5); //13
+        automous.addPath(-90, 0, toRung4, 2, 5); //13
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
-            ScorePos();
         }, 0.5, 13));
-        automous.addPath(0, 0, toPickup4, 2, 5);//14
+        automous.addPath(-90, 0, toPickup4, 2, 5);//14
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Collect();
-            CollectPos();
         }, 1, 14));
-        automous.addPath(0, 0, toRung5, 2, 5); //15
+        automous.addPath(-90, 0, toRung5, 2, 5); //15
         automous.addTimeStamp(new TimeStamp(() -> {
             grabber.Score();
-            ScorePos();
         }, 0.5, 15));
         automous.addPath(90, 33, toPark, 1, 5);//16
-        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));*/
+        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
     }
 
     @Override
@@ -276,9 +251,14 @@ public class Auto_Test_05Z extends OpMode{
         intake.closeFlap();
 
         automous.routine();
-        automous.update();
+        follower.update();
+        leftLift.update();
+        leftPivot.update();
+        rightLift.update();
+        rightPivot.update();
+        intake.update();
 
-        telemetry.addData("path state", currentState);
+        telemetry.addData("path state", automous.getPath());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
@@ -292,6 +272,7 @@ public class Auto_Test_05Z extends OpMode{
     @Override
     public void start() {
         buildPaths();
+        follower.followPath(toRung1);
 
         deltaTime = 0;
         frameTimer.reset();
@@ -302,6 +283,8 @@ public class Auto_Test_05Z extends OpMode{
     public void stop() {
         follower.breakFollowing();
     }
+
+
 }
 
 /**

@@ -8,28 +8,25 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.pedroPathing.AutomousNoLift;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
-import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 
 import java.util.List;
 
-@Autonomous(name = "6w5syu5xrytulkythgretftryuhykul")
-public class Auto_Test_Square extends OpMode{
+@Autonomous(name = "SquareTest")
+public class Auto_Test_Template extends OpMode{
 
     LeftLift leftLift;
     LeftPivot leftPivot;
@@ -42,7 +39,7 @@ public class Auto_Test_Square extends OpMode{
 
     RobotConfig config;
 
-    AutomousNoLift automous;
+    //AutomousNoLift automous;
 
     List<LynxModule> allHubs;
 
@@ -57,6 +54,8 @@ public class Auto_Test_Square extends OpMode{
 
     double deltaTime;
 
+    Pose startPose = new Pose(0, 0);
+
     public void buildPaths() {
         square = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(0,0, Point.CARTESIAN),new Point(0,10, Point.CARTESIAN)))
@@ -69,7 +68,11 @@ public class Auto_Test_Square extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        automous.addPath(0, 0, square, 0, 10);
+        //automous.addPath(0, 0, square, 0, 10);
+    }
+
+    public void autonomousPathUpdate() {
+
     }
 
     @Override
@@ -81,8 +84,7 @@ public class Auto_Test_Square extends OpMode{
         deltaTime = frameTimer.seconds();
         frameTimer.reset();
 
-        automous.routine();
-
+        //automous.routine();
         follower.update();
         leftLift.update();
         leftPivot.update();
@@ -90,7 +92,7 @@ public class Auto_Test_Square extends OpMode{
         rightPivot.update();
         intake.update();
 
-        telemetry.addData("path", automous.getPath());
+        //telemetry.addData("path", automous.getPath());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
@@ -129,8 +131,9 @@ public class Auto_Test_Square extends OpMode{
         rightPivot.assignLift(rightLift);
 
         follower = new Follower(hardwareMap);
+        follower.setStartingPose(startPose);
 
-        automous = new AutomousNoLift(this, config, follower);
+        //automous = new AutomousNoLift(this, config, follower);
     }
 
     @Override

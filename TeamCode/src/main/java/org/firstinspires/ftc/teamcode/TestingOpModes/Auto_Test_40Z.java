@@ -112,7 +112,7 @@ public class Auto_Test_40Z extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-        automous = new AutomousNoLift(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
+        automous = new AutomousNoLift(this, config, follower);
     }
 
 
@@ -221,7 +221,12 @@ public class Auto_Test_40Z extends OpMode{
         intake.closeFlap();
 
         automous.routine();
-        automous.update();
+        follower.update();
+        leftLift.update();
+        leftPivot.update();
+        rightLift.update();
+        rightPivot.update();
+        intake.update();
 
         telemetry.addData("path state", currentState);
         telemetry.addData("x", follower.getPose().getX());

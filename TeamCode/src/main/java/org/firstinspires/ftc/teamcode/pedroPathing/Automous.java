@@ -75,28 +75,6 @@ public class Automous{
     public void routine() {
         currentPath = pathDirectory.get(listPointer);
 
-        switch (currentPath.getArmPosSpecimen()) {
-            case 0:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Rest();
-                break;
-            case 1:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Collect();
-                break;
-            case 2:
-                rightLift.setTargetPosition(0);
-                rightPivot.setTargetPosition(0);
-                grabber.Score();
-                break;
-        }
-
-        if (currentPath.getPath() != null) {
-            follower.followPath(currentPath.getPath());
-        }
-
         for (TimeStamp current : timeStamps) {
             if (current.getTime() <= pathTimer.getElapsedTimeSeconds() && !current.hasBeenRun() && current.getPath() == listPointer + 1) {
                 current.run();
@@ -112,13 +90,26 @@ public class Automous{
         }
 
         if (currentPath.getPath() != null && follower.atParametricEnd() || currentPath.getTimeout() <= pathTimer.getElapsedTimeSeconds()) {
+            switch (currentPath.getArmPosSpecimen()) {
+                case 0:
+                    grabber.Rest();
+                    break;
+                case 1:
+                    grabber.Collect();
+                    break;
+                case 2:
+                    grabber.Score();
+                    break;
+            }
+
             leftLift.setTargetPosition(currentPath.getPPA());
             leftPivot.setTargetPosition(currentPath.getLPA());
-            //Specimen lift code go brr
             listPointer = listPointer + 1;
             pathTimer.resetTimer();
             if (listPointer >= pathDirectory.size()){
                 currentOpMode.stop();
+            } else {
+                follower.followPath(currentPath.getPath());
             }
         }
     }

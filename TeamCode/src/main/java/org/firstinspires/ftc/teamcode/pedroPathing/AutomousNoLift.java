@@ -21,15 +21,6 @@ public class AutomousNoLift {
 
     private Follower follower;
 
-    LeftLift leftLift;
-    LeftPivot leftPivot;
-
-    RightLift rightLift;
-    RightPivot rightPivot;
-
-    ActiveIntakeMotor intake;
-    PassiveGrabber grabber;
-
     RobotConfig config;
 
     ArrayList<PathDirectory> pathDirectory = new ArrayList<PathDirectory>(0);
@@ -42,18 +33,13 @@ public class AutomousNoLift {
     PathDirectory currentPath;
     int listPointer = 0;
 
-    Timer pathTimer;
+    Timer pathTimer = new Timer();
 
     /**
      * A class for easily storing and executing autonomous routines.
      */
-    public AutomousNoLift(OpMode opmode, LeftLift leftLift, LeftPivot leftPivot, RightLift rightLift, RightPivot rightPivot, ActiveIntakeMotor activeIntake, PassiveGrabber grabber, RobotConfig robotConfig, Follower follower) {
+    public AutomousNoLift(OpMode opmode, RobotConfig robotConfig, Follower follower) {
         currentOpMode = opmode;
-        this.leftLift = leftLift;
-        this.leftPivot = leftPivot;
-        this.rightLift = rightLift;
-        this.rightPivot = rightPivot;
-        intake = activeIntake;
         config = robotConfig;
         this.follower = follower;
     }
@@ -80,7 +66,7 @@ public class AutomousNoLift {
 
         for (TimeStamp current : timeStamps) {
             if (current.getTime() <= pathTimer.getElapsedTimeSeconds() && !current.hasBeenRun() && current.getPath() == listPointer + 1) {
-                //current.run();
+
             }
         }
 
@@ -90,7 +76,6 @@ public class AutomousNoLift {
         }
 
         if (currentPath.getPath() != null && follower.atParametricEnd() || currentPath.getTimeout() <= pathTimer.getElapsedTimeSeconds()) {
-            //Specimen lift code go brr
             listPointer = listPointer + 1;
             pathTimer.resetTimer();
             if (listPointer >= pathDirectory.size()){
@@ -109,13 +94,6 @@ public class AutomousNoLift {
 
     public int getPath() {
         return listPointer + 1;
-    }
-
-    public void update() {
-        follower.update();
-        leftLift.update();
-        leftPivot.update();
-        intake.update();
     }
 
     public void resetPathTimer() {
