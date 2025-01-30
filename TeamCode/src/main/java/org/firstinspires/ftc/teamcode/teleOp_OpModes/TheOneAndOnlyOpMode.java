@@ -171,6 +171,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             //intake.directControl();
 
+            leftLift.update();
+            otherSpinnyBit.update();
             suck.directControl();
 
 

@@ -90,6 +90,7 @@ public class TheOtherOneAndOnlyOpMode extends LinearOpMode {
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
 
+        PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
 
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
