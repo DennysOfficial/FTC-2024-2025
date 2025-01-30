@@ -44,49 +44,24 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.InertialMeasurementUnit;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-
-import java.util.Locale;
 import java.util.List;
 
-@TeleOp(name = "motorGoVroom", group = "Linear OpMode")
+@TeleOp(name = "Motor Go Vrooom", group = "Linear OpMode")
 //@Disabled
-public class motorGoVrooom extends LinearOpMode {
+public class motorGoVrooom extends LinearOpMode { // this is basically theotheroneandonlyopmode but with imu stuff
+
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     StopWatch stopWatch = new StopWatch();
 
-    BNO055IMU imu;
-
-    Orientation angles;
-
-    Acceleration gravity;
+    InertialMeasurementUnit IMU = new InertialMeasurementUnit();
 
     @Override
     public void runOpMode() {
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json";
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -119,12 +94,13 @@ public class motorGoVrooom extends LinearOpMode {
         PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
 
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gravity  = imu.getGravity();
+
+        IMU.initialize(hardwareMap);
+        IMU.composeTelemetry(telemetry);
 
         waitForStart();
         frameTimer.reset();
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        IMU.afterStart(); // starts measuring
 
         double deltaTime = 0;
 
@@ -133,10 +109,6 @@ public class motorGoVrooom extends LinearOpMode {
 
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
-
-            telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle));
-            telemetry.addData("roll", formatAngle(angles.angleUnit, angles.secondAngle));
-            telemetry.addData("pitch", formatAngle(angles.angleUnit, angles.thirdAngle));
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -166,11 +138,5 @@ public class motorGoVrooom extends LinearOpMode {
             telemetry.update();
         }
     }
-    String formatAngle(AngleUnit angleUnit, double angle) {
-        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
-    }
 
-    String formatDegrees(double degrees){
-        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
-    }
 }
