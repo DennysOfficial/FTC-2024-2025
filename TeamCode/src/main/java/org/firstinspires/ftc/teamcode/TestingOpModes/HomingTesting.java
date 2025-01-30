@@ -74,7 +74,8 @@ public class HomingTesting extends LinearOpMode {
                 motor.setPower(0);
             telemetry.addData("motor current(Amps) : %f",motor.getCurrent(CurrentUnit.AMPS));
             motor.setCurrentAlert(HomingClass.setCurrentAlertValue,CurrentUnit.AMPS);
-            telemetry.addData("get current alert",motor.getCurrentAlert(CurrentUnit.AMPS));
+            telemetry.addData("get is motor over current %b",motor.isOverCurrent());
+
 
             telemetry.update();
 
