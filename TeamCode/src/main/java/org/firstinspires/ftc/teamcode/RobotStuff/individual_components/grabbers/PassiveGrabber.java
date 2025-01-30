@@ -30,9 +30,9 @@ public class PassiveGrabber {
     public static double elbowPosRest1 = 0.5;
 
     public static double wristPosScore = 0.83;
-    public static double elbowPosScore = 0.54;
-    public static double liftPosScore = 5.4;
-    public static double pivotPosScore = 20;
+    public static double elbowPosScore = 0.56;
+    public static double liftPosScore = 6.8;
+    public static double pivotPosScore = 30;
 
     public static double wristPosCollect = 0.16;
     public static double elbowPosCollect = 0.57;
