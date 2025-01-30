@@ -20,8 +20,8 @@ public class ActiveIntakeMotor {
 
     Servo wristServo;
 
-    public static double wristUp = 0.1;
-    public static double wristDown = 0.1;
+    public static double wristUp = 0;
+    public static double wristDown = 0.2;
 
     static float intakeSpeed = -1;
     static float outtakeSpeed = 1;
