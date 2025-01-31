@@ -45,11 +45,11 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected abstract void initMotors();
 
-    int getEncoder(){
+    int getEncoder() {
         return motors.getCurrentPosition();
     }
 
-    void setPower(double power){
+    void setPower(double power) {
         motors.setPower(power);
     }
 
@@ -261,16 +261,17 @@ public abstract class ControlAxis {  //schrödinger's code
     public double targetTorque;
 
     // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    double previousTime = 0;
+    long previousTimeNano = 0;
+    final double secondsPerNano = 1.0 / ElapsedTime.SECOND_IN_NANO;
 
     void updateDeltaTime() {
-        if (previousTime == 0) {
-            previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO);
+        if (previousTimeNano == 0) {
+            previousTimeNano = System.nanoTime();
             deltaTime = 0;
             return;
         }
 
-        deltaTime = -1 * previousTime + (previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO));
+        deltaTime = (-1 * previousTimeNano + (previousTimeNano = System.nanoTime())) * secondsPerNano;
     }
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -410,7 +411,7 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of Control axis update time");
     }
 
-    public void homeAxis(){
+    public void homeAxis() {
 
     }
 }
