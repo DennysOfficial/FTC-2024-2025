@@ -54,7 +54,7 @@ public class Auto_Test_05Z extends OpMode{
     Point parkPoint = new Point(24, 48, Point.CARTESIAN);
 
 
-    public PathChain toRung1, toRung2, toRung3, toRung4, toRung5, toSample1, toSample2, toSample3, toPickup1, toPickup2, toPickup3, toPickup4, toPark;
+    public PathChain startToSample1, toRung2, toRung3, toRung4, toRung5, toSample1, toSample2, toSample3, toPickup1, toPickup2, toPickup3, toPickup4, toPark, movement1, movement2, movement3, movement4;
 
     // Other misc. stuff
     private Follower follower;
@@ -74,6 +74,8 @@ public class Auto_Test_05Z extends OpMode{
     RobotConfig config;
 
     Automous automous; //CHANGE THIS WHEN NEW ROBOT
+
+    int listPointer = 1;
 
     @Override
     public void init() {
@@ -109,9 +111,35 @@ public class Auto_Test_05Z extends OpMode{
 
 
     public void buildPaths() {
-        toRung1 = follower.pathBuilder()
+        movement1 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(new Point(startPose), rungPoint1)))
+                .addTemporalCallback(500, () -> {
+                    grabber.Score();
+                })
+                .addPath(new Path(new BezierLine(rungPoint1, samplePoint1)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(1, () -> {
+                    grabber.Rest();
+                })
+                .addTemporalCallback(3.5, () -> {
+
+                })
                 .build();
+        movement2 = follower.pathBuilder()
+                .addPath(new Path(new BezierLine(samplePoint1,samplePoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .build();
+        movement3 = follower.pathBuilder()
+                .addPath(new Path(new BezierPoint(samplePoint2)))
+                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(340))
+                .build();
+        movement4 = follower.pathBuilder()
+                .addPath(new Path(new BezierLine(samplePoint2, pickupPoint1)))
+                .setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(0))
+
+                .build();
+
+
         toRung2 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint1, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -127,20 +155,6 @@ public class Auto_Test_05Z extends OpMode{
         toRung5 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint5)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-
-        toSample1 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint1, samplePoint1)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toSample2 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(samplePoint1,samplePoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toSample3 = follower.pathBuilder()
-                .addPath(new Path(new BezierPoint(samplePoint2)))
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(340))
                 .build();
 
 
@@ -238,6 +252,16 @@ public class Auto_Test_05Z extends OpMode{
         automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
     }
 
+    public void routine() {
+        switch (listPointer) {
+            case 1:
+                if (!follower.isBusy()) {
+                    listPointer = 2;
+                    follower.followPath(toSample1);
+                }
+        }
+    }
+
     @Override
     public void loop() {
 
@@ -267,8 +291,6 @@ public class Auto_Test_05Z extends OpMode{
         telemetry.update();
     }
 
-
-
     @Override
     public void start() {
         buildPaths();
@@ -283,8 +305,6 @@ public class Auto_Test_05Z extends OpMode{
     public void stop() {
         follower.breakFollowing();
     }
-
-
 }
 
 /**
