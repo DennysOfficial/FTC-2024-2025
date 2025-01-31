@@ -85,7 +85,7 @@ public abstract class ControlAxis {  //schrödinger's code
             case trajectoryControl:
                 if (activeTrajectory == null || !activeTrajectory.isActive())
                     break;
-                setTargetPosition(getPosition());
+                setTargetPosition(getNonCachedPosition());
                 targetVelocity = 0;
                 targetAcceleration = 0;
                 this.controlMode = controlMode;
@@ -95,7 +95,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                targetPosition = Double.NaN;
+                targetPosition = getPosition();
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -344,9 +344,6 @@ public abstract class ControlAxis {  //schrödinger's code
         updateCachedPosition();
         positionDerivatives.update(getPosition(), deltaTime);
 
-        if(Double.isNaN(targetPosition))
-            setTargetPosition(getPosition());
-
 
         if (config.inputMap != null && config.inputMap.getUnAbort())
             setControlMode(defaultControlMode);
@@ -411,5 +408,9 @@ public abstract class ControlAxis {  //schrödinger's code
         miscUpdate();
         debugUpdate();
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of Control axis update time");
+    }
+
+    public void homeAxis(){
+
     }
 }

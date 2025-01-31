@@ -73,6 +73,11 @@ public class InputMap {
         return gamepad1.right_trigger > 0.5;
     }
 
+    public boolean getIntakeWristDown() {
+        return gamepad2.right_trigger > 0.5;
+    }
+
+
     ElapsedTime doubleClickTimer = new ElapsedTime();
 
 

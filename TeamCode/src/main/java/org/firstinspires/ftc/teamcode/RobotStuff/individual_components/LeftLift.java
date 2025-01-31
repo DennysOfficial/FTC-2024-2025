@@ -34,6 +34,16 @@ public class LeftLift extends ControlAxis {
     public static double kineticFrictionCoefficient = 0;
     public static double staticThreshold = 0.1;
 
+    public static double homingPower = 0.5;
+
+    @Override
+    public void homeAxis(){
+        setControlMode(ControlMode.torqueControl);
+        //motors.getCurrentAlert()
+        targetTorque = homingPower;
+
+    }
+
     @Override
     double getKp() {
         return Kp;

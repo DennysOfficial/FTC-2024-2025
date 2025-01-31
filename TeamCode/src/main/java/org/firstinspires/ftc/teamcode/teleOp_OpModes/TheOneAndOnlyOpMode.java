@@ -44,7 +44,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -90,11 +92,17 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
 
+        PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
+
+        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
+
+
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
         frameTimer.reset();
+        //leftArmStuff.Rest();
 
         double deltaTime = 0;
 
@@ -116,35 +124,37 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
 
-            if (gamepad2.x) {
+            if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-10, 3);
+                    spinnyBit.fancyMoveToPosition(74, 1);
                 if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(12.5, 3);
+                    rightLift.fancyMoveToPosition(0, 0.75);
             }
 
 
-            if (gamepad2.a) {
-                rightLift.setTargetPosition(0);
-
-                if (rightLift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 3);
-
-                if (rightLift.getPosition() < 20)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 3);
+            if (gamepad2.b) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(-69, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
             }// presets
 
+            if(gamepad2.x){
+                leftArmStuff.Score();
+            }
+            if(gamepad2.a){
+                leftArmStuff.Collect();
+            }
 
-            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
+//            // make the arm smack into the ground and intake
+//            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+//
+//                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
+//                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+//
+//            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
+//                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
 
 
 
@@ -160,6 +170,11 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             //intake.directControl();
+
+            leftLift.update();
+            otherSpinnyBit.update();
+            suck.directControl();
+
 
 
             telemetry.update();

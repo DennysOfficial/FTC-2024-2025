@@ -23,7 +23,7 @@ public class DeviceConfig {
     public final String leftPivotServo1 = "PivotL1";
     public final String leftPivotServo2 = "PivotL2";
 
-    public final String leftPivotEncoder = frontRightDrive;
+    public final String leftPivotEncoder = backRightDrive;
 
     public final String rightPivot = "PivotR";
 

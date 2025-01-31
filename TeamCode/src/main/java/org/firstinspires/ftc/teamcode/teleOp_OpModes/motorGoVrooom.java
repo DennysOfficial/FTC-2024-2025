@@ -42,23 +42,22 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.InertialMeasurementUnit;
 
 import java.util.List;
 
-@TeleOp(name = "gorndog", group = "Linear OpMode")
+@TeleOp(name = "Motor Go Vrooom", group = "Linear OpMode")
 //@Disabled
-public class susyChristianMode extends LinearOpMode {
+public class motorGoVrooom extends LinearOpMode { // this is basically theotheroneandonlyopmode but with imu stuff
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     StopWatch stopWatch = new StopWatch();
+
+    InertialMeasurementUnit IMU = new InertialMeasurementUnit();
 
     @Override
     public void runOpMode() {
@@ -78,28 +77,29 @@ public class susyChristianMode extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        //RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        //RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        //spinnyBit.assignLift(rightLift);
+        //rightLift.assignPivot(spinnyBit);
 
         LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        LeftPivot spinnyBitL = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
+        otherSpinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(otherSpinnyBit);
 
-        spinnyBitL.assignLift(leftLift);
-        leftLift.assignPivot(spinnyBitL);
+        PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
 
+        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
-        ActiveIntakeMotor intake = new ActiveIntakeMotor(this, activeConfig);
-
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, leftLift, spinnyBitL);
-
+        IMU.initialize(hardwareMap);
 
         waitForStart();
         frameTimer.reset();
+        IMU.afterStart(); // starts measuring
 
         double deltaTime = 0;
 
@@ -109,6 +109,8 @@ public class susyChristianMode extends LinearOpMode {
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
+            IMU.updateIMU(telemetry);
+            IMU.returnIMU(telemetry);
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -119,31 +121,20 @@ public class susyChristianMode extends LinearOpMode {
             }
             activeConfig.sensorData.update(); // bulk caching
 
+            otherSpinnyBit.update();
+            leftLift.update();
 
-            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
-
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            rightLift.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
-
-            spinnyBit.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
+            if(gamepad2.b)
+                dohicky.Collect();
+            if(gamepad2.y)
+                dohicky.Rest();
+            if(gamepad2.x)
+                dohicky.Score();
 
             activeDriveMode.updateDrive(deltaTime);
-            //stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            intake.directControl();
-
+            //intake.directControl();
 
             telemetry.update();
         }
