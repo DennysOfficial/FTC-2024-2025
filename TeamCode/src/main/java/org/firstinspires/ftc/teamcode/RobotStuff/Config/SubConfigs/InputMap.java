@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class InputMap {
 
-    Gamepad gamepad1;
-    Gamepad gamepad2;
+    public final Gamepad gamepad1;
+    public final Gamepad gamepad2;
 
     public InputMap(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
@@ -41,8 +41,12 @@ public class InputMap {
         return 0;
     }
 
-    public boolean getPinchButton() {
+    public boolean getClawOpen() {
         return gamepad2.right_bumper;
+    }
+
+    public boolean getClawTwistToggleButton() {
+        return gamepad1.left_bumper;
     }
 
     public boolean getIntakeButton() {
