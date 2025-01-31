@@ -40,5 +40,8 @@ public class DeviceConfig {
     public final String elbowServo = "Elbow";
     public final String spWristServo = "SpWrist";
 
+    public final String clawTwistServo = "SpWrist";
+    public final String clawServo = "SpWrist";
+
 
 }

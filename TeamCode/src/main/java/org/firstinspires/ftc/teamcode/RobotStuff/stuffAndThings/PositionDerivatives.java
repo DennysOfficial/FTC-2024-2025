@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.MotionState;
+
 public class PositionDerivatives {
+
+    public MotionState motionState;
     double velocity = 0;
 
     public double getVelocity() {
@@ -20,17 +24,19 @@ public class PositionDerivatives {
         previousPosition = startingPosition;
     }
 
-    public void update(double position, double deltaTime) {
-        updateVelocity(position, deltaTime);
+
+    public void  update(double position, double deltaTime) {
+        motionState.position = position;
+        updateVelocity(deltaTime);
         updateAcceleration(deltaTime);
     }
 
-    void updateVelocity(double position, double deltaTime) {
-        velocity = -(previousPosition - (previousPosition = position)) / deltaTime;
+    void updateVelocity(double deltaTime) {
+        motionState.velocity = -(previousPosition - (previousPosition = motionState.position)) / deltaTime;
     }
 
     void updateAcceleration(double deltaTime) {
-        acceleration = -(previousVelocity - (previousVelocity = velocity)) / deltaTime;
+        motionState.acceleration = -(previousVelocity - (previousVelocity = motionState.velocity)) / deltaTime;
     }
 
 }

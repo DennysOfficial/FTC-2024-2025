@@ -45,11 +45,11 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected abstract void initMotors();
 
-    int getEncoder(){
+    int getEncoder() {
         return motors.getCurrentPosition();
     }
 
-    void setPower(double power){
+    void setPower(double power) {
         motors.setPower(power);
     }
 
@@ -86,8 +86,8 @@ public abstract class ControlAxis {  //schrödinger's code
                 if (activeTrajectory == null || !activeTrajectory.isActive())
                     break;
                 setTargetPosition(getNonCachedPosition());
-                targetVelocity = 0;
-                targetAcceleration = 0;
+                targetMotionState.velocity = 0;
+                targetMotionState.acceleration = 0;
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -95,7 +95,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                targetPosition = getPosition();
+                targetMotionState.position = getPosition();
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -192,16 +192,19 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     abstract double getAccelerationFeedforward();
+    // motion state stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    MotionState currentMotionState;
+    MotionState targetMotionState;
 
     // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    protected double targetPosition = 0;
+
 
     public double getTargetPosition() {
-        return targetPosition;
+        return targetMotionState.position;
     }
 
     public void setTargetPosition(double targetPosition) {
-        this.targetPosition = softLimits.clamp(targetPosition);
+        targetMotionState.position = softLimits.clamp(targetPosition);
     }
 
     Range<Double> softLimits = new Range<Double>(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -242,35 +245,34 @@ public abstract class ControlAxis {  //schrödinger's code
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    public double targetVelocity;
 
     public double getVelocityTPS() {
         return positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
     void updateVelocityControl() {
-        setTargetPosition(targetPosition + targetVelocity * deltaTime);
-        updatePositionPID(targetPosition, getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
+        setTargetPosition(targetMotionState.position + targetMotionState.velocity * deltaTime);
+        updatePositionPID(targetMotionState.position, getStaticFeedforward(targetMotionState.velocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    protected double targetAcceleration = 0;
 
 
     // Torque stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     public double targetTorque;
 
     // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    double previousTime = 0;
+    long previousTimeNano = 0;
+    final double secondsPerNano = 1.0 / ElapsedTime.SECOND_IN_NANO;
 
     void updateDeltaTime() {
-        if (previousTime == 0) {
-            previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO);
+        if (previousTimeNano == 0) {
+            previousTimeNano = System.nanoTime();
             deltaTime = 0;
             return;
         }
 
-        deltaTime = -1 * previousTime + (previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO));
+        deltaTime = (-1 * previousTimeNano + (previousTimeNano = System.nanoTime())) * secondsPerNano;
     }
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -363,7 +365,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case gamePadVelocityControl:
-                targetVelocity = getInput() * getVelocityControlMaxRate();
+                targetMotionState.velocity = getInput() * getVelocityControlMaxRate();
                 updateVelocityControl();
                 break;
 
@@ -390,13 +392,11 @@ public abstract class ControlAxis {  //schrödinger's code
                     activeTrajectory = null;
                     break;
                 }
-                MotionState targetMotionState = activeTrajectory.sampleTrajectory();
+                targetMotionState = activeTrajectory.sampleTrajectory();
 
                 //MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
 
                 setTargetPosition(targetMotionState.position);
-                targetVelocity = targetMotionState.velocity;
-                targetAcceleration = targetMotionState.acceleration;
 
                 updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
                 break;
@@ -410,7 +410,7 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of Control axis update time");
     }
 
-    public void homeAxis(){
+    public void homeAxis() {
 
     }
 }
