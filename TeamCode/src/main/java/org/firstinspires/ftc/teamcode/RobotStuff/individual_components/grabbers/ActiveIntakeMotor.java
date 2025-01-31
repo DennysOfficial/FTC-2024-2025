@@ -119,4 +119,8 @@ public class ActiveIntakeMotor {
         flapServo.setPosition(flapClosed);
     }
 
+    public void moveWrist(double position) {
+        wristServo.setPosition(position);
+    }
+
 }

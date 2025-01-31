@@ -179,15 +179,15 @@ public class PathBuilder {
 
     /**
      * This adds a temporal callback on the last Path added to the PathBuilder.
-     * This callback is set to run at a specified number of milliseconds after the start of the path.
+     * This callback is set to run at a specified number of seconds after the start of the path.
      *
-     * @param time This sets the number of milliseconds of wait between the start of the Path and
+     * @param time This sets the number of seconds of wait between the start of the Path and
      *             the calling of the callback.
      * @param runnable This sets the code for the callback to run. Use lambda statements for this.
      * @return This returns itself with the updated data.
      */
     public PathBuilder addTemporalCallback(double time, Runnable runnable) {
-        this.callbacks.add(new PathCallback(time, runnable, PathCallback.TIME, paths.size()-1));
+        this.callbacks.add(new PathCallback(time * 1000, runnable, PathCallback.TIME, paths.size()-1));
         return this;
     }
 

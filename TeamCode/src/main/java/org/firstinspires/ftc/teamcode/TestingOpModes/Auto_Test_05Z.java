@@ -28,6 +28,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.SingleRunAction;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
@@ -54,7 +56,10 @@ public class Auto_Test_05Z extends OpMode{
     Point parkPoint = new Point(24, 48, Point.CARTESIAN);
 
 
-    public PathChain startToSample1, toRung2, toRung3, toRung4, toRung5, toSample1, toSample2, toSample3, toPickup1, toPickup2, toPickup3, toPickup4, toPark, movement1, movement2, movement3, movement4;
+    public PathChain movement1, movement2, movement3, movement4;
+
+    public static double liftPosSpike1 = 0;
+    public static double liftPosSpike3 = 0;
 
     // Other misc. stuff
     private Follower follower;
@@ -77,8 +82,15 @@ public class Auto_Test_05Z extends OpMode{
 
     int listPointer = 1;
 
+    private Timer pathTimer;
+
+    Runnable r1, r2;
+    SingleRunAction a1, a2;
+
     @Override
     public void init() {
+
+        pathTimer = new Timer();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
@@ -113,7 +125,7 @@ public class Auto_Test_05Z extends OpMode{
     public void buildPaths() {
         movement1 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(new Point(startPose), rungPoint1)))
-                .addTemporalCallback(500, () -> {
+                .addTemporalCallback(0.5, () -> {
                     grabber.Score();
                 })
                 .addPath(new Path(new BezierLine(rungPoint1, samplePoint1)))
@@ -121,144 +133,187 @@ public class Auto_Test_05Z extends OpMode{
                 .addTemporalCallback(1, () -> {
                     grabber.Rest();
                 })
-                .addTemporalCallback(3.5, () -> {
-
+                .addTemporalCallback(2, () -> {
+                    rightPivot.setTargetPosition(90);
+                    rightLift.setTargetPosition(liftPosSpike1);
                 })
                 .build();
         movement2 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(samplePoint1,samplePoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0.5, () -> {
+                    rightPivot.setTargetPosition(90);
+                    rightLift.setTargetPosition(liftPosSpike1);
+                })
                 .build();
         movement3 = follower.pathBuilder()
                 .addPath(new Path(new BezierPoint(samplePoint2)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(340))
+                .addTemporalCallback(0.5, () -> {
+                    rightPivot.setTargetPosition(90);
+                    rightLift.setTargetPosition(liftPosSpike3);
+                })
                 .build();
         movement4 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(samplePoint2, pickupPoint1)))
+                .addPath(new Path(new BezierPoint(samplePoint2)))
                 .setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(0))
-
-                .build();
-
-
-        toRung2 = follower.pathBuilder()
+                .addTemporalCallback(0, () -> {
+                    grabber.Collect();
+                })
+                .addPath(new Path(new BezierLine(samplePoint2, pickupPoint1)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(pickupPoint1, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toRung3 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint3)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toRung4 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint4)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toRung5 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint5)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-
-        toPickup1 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(samplePoint2, pickupPoint1)))
-                .setLinearHeadingInterpolation(Math.toRadians(340), Math.toRadians(0))
-                .build();
-        toPickup2 = follower.pathBuilder()
+                .addTemporalCallback(0.5, ()-> {
+                    grabber.Score();
+                })
                 .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toPickup3 = follower.pathBuilder()
+                .addTemporalCallback(0.5, () -> {
+                    grabber.Collect();
+                })
+                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint3)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0.5, ()-> {
+                    grabber.Score();
+                })
                 .addPath(new Path(new BezierLine(rungPoint3, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-        toPickup4 = follower.pathBuilder()
+                .addTemporalCallback(0.5, () -> {
+                    grabber.Collect();
+                })
+                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint4)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0.5, ()-> {
+                    grabber.Score();
+                })
                 .addPath(new Path(new BezierLine(rungPoint4, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-
-        toPark = follower.pathBuilder()
+                .addTemporalCallback(0.5, () -> {
+                    grabber.Collect();
+                })
+                .addPath(new Path(new BezierLine(pickupPoint2, rungPoint5)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0.5, ()-> {
+                    grabber.Score();
+                })
                 .addPath(new Path(new BezierLine(rungPoint5, parkPoint)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(240))
+                .addTemporalCallback(0.5, () -> {
+                    grabber.Collect();
+                })
+                .addTemporalCallback(1, () -> {
+                    rightPivot.setTargetPosition(90);
+                    rightLift.setTargetPosition(0);
+                    intake.moveWrist(0.2);
+                })
                 .build();
 
-        //TODO: Lift values are ESTIMATES, any comments in this codeblock are spots where lift code is needed
-        automous.addPath(0, 0, toRung1, 2, 5); //1
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Score();
-        }, 0, 1));
-        automous.addPath(90, 10, toSample1, 0, 5); //2
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Collect();
-        }, 1, 2));
-        automous.addPath(0, 0, null, 1, 5); //3
-        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 3));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.intakeForDuration(0.5);
-        }, 1, 3));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.openFlap();
-            intake.intakeForDuration(0.5);
-        }, 5, 3));
-        automous.addPath(0, 0, toSample2, 1, 5); //4
-        automous.addPath(0, 0, null, 1, 5); //5
-        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 5));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.intakeForDuration(0.5);
-        }, 1, 5));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.openFlap();
-            intake.intakeForDuration(0.5);
-        }, 5, 5));
-        automous.addPath(0, 0, toSample3, 1, 5); //6
-        automous.addPath(-90, 0, null, 1, 5); //7
-        automous.addLiftTimeStamp(new LiftTimeStamp(-90, 0, 4, 7));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.intakeForDuration(0.5);
-        }, 1, 7));
-        automous.addTimeStamp(new TimeStamp(() -> {
-            intake.openFlap();
-            intake.intakeForDuration(0.5);
-        }, 5, 7));
-        automous.addPath(-90, 0, toPickup1, 2, 5); //8
-        automous.addPath(-90, 0, toRung2, 2, 5); //9
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Score();
-        }, 0.5, 9));
-        automous.addPath(-90, 0, toPickup2, 2, 5);//10
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Collect();
-        }, 1, 10));
-        automous.addPath(-90, 0, toRung3, 2, 5); //11
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Score();
-        },0.5, 11));
-        automous.addPath(-90, 0, toPickup3, 2, 5);//12
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Collect();
-        }, 1, 12));
-        automous.addPath(-90, 0, toRung4, 2, 5); //13
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Score();
-        }, 0.5, 13));
-        automous.addPath(-90, 0, toPickup4, 2, 5);//14
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Collect();
-        }, 1, 14));
-        automous.addPath(-90, 0, toRung5, 2, 5); //15
-        automous.addTimeStamp(new TimeStamp(() -> {
-            grabber.Score();
-        }, 0.5, 15));
-        automous.addPath(90, 33, toPark, 1, 5);//16
-        automous.addLiftTimeStamp(new LiftTimeStamp(90, 33, 1, 16));
+        r1 = () -> {
+            rightLift.setTargetPosition(0);
+            rightPivot.setTargetPosition(-69);
+            intake.moveWrist(0.85);
+        };
+
+        a1 = new SingleRunAction(r1);
+
+        r2 = () -> {
+            intake.intakeForDuration(1);
+        };
+
+        a2 = new SingleRunAction(r2);
     }
 
     public void routine() {
         switch (listPointer) {
             case 1:
-                if (!follower.isBusy()) {
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10) {
                     listPointer = 2;
-                    follower.followPath(toSample1);
+                    pathTimer.resetTimer();
+                    intake.moveWrist(0.2);
+                    intake.intakeForDuration(1);
                 }
+
+                break;
+            case 2:
+
+                if (pathTimer.getElapsedTimeSeconds() >= 1) {
+                    a1.run();
+                }
+
+                if (pathTimer.getElapsedTimeSeconds() >= 2) {
+                    a2.run();
+                }
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 3) {
+                    listPointer = 3;
+                    follower.followPath(movement2);
+                    pathTimer.resetTimer();
+                    a1.reset();
+                    a2.reset();
+                }
+
+                break;
+            case 3:
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10) {
+                    listPointer = 4;
+                    pathTimer.resetTimer();
+                    intake.moveWrist(0.2);
+                    intake.intakeForDuration(1);
+                }
+
+                break;
+            case 4:
+
+                if (pathTimer.getElapsedTimeSeconds() >= 1) {
+                    a1.run();
+                }
+
+                if (pathTimer.getElapsedTimeSeconds() >= 2) {
+                    a2.run();
+                }
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 3) {
+                    listPointer = 5;
+                    follower.followPath(movement3);
+                    pathTimer.resetTimer();
+                    a1.reset();
+                    a2.reset();
+                }
+
+                break;
+            case 5:
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 10) {
+                    listPointer = 6;
+                    pathTimer.resetTimer();
+                    intake.moveWrist(0.2);
+                    intake.intakeForDuration(1);
+                }
+
+                break;
+            case 6:
+
+                if (pathTimer.getElapsedTimeSeconds() >= 1) {
+                    a1.run();
+                }
+
+                if (pathTimer.getElapsedTimeSeconds() >= 2) {
+                    a2.run();
+                }
+
+                if (!follower.isBusy() || pathTimer.getElapsedTimeSeconds() >= 3) {
+                    listPointer = 7;
+                    follower.followPath(movement4);
+                    pathTimer.resetTimer();
+                    a1.reset();
+                    a2.reset();
+                }
+                break;
+            case 7:
+                break;
         }
     }
 
@@ -269,12 +324,10 @@ public class Auto_Test_05Z extends OpMode{
             hub.clearBulkCache();
         }
 
-        deltaTime = frameTimer.seconds();
+        deltaTime = frameTimer.milliseconds();
         frameTimer.reset();
 
-        intake.closeFlap();
-
-        automous.routine();
+        routine();
         follower.update();
         leftLift.update();
         leftPivot.update();
@@ -294,7 +347,8 @@ public class Auto_Test_05Z extends OpMode{
     @Override
     public void start() {
         buildPaths();
-        follower.followPath(toRung1);
+        follower.followPath(movement1);
+        pathTimer.resetTimer();
 
         deltaTime = 0;
         frameTimer.reset();
