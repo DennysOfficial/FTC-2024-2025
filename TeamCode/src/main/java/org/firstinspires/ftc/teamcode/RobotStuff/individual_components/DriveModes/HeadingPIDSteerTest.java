@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
-import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -13,11 +11,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 public class HeadingPIDSteerTest extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = 0.02;
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
+    public static double angleKp = 0;
+    public static double angleKi = 0;
+    public static double angleKd = 0;
 
-    CustomPID steeringPID;
+    public static double velocityKp = 0;
+    public static double velocityKi = 0;
+    public static double velocityKd = 0;
+
+    CustomPID steeringAnglePID;
+    CustomPID steeringAngularVelocityPID;
     IMU imu;
 
     double[] motorPowers = new double[4];
@@ -26,13 +29,18 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
     public HeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        steeringPID = new CustomPID(opMode.telemetry, config, "steeringPID");
+        steeringAnglePID = new CustomPID(opMode.telemetry, config, "steeringAnglePID");
+        steeringAngularVelocityPID = new CustomPID(opMode.telemetry, config, "steeringAngularVelocityPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
     }
 
     double getHeadingDeg() {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+    }
+
+    double getHeadingRate() {
+        return imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate;
     }
 
     public void telemetryAngleVelocity() {
@@ -55,11 +63,15 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
         targetHeading += targetTurnRate * deltaTime;
 
-        steeringPID.setCoefficients(Kp, Ki, Kd);
+        steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
+
+        steeringAngularVelocityPID.setCoefficients(velocityKp, velocityKi, velocityKd);
 
         double turn = turnFeedforwardCoefficient * targetTurnRate;
 
-        turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
+        turn += steeringAnglePID.runPID(targetHeading, getHeadingDeg(), deltaTime);
+
+        turn += steeringAngularVelocityPID.runPID(targetTurnRate, getHeadingRate(), deltaTime);
 
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
