@@ -132,7 +132,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 prayers.enterSub();
             }
 
-
             if (gamepad2.b) {
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(-69, 1);
