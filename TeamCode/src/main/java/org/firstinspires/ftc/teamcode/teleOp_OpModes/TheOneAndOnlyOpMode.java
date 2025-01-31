@@ -45,8 +45,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
@@ -96,7 +96,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
 
-
+        speedyServos prayers = new speedyServos(this, activeConfig);
         //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
@@ -126,9 +126,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(74, 1);
+                    spinnyBit.fancyMoveToPosition(70, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.enterSub();
             }
 
 
@@ -137,6 +138,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.deposit();
             }// presets
 
             if(gamepad2.x){
