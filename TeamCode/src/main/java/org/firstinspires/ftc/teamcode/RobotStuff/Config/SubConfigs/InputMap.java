@@ -42,7 +42,7 @@ public class InputMap {
     }
 
     public boolean getClawOpen() {
-        return gamepad2.right_bumper;
+        return gamepad1.right_trigger > 0.2;
     }
 
     public boolean getClawTwistToggleButton() {

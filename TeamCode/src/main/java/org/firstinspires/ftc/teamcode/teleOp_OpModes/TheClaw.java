@@ -148,6 +148,8 @@ public class TheClaw extends LinearOpMode {
             otherSpinnyBit.update();
             suck.directControl();
 
+            leftArmStuff.updatePincher();
+
 
 
             telemetry.update();

@@ -19,8 +19,6 @@ public class ClawAndStuff {
     Servo pinchServo;
     public static double closedPosition = .6f;
     public static double openPosition = .4f;
-    public static double twistUp = .6;
-    public static double twistDown = .4;
 
     OpMode opmode;
     RobotConfig config;
@@ -34,7 +32,6 @@ public class ClawAndStuff {
     public static double pivotPosScore = 30;
 
     public static double wristPosCollect = 0.16;
-    public static double elbowPosCollect = 0.57;
     public static double liftPosCollect = 0;
     public static double pivotPosCollect = -65;
 
@@ -78,7 +75,7 @@ public class ClawAndStuff {
     }
 
 
-    void updatePincher() {
+    public void updatePincher() {
         if (config.inputMap.getClawOpen())
             pinchServo.setPosition(openPosition);
         else
