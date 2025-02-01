@@ -11,11 +11,16 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot
 @Config
 public class ClawGrabber {
 
-    Servo elbow;
-    Servo wrist;
+    Servo twistServo;
 
     LeftLift lift;
     LeftPivot pivot;
+
+    Servo pinchServo;
+    public static double closedPosition = .6f;
+    public static double openPosition = .4f;
+    public static double twistUp = .6;
+    public static double twistDown = .4;
 
     OpMode opmode;
     RobotConfig config;
@@ -24,9 +29,7 @@ public class ClawGrabber {
     public static double liftPosRest = 0;
     public static double pivotPosRest = -80;
 
-    public static double elbowPosRest1 = 0.5;
-
-    public static double elbowPosScore = 0.56;
+    public static double wristPosScore = 0.83;
     public static double liftPosScore = 6.8;
     public static double pivotPosScore = 30;
 
@@ -40,53 +43,45 @@ public class ClawGrabber {
         this.config = config;
         this.lift = lift;
         this.pivot = pivot;
-        elbow = opmode.hardwareMap.get(Servo.class, config.deviceConfig.elbowServo);
-        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
+        twistServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
+        pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.clawServo);
     }
 
     public void Score() {
-        wrist.setPosition(wristPosScore);
-        elbow.setPosition(elbowPosScore);
+        twistServo.setPosition(wristPosScore);
         lift.setTargetPosition(liftPosScore);
         pivot.setTargetPosition(pivotPosScore);
     }
 
     public void Collect() {
-        wrist.setPosition(wristPosCollect);
-        elbow.setPosition(elbowPosCollect);
+        twistServo.setPosition(wristPosCollect);
         lift.setTargetPosition(liftPosCollect);
         pivot.setTargetPosition(pivotPosCollect);
     }
 
     public void Rest() {
-        wrist.setPosition(wristPosRest);
-        elbow.setPosition(elbowPosRest);
+        twistServo.setPosition(wristPosRest);
         lift.setTargetPosition(liftPosRest);
         pivot.setTargetPosition(pivotPosRest);
     }
 
-    public void setPosition(double elbowPos, double wristPos) {
-        wrist.setPosition(wristPos);
-        elbow.setPosition(elbowPos);
-    }
-
-    public void setElbowPos(double elbowPos) {
-        elbow.setPosition(elbowPos);
+    public void setTwistServo(double wristPos) {
+        twistServo.setPosition(wristPos);
     }
 
     public void setWristPos(double wristPos) {
-        wrist.setPosition(wristPos);
-    }
-
-    public double getElbowPos() {
-        return elbow.getPosition();
+        twistServo.setPosition(wristPos);
     }
 
     public double getWristPos() {
-        return wrist.getPosition();
+        return twistServo.getPosition();
     }
 
-    public double getElbowPosRest1() {
-        return elbowPosRest1;
+
+    void updatePincher() {
+        if (config.inputMap.getClawOpen())
+            pinchServo.setPosition(openPosition);
+        else
+            pinchServo.setPosition(closedPosition);
     }
 }

@@ -199,7 +199,7 @@ public abstract class ControlAxis {  //schrödinger's code
     // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
 
-    public double getTargetPosition() {
+    public double   getTargetPosition() {
         return targetMotionState.position;
     }
 
@@ -392,6 +392,7 @@ public abstract class ControlAxis {  //schrödinger's code
                     activeTrajectory = null;
                     break;
                 }
+
                 targetMotionState = activeTrajectory.sampleTrajectory();
 
                 //MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
