@@ -27,11 +27,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -40,20 +41,21 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "gorndog", group = "Linear OpMode")
-//@Disabled
-public class susyChristianMode extends LinearOpMode {
+@TeleOp(name = "Heading PID Test", group = "Linear OpMode")
+@Disabled
+public class HeadingPIDTest extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -63,44 +65,16 @@ public class susyChristianMode extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        LeftPivot spinnyBitL = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
-
-        spinnyBitL.assignLift(leftLift);
-        leftLift.assignPivot(spinnyBitL);
-
-
-        ActiveIntakeMotor intake = new ActiveIntakeMotor(this, activeConfig);
-
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, leftLift, spinnyBitL);
+        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
 
 
         waitForStart();
         frameTimer.reset();
-
         double deltaTime = 0;
 
         // run until the end of the match (driver presses STOP)
@@ -114,36 +88,9 @@ public class susyChristianMode extends LinearOpMode {
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
-            for (LynxModule hub : allHubs) {
-                hub.clearBulkCache();
-            }
             activeConfig.sensorData.update(); // bulk caching
 
-
-            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
-
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            rightLift.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
-
-            spinnyBit.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
-
             activeDriveMode.updateDrive(deltaTime);
-            //stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
-            intake.directControl();
-
 
             telemetry.update();
         }

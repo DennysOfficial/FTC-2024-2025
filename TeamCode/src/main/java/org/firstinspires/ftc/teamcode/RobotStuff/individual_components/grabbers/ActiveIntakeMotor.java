@@ -59,6 +59,7 @@ public class ActiveIntakeMotor {
         wheelControl();
         //flapControl();
         if(config.inputMap.getIntakeWristDown())
+
             wristServo.setPosition(wristDown);
         else
             wristServo.setPosition(wristUp);

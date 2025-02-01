@@ -23,6 +23,7 @@ public class SensorData {
         }
         batteryVoltage = batteryVoltageSensor.getVoltage();
     }
+
     VoltageSensor getBatteryVoltageSensor() {
         for (VoltageSensor sensor : hardwareMap.voltageSensor) {
             if (sensor.getVoltage() > 0)
@@ -30,10 +31,50 @@ public class SensorData {
         }
         return null;
     }
+
     VoltageSensor batteryVoltageSensor;
     double batteryVoltage;
+
     public double getBatteryVoltage() {
         return batteryVoltage;
     }
+
+    public double getForwardAcceleration() {
+        return 0;
+    }//TODO
+
+    public double getRightAcceleration() {
+        return 0;
+    }//TODO
+
+    public double getUpAcceleration() {
+        return 0;
+    }//TODO
+
+    public double getYawRate() {
+        return 0;
+    }//TODO
+
+    public double getPitchRate() {
+        return 0;
+    }//TODO
+
+    public double getRollRate() {
+        return 0;
+    }//TODO
+
+
+    public double getYaw() {
+        return 0;
+    }//TODO
+
+    public double getPitch() {
+        return 0;
+    }//TODO
+
+    public double getRoll() {
+        return 0;
+    }//TODO
+
 
 }
