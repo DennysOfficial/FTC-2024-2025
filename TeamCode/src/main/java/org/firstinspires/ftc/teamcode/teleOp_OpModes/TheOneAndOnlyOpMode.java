@@ -149,8 +149,12 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
 //            // make the arm smack into the ground and intake
-//            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
-//
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 60) {
+                prayers.inSub(gamepad2.left_stick_x);
+                if (gamepad2.right_trigger > 0.2 && prayers.getWristPos() == 0.2) {
+                    spinnyBit.fancyMoveToPosition(75, 0.1);
+                }
+            }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 //                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 //
