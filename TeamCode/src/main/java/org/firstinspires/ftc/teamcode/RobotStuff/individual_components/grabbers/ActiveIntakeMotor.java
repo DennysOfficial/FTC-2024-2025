@@ -29,7 +29,7 @@ public class ActiveIntakeMotor {
     static double flapOpen = 0;
     static double flapClosed = 0.9;
 
-    speedyServos wrist = new speedyServos(opMode, config);
+
 
 
     public ActiveIntakeMotor(OpMode opMode, RobotConfig config) {
@@ -59,10 +59,10 @@ public class ActiveIntakeMotor {
         wheelControl();
         //flapControl();
         if(config.inputMap.getIntakeWristDown())
-            wrist.Intake();
-            //wristServo.setPosition(wristDown);
-        //else
-            //wristServo.setPosition(wristUp);
+
+            wristServo.setPosition(wristDown);
+        else
+            wristServo.setPosition(wristUp);
     }
 
     public void wheelControl() {
