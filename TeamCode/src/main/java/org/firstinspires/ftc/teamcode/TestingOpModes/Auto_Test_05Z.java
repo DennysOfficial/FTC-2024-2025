@@ -48,7 +48,8 @@ public class Auto_Test_05Z extends OpMode{
     Point rungPoint5 = new Point(39, 70.5, Point.CARTESIAN);
 
     Point pickupPoint1 = new Point(9, 12, Point.CARTESIAN);
-    Point pickupPoint2 = new Point(9, 36, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(10.5, 36, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(9, 36, Point.CARTESIAN);
 
     Point samplePoint1 = new Point(24, 24, Point.CARTESIAN);
     Point samplePoint2 = new Point(24, 12, Point.CARTESIAN);
@@ -113,9 +114,13 @@ public class Auto_Test_05Z extends OpMode{
 
         leftLift.assignPivot(leftPivot);
         leftPivot.assignLift(leftLift);
+        rightLift.assignPivot(rightPivot);
+        rightPivot.assignLift(rightLift);
 
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+
+
 
         automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
     }
@@ -172,6 +177,8 @@ public class Auto_Test_05Z extends OpMode{
                 .addTemporalCallback(0.5, () -> {
                     grabber.Collect();
                 })
+                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addTemporalCallback(0.5, ()-> {
@@ -182,6 +189,8 @@ public class Auto_Test_05Z extends OpMode{
                 .addTemporalCallback(0.5, () -> {
                     grabber.Collect();
                 })
+                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addTemporalCallback(0.5, ()-> {
@@ -192,6 +201,8 @@ public class Auto_Test_05Z extends OpMode{
                 .addTemporalCallback(0.5, () -> {
                     grabber.Collect();
                 })
+                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(pickupPoint2, rungPoint5)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addTemporalCallback(0.5, ()-> {
@@ -349,6 +360,8 @@ public class Auto_Test_05Z extends OpMode{
         buildPaths();
         follower.followPath(movement1);
         pathTimer.resetTimer();
+        rightLift.setTargetPosition(0);
+        rightPivot.setTargetPosition(-69);
 
         deltaTime = 0;
         frameTimer.reset();
