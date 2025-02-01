@@ -28,50 +28,10 @@ public class ClawAndStuff {
         twistServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.clawTwistServo);
     }
 
-    public void directControl() {
-        updatePincher();
-        updateTwister();
-    }
-
-    boolean previousTwistButton = false;
-
-    void updateTwister() {
-        if (config.inputMap.getClawTwistToggleButton() && (config.inputMap.getClawTwistToggleButton()) != previousTwistButton)
-            togglePincher();
-        previousTwistButton = config.inputMap.getClawTwistToggleButton();
-
-        switch (twistState){
-            case Up:
-                pinchServo.setPosition(twistUp);
-                break;
-            case Down:
-                pinchServo.setPosition(twistDown);
-                break;
-        }
-    }
-
-    enum TwistState{
-        Up,
-        Down
-    }
-    TwistState twistState = TwistState.Up;
-    void togglePincher(){
-
-        if (twistState == TwistState.Up)
-            twistState = TwistState.Down;
-
-        else
-            twistState = TwistState.Up;
-    }
-
     void updatePincher() {
         if (config.inputMap.getClawOpen())
             pinchServo.setPosition(openPosition);
         else
             pinchServo.setPosition(closedPosition);
     }
-
-
-
-
 }
