@@ -85,7 +85,7 @@ public class RightLift extends ControlAxis {
 
     @Override
     double getVelocityFeedforward() {
-        return kineticFrictionForce(targetMotionState.velocity, kineticFrictionCoefficient, staticThreshold) + targetMotionState.velocity * velocityFeedforwardCoefficient;
+        return kineticFrictionForce(targetVelocity, kineticFrictionCoefficient, staticThreshold) + targetVelocity * velocityFeedforwardCoefficient;
     }
 
     @Override

@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,8 +52,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Heading PID Test", group = "Linear OpMode")
-@Disabled
+@TeleOp(name = "Heading PID Test", group = "Test?")
+//@Disabled
 public class HeadingPIDTest extends LinearOpMode {
 
 

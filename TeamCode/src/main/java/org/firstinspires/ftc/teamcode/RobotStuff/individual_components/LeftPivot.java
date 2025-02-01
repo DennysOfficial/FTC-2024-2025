@@ -141,7 +141,7 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     double getVelocityFeedforward() {
-        return targetMotionState.velocity * getVelocityFeedforwardCoefficient();
+        return targetVelocity * getVelocityFeedforwardCoefficient();
     }
 
     @Override
