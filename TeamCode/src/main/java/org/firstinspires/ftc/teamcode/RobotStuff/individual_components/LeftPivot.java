@@ -24,6 +24,8 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     void setPower(double power) {
+        if(Double.isNaN(power))
+            return;
         servo1.setPower(-power);
         servo2.setPower(-power);
     }
