@@ -17,15 +17,10 @@ public class PositionDerivatives {
     public double getAcceleration() {
         return acceleration;
     }
+
     double previousPosition;
     double previousVelocity = 0;
-    public PositionDerivatives(double startingPosition, MotionState motionState) {
-        this.motionState = motionState;
-        previousPosition = startingPosition;
-    }
     public PositionDerivatives(double startingPosition) {
-        motionState = new MotionState();
-        motionState.position = startingPosition;
         previousPosition = startingPosition;
     }
 

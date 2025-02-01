@@ -292,7 +292,7 @@ public abstract class ControlAxis {  //schrödinger's code
         setControlMode(defaultControlMode);
 
         initPid();
-        positionDerivatives = new PositionDerivatives(getPosition(),currentMotionState);
+        positionDerivatives = new PositionDerivatives(getPosition());
     }
 
     // trajectory stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
