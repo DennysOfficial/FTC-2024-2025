@@ -193,8 +193,8 @@ public abstract class ControlAxis {  //schrödinger's code
 
     abstract double getAccelerationFeedforward();
     // motion state stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    MotionState currentMotionState = new MotionState(0);
-    MotionState targetMotionState = new MotionState(0);
+    MotionState currentMotionState;
+    MotionState targetMotionState;
 
     // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
