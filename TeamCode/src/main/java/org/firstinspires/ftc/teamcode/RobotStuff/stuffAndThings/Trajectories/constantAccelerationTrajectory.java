@@ -42,9 +42,9 @@ public class constantAccelerationTrajectory extends Trajectory {
 
         travelDirection = endMotionState.position - startMotionState.position;
 
-        //double deltaVelocity = maxSpeed - Math.abs(startMotionState.velocity);
-        double thing = Math.pow(Math.copySign(maxSpeed, travelDirection),2) - Math.pow(startMotionState.velocity,2);
-        double topSpeedAccelerationDistance =  thing/ (2.0 * maxAcceleration);
+        double deltaVelocity = maxSpeed - Math.abs(startMotionState.velocity);
+
+        double topSpeedAccelerationDistance = ;
     }
 
     MotionState lastTargetMotionState;
@@ -83,6 +83,10 @@ public class constantAccelerationTrajectory extends Trajectory {
 
     double distanceToEnd() {
         return lastTargetMotionState.position - endMotionState.position;
+    }
+
+    double timeToMaxSpeed(){
+
     }
 
     public boolean isActive() {
