@@ -74,7 +74,7 @@ public class InputMap {
     }
 
     public boolean getBrake() {
-        return gamepad1.right_trigger > 0.5;
+        return false;
     }
 
     public boolean getIntakeWristDown() {
