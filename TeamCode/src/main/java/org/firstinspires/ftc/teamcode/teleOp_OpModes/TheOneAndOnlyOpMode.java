@@ -126,7 +126,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(70, 1);
+                    spinnyBit.fancyMoveToPosition(65, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
                 prayers.enterSub();
@@ -139,6 +139,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
                 prayers.deposit();
+                suck.intakeForDuration(0.3);
             }// presets
 
             if(gamepad2.x){
@@ -151,9 +152,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 60) {
-                prayers.inSub(gamepad2.left_stick_x);
-                if (gamepad2.right_trigger > 0.2 && prayers.getWristPos() == 0.2) {
-                    spinnyBit.fancyMoveToPosition(75, 0.1);
+                if (prayers.inSubRout(gamepad2.right_trigger)){
+                    spinnyBit.setTargetPosition(75);
+                    suck.intakeForDuration(1);
+                    prayers.Intake();
                 }
             }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
