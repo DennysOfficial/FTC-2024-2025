@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -7,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 
-//@Config
+@Config
 public class HeadingPIDSteerTest extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = 0.02;

@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "Follow The Leader Test", group = "Linear OpMode")
 //@Disabled
 public class FollowTheLeader extends LinearOpMode {
 
