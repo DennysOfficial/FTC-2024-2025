@@ -45,11 +45,11 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected abstract void initMotors();
 
-    int getEncoder(){
+    int getEncoder() {
         return motors.getCurrentPosition();
     }
 
-    void setPower(double power){
+    void setPower(double power) {
         motors.setPower(power);
     }
 
@@ -58,6 +58,12 @@ public abstract class ControlAxis {  //schrödinger's code
     private ControlMode controlMode = ControlMode.disabled;
 
     public ControlMode defaultControlMode;
+
+    ControlAxis leaderControlAxis;
+
+    public void setLeaderControlAxis(ControlAxis leaderControlAxis) {
+        this.leaderControlAxis = leaderControlAxis;
+    }
 
 
     public enum ControlMode {
@@ -68,6 +74,7 @@ public abstract class ControlAxis {  //schrödinger's code
         gamePadVelocityControl,
         gamePadTorqueControl,
         trajectoryControl,
+        followTheLeader,
         testing
     }
 
@@ -112,6 +119,10 @@ public abstract class ControlAxis {  //schrödinger's code
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                break;
+
+            case followTheLeader:
+
                 break;
 
             default:
@@ -401,6 +412,16 @@ public abstract class ControlAxis {  //schrödinger's code
                 updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
                 break;
 
+            case followTheLeader:
+                if(leaderControlAxis == null)
+                    throw new NullPointerException("use setLeaderControlAxis to assign the leader before update is called");
+                setTargetPosition(leaderControlAxis.getTargetPosition());
+                targetVelocity = leaderControlAxis.targetVelocity;
+                targetAcceleration = leaderControlAxis.targetAcceleration;
+
+                updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
+                break;
+
             case testing:
                 break;
         }
@@ -410,7 +431,7 @@ public abstract class ControlAxis {  //schrödinger's code
         updateStopwatch.addTimeToTelemetryAndReset(opMode.telemetry, "end of Control axis update time");
     }
 
-    public void homeAxis(){
+    public void homeAxis() {
 
     }
 }
