@@ -61,8 +61,15 @@ public abstract class ControlAxis {  //schrödinger's code
 
     ControlAxis leaderControlAxis;
 
-    public void setLeaderControlAxis(ControlAxis leaderControlAxis) {
+    double leaderPositionOffset = 0;
+
+    public void assignLeaderControlAxis(ControlAxis leaderControlAxis) {
         this.leaderControlAxis = leaderControlAxis;
+    }
+
+    public void assignLeaderControlAxis(ControlAxis leaderControlAxis, double positionOffset) {
+        this.leaderControlAxis = leaderControlAxis;
+        this.positionOffset = positionOffset;
     }
 
 
@@ -414,8 +421,8 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case followTheLeader:
                 if(leaderControlAxis == null)
-                    throw new NullPointerException("use setLeaderControlAxis to assign the leader before update is called");
-                setTargetPosition(leaderControlAxis.getTargetPosition());
+                    throw new NullPointerException("use assignLeaderControlAxis to assign the leader before update is called");
+                setTargetPosition(leaderControlAxis.getTargetPosition() + leaderPositionOffset);
                 targetVelocity = leaderControlAxis.targetVelocity;
                 targetAcceleration = leaderControlAxis.targetAcceleration;
 
