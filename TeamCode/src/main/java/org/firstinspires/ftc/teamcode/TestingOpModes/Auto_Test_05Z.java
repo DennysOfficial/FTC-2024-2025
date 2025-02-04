@@ -41,11 +41,11 @@ public class Auto_Test_05Z extends OpMode{
     private final Pose startPose = new Pose(9,64.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    Point rungPoint1 = new Point(39, 64.5, Point.CARTESIAN);
-    Point rungPoint2 = new Point(39, 66, Point.CARTESIAN);
-    Point rungPoint3 = new Point(39, 67.5, Point.CARTESIAN);
-    Point rungPoint4 = new Point(39, 69, Point.CARTESIAN);
-    Point rungPoint5 = new Point(39, 70.5, Point.CARTESIAN);
+    Point rungPoint1 = new Point(37, 64.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(37, 66, Point.CARTESIAN);
+    Point rungPoint3 = new Point(37, 67.5, Point.CARTESIAN);
+    Point rungPoint4 = new Point(37, 69, Point.CARTESIAN);
+    Point rungPoint5 = new Point(37, 70.5, Point.CARTESIAN);
 
     Point pickupPoint1 = new Point(9, 12, Point.CARTESIAN);
     Point pickupPoint2 = new Point(10.5, 36, Point.CARTESIAN);
