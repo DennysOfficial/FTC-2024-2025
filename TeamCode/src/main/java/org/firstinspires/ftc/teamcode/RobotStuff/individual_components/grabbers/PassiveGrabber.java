@@ -37,7 +37,7 @@ public class PassiveGrabber {
     public static double wristPosCollect = 0.16;
     public static double elbowPosCollect = 0.469;
     public static double liftPosCollect = 0;
-    public static double pivotPosCollect = -65;
+    public static double pivotPosCollect = -60;
 
     public PassiveGrabber(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
         this.opmode = opmode;
@@ -88,9 +88,5 @@ public class PassiveGrabber {
 
     public double getWristPos() {
         return wrist.getPosition();
-    }
-
-    public double getElbowPosRest1() {
-        return elbowPosRest1;
     }
 }

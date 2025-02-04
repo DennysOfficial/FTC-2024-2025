@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
-import androidx.core.math.MathUtils;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -9,9 +7,10 @@ import com.qualcomm.robotcore.hardware.IMU;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Ramp;
 
 @Config
-public class HeadingPIDSteerTest extends DriveModeBase {
+public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = 0.02;
     public static double angleKp = 0;
@@ -19,6 +18,11 @@ public class HeadingPIDSteerTest extends DriveModeBase {
     public static double angleKd = 0;
 
     public static double maxAngularAcceleration = 10;
+
+    double targetAngularVelocity = 0;
+    Ramp velocityRamp;
+
+    public static double maxAngularVelocity;
 
 
     CustomPID steeringAnglePID;
@@ -28,11 +32,12 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
     double targetHeading;
 
-    public HeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
+    public AlternateHeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         steeringAnglePID = new CustomPID(opMode.telemetry, config, "steeringAnglePID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
+        velocityRamp = new Ramp(0, maxAngularAcceleration);
     }
 
     double previousHeading;
@@ -62,26 +67,14 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
     }
 
-    double calculateTurnRate(double requestedTargetTurnRate, double deltaTime) {
-        if(requestedTargetTurnRate == previousTargetTurnRate)
-            return requestedTargetTurnRate;
-
-        double accelerationDirection = Math.copySign(1, requestedTargetTurnRate - previousTargetTurnRate);
-
-
-
-        double targetTurnRate = accelerationDirection * previousTargetTurnRate * maxAngularAcceleration * deltaTime;
-
-        if(Math.copySign(1, targetTurnRate - previousTargetTurnRate) != accelerationDirection)
-            return requestedTargetTurnRate;
-
-        return targetTurnRate;
-    }
 
     double previousTargetTurnRate = 0;
 
     @Override
     public void updateDrive(double deltaTime) {
+
+        velocityRamp.ratePerSecond = maxAngularAcceleration;
+
 
         telemetryAngleVelocity();
 
@@ -90,12 +83,11 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
         double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
-        double targetTurnRate = calculateTurnRate(requestedTargetTurnRate, deltaTime);
+        double targetTurnRate = velocityRamp.getRampedValue(requestedTargetTurnRate,deltaTime);
 
         targetHeading += targetTurnRate * deltaTime;
 
         steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
-
 
         double turn = turnFeedforwardCoefficient * targetTurnRate;
 

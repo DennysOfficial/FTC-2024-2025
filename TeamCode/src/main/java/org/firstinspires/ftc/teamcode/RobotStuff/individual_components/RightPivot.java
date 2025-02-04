@@ -114,7 +114,7 @@ public class RightPivot extends ControlAxis{
 
     @Override
     double getVelocityFeedforward() {
-        return targetMotionState.velocity * getVelocityFeedforwardCoefficient();
+        return targetVelocity * getVelocityFeedforwardCoefficient();
     }
 
     @Override

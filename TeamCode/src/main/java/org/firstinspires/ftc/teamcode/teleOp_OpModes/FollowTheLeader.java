@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -40,7 +40,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
@@ -52,9 +51,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Heading PID Test", group = "Test?")
+@TeleOp(name = "Follow The Leader Test", group = "Linear OpMode")
 //@Disabled
-public class HeadingPIDTest extends LinearOpMode {
+public class FollowTheLeader extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -64,17 +63,54 @@ public class HeadingPIDTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
 
-        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+
+
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
+
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
+
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
+
+        otherSpinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(otherSpinnyBit);
+
+        leftLift.assignLeaderControlAxis(rightLift);
+        otherSpinnyBit.assignLeaderControlAxis(spinnyBit);
+
+        //PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
+
+        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
+
+        speedyServos prayers = new speedyServos(this, activeConfig);
+        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
         frameTimer.reset();
+        //leftArmStuff.Rest();
+
         double deltaTime = 0;
+
+        leftLift.fancyMoveToPosition(rightLift.getPosition(), 2);
+        otherSpinnyBit.fancyMoveToPosition(spinnyBit.getPosition(), 2);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -87,9 +123,66 @@ public class HeadingPIDTest extends LinearOpMode {
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
             activeConfig.sensorData.update(); // bulk caching
 
+
+
+            if (gamepad2.y) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(65, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.enterSub();
+            }
+
+
+            if (gamepad2.b) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(-69, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.deposit();
+                suck.intakeForDuration(0.3);
+            }// presets
+
+
+//            // make the arm smack into the ground and intake
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 60) {
+                if (prayers.inSubRout(gamepad2.right_trigger)){
+                    spinnyBit.setTargetPosition(75);
+                    suck.intakeForDuration(1);
+                    prayers.Intake();
+                }
+            }
+//                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
+//                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+//
+//            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
+//                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
+
+
+
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
+
+            rightLift.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
+
+            spinnyBit.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
+
             activeDriveMode.updateDrive(deltaTime);
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
+
+            //intake.directControl();
+
+            leftLift.update();
+            otherSpinnyBit.update();
+            suck.directControl();
+
+
 
             telemetry.update();
         }

@@ -59,6 +59,19 @@ public abstract class ControlAxis {  //schrödinger's code
 
     public ControlMode defaultControlMode;
 
+    ControlAxis leaderControlAxis;
+
+    double leaderPositionOffset = 0;
+
+    public void assignLeaderControlAxis(ControlAxis leaderControlAxis) {
+        this.leaderControlAxis = leaderControlAxis;
+    }
+
+    public void assignLeaderControlAxis(ControlAxis leaderControlAxis, double positionOffset) {
+        this.leaderControlAxis = leaderControlAxis;
+        this.positionOffset = positionOffset;
+    }
+
 
     public enum ControlMode {
         disabled,
@@ -68,6 +81,7 @@ public abstract class ControlAxis {  //schrödinger's code
         gamePadVelocityControl,
         gamePadTorqueControl,
         trajectoryControl,
+        followTheLeader,
         testing
     }
 
@@ -86,8 +100,8 @@ public abstract class ControlAxis {  //schrödinger's code
                 if (activeTrajectory == null || !activeTrajectory.isActive())
                     break;
                 setTargetPosition(getNonCachedPosition());
-                targetMotionState.velocity = 0;
-                targetMotionState.acceleration = 0;
+                targetVelocity = 0;
+                targetAcceleration = 0;
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -95,7 +109,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
             case gamePadVelocityControl:
             case velocityControl:
-                targetMotionState.position = getNonCachedPosition();
+                targetPosition = getPosition();
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -112,6 +126,10 @@ public abstract class ControlAxis {  //schrödinger's code
                 this.controlMode = controlMode;
                 motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motors.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                break;
+
+            case followTheLeader:
+
                 break;
 
             default:
@@ -192,19 +210,16 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     abstract double getAccelerationFeedforward();
-    // motion state stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    MotionState currentMotionState = new MotionState();
-    MotionState targetMotionState = new MotionState();
 
     // Position stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-
+    protected double targetPosition = 0;
 
     public double getTargetPosition() {
-        return targetMotionState.position;
+        return targetPosition;
     }
 
     public void setTargetPosition(double targetPosition) {
-        targetMotionState.position = softLimits.clamp(targetPosition);
+        this.targetPosition = softLimits.clamp(targetPosition);
     }
 
     Range<Double> softLimits = new Range<Double>(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
@@ -245,34 +260,35 @@ public abstract class ControlAxis {  //schrödinger's code
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    public double targetVelocity;
 
     public double getVelocityTPS() {
         return positionDerivatives.getVelocity() / unitsPerEncoderCount;
     }
 
     void updateVelocityControl() {
-        setTargetPosition(targetMotionState.position + targetMotionState.velocity * deltaTime);
-        updatePositionPID(targetMotionState.position, getStaticFeedforward(targetMotionState.velocity) + getVelocityFeedforward());
+        setTargetPosition(targetPosition + targetVelocity * deltaTime);
+        updatePositionPID(targetPosition, getStaticFeedforward(targetVelocity) + getVelocityFeedforward());
     }
 
     // Acceleration stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+    protected double targetAcceleration = 0;
 
 
     // Torque stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     public double targetTorque;
 
     // deltaTime stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
-    long previousTimeNano = 0;
-    final double secondsPerNano = 1.0 / ElapsedTime.SECOND_IN_NANO;
+    double previousTime = 0;
 
     void updateDeltaTime() {
-        if (previousTimeNano == 0) {
-            previousTimeNano = System.nanoTime();
+        if (previousTime == 0) {
+            previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO);
             deltaTime = 0;
             return;
         }
 
-        deltaTime = (-1 * previousTimeNano + (previousTimeNano = System.nanoTime())) * secondsPerNano;
+        deltaTime = -1 * previousTime + (previousTime = System.nanoTime() / ((double) ElapsedTime.SECOND_IN_NANO));
     }
 
     // Constructor stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -292,7 +308,7 @@ public abstract class ControlAxis {  //schrödinger's code
         setControlMode(defaultControlMode);
 
         initPid();
-        positionDerivatives = new PositionDerivatives(getPosition(),currentMotionState);
+        positionDerivatives = new PositionDerivatives(getPosition());
     }
 
     // trajectory stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -365,7 +381,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case gamePadVelocityControl:
-                targetMotionState.velocity = getInput() * getVelocityControlMaxRate();
+                targetVelocity = getInput() * getVelocityControlMaxRate();
                 updateVelocityControl();
                 break;
 
@@ -392,11 +408,23 @@ public abstract class ControlAxis {  //schrödinger's code
                     activeTrajectory = null;
                     break;
                 }
-                targetMotionState = activeTrajectory.sampleTrajectory();
+                MotionState targetMotionState = activeTrajectory.sampleTrajectory();
 
                 //MotionState.telemetryMotionState(opMode.telemetry, targetMotionState, axisName + " target");
 
                 setTargetPosition(targetMotionState.position);
+                targetVelocity = targetMotionState.velocity;
+                targetAcceleration = targetMotionState.acceleration;
+
+                updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
+                break;
+
+            case followTheLeader:
+                if(leaderControlAxis == null)
+                    throw new NullPointerException("use assignLeaderControlAxis to assign the leader before update is called");
+                setTargetPosition(leaderControlAxis.getTargetPosition() + leaderPositionOffset);
+                targetVelocity = leaderControlAxis.targetVelocity;
+                targetAcceleration = leaderControlAxis.targetAcceleration;
 
                 updatePositionPID(getTargetPosition(), getVelocityFeedforward() + getAccelerationFeedforward());
                 break;

@@ -78,7 +78,7 @@ public class LeftPivot extends ControlAxis {
     public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-80.0, 50.0);
+        softLimits = new Range<>(-95.0, 50.0);
     }
 
     double previousRightLiftTargetPosition = Double.NaN;
@@ -141,7 +141,7 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     double getVelocityFeedforward() {
-        return targetMotionState.velocity * getVelocityFeedforwardCoefficient();
+        return targetVelocity * getVelocityFeedforwardCoefficient();
     }
 
     @Override

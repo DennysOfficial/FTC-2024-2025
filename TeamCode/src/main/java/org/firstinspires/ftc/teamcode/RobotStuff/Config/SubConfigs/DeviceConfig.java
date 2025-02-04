@@ -41,7 +41,7 @@ public class DeviceConfig {
     public final String spWristServo = "SpWrist";
 
     public final String clawTwistServo = "SpWrist";
-    public final String clawServo = "SpWrist";
+    public final String clawServo = "Elbow";
 
 
 }
