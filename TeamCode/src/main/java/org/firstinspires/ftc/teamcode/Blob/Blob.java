@@ -36,12 +36,13 @@ public class Blob {
     public ColorBlobLocatorProcessor CameraSetUp(String PixelColor, int XCameraResolutionHeight, int YCameraResolutionWidth) {
 
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-                .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
+        //        .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                .setRoi(ImageRegion.asUnityCenterCoordinates(-0.5, 0.5, 0.5, -0.5))  // search central 1/4 of camera view
+                .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
                 .setBlurSize(5)                               // Smooth the transitions between different colors in image
                 .build();
+
 
         switch (PixelColor) {
             case "Yellow":
@@ -50,32 +51,28 @@ public class Blob {
                         .build();
                 break;
             case "Blue":
-                colorLocator = new ColorBlobLocatorProcessor.Builder()
+                 colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.BLUE)
-                        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
-                        .setDrawContours(true)                        // Show contours on the Stream Preview
-                        .setBlurSize(5)                               // Smooth the transitions between different colors in image
+                        //.setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                        //.setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+                        //.setDrawContours(true)                        // Show contours on the Stream Preview
+                        //.setBlurSize(5)                               // Smooth the transitions between different colors in image
 
                         // use a predefined color match// Smooth the transitions between different colors in image
                         .build();
                 break;
             case "Red":
-                colorLocator = new ColorBlobLocatorProcessor.Builder()
+                 colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.RED)// use a predefined color match// Smooth the transitions between different colors in image
-                        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
-                        .setDrawContours(true)                        // Show contours on the Stream Preview
-                        .setBlurSize(5)
+                        //.setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                        //.setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+                        //.setDrawContours(true)                        // Show contours on the Stream Preview
+                        //.setBlurSize(5)
                         .build();
                 break;
         }
 
-        VisionPortal portal = new VisionPortal.Builder()
-                .addProcessor(colorLocator)
-                .setCameraResolution(new Size(XCameraResolutionHeight, YCameraResolutionWidth))
-                .setCamera(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .build();
+
 
         opMode.telemetry.setMsTransmissionInterval(50);   // Speed up telemetry updates, Just use for debugging.
         opMode.telemetry.setDisplayFormat(Telemetry.DisplayFormat.MONOSPACE);
@@ -175,7 +172,7 @@ public class Blob {
         opMode.telemetry.addData("vAngle", VAngle);
         //this not work
         //SampleDistanceFromCam = vectorToCam.getZ() * Math.tan(Math.toDegrees(VAngle))*-1  ;
-        SampleDistanceFromCam = Math.sin(Math.toRadians(VAngle))/ Math.sin(Math.toRadians(90-VAngle)) *vectorToCam.getZ();
+        SampleDistanceFromCam = Math.sin(Math.toRadians(VAngle))/ Math.sin(Math.toRadians(90-VAngle)) * vectorToCam.getZ();
         opMode.telemetry.addData("SampleD", SampleDistanceFromCam);
 
 

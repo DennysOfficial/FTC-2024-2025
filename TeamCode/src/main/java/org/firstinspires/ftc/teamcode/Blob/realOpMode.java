@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.Blob;
 
+import android.util.Size;
+
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 
 @TeleOp(name = "newOPMODE", group = "Linear OpMode")
@@ -16,7 +20,9 @@ public class realOpMode extends LinearOpMode {
         double CameraAngle = 54;
         double liftAngle = 90;
         double liftExtension = 0;
-        String PixelColor = "Blue";
+        String PixelColorBlue = "Blue";
+        String PixelColorRed = "Red";
+        String PixelColorYellow = "Yellow";
 
         Blob NewBlob = new Blob(this);
 
@@ -27,14 +33,30 @@ public class realOpMode extends LinearOpMode {
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
 
 
-        ColorBlobLocatorProcessor colorLocator ;
+        ColorBlobLocatorProcessor colorLocatorBlue ;
+        ColorBlobLocatorProcessor colorLocatorRed ;
+        ColorBlobLocatorProcessor colorLocatorYellow ;
+
 
         //waitForStart();
-        colorLocator = NewBlob.CameraSetUp(PixelColor, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+        colorLocatorBlue = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+        colorLocatorRed = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+        colorLocatorYellow = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+
+        VisionPortal portal = new VisionPortal.Builder()
+                .addProcessor(colorLocatorBlue)
+                .addProcessor(colorLocatorRed)
+                .addProcessor(colorLocatorYellow)
+                .setCameraResolution(new Size((int) XCameraResolutionHeight, (int) YCameraResolutionWidth))
+                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .build();
+
+
+
 
         while (opModeInInit()){
 
-        thing.OPBlob(colorLocator, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
+        thing.OPBlob(colorLocatorBlue, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
 
         sleep(30);
 
