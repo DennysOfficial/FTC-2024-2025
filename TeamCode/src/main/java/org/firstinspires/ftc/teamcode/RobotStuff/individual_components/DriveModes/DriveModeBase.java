@@ -44,6 +44,30 @@ public abstract class DriveModeBase {
         frontRightDrive.setDirection(config.deviceConfig.frontRightDriveDir);
     }
 
+    private double[] motorPowers = new double[4];
+    protected void setDriveVector(double drive, double strafe, double turn){
+        motorPowers[0] = drive + strafe + turn;    // Front Left
+        motorPowers[1] = drive - strafe - turn;    // front right
+        motorPowers[2] = drive - strafe + turn;    // back left
+        motorPowers[3] = drive + strafe - turn;
+
+        clampVectorMagnitude(motorPowers);
+
+        frontLeftDrive.setPower(motorPowers[0] * config.sensitivities.getDriveSensitivity());
+        frontRightDrive.setPower(motorPowers[1] * config.sensitivities.getDriveSensitivity());
+        backLeftDrive.setPower(motorPowers[2] * config.sensitivities.getDriveSensitivity());
+        backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
+    }
+    void clampVectorMagnitude(double[] inputArray) {
+        double max;
+        max = Math.max(Math.abs(inputArray[0]), Math.abs(inputArray[1]));
+        max = Math.max(max, Math.abs(inputArray[2]));
+        max = Math.max(max, Math.abs(inputArray[3]));
+
+        if (max > 1)
+            for (int i = 0; i < inputArray.length; i++)
+                inputArray[i] /= max;
+    }
 
     abstract public void updateDrive(double deltaTime);
 }
