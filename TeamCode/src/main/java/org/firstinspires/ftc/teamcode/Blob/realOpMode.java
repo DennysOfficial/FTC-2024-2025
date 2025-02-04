@@ -57,7 +57,8 @@ public class realOpMode extends LinearOpMode {
         while (opModeInInit()){
 
         thing.OPBlob(colorLocatorBlue, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
-
+        thing.OPBlob(colorLocatorRed, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
+        thing.OPBlob(colorLocatorYellow, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
         sleep(30);
 
         }
