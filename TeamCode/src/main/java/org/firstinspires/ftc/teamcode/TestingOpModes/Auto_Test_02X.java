@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -35,11 +36,11 @@ public class Auto_Test_02X extends OpMode{
     private final Pose startPose = new Pose(9,64.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    Point rungPoint1 = new Point(37, 64.5, Point.CARTESIAN);
-    Point rungPoint2 = new Point(37, 67.5, Point.CARTESIAN);
+    Point rungPoint1 = new Point(30, 64.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(30, 67.5, Point.CARTESIAN);
 
-    Point pickupPoint2 = new Point(10.5, 36, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(9, 36, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(12, 36, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(10.5, 36, Point.CARTESIAN);
 
     public PathChain movement1;
 
@@ -56,7 +57,7 @@ public class Auto_Test_02X extends OpMode{
 
     RightLift rightLift;
     RightPivot rightPivot;
-    PassiveGrabber grabber;
+    ClawAndStuff grabber;
 
     RobotConfig config;
 
@@ -84,7 +85,7 @@ public class Auto_Test_02X extends OpMode{
 
         rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
         rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
-        grabber = new PassiveGrabber(this, config, leftLift, leftPivot);
+        grabber = new ClawAndStuff(this, config, leftLift, leftPivot);
 
         leftLift.assignPivot(leftPivot);
         leftPivot.assignLift(leftLift);
@@ -98,6 +99,7 @@ public class Auto_Test_02X extends OpMode{
         rightLift.setTargetPosition(0);
         rightPivot.setTargetPosition(-69);
         grabber.Collect();
+        grabber.closeClaw();
     }
 
 
@@ -112,13 +114,23 @@ public class Auto_Test_02X extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addTemporalCallback(0.5, () -> {
                     grabber.Collect();
+                    grabber.openClaw();
                 })
                 .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(pickupPoint3, rungPoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0, () -> {
+                    grabber.closeClaw();
+                })
                 .addTemporalCallback(0.5, () -> {
                     grabber.Score();
                 })
                 .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addTemporalCallback(0.5, () -> {
+                    grabber.Collect();
+                })
                 .build();
     }
 

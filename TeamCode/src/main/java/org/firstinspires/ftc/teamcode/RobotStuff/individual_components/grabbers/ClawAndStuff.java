@@ -81,4 +81,12 @@ public class ClawAndStuff {
         else
             pinchServo.setPosition(closedPosition);
     }
+
+    public void openClaw() {
+        pinchServo.setPosition(openPosition);
+    }
+
+    public void closeClaw() {
+        pinchServo.setPosition(closedPosition);
+    }
 }
