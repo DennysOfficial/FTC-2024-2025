@@ -141,18 +141,20 @@ public class LeftLift extends ControlAxis {
     @Override
     void miscUpdate() {
 
-        opMode.telemetry.addLine("misc update running");
+        return;
 
-        if (config.inputMap.gamepad1.left_bumper) {
-            targetTorque = homingPower;
-            setControlModeUnsafe(ControlMode.torqueControl);
-        } else
-            setControlMode(defaultControlMode);
+        //opMode.telemetry.addLine("misc update running");
 
-        if (!limitSwitch.getState()) {
-            opMode.telemetry.addData("position offset = %f", positionOffset);
-            setCurrentPosition(homingPosition);
-        }
+//        if (config.inputMap.gamepad1.left_bumper) {
+//            targetTorque = homingPower;
+//            setControlModeUnsafe(ControlMode.torqueControl);
+//        } else
+//            setControlMode(defaultControlMode);
+//
+//        if (!limitSwitch.getState()) {
+//            opMode.telemetry.addData("position offset = %f", positionOffset);
+//            setCurrentPosition(homingPosition);
+//        }
     }
 
 }
