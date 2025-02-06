@@ -42,7 +42,7 @@ public class LeftLift extends ControlAxis {
 
 
     @Override
-    public void homeAxis(){
+    public void homeAxis() {
         setControlMode(ControlMode.torqueControl);
         //motors.getCurrentAlert()
         targetTorque = homingPower;
@@ -110,8 +110,9 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25/4056);
-        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class,"Left Limit Switch");
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056);
+        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
+        limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         softLimits = new Range<>(0.5, 20.0);
 
@@ -119,6 +120,7 @@ public class LeftLift extends ControlAxis {
     }
 
     double previousRightPivotTargetPosition = Double.NaN;
+
     @Override
     public void setTargetPosition(double targetPosition) {
         if (leftPivot == null)
@@ -139,14 +141,16 @@ public class LeftLift extends ControlAxis {
     @Override
     void miscUpdate() {
 
-        if(config.inputMap.gamepad1.left_bumper){
+        opMode.telemetry.addLine("misc update running");
+
+        if (config.inputMap.gamepad1.left_bumper) {
             targetTorque = homingPower;
             setControlModeUnsafe(ControlMode.torqueControl);
-        }
-        else
+        } else
             setControlMode(defaultControlMode);
 
-        if(limitSwitch.getState()){
+        if (!limitSwitch.getState()) {
+            opMode.telemetry.addData("position offset = %f", positionOffset);
             setCurrentPosition(homingPosition);
         }
     }
