@@ -97,9 +97,17 @@ public class Auto_Test_02X extends OpMode{
         follower.setStartingPose(startPose);
 
         rightLift.setTargetPosition(0);
-        rightPivot.setTargetPosition(-69);
+        rightPivot.setTargetPosition(-50);
         grabber.Collect();
         grabber.closeClaw();
+    }
+
+    @Override
+    public void init_loop() {
+        leftLift.update();
+        leftPivot.update();
+        rightLift.update();
+        rightPivot.update();
     }
 
 
@@ -174,6 +182,8 @@ public class Auto_Test_02X extends OpMode{
     public void stop() {
         follower.breakFollowing();
     }
+
+
 }
 
 /**
