@@ -17,7 +17,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public static double angleKi = 0;
     public static double angleKd = 0;
 
-    public static double maxAngularAcceleration = 10;
+    public static double accelerationConstant = 10;
+    public static double accelerationProportionalCoefficient = 10;
+    double targetAcceleration;
 
     double targetAngularVelocity = 0;
     Ramp velocityRamp;
@@ -37,7 +39,7 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         steeringAnglePID = new CustomPID(opMode.telemetry, config, "steeringAnglePID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
-        velocityRamp = new Ramp(0, maxAngularAcceleration);
+        velocityRamp = new Ramp(0, accelerationConstant);
     }
 
     double previousHeading;
@@ -73,8 +75,6 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     @Override
     public void updateDrive(double deltaTime) {
 
-        velocityRamp.ratePerSecond = maxAngularAcceleration;
-
 
         telemetryAngleVelocity();
 
@@ -83,13 +83,15 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
         double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
-        double targetTurnRate = velocityRamp.getRampedValue(requestedTargetTurnRate,deltaTime);
+        velocityRamp.ratePerSecond = accelerationConstant + accelerationProportionalCoefficient * Math.abs(requestedTargetTurnRate - targetAngularVelocity);
 
-        targetHeading += targetTurnRate * deltaTime;
+        targetAngularVelocity = velocityRamp.getRampedValue(requestedTargetTurnRate, deltaTime);
+
+        targetHeading += targetAngularVelocity * deltaTime;
 
         steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
 
-        double turn = turnFeedforwardCoefficient * targetTurnRate;
+        double turn = turnFeedforwardCoefficient * targetAngularVelocity;
 
         turn += steeringAnglePID.runPID(targetHeading, getHeadingDeg(), deltaTime);
 
