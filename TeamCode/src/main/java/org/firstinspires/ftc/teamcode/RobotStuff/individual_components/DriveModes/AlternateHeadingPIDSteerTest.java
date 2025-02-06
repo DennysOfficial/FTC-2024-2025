@@ -17,11 +17,14 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public static double angleKi = 0;
     public static double angleKd = 0;
 
-    public static double maxAngularAcceleration = 10;
+    public static double accelerationConstant = 10;
+    public static double accelerationProportionalCoefficient = 10;
+    double targetAcceleration;
 
+    double targetAngularVelocity = 0;
     Ramp velocityRamp;
 
-    public static double maxAngularVelocity = 90;
+    public static double maxAngularVelocity;
 
 
     CustomPID steeringAnglePID;
@@ -36,7 +39,7 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         steeringAnglePID = new CustomPID(opMode.telemetry, config, "steeringAnglePID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
-        velocityRamp = new Ramp(0, maxAngularAcceleration);
+        velocityRamp = new Ramp(0, accelerationConstant);
     }
 
     double previousHeading;
@@ -61,9 +64,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public void telemetryAngleVelocity() {
         opMode.telemetry.addData("Heading", getHeadingDeg());
         opMode.telemetry.addData("TargetHeading", targetHeading);
-        //opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
-        //opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
-        //opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+        opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
+        opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
+        opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
     }
 
 
@@ -72,24 +75,23 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     @Override
     public void updateDrive(double deltaTime) {
 
-        velocityRamp.ratePerSecond = maxAngularAcceleration;
-
 
         telemetryAngleVelocity();
 
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
         double drive = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();
 
-        double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * maxAngularVelocity;
-        opMode.telemetry.addData("RequestedTargetVelocity", requestedTargetTurnRate);
-        double targetTurnRate = velocityRamp.getRampedValue(requestedTargetTurnRate,deltaTime);
-        opMode.telemetry.addData("TargetVelocity", targetTurnRate);
+        double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
-        targetHeading += targetTurnRate * deltaTime;
+        velocityRamp.ratePerSecond = accelerationConstant + accelerationProportionalCoefficient * Math.abs(requestedTargetTurnRate - targetAngularVelocity);
+
+        targetAngularVelocity = velocityRamp.getRampedValue(requestedTargetTurnRate, deltaTime);
+
+        targetHeading += targetAngularVelocity * deltaTime;
 
         steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
 
-        double turn = turnFeedforwardCoefficient * targetTurnRate;
+        double turn = turnFeedforwardCoefficient * targetAngularVelocity;
 
         turn += steeringAnglePID.runPID(targetHeading, getHeadingDeg(), deltaTime);
 

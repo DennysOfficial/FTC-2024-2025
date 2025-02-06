@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Ramp;
-
+@Config
 public class FullPIDDrive extends DriveModeBase {
 
     public static PIDCoefficients turnPid = new PIDCoefficients(0, 0, 0);
@@ -52,15 +53,14 @@ public class FullPIDDrive extends DriveModeBase {
     }
 
     void updateRequestedDriveVector() {
-        xRequestedTargetVelocity = Math.cos(robotPose.h) * config.inputMap.getStrafeStick();
-        xRequestedTargetVelocity = Math.sin(robotPose.h) * config.inputMap.getForwardStick();
+        xRequestedTargetVelocity = config.inputMap.getStrafeStick();
 
-        yRequestedTargetVelocity = Math.sin(robotPose.h) * config.inputMap.getStrafeStick();
-        yRequestedTargetVelocity = Math.cos(robotPose.h) * config.inputMap.getForwardStick();
+        yRequestedTargetVelocity = config.inputMap.getForwardStick();
     }
 
     @Override
     public void updateDrive(double deltaTime) {
+
         robotPose = otos.getPosition();
         setDriveVector(drive, strafe, turn);
 
