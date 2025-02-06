@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -15,6 +16,10 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 public class LeftLift extends ControlAxis {
 
     LeftPivot leftPivot;
+
+    DigitalChannel limitSwitch;
+    public static double homingPosition = 0.5;
+
 
     final double retractedRadius = 10;
 
@@ -106,6 +111,7 @@ public class LeftLift extends ControlAxis {
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25/4056);
+        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class,"Left Limit Switch");
 
         softLimits = new Range<>(0.5, 20.0);
 
@@ -133,6 +139,9 @@ public class LeftLift extends ControlAxis {
     @Override
     void miscUpdate() {
 
+        if(limitSwitch.getState()){
+            setCurrentPosition(homingPosition);
+        }
     }
 
 }
