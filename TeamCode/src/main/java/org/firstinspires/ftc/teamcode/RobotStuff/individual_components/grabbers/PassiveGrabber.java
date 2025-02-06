@@ -35,9 +35,9 @@ public class PassiveGrabber {
     public static double pivotPosScore = 30;
 
     public static double wristPosCollect = 0.16;
-    public static double elbowPosCollect = 0.469;
+    public static double elbowPosCollect = 0.415;
     public static double liftPosCollect = 0;
-    public static double pivotPosCollect = -60;
+    public static double pivotPosCollect = -67;
 
     public PassiveGrabber(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
         this.opmode = opmode;

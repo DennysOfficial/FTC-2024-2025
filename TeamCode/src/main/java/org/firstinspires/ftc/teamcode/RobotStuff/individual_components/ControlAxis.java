@@ -258,6 +258,10 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
+    public void setCurrentPosition(double position){
+        positionOffset = position - getPosition();
+    }
+
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     public double targetVelocity;

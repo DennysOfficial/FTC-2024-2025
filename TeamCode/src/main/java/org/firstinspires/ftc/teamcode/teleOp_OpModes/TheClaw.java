@@ -42,6 +42,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
@@ -77,10 +79,16 @@ public class TheClaw extends LinearOpMode {
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.velocityControl, this, activeConfig);
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.velocityControl, this, activeConfig);
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
+
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
+
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
 
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
@@ -117,6 +125,24 @@ public class TheClaw extends LinearOpMode {
 
 
 
+            if (gamepad2.y) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(61, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.enterSub();
+            }
+
+
+            if (gamepad2.b) {
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(-69, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
+                prayers.deposit();
+                suck.intakeForDuration(0.3);
+            }// presets
+
             if(gamepad2.x){
                 leftArmStuff.Score();
             }
@@ -126,8 +152,13 @@ public class TheClaw extends LinearOpMode {
 
 
 //            // make the arm smack into the ground and intake
-//            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
-//
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
+                if (prayers.inSubRout(gamepad2.right_trigger)){
+                    spinnyBit.setTargetPosition(80);
+                    suck.intakeForDuration(2);
+                    prayers.Intake();
+                }
+            }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 //                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 //
@@ -138,6 +169,11 @@ public class TheClaw extends LinearOpMode {
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
+            rightLift.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
+
+            spinnyBit.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
@@ -147,8 +183,6 @@ public class TheClaw extends LinearOpMode {
             leftLift.update();
             otherSpinnyBit.update();
             suck.directControl();
-
-            leftArmStuff.updatePincher();
 
 
 

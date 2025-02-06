@@ -11,12 +11,15 @@ public class Ramp {
 
     double deltaValue;
     double targetDeltaValue;
+    double rampedTargetValue;
 
     public double getRampedValue(double targetValue, double deltaTime) {
         deltaValue = targetValue - previousTarget;
         targetDeltaValue = Math.copySign(ratePerSecond * deltaTime, deltaValue);
-        if (deltaValue - targetDeltaValue < 0)
-            return targetValue;
-        return previousTarget + deltaValue;
+        if (Math.abs(deltaValue)  - Math.abs(targetDeltaValue) < 0)
+            rampedTargetValue = targetValue;
+        else
+            rampedTargetValue = previousTarget + targetDeltaValue;
+        return previousTarget = rampedTargetValue;
     }
 }
