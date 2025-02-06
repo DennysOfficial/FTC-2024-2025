@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "SoupcOpMode_0-5-Z 2.0.0")
+@Autonomous(name = "SoupcOpMode_0-2-X 0.0.1")
 public class Auto_Test_02X extends OpMode{
 
     List<LynxModule> allHubs;
@@ -59,8 +59,6 @@ public class Auto_Test_02X extends OpMode{
     PassiveGrabber grabber;
 
     RobotConfig config;
-
-    Automous automous; //CHANGE THIS WHEN NEW ROBOT
 
     private Timer pathTimer;
 
@@ -97,10 +95,6 @@ public class Auto_Test_02X extends OpMode{
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-
-
-        automous = new Automous(this, leftLift, leftPivot, rightLift, rightPivot, intake, grabber, config, follower);
-
         rightLift.setTargetPosition(0);
         rightPivot.setTargetPosition(-69);
         grabber.Collect();
@@ -120,13 +114,11 @@ public class Auto_Test_02X extends OpMode{
                     grabber.Collect();
                 })
                 .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
-                .addTemporalCallback(0, () -> {
-                    rightPivot.setTargetPosition(70);
-                })
                 .addPath(new Path(new BezierLine(pickupPoint3, rungPoint2)))
                 .addTemporalCallback(0.5, () -> {
                     grabber.Score();
                 })
+                .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
                 .build();
     }
 
@@ -147,7 +139,6 @@ public class Auto_Test_02X extends OpMode{
         rightPivot.update();
         intake.update();
 
-        telemetry.addData("path state", automous.getPath());
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
