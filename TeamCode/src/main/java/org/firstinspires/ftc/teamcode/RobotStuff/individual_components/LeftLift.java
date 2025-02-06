@@ -19,6 +19,7 @@ public class LeftLift extends ControlAxis {
 
     DigitalChannel limitSwitch;
     public static double homingPosition = 0.5;
+    public static double homingPower = 0.5;
 
 
     final double retractedRadius = 10;
@@ -39,7 +40,6 @@ public class LeftLift extends ControlAxis {
     public static double kineticFrictionCoefficient = 0;
     public static double staticThreshold = 0.1;
 
-    public static double homingPower = 0.5;
 
     @Override
     public void homeAxis(){
@@ -138,6 +138,13 @@ public class LeftLift extends ControlAxis {
 
     @Override
     void miscUpdate() {
+
+        if(config.inputMap.gamepad1.left_bumper){
+            targetTorque = homingPower;
+            setControlModeUnsafe(ControlMode.torqueControl);
+        }
+        else
+            setControlMode(defaultControlMode);
 
         if(limitSwitch.getState()){
             setCurrentPosition(homingPosition);
