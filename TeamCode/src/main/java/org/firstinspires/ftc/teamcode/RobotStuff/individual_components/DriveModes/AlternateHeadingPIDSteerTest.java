@@ -19,10 +19,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
     public static double maxAngularAcceleration = 10;
 
-    double targetAngularVelocity = 0;
     Ramp velocityRamp;
 
-    public static double maxAngularVelocity;
+    public static double maxAngularVelocity = 90;
 
 
     CustomPID steeringAnglePID;
@@ -62,9 +61,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public void telemetryAngleVelocity() {
         opMode.telemetry.addData("Heading", getHeadingDeg());
         opMode.telemetry.addData("TargetHeading", targetHeading);
-        opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
-        opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
-        opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+        //opMode.telemetry.addData("angleVelX", imu.getRobotAngularVelocity(AngleUnit.DEGREES).xRotationRate);
+        //opMode.telemetry.addData("angleVelY", imu.getRobotAngularVelocity(AngleUnit.DEGREES).yRotationRate);
+        //opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
     }
 
 
@@ -81,9 +80,10 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
         double drive = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();
 
-        double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
-
+        double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * maxAngularVelocity;
+        opMode.telemetry.addData("RequestedTargetVelocity", requestedTargetTurnRate);
         double targetTurnRate = velocityRamp.getRampedValue(requestedTargetTurnRate,deltaTime);
+        opMode.telemetry.addData("TargetVelocity", targetTurnRate);
 
         targetHeading += targetTurnRate * deltaTime;
 
