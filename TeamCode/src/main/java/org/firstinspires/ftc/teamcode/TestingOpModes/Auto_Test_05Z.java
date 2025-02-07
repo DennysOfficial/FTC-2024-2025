@@ -43,17 +43,17 @@ public class Auto_Test_05Z extends OpMode{
     Point rungPointControl1 = new Point(22, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(24, 66, Point.CARTESIAN);
 
-    private Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
-    private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
-    private Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
-    private Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
+    Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
+    Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
+    Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
+    Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
 
-    private Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
-    private Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
-    private Point samplepoint3 =      new Point(62,10, Point.CARTESIAN);
+    Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
+    Point samplepoint3 =      new Point(62,10, Point.CARTESIAN);
 
-    private Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
-    private Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
+    Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
+    Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
 
     Point pickupPoint1 = new Point(11, 10, Point.CARTESIAN);
     Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);

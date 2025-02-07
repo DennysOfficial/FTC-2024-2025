@@ -23,9 +23,9 @@ public class ClawAndStuff {
     OpMode opmode;
     RobotConfig config;
 
-    public static double wristPosRest = 0.83;
+    public static double wristPosRest = 0.3;
     public static double liftPosRest = 0;
-    public static double pivotPosRest = -80;
+    public static double pivotPosRest = -50;
 
     public static double wristPosScore = 0.94;
     public static double liftPosScore = 11.3;
@@ -60,10 +60,6 @@ public class ClawAndStuff {
         twistServo.setPosition(wristPosRest);
         lift.setTargetPosition(liftPosRest);
         pivot.setTargetPosition(pivotPosRest);
-    }
-
-    public void setTwistServo(double wristPos) {
-        twistServo.setPosition(wristPos);
     }
 
     public void setWristPos(double wristPos) {
