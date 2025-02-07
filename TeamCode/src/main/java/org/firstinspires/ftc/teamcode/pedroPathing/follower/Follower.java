@@ -66,7 +66,7 @@ public class Follower {
     private DcMotorEx leftRear;
     private DcMotorEx rightFront;
     private DcMotorEx rightRear;
-    private List<DcMotorEx> motors;
+    public List<DcMotorEx> motors;
 
     private DriveVectorScaler driveVectorScaler;
 

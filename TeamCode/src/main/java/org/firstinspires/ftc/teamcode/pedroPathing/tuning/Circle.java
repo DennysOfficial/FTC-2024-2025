@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
@@ -28,11 +29,15 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 public class Circle extends OpMode {
     private Telemetry telemetryA;
 
+    double deltaTime;
+
     public static double RADIUS = 10;
 
     private Follower follower;
 
     private PathChain circle;
+
+    private final ElapsedTime frameTimer = new ElapsedTime();
 
     /**
      * This initializes the Follower and creates the PathChain for the "circle". Additionally, this
@@ -55,7 +60,14 @@ public class Circle extends OpMode {
         telemetryA.addLine("This will run in a roughly circular shape of radius " + RADIUS
                             + ", starting on the right-most edge. So, make sure you have enough "
                             + "space to the left, front, and back to run the OpMode.");
+        telemetryA.addData("deltaTime:", deltaTime);
         telemetryA.update();
+    }
+
+    @Override
+    public void start() {
+        deltaTime = 0;
+        frameTimer.reset();
     }
 
     /**
@@ -64,6 +76,9 @@ public class Circle extends OpMode {
      */
     @Override
     public void loop() {
+        deltaTime = frameTimer.seconds();
+        frameTimer.reset();
+
         follower.update();
         if (follower.atParametricEnd()) {
             follower.followPath(circle);
