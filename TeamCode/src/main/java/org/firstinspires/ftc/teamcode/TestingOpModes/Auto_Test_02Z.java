@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "The First: SoupcOpMode_0-2-Z 0.0.8", group = "SoupcOpModes")
+@Autonomous(name = "Spare: SoupcOpMode_0-2-Z 1.0.8", group = "SoupcOpModes")
 public class Auto_Test_02Z extends OpMode{
 
     List<LynxModule> allHubs;
@@ -35,8 +35,8 @@ public class Auto_Test_02Z extends OpMode{
     private final Pose startPose = new Pose(9,64.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    Point rungPoint1 = new Point(33.5, 64.5, Point.CARTESIAN);
-    Point rungPoint2 = new Point(33.5, 67.5, Point.CARTESIAN);
+    Point rungPoint1 = new Point(35, 64.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(35, 67.5, Point.CARTESIAN);
 
     Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
@@ -143,7 +143,7 @@ public class Auto_Test_02Z extends OpMode{
                 .addParametricCallback(0.1, () -> {
                     grabber.Score();
                 })
-                .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint2, rungPointControl2, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     grabber.Collect();
