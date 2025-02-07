@@ -40,8 +40,8 @@ public class Auto_Test_04Z extends OpMode{
     Point rungPoint3 = new Point(33.5, 64.5, Point.CARTESIAN);
     Point rungPoint4 = new Point(33.5, 69, Point.CARTESIAN);
 
-    Point rungPointControl1 = new Point(22, 28, Point.CARTESIAN);
-    Point rungPointControl2 = new Point(24, 66, Point.CARTESIAN);
+    Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
+    Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
     private Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
     private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
@@ -54,7 +54,7 @@ public class Auto_Test_04Z extends OpMode{
 
     Point pickupPoint1 = new Point(11, 15.5, Point.CARTESIAN);
     Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(10.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toline1, toline2, toPickup1;
 
@@ -191,7 +191,7 @@ public class Auto_Test_04Z extends OpMode{
         score4 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
+                .addPath(new Path(new BezierLine(rungPoint4, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     grabber.Collect();

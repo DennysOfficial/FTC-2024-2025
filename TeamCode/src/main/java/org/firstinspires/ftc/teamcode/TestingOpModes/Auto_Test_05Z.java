@@ -39,9 +39,10 @@ public class Auto_Test_05Z extends OpMode{
     Point rungPoint2 = new Point(33.5, 66, Point.CARTESIAN);
     Point rungPoint3 = new Point(33.5, 64.5, Point.CARTESIAN);
     Point rungPoint4 = new Point(33.5, 69, Point.CARTESIAN);
+    Point rungPoint5 = new Point(33.5, 70.5, Point.CARTESIAN);
 
-    Point rungPointControl1 = new Point(22, 28, Point.CARTESIAN);
-    Point rungPointControl2 = new Point(24, 66, Point.CARTESIAN);
+    Point rungPointControl1 = new Point(20,28, Point.CARTESIAN);
+    Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
     Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
     Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
@@ -57,7 +58,7 @@ public class Auto_Test_05Z extends OpMode{
 
     Point pickupPoint1 = new Point(11, 10, Point.CARTESIAN);
     Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(10.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3;
 
@@ -199,9 +200,9 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint3)))
+                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl2, rungPointControl1, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint4, rungPointControl2, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 .addParametricCallback(0, () -> {
@@ -217,9 +218,9 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         score5 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4)))
+                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint5)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierLine(rungPoint2, pickupPoint2)))
+                .addPath(new Path(new BezierLine(rungPoint5, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     grabber.Collect();

@@ -16,8 +16,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.pedroPathing.Automous;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierCurve;
@@ -25,13 +23,12 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
-import org.firstinspires.ftc.teamcode.pedroPathing.util.SingleRunAction;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "The First: SoupcOpMode_0-2-Z 0.0.7", group = "SoupcOpModes")
-public class Auto_Test_02X extends OpMode{
+@Autonomous(name = "The First: SoupcOpMode_0-2-Z 0.0.8", group = "SoupcOpModes")
+public class Auto_Test_02Z extends OpMode{
 
     List<LynxModule> allHubs;
 
@@ -41,11 +38,11 @@ public class Auto_Test_02X extends OpMode{
     Point rungPoint1 = new Point(33.5, 64.5, Point.CARTESIAN);
     Point rungPoint2 = new Point(33.5, 67.5, Point.CARTESIAN);
 
-    Point rungPointControl1 = new Point(22, 28, Point.CARTESIAN);
-    Point rungPointControl2 = new Point(24, 66, Point.CARTESIAN);
+    Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
+    Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
     Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(10.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
 
     public PathChain movement1, movement2, movement3;
 
@@ -184,9 +181,11 @@ public class Auto_Test_02X extends OpMode{
                     grabber.Score();
                     if (leftPivot.getPosition() >= 15) {
                         follower.followPath(movement3);
-                        listPointer = 3;
+                        listPointer = 4;
                     }
                 }
+                break;
+            case 4:
                 break;
         }
     }
