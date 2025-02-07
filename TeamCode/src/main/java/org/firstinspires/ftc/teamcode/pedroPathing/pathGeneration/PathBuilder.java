@@ -187,7 +187,7 @@ public class PathBuilder {
      * @return This returns itself with the updated data.
      */
     public PathBuilder addTemporalCallback(double time, Runnable runnable) {
-        this.callbacks.add(new PathCallback(time * 1000, runnable, PathCallback.TIME, paths.size()-1));
+        this.callbacks.add(new PathCallback(time, runnable, PathCallback.TIME, paths.size()-1));
         return this;
     }
 
