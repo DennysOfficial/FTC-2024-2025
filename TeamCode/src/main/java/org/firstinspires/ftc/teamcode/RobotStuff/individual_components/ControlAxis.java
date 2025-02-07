@@ -231,7 +231,7 @@ public abstract class ControlAxis {  //schrödinger's code
      * returns the current position of the axis in the designated units
      */
     public double getNonCachedPosition() {
-        return getEncoder() * unitsPerEncoderCount + positionOffset;
+        return getEncoder() * unitsPerEncoderCount;
     }
 
     double cachedPosition;
@@ -244,7 +244,7 @@ public abstract class ControlAxis {  //schrödinger's code
      * returns the current position of the axis in the designated units
      */
     public double getPosition() {
-        return cachedPosition;
+        return cachedPosition + positionOffset;
     }
 
     /**
@@ -256,6 +256,10 @@ public abstract class ControlAxis {  //schrödinger's code
         } else if (getPosition() < physicalLimits.getLower()) {
             positionOffset -= getPosition() - physicalLimits.getLower();
         }
+    }
+
+    public void setCurrentPosition(double position){
+        positionOffset = position - getNonCachedPosition();
     }
 
 
