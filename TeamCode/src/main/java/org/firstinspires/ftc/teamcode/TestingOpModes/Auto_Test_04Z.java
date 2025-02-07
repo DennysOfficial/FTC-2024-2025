@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "W Acquisition Machine: SoupcOpMode_0-4-Z 0.0.1", group = "SoupcOpModes")
+@Autonomous(name = "Grand Slam: SoupcOpMode_0-4-Z 1.0.5", group = "SoupcOpModes")
 public class Auto_Test_04Z extends OpMode{
 
     List<LynxModule> allHubs;
@@ -47,14 +47,14 @@ public class Auto_Test_04Z extends OpMode{
     private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
     private Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
 
-    private Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(62,26.5, Point.CARTESIAN);
     private Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
 
     private Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
 
-    Point pickupPoint1 = new Point(11, 15.5, Point.CARTESIAN);
-    Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
+    Point pickupPoint1 = new Point(11.5, 15.5, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(13.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11.5, 28, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toline1, toline2, toPickup1;
 
@@ -231,7 +231,7 @@ public class Auto_Test_04Z extends OpMode{
                 }
                 break;
             case 4:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect3);
                     listPointer = 5;
                 }
@@ -253,7 +253,7 @@ public class Auto_Test_04Z extends OpMode{
                 }
                 break;
             case 7:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect4);
                     listPointer = 8;
                 }

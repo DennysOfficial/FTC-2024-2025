@@ -35,9 +35,9 @@ public class Auto_Test_03Z extends OpMode{
     private final Pose startPose = new Pose(9,67.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    Point rungPoint1 = new Point(33.5, 67.5, Point.CARTESIAN);
-    Point rungPoint2 = new Point(33.5, 66, Point.CARTESIAN);
-    Point rungPoint3 = new Point(33.5, 64.5, Point.CARTESIAN);
+    Point rungPoint1 = new Point(35, 67.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(35, 66, Point.CARTESIAN);
+    Point rungPoint3 = new Point(35, 64.5, Point.CARTESIAN);
 
     Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
@@ -45,11 +45,11 @@ public class Auto_Test_03Z extends OpMode{
     private Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
     private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
 
-    private Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(62,26.5, Point.CARTESIAN);
 
-    Point pickupPoint1 = new Point(11, 25, Point.CARTESIAN);
-    Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
+    Point pickupPoint1 = new Point(11.5, 25, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(13.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11.5, 28, Point.CARTESIAN);
 
     public Path toSample1, toline1;
 
@@ -163,7 +163,7 @@ public class Auto_Test_03Z extends OpMode{
         score3 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierLine(rungPoint3, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl2, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     grabber.Collect();
@@ -203,7 +203,7 @@ public class Auto_Test_03Z extends OpMode{
                 }
                 break;
             case 4:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect3);
                     listPointer = 5;
                 }

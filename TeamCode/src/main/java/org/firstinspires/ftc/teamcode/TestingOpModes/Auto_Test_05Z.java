@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "WE BALL: SoupcOpMode_0-4-Z 0.0.1", group = "SoupcOpModes")
+@Autonomous(name = "Superman: SoupcOpMode_0-5-Z 0.0.1", group = "SoupcOpModes")
 public class Auto_Test_05Z extends OpMode{
 
     List<LynxModule> allHubs;
@@ -49,16 +49,16 @@ public class Auto_Test_05Z extends OpMode{
     Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
     Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
 
-    Point samplepoint1 =      new Point(62,25, Point.CARTESIAN);
+    Point samplepoint1 =      new Point(62,26.5, Point.CARTESIAN);
     Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
     Point samplepoint3 =      new Point(62,10, Point.CARTESIAN);
 
     Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
     Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
 
-    Point pickupPoint1 = new Point(11, 10, Point.CARTESIAN);
-    Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
+    Point pickupPoint1 = new Point(11.5, 10, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(13.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(11.5, 28, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3;
 
@@ -260,7 +260,7 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 4:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect3);
                     listPointer = 5;
                 }
@@ -282,7 +282,7 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 7:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect4);
                     listPointer = 8;
                 }
@@ -304,7 +304,7 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 10:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= -77) {
+                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect5);
                     listPointer = 11;
                 }
