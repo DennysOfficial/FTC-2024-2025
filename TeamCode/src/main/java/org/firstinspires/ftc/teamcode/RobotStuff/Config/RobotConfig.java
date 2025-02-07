@@ -11,14 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.Sensitivities
 
 @Config
 public class RobotConfig {
-
-    public static double retractedLiftLengthInch = 15;
-
-    public double getRetractedLiftLengthInch() {
-        return retractedLiftLengthInch;
-    }
-
-    public static double rearExtensionLimitInch = 12;
+    public static double rearExtensionLimitInch = 15;
 
     public double getRearExtensionLimitInch() {
         return rearExtensionLimitInch;

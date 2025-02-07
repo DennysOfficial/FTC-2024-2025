@@ -20,6 +20,10 @@ public class DeviceConfig {
 
 
     public final String leftPivot = "PivotL";
+    public final String leftPivotServo1 = "PivotL1";
+    public final String leftPivotServo2 = "PivotL2";
+
+    public final String leftPivotEncoder = backRightDrive;
 
     public final String rightPivot = "PivotR";
 
@@ -27,8 +31,17 @@ public class DeviceConfig {
 
     public final String rightLift = "LiftR";
 
-    public final String grabberServo = "Pinch";
+    public final String intakeServo = "suck";
+    public final String intakeMotor = "suck";
 
     public final String flapServo = "Flap";
+    public final String wristServo = "Wrist";
+
+    public final String elbowServo = "Elbow";
+    public final String spWristServo = "SpWrist";
+
+    public final String clawTwistServo = "SpWrist";
+    public final String clawServo = "Elbow";
+
 
 }

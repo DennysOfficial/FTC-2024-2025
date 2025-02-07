@@ -2,10 +2,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories;
 
 
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 public class LinearTrajectory extends Trajectory {
 

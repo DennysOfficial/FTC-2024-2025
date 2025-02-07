@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class InputMap {
 
-    Gamepad gamepad1;
-    Gamepad gamepad2;
+    public final Gamepad gamepad1;
+    public final Gamepad gamepad2;
 
     public InputMap(Gamepad gamepad1, Gamepad gamepad2) {
         this.gamepad1 = gamepad1;
@@ -25,16 +25,28 @@ public class InputMap {
         return gamepad1.right_stick_x;
     }
 
-    public double getLiftStick() {
+    public double getRightLiftStick() {
         return -1 * gamepad2.left_stick_y;
     }
 
-    public double getPivotStick() {
+    public double getLeftLiftStick() {
+        return 0;
+    }
+
+    public double getRightPivotStick() {
         return -1 * gamepad2.right_stick_y;
     }
 
-    public boolean getPinchButton() {
-        return gamepad2.right_bumper;
+    public double getLeftPivotStick() {
+        return 0;
+    }
+
+    public boolean getClawOpen() {
+        return gamepad1.right_trigger > 0.2;
+    }
+
+    public boolean getClawTwistToggleButton() {
+        return gamepad1.left_bumper;
     }
 
     public boolean getIntakeButton() {
@@ -61,7 +73,14 @@ public class InputMap {
         return gamepad1.left_trigger > 0.5;
     }
 
-    public boolean getBrake(){return gamepad1.right_trigger > 0.5;}
+    public boolean getBrake() {
+        return false;
+    }
+
+    public boolean getIntakeWristDown() {
+        return gamepad2.right_trigger > 0.5;
+    }
+
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 

@@ -34,7 +34,7 @@ Left: Unbound
 ### Sticks
 ##### Left Joystick
 X: Unbound\
-Y: Extend/retract lift
+Y: Extend/retract oldLift
 ##### Right Joystick
 X: Unbound\
 Y: Pivot Lift

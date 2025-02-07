@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
+import androidx.core.math.MathUtils;
+
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
@@ -13,11 +14,14 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 public class HeadingPIDSteerTest extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = 0.02;
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
+    public static double angleKp = 0;
+    public static double angleKi = 0;
+    public static double angleKd = 0;
 
-    CustomPID steeringPID;
+    public static double maxAngularAcceleration = 10;
+
+
+    CustomPID steeringAnglePID;
     IMU imu;
 
     double[] motorPowers = new double[4];
@@ -26,13 +30,28 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
     public HeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        steeringPID = new CustomPID(opMode.telemetry, config, "steeringPID");
+        steeringAnglePID = new CustomPID(opMode.telemetry, config, "steeringAnglePID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
     }
 
+    double previousHeading;
+    int rotationCount = 0;
+
     double getHeadingDeg() {
-        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double imuHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        if (previousHeading * imuHeading <= 1) {
+            if (previousHeading - imuHeading > 100)
+                rotationCount++;
+            else if (previousHeading - imuHeading < -100)
+                rotationCount--;
+        }
+
+        return imuHeading + rotationCount * 360;
+    }
+
+    double getHeadingRate() {
+        return imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate;
     }
 
     public void telemetryAngleVelocity() {
@@ -43,6 +62,24 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         opMode.telemetry.addData("angleVelZ", imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
     }
 
+    double calculateTurnRate(double requestedTargetTurnRate, double deltaTime) {
+        if(requestedTargetTurnRate == previousTargetTurnRate)
+            return requestedTargetTurnRate;
+
+        double accelerationDirection = Math.copySign(1, requestedTargetTurnRate - previousTargetTurnRate);
+
+
+
+        double targetTurnRate = accelerationDirection * previousTargetTurnRate * maxAngularAcceleration * deltaTime;
+
+        if(Math.copySign(1, targetTurnRate - previousTargetTurnRate) != accelerationDirection)
+            return requestedTargetTurnRate;
+
+        return targetTurnRate;
+    }
+
+    double previousTargetTurnRate = 0;
+
     @Override
     public void updateDrive(double deltaTime) {
 
@@ -51,16 +88,20 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
         double drive = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();
 
-        double targetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
+        double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
+
+        double targetTurnRate = calculateTurnRate(requestedTargetTurnRate, deltaTime);
 
         targetHeading += targetTurnRate * deltaTime;
 
-        steeringPID.setCoefficients(Kp, Ki, Kd);
+        steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
+
 
         double turn = turnFeedforwardCoefficient * targetTurnRate;
 
-        turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
+        turn += steeringAnglePID.runPID(targetHeading, getHeadingDeg(), deltaTime);
 
+        turn *= -1;
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
