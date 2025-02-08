@@ -18,7 +18,7 @@ public class LeftLift extends ControlAxis {
     LeftPivot leftPivot;
 
     DigitalChannel limitSwitch;
-    public static double homingPosition = 0.5;
+    public static double homingPosition = 0;
     public static double homingPower = 0.5;
 
 

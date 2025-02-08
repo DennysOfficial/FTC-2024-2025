@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.Autonomous_OpModes;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -41,8 +41,8 @@ public class Auto_Test_02Z extends OpMode{
     Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
-    Point pickupPoint2 = new Point(12, 28, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(11, 28, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(13.5, 28, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(12, 28, Point.CARTESIAN);
 
     public PathChain movement1, movement2, movement3;
 
