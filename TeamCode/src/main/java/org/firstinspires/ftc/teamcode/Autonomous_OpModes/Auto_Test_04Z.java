@@ -79,7 +79,7 @@ public class Auto_Test_04Z extends OpMode{
 
     private Timer pathTimer;
 
-    int listPointer = 0;
+    int robotState = 0;
 
     @Override
     public void init() {
@@ -154,7 +154,7 @@ public class Auto_Test_04Z extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toSample2)
                 .addParametricCallback(0.5, () -> {
-                    leftLift.setTargetPosition(10);
+                    leftLift.setTargetPosition(8);
                 })
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toline2)
@@ -208,12 +208,12 @@ public class Auto_Test_04Z extends OpMode{
     }
 
     public void routine() {
-        switch (listPointer) {
+        switch (robotState) {
             case 0:
                 if (leftPivot.getPosition() >= 15) {
                     follower.followPath(score1);
                     pathTimer.resetTimer();
-                    listPointer = 1;
+                    robotState = 1;
                 }
                 break;
             case 1:
@@ -221,12 +221,12 @@ public class Auto_Test_04Z extends OpMode{
                     leftLift.setTargetPosition(0);
                     grabber.openClaw();
                     follower.followPath(moveSamples);
-                    listPointer = 2;
+                    robotState = 2;
                     pathTimer.resetTimer();
                 }
             case 2:
                 if (follower.atParametricEnd()) {
-                    listPointer = 3;
+                    robotState = 3;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
@@ -236,7 +236,7 @@ public class Auto_Test_04Z extends OpMode{
                     grabber.Score();
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score2);
-                        listPointer = 4;
+                        robotState = 4;
                         pathTimer.resetTimer();
                     }
                 }
@@ -244,13 +244,13 @@ public class Auto_Test_04Z extends OpMode{
             case 4:
                 if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect3);
-                    listPointer = 5;
+                    robotState = 5;
                     pathTimer.resetTimer();
                 }
                 break;
             case 5:
                 if (follower.atParametricEnd()) {
-                    listPointer = 6;
+                    robotState = 6;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
@@ -260,7 +260,7 @@ public class Auto_Test_04Z extends OpMode{
                     grabber.Score();
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score3);
-                        listPointer = 7;
+                        robotState = 7;
                         pathTimer.resetTimer();
                     }
                 }
@@ -268,7 +268,7 @@ public class Auto_Test_04Z extends OpMode{
             case 7:
                 if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect4);
-                    listPointer = 8;
+                    robotState = 8;
                     pathTimer.resetTimer();
                 }
                 break;
@@ -278,7 +278,7 @@ public class Auto_Test_04Z extends OpMode{
                     grabber.closeClaw();
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score4);
-                        listPointer = 9;
+                        robotState = 9;
                         pathTimer.resetTimer();
                     }
                 }

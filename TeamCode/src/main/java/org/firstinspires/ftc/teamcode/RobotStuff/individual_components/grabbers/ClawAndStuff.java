@@ -33,7 +33,7 @@ public class ClawAndStuff {
 
     public static double wristPosCollect = 0.3;
     public static double liftPosCollect = 2;
-    public static double pivotPosCollect = -80;
+    public static double pivotPosCollect = -78;
 
     public ClawAndStuff(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
         this.opmode = opmode;
