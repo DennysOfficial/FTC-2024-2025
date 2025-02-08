@@ -18,7 +18,7 @@ public class LeftLift extends ControlAxis {
     LeftPivot leftPivot;
 
     DigitalChannel limitSwitch;
-    public static double homingPosition = 0.5;
+    public static double homingPosition = 0;
     public static double homingPower = 0.5;
 
 
@@ -138,23 +138,26 @@ public class LeftLift extends ControlAxis {
         super.setTargetPosition(targetPosition);
     }
 
+    boolean previousButtonState = false;
     @Override
     void miscUpdate() {
 
-        return;
+
 
         //opMode.telemetry.addLine("misc update running");
 
-//        if (config.inputMap.gamepad1.left_bumper) {
-//            targetTorque = homingPower;
-//            setControlModeUnsafe(ControlMode.torqueControl);
-//        } else
-//            setControlMode(defaultControlMode);
-//
-//        if (!limitSwitch.getState()) {
-//            opMode.telemetry.addData("position offset = %f", positionOffset);
-//            setCurrentPosition(homingPosition);
-//        }
+        if (config.inputMap.gamepad1.y) {
+            targetTorque = homingPower;
+            setControlModeUnsafe(ControlMode.torqueControl);
+        } else
+            setControlMode(defaultControlMode);
+
+        if(previousButtonState && !config.inputMap.gamepad1.y){
+            opMode.telemetry.addData("position offset = %f", positionOffset);
+            setCurrentPosition(homingPosition);
+        }
+
+        previousButtonState = config.inputMap.gamepad1.y;
     }
 
 }

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -16,6 +17,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public static double angleKp = 0;
     public static double angleKi = 0;
     public static double angleKd = 0;
+
+
+    public static PIDCoefficients turnPID = new PIDCoefficients(0,0,0);
 
     public static double accelerationConstant = 10;
     public static double accelerationProportionalCoefficient = 10;

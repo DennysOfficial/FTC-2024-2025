@@ -16,7 +16,7 @@ public class Ramp {
     public double getRampedValue(double targetValue, double deltaTime) {
         deltaValue = targetValue - previousTarget;
         targetDeltaValue = Math.copySign(ratePerSecond * deltaTime, deltaValue);
-        if (Math.abs(deltaValue)  - Math.abs(targetDeltaValue) < 0)
+        if (Math.abs(deltaValue)  < Math.abs(targetDeltaValue))
             rampedTargetValue = targetValue;
         else
             rampedTargetValue = previousTarget + targetDeltaValue;

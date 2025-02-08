@@ -154,7 +154,7 @@ public class TheClaw extends LinearOpMode {
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
                 if (prayers.inSubRout(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(80);
+                    spinnyBit.setTargetPosition(76.9);
                     suck.intakeForDuration(2);
                     prayers.Intake();
                 }
