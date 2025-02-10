@@ -45,6 +45,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
@@ -92,7 +93,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
 
-        PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
+        ClawAndStuff leftArmStuff = new ClawAndStuff(this,activeConfig,leftLift,otherSpinnyBit);
 
         ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
 
@@ -126,10 +127,9 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(61, 1);
+                    spinnyBit.fancyMoveToPosition(65, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.enterSub();
             }
 
 
@@ -138,8 +138,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.deposit();
-                suck.intakeForDuration(0.3);
             }// presets
 
             if(gamepad2.x){
@@ -149,13 +147,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 leftArmStuff.Collect();
             }
 
+            if(gamepad2.right_trigger > 0.2){
+                prayers.Intake();
+            }
 
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
                 if (prayers.inSubRout(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(80);
-                    suck.intakeForDuration(2);
-                    prayers.Intake();
+                    spinnyBit.setTargetPosition(86);
                 }
             }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
@@ -182,7 +181,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             leftLift.update();
             otherSpinnyBit.update();
             suck.directControl();
-
+            prayers.update();
 
 
             telemetry.update();
