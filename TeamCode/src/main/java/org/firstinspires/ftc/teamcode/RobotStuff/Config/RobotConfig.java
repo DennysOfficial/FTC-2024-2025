@@ -25,6 +25,7 @@ public class RobotConfig {
 
     OpMode opMode;
 
+
     public final DeviceConfig deviceConfig = new DeviceConfig();
     public final DebugConfig debugConfig = new DebugConfig();
 
