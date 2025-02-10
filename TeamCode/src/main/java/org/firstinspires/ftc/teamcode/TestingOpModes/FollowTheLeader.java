@@ -131,10 +131,10 @@ public class FollowTheLeader extends LinearOpMode {
 
             if (gamepad2.y) {
                 if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(65, 1);
+                    spinnyBit.fancyMoveToPosition(60, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.enterSub();
+                prayers.enterSub(true);
             }
 
 
@@ -149,11 +149,14 @@ public class FollowTheLeader extends LinearOpMode {
 
 
 //            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 60) {
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
                 if (prayers.inSubRout(gamepad2.right_trigger)){
                     spinnyBit.setTargetPosition(75);
                     suck.intakeForDuration(1);
                     prayers.Intake();
+                }
+                if (gamepad2.left_trigger > 0.2) {
+                    prayers.holding();
                 }
             }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);

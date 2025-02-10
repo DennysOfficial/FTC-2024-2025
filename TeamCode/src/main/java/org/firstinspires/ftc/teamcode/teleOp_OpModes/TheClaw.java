@@ -130,7 +130,6 @@ public class TheClaw extends LinearOpMode {
                     spinnyBit.fancyMoveToPosition(61, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.enterSub();
             }
 
 

@@ -11,11 +11,13 @@ public class speedyServos {
     Servo wrist;
     OpMode opmode;
     RobotConfig config;
-    public static double subIntake = 0.2;
+    public static double point = 0.25;
     public static double deposit = 0.85;
     public static double subEntrance = 0.425;
+    public static double pullBack = 0.5;
     public double targetPos = 0;
     public boolean hold = false;
+    public static double holding = 0;
     public boolean inSub = false;
     public speedyServos(OpMode opmode, RobotConfig config){
         this.opmode = opmode;
@@ -29,15 +31,25 @@ public class speedyServos {
         inSub = false;
     }
 
-    public void enterSub(){
-        wrist.setPosition(subEntrance);
-        targetPos = subEntrance;
-        inSub = false;
+    public void holding(){
+        wrist.setPosition(holding);
+    }
+    public void enterSub(boolean phase){
+         if(phase){
+             wrist.setPosition(subEntrance);
+             targetPos = subEntrance;
+             inSub = false;
+         }
+         else{
+             wrist.setPosition(pullBack);
+             targetPos = pullBack;
+             inSub = false;
+         }
     }
 
     public void Intake(){
-        wrist.setPosition(subIntake);
-        targetPos = subIntake;
+        wrist.setPosition(point);
+        targetPos = point;
     }
 
     public boolean inSubRout(double pos){
@@ -50,6 +62,12 @@ public class speedyServos {
             return true;
         }
         return false;
+    }
+
+    public void update(){
+        if(!hold){
+            wrist.setPosition(pullBack);
+        }
     }
 
     public double getWristPos(){
