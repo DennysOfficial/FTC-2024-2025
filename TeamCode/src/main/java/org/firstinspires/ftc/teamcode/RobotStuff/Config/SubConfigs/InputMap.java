@@ -81,6 +81,13 @@ public class InputMap {
         return gamepad2.right_trigger > 0.5;
     }
 
+    public boolean getIntakeForward() {
+        return gamepad2.y;
+    }
+    public boolean getObservationDepositPreset() {
+        return gamepad2.b;
+    }
+
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 

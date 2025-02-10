@@ -16,7 +16,7 @@ public class RightLift extends ControlAxis {
 
     RightPivot rightPivot;
 
-    final double retractedRadius = 10;
+    public final double retractedRadius = 10;
 
     public void assignPivot(RightPivot rightPivot) {
         if (rightPivot == null)
