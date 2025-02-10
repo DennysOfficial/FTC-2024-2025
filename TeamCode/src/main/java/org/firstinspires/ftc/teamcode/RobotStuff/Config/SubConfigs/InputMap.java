@@ -42,7 +42,7 @@ public class InputMap {
     }
 
     public boolean getClawOpen() {
-        return gamepad1.right_trigger > 0.2;
+        return gamepad1.left_trigger > 0.2;
     }
 
     public boolean getClawTwistToggleButton() {
@@ -86,6 +86,10 @@ public class InputMap {
     }
     public boolean getObservationDepositPreset() {
         return gamepad2.b;
+    }
+
+    public boolean getYoinkButton() {
+        return gamepad1.right_trigger > 0.2;
     }
 
 

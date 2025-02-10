@@ -32,6 +32,10 @@ public class RightPivot extends ControlAxis{
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.05;
 
+    public static Range<Double> softLimits;
+
+
+
     @Override
     float getVelocityControlMaxRate() {
         return config.sensitivities.getPivotRate();}

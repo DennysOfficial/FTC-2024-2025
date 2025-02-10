@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 public class Harpoon {
 
@@ -15,8 +16,8 @@ public class Harpoon {
 
     public static double openPos = 0.5, closePos = 0.5;
 
-   // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
 
+    // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
 
 
     OpMode opMode;
@@ -33,7 +34,8 @@ public class Harpoon {
      * ranges from 0 - 1   for open - close
      */
     public void setGrabPosition(double position) {
-        position = MathUtils.clamp(position, Math.min(openPos, closePos), Math.max(openPos, closePos));
+        position = MathUtils.clamp(position,0,1);
+        position = MathStuff.map(position,0,1,openPos,closePos);
         setGrabPosition(position);
     }
 
