@@ -94,6 +94,8 @@ public class HarpoonArm {
         rightLift.update();
         rightPivot.update();
 
+        opMode.telemetry.addData("target intake pivot angle = %f", calculateIntakePivotAngle());
+        opMode.telemetry.addData("intake height = %f", calculateIntakePivotAngle());
         previousArmState = armState;
     }
 
@@ -150,7 +152,7 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public double calculateIntakeHeight() {
-        return -(rightLift.retractedRadius + rightLift.getPosition()) * Math.sin(Math.toRadians(rightPivot.getPosition() - 90));
+        return -(rightLift.retractedRadius + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
     }
 
 }
