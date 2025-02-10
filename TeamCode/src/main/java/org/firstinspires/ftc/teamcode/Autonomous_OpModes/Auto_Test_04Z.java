@@ -257,8 +257,9 @@ public class Auto_Test_04Z extends OpMode{
                 break;
             case 6:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    leftPivot.setTargetPosition(35);
                     if (leftPivot.getPosition() >= 0) {
+                        grabber.Score();
                         follower.followPath(score3);
                         robotState = 7;
                         pathTimer.resetTimer();
@@ -270,13 +271,14 @@ public class Auto_Test_04Z extends OpMode{
                     follower.followPath(collect4);
                     robotState = 8;
                     pathTimer.resetTimer();
+                    grabber.closeClaw();
                 }
                 break;
             case 8:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
-                    grabber.closeClaw();
+                    leftPivot.setTargetPosition(35);
                     if (leftPivot.getPosition() >= 0) {
+                        grabber.Score();
                         follower.followPath(score4);
                         robotState = 9;
                         pathTimer.resetTimer();
