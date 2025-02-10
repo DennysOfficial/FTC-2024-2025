@@ -138,21 +138,8 @@ public class HarpoonArm {
                         harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
                     } else
                         rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
-
                     break;
             }
-
-
-        if (config.inputMap.getIntakeForward()) {
-
-        }
-
-        if (config.inputMap.getObservationDepositPreset()) {
-            if (!rightPivot.isBusy())
-                rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
-            if (!rightLift.isBusy())
-                rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
-        }
     }
 
     public double calculateIntakePivotAngle() {
