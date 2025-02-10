@@ -42,28 +42,53 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.
 @Config
 public class HarpoonArm {
 
+    public static double ObservationDepositArmAngle = -70;
+    public static double ObservationDepositLiftPosition = 0;
+
+    public static double intakeHeightOffset = -1;
 
 
-    OpMode opMode;
-    RobotConfig config;
+    final OpMode opMode;
+    final RobotConfig config;
 
-    RightLift rightLift;
-    RightPivot rightPivot;
+    final RightLift rightLift;
+    final RightPivot rightPivot;
 
-    public HarpoonArm(OpMode opMode, RobotConfig config){
+    public HarpoonArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
-        rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl,opMode,config);
-        rightPivot = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl,opMode,config);
+        rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, opMode, config);
+        rightPivot = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, opMode, config);
 
         rightLift.assignPivot(rightPivot);
         rightPivot.assignLift(rightLift);
     }
 
-    public void update(){
+    public void update() {
+        updatePresets();
         rightLift.update();
         rightPivot.update();
+    }
+
+    void updatePresets() {
+        if (config.inputMap.getIntakeForward()) {
+            if (!rightPivot.isBusy())
+                rightPivot.fancyMoveToPosition(61, 1);
+            if (!rightLift.isBusy())
+                rightLift.fancyMoveToPosition(0, 0.75);
+        }
+
+        if (config.inputMap.getObservationDepositPreset()) {
+            if (!rightPivot.isBusy())
+                rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
+            if (!rightLift.isBusy())
+                rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
+        }
+    }
+
+    public double calculateIntakePivotAngle() {
+        return 90 - Math.toDegrees(Math.asin(intakeHeightOffset / (rightLift.retractedRadius + rightLift.getPosition())));
     }
 
 }
