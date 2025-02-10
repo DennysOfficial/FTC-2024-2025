@@ -45,7 +45,17 @@ public class HarpoonArm {
     public static double ObservationDepositArmAngle = -70;
     public static double ObservationDepositLiftPosition = 0;
 
+    public static double StoreArmAngle = -70;
+    public static double StoreLiftPosition = 0;
+
+    /**
+     * relative to the center of the pivot
+     */
     public static double intakeHeightOffset = -1;
+    public static double intakeLiftExtension = 0;
+    public static double intakeTorque = 1;
+    public static double clawTriggerHeightOffset = -2;
+    public static double clawTriggerScale = 1;
 
 
     final OpMode opMode;
@@ -53,6 +63,18 @@ public class HarpoonArm {
 
     final RightLift rightLift;
     final RightPivot rightPivot;
+
+    final Harpoon harpoon;
+
+    public enum ArmState {
+        store,
+        intake,
+        depositLow,
+        depositHigh,
+    }
+
+    ArmState armState = ArmState.store;
+    ArmState previousArmState;
 
     public HarpoonArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -63,20 +85,66 @@ public class HarpoonArm {
 
         rightLift.assignPivot(rightPivot);
         rightPivot.assignLift(rightLift);
+
+        harpoon = new Harpoon(opMode, config);
     }
 
     public void update() {
         updatePresets();
         rightLift.update();
         rightPivot.update();
+
+        previousArmState = armState;
     }
 
     void updatePresets() {
+        if (config.inputMap.getIntakeForward())
+            armState = ArmState.intake;
+
+        if (armState != previousArmState) {
+            switch (armState) {
+                case store:
+                    if (!rightPivot.isBusy())
+                        rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
+                    if (!rightLift.isBusy())
+                        rightLift.fancyMoveToPosition(StoreLiftPosition, 0.75);
+                    break;
+                case depositLow:
+                    if (!rightPivot.isBusy())
+                        rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
+                    if (!rightLift.isBusy())
+                        rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
+                    break;
+                case intake:
+                    if (!rightPivot.isBusy())
+                        rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 1);
+                    if (!rightLift.isBusy())
+                        rightLift.fancyMoveToPosition(intakeLiftExtension, 0.75);
+                    break;
+            }
+        } else
+            switch (armState) {
+                case intake:
+                    rightPivot.setTargetPosition(calculateIntakePivotAngle());
+
+                    if (config.inputMap.getYoinkButton()
+                            && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
+                            && !rightPivot.isBusy()
+                            && rightPivot.getPosition() > 55) {
+
+                        rightPivot.targetTorque = intakeTorque;
+                        rightPivot.setControlModeUnsafe(ControlAxis.ControlMode.torqueControl);
+
+                        harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
+                    } else
+                        rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
+
+                    break;
+            }
+
+
         if (config.inputMap.getIntakeForward()) {
-            if (!rightPivot.isBusy())
-                rightPivot.fancyMoveToPosition(61, 1);
-            if (!rightLift.isBusy())
-                rightLift.fancyMoveToPosition(0, 0.75);
+
         }
 
         if (config.inputMap.getObservationDepositPreset()) {
@@ -89,6 +157,13 @@ public class HarpoonArm {
 
     public double calculateIntakePivotAngle() {
         return 90 - Math.toDegrees(Math.asin(intakeHeightOffset / (rightLift.retractedRadius + rightLift.getPosition())));
+    }
+
+    /**
+     * relative to the center of the pivot
+     */
+    public double calculateIntakeHeight() {
+        return -(rightLift.retractedRadius + rightLift.getPosition()) * Math.sin(Math.toRadians(rightPivot.getPosition() - 90));
     }
 
 }
