@@ -77,8 +77,8 @@ public class HarpoonTestOpMode extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-
         HarpoonArm harpoonArm = new HarpoonArm(this, activeConfig);
+
 
         LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
 
@@ -88,11 +88,6 @@ public class HarpoonTestOpMode extends LinearOpMode {
         leftLift.assignPivot(otherSpinnyBit);
 
         ClawAndStuff leftArmStuff = new ClawAndStuff(this, activeConfig, leftLift, otherSpinnyBit);
-
-        ActiveIntakeMotor suck = new ActiveIntakeMotor(this, activeConfig);
-
-        speedyServos prayers = new speedyServos(this, activeConfig);
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
@@ -137,7 +132,6 @@ public class HarpoonTestOpMode extends LinearOpMode {
 
             leftLift.update();
             otherSpinnyBit.update();
-            suck.directControl();
             leftArmStuff.updatePincher();
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
