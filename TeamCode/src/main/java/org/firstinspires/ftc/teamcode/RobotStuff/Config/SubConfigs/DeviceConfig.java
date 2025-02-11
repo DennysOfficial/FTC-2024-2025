@@ -25,6 +25,8 @@ public class DeviceConfig {
 
     public final String rightLift = "LiftR";
 
+    public final String leftLift = "LiftL";
+
     public final String grabberServo = "Pinch";
 
     public final String flapServo = "Flap";
