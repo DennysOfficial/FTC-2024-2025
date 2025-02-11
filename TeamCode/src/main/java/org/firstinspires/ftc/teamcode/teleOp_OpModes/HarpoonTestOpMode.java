@@ -80,16 +80,6 @@ public class HarpoonTestOpMode extends LinearOpMode {
         HarpoonArm harpoonArm = new HarpoonArm(this, activeConfig);
 
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
-
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
-
-        otherSpinnyBit.assignLift(leftLift);
-        leftLift.assignPivot(otherSpinnyBit);
-
-        ClawAndStuff leftArmStuff = new ClawAndStuff(this, activeConfig, leftLift, otherSpinnyBit);
-
-
         waitForStart();
         frameTimer.reset();
         //leftArmStuff.Rest();
@@ -113,14 +103,6 @@ public class HarpoonTestOpMode extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-            if (gamepad2.x) {
-                leftArmStuff.Score();
-            }
-            if (gamepad2.a) {
-                leftArmStuff.Collect();
-            }
-
-
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
             harpoonArm.update();
@@ -129,11 +111,7 @@ public class HarpoonTestOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
 
-
-            leftLift.update();
-            otherSpinnyBit.update();
-            leftArmStuff.updatePincher();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
+            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

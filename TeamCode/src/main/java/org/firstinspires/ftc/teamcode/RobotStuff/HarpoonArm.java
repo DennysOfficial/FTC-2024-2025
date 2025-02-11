@@ -34,7 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.Harpoon;
@@ -68,7 +67,8 @@ public class HarpoonArm {
 
     public enum ArmState {
         store,
-        intake,
+        intakeHeightBasedGrab,
+        intakeTimeBasedGrab,
         depositLow,
         depositHigh,
     }
@@ -101,7 +101,7 @@ public class HarpoonArm {
 
     void updatePresets() {
         if (config.inputMap.getIntakeForward())
-            armState = ArmState.intake;
+            armState = ArmState.intakeHeightBasedGrab;
 
         if (armState != previousArmState) {
             switch (armState) {
@@ -117,7 +117,7 @@ public class HarpoonArm {
                     if (!rightLift.isBusy())
                         rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
                     break;
-                case intake:
+                case intakeHeightBasedGrab:
                     if (!rightPivot.isBusy())
                         rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 1);
                     if (!rightLift.isBusy())
@@ -126,7 +126,7 @@ public class HarpoonArm {
             }
         } else
             switch (armState) {
-                case intake:
+                case intakeHeightBasedGrab:
                     rightPivot.setTargetPosition(calculateIntakePivotAngle());
 
                     if (config.inputMap.getYoinkButton()
