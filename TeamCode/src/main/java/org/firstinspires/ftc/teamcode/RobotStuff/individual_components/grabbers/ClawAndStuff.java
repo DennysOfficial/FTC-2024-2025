@@ -17,7 +17,7 @@ public class ClawAndStuff {
     LeftPivot pivot;
 
     Servo pinchServo;
-    public static double closedPosition = .3f;
+    public static double closedPosition = .269f;
     public static double openPosition = .6f;
 
     OpMode opmode;
@@ -29,11 +29,11 @@ public class ClawAndStuff {
 
     public static double wristPosScore = 0.94;
     public static double liftPosScore = 11.3;
-    public static double pivotPosScore = 35;
+    public static double pivotPosScore = 32;
 
-    public static double wristPosCollect = 0.3;
+    public static double wristPosCollect = 0.31;
     public static double liftPosCollect = 2;
-    public static double pivotPosCollect = -79;
+    public static double pivotPosCollect = -80;
 
     public ClawAndStuff(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
         this.opmode = opmode;

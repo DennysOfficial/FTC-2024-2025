@@ -95,10 +95,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         ClawAndStuff leftArmStuff = new ClawAndStuff(this,activeConfig,leftLift,otherSpinnyBit);
 
-        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
 
         speedyServos prayers = new speedyServos(this, activeConfig);
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
@@ -180,7 +178,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             leftLift.update();
             otherSpinnyBit.update();
-            suck.directControl();
             prayers.update();
 
 
