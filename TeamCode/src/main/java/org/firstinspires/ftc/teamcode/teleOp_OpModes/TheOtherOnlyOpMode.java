@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "The Other Only OpMode", group = "Linear OpMode")
 //@Disabled
 public class TheOtherOnlyOpMode extends LinearOpMode {
 
