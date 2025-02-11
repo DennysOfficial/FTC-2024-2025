@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.Timer;
 
 import java.util.List;
 
-@Autonomous(name = "Superman: SoupcOpMode_0-5-Z 0.0.1", group = "SoupcOpModes")
+@Autonomous(name = "Superman: SoupcOpMode_0-4-Z 1.0.5", group = "SoupcOpModes")
 public class Auto_Test_05Z extends OpMode{
 
     List<LynxModule> allHubs;
@@ -41,28 +41,35 @@ public class Auto_Test_05Z extends OpMode{
     Point rungPoint4 = new Point(33.5, 69, Point.CARTESIAN);
     Point rungPoint5 = new Point(33.5, 70.5, Point.CARTESIAN);
 
-    Point rungPointControl1 = new Point(20,28, Point.CARTESIAN);
-    Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
-    Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
-    Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
-    Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
-    Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
+    Point rungPoint1a = new Point(28, 67.5, Point.CARTESIAN);
+    Point rungPoint2a = new Point(28, 66, Point.CARTESIAN);
+    Point rungPoint3a = new Point(28, 64.5, Point.CARTESIAN);
+    Point rungPoint4a = new Point(28, 69, Point.CARTESIAN);
+    Point rungPoint5a = new Point(28, 70.5, Point.CARTESIAN);
 
-    Point samplepoint1 =      new Point(62,26.5, Point.CARTESIAN);
-    Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
-    Point samplepoint3 =      new Point(62,10, Point.CARTESIAN);
+    Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
+    Point rungPointControl2 = new Point(18, 66, Point.CARTESIAN);
 
-    Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
-    Point linepoint2 =        new Point(32,15.5, Point.CARTESIAN);
+    private Point samplecurvepoint1 = new Point(19,22, Point.CARTESIAN);
+    private Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
+    private Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
+    private Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
 
-    Point pickupPoint1 = new Point(11.5, 10, Point.CARTESIAN);
+    private Point samplepoint1 =      new Point(62,26.5, Point.CARTESIAN);
+    private Point samplepoint2 =      new Point(62,15.5, Point.CARTESIAN);
+    private Point samplepoint3 =      new Point(62,10, Point.CARTESIAN);
+
+    private Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
+    private Point linepoint2 =        new Point(32,14, Point.CARTESIAN);
+
+    Point pickupPoint1 = new Point(18, 11.5, Point.CARTESIAN);
     Point pickupPoint2 = new Point(13.5, 28, Point.CARTESIAN);
     Point pickupPoint3 = new Point(11.5, 28, Point.CARTESIAN);
 
-    public Path toSample1, toSample2, toSample3, toline1, toline2, toline3;
+    public Path toSample1, toSample2, toSample3, toline1, toline2, toPickup1;
 
-    public PathChain score1, score2, collect3, score3, moveSamples, collect4, score4, collect5, score5;
+    public PathChain score1, score2, collect3, score3, moveSamples, collect4, score4;
 
     // Other misc. stuff
     private Follower follower;
@@ -83,7 +90,7 @@ public class Auto_Test_05Z extends OpMode{
 
     private Timer pathTimer;
 
-    int listPointer = 0;
+    int robotState = 0;
 
     @Override
     public void init() {
@@ -138,7 +145,7 @@ public class Auto_Test_05Z extends OpMode{
 
     public void buildPaths() {
         score1 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(new Point(startPose), rungPoint1)))
+                .addPath(new Path(new BezierLine(new Point(startPose), rungPoint1a)))
                 .build();
 
         toSample1 = new Path(new BezierCurve(rungPoint1, samplecurvepoint1, samplecurvepoint2, samplepoint1));
@@ -147,29 +154,33 @@ public class Auto_Test_05Z extends OpMode{
 
         toline1 = new Path(new BezierLine(samplepoint1, linepoint1));
         toline2 = new Path(new BezierLine(samplepoint2, linepoint2));
-        toline3 = new Path(new BezierLine(samplepoint2, linepoint2));
+        toPickup1 = new Path(new BezierLine(samplepoint3, pickupPoint1));
 
         moveSamples = follower.pathBuilder()
                 .addPath(toSample1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toline1)
+                .addParametricCallback(0, () -> {
+                    grabber.Collect();
+                    leftPivot.setTargetPosition(-84);
+                })
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toSample2)
+                .addParametricCallback(0.5, () -> {
+                    leftLift.setTargetPosition(8);
+                })
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toline2)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(toSample3)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(toline3)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setZeroPowerAccelerationMultiplier(1)
                 .build();
 
         score2 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint2, rungPointControl2, rungPointControl1, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint2, rungPointControl2, new Point(26, 28, Point.CARTESIAN), pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(1)
                 .addParametricCallback(0, () -> {
                     grabber.Collect();
                     grabber.openClaw();
@@ -178,74 +189,57 @@ public class Auto_Test_05Z extends OpMode{
 
         collect3 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         score3 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl2, rungPointControl1, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl2, new Point(26, 28, Point.CARTESIAN), pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(1)
                 .addParametricCallback(0, () -> {
                     grabber.Collect();
-                    grabber.closeClaw();
+                    grabber.openClaw();
                 })
                 .build();
 
         collect4 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
-
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint4)))
+                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint4, rungPointControl2, rungPointControl1, pickupPoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(2)
-                .addParametricCallback(0, () -> {
-                    grabber.Collect();
-                    grabber.closeClaw();
-                })
-                .build();
-
-        collect5 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
-                .setZeroPowerAccelerationMultiplier(2)
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .build();
-
-        score5 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint5)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierLine(rungPoint5, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl2, new Point(26, 28, Point.CARTESIAN), pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
-                    grabber.Collect();
+                    leftLift.setTargetPosition(0);
                 })
                 .build();
     }
 
     public void routine() {
-        switch (listPointer) {
+        switch (robotState) {
             case 0:
                 if (leftPivot.getPosition() >= 15) {
                     follower.followPath(score1);
-                    listPointer = 1;
+                    pathTimer.resetTimer();
+                    robotState = 1;
                 }
                 break;
             case 1:
                 if (follower.atParametricEnd()) {
-                    grabber.Collect();
+                    leftLift.setTargetPosition(0);
                     grabber.openClaw();
                     follower.followPath(moveSamples);
-                    listPointer = 2;
+                    robotState = 2;
+                    pathTimer.resetTimer();
                 }
             case 2:
                 if (follower.atParametricEnd()) {
-                    listPointer = 3;
+                    robotState = 3;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
@@ -255,70 +249,56 @@ public class Auto_Test_05Z extends OpMode{
                     grabber.Score();
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score2);
-                        listPointer = 4;
+                        robotState = 4;
+                        pathTimer.resetTimer();
                     }
                 }
                 break;
             case 4:
                 if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect3);
-                    listPointer = 5;
+                    robotState = 5;
+                    pathTimer.resetTimer();
                 }
                 break;
             case 5:
                 if (follower.atParametricEnd()) {
-                    listPointer = 6;
+                    robotState = 6;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
                 break;
             case 6:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    leftPivot.setTargetPosition(35);
                     if (leftPivot.getPosition() >= 0) {
+                        grabber.Score();
                         follower.followPath(score3);
-                        listPointer = 7;
+                        robotState = 7;
+                        pathTimer.resetTimer();
                     }
                 }
                 break;
             case 7:
                 if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
                     follower.followPath(collect4);
-                    listPointer = 8;
-                }
-                break;
-            case 8:
-                if (follower.atParametricEnd()) {
-                    listPointer = 9;
+                    robotState = 8;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
                 break;
-            case 9:
+            case 8:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    leftPivot.setTargetPosition(35);
                     if (leftPivot.getPosition() >= 0) {
+                        grabber.Score();
                         follower.followPath(score4);
-                        listPointer = 10;
+                        robotState = 9;
+                        pathTimer.resetTimer();
                     }
                 }
                 break;
-            case 10:
-                if (follower.atParametricEnd() && leftPivot.getPosition() <= -77) {
-                    follower.followPath(collect5);
-                    listPointer = 11;
-                }
-                break;
-            case 11:
-                if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
-                    if (leftPivot.getPosition() >= 0) {
-                        follower.followPath(score5);
-                        listPointer = 12;
-                    }
-                }
-                break;
-            case 12:
+            case 9:
                 break;
         }
     }
