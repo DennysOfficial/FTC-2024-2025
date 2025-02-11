@@ -45,9 +45,13 @@ public class InputMap {
         return gamepad2.left_bumper;
     }
 
-    public boolean getAbort() {return gamepad1.dpad_left;}
+    public boolean getAbort() {
+        return gamepad1.dpad_left || gamepad2.dpad_left;
+    }
 
-    public boolean getUnAbort() {return gamepad1.dpad_right;}
+    public boolean getUnAbort() {
+        return gamepad1.dpad_right || gamepad2.dpad_right;
+    }
 
     public boolean getFlapButton() {
         return gamepad2.left_trigger > 0.5;

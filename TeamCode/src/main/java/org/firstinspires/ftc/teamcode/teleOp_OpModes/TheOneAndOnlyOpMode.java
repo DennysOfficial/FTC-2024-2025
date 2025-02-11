@@ -1,3 +1,4 @@
+
 /* Copyright (c) 2021 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,6 +35,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -42,32 +44,28 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.IMU;
-
 
 import java.util.List;
 
-@TeleOp(name = "The Other Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
 //@Disabled
-public class TheOtherOnlyOpMode extends LinearOpMode {
+public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     StopWatch stopWatch = new StopWatch();
 
-    IMU imu;
-
     @Override
     public void runOpMode() {
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
@@ -94,16 +92,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
 
-        imu = hardwareMap.get(IMU.class, "imu");
-
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
-
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
-        imu.initialize(new IMU.Parameters(orientationOnRobot));
-
-
         waitForStart();
         frameTimer.reset();
 
@@ -114,10 +102,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
-
-
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -166,9 +150,11 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
                 lift.setTargetPosition(5.12);
             }
 
+
             if (gamepad2.dpad_down) {
                 grabber.Collect();
             }
+
 
             if (gamepad2.dpad_left) {
                 e = grabber.getElbowPos();
@@ -179,7 +165,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
                 e = grabber.getElbowPos();
                 grabber.setElbowPos(e - 0.01);
             }
-
 
 
             // make the arm smack into the ground and intake
@@ -206,12 +191,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
             telemetry.addData("ElbowPos:", grabber.getElbowPos());
 
-            telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
-            telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
-            telemetry.addData("roll", "%.2f deg\n", orientation.getRoll(AngleUnit.DEGREES));
-            telemetry.addData("yaw velocity", "%.2f deg/sec", angularVelocity.zRotationRate);
-            telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
-            telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
             telemetry.update();
         }
