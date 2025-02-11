@@ -23,8 +23,6 @@ public class DeviceConfig {
 
     public final String rightPivot = "PivotR";
 
-    public final String leftLift = "LiftL";
-
     public final String rightLift = "LiftR";
 
     public final String grabberServo = "Pinch";

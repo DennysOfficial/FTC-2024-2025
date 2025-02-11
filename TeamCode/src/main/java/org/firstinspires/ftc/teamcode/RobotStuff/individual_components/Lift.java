@@ -75,9 +75,7 @@ public class Lift extends ControlAxis {
         //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        motors.getMotor(config.deviceConfig.leftLift).setMotorDisable();
     }
-
 
     @Override
     double getStaticFeedforward(double targetDirection) {

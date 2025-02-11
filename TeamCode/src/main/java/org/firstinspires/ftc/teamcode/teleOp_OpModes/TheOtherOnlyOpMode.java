@@ -34,7 +34,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -43,28 +42,32 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntake;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Animator;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.IMU;
+
 
 import java.util.List;
 
 @TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
 //@Disabled
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+public class TheOtherOnlyOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     StopWatch stopWatch = new StopWatch();
 
+    IMU imu;
+
     @Override
     public void runOpMode() {
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-
         for (LynxModule hub : allHubs) {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
@@ -90,6 +93,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
+        imu = hardwareMap.get(IMU.class, "imu");
+
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         waitForStart();
         frameTimer.reset();
@@ -111,6 +122,16 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 hub.clearBulkCache();
             }
             activeConfig.sensorData.update();
+
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+
+            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
+            telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
+            telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
+            telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", angularVelocity.zRotationRate);
+            telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", angularVelocity.xRotationRate);
+            telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", angularVelocity.yRotationRate);
 
 
             if (gamepad2.x) {
@@ -143,14 +164,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
 
 
-            if (gamepad2.dpad_up) {
+            if (gamepad1.dpad_up) {
                 grabber.Score();
                 spinnyBit.fancyMoveToPosition(21.15, 0.5);
                 lift.setTargetPosition(5.12);
             }
 
 
-            if (gamepad2.dpad_down) {
+            if (gamepad1.dpad_down) {
                 grabber.Collect();
             }
 
