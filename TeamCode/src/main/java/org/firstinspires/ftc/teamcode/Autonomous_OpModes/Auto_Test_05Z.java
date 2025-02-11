@@ -214,7 +214,7 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         score2 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint2)))
+                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint2a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
@@ -224,7 +224,7 @@ public class Auto_Test_05Z extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
         score3 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint3)))
+                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint3a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
@@ -235,7 +235,7 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint1, rungPointControl1, rungPointControl2, rungPoint4)))
+                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
@@ -246,7 +246,7 @@ public class Auto_Test_05Z extends OpMode{
                 .build();
 
         score5 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint5)))
+                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint5a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
     }
@@ -279,6 +279,102 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 4:
+                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                    follower.followPath(score2a);
+                    listPointer = 5;
+                }
+                break;
+            case 5:
+                if (follower.atParametricEnd()) {
+                    grabber.openClaw();
+                    follower.followPath(collect3);
+                    listPointer = 6;
+                }
+            case 6:
+                if (follower.atParametricEnd()) {
+                    listPointer = 7;
+                    pathTimer.resetTimer();
+                    grabber.closeClaw();
+                }
+                break;
+            case 7:
+                if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
+                        follower.followPath(score3);
+                        listPointer = 8;
+                    }
+                }
+                break;
+            case 8:
+                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                    follower.followPath(score3a);
+                    listPointer = 9;
+                }
+                break;
+            case 9:
+                if (follower.atParametricEnd()) {
+                    grabber.openClaw();
+                    follower.followPath(collect4);
+                    listPointer = 10;
+                }
+            case 10:
+                if (follower.atParametricEnd()) {
+                    listPointer = 11;
+                    pathTimer.resetTimer();
+                    grabber.closeClaw();
+                }
+                break;
+            case 11:
+                if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
+                        follower.followPath(score4);
+                        listPointer = 12;
+                    }
+                }
+                break;
+            case 12:
+                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                    follower.followPath(score4a);
+                    listPointer = 13;
+                }
+                break;
+            case 13:
+                if (follower.atParametricEnd()) {
+                    grabber.openClaw();
+                    follower.followPath(collect5);
+                    listPointer = 14;
+                }
+            case 14:
+                if (follower.atParametricEnd()) {
+                    listPointer = 15;
+                    pathTimer.resetTimer();
+                    grabber.closeClaw();
+                }
+                break;
+            case 15:
+                if (follower.atParametricEnd()) {
+                    listPointer = 16;
+                    pathTimer.resetTimer();
+                    grabber.closeClaw();
+                }
+                break;
+            case 16:
+                if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
+                        follower.followPath(score5);
+                        listPointer = 17;
+                    }
+                }
+                break;
+            case 17:
+                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                    follower.followPath(score5a);
+                    listPointer = 18;
+                }
+                break;
         }
     }
 
