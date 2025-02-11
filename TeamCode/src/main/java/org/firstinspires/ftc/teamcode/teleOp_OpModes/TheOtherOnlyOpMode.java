@@ -93,6 +93,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
         PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
+
         imu = hardwareMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -101,6 +102,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
+
 
         waitForStart();
         frameTimer.reset();
@@ -114,6 +116,10 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
 
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
+
+
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
@@ -122,16 +128,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
                 hub.clearBulkCache();
             }
             activeConfig.sensorData.update();
-
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
-
-            telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
-            telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
-            telemetry.addData("roll", "%.2f deg\n", orientation.getRoll(AngleUnit.DEGREES));
-            telemetry.addData("yaw velocity", "%.2f deg/sec", angularVelocity.zRotationRate);
-            telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
-            telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
 
             if (gamepad2.x) {
@@ -211,6 +207,12 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
             telemetry.addData("ElbowPos:", grabber.getElbowPos());
 
+            telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
+            telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
+            telemetry.addData("roll", "%.2f deg\n", orientation.getRoll(AngleUnit.DEGREES));
+            telemetry.addData("yaw velocity", "%.2f deg/sec", angularVelocity.zRotationRate);
+            telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
+            telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
             telemetry.update();
         }
