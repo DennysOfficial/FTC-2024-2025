@@ -126,12 +126,12 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
             AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
 
-            telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
-            telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
-            telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
-            telemetry.addData("Yaw (Z) velocity", "%.2f Deg/Sec", angularVelocity.zRotationRate);
-            telemetry.addData("Pitch (X) velocity", "%.2f Deg/Sec", angularVelocity.xRotationRate);
-            telemetry.addData("Roll (Y) velocity", "%.2f Deg/Sec", angularVelocity.yRotationRate);
+            telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
+            telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
+            telemetry.addData("roll", "%.2f deg\n", orientation.getRoll(AngleUnit.DEGREES));
+            telemetry.addData("yaw velocity", "%.2f deg/sec", angularVelocity.zRotationRate);
+            telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
+            telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
 
             if (gamepad2.x) {
