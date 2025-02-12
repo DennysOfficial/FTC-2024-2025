@@ -94,6 +94,10 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
         double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
+        if(config.inputMap.getSlowDown()){
+            requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getSlowTurningRateDPS();
+        }
+
         requestedTargetTurnRate = MathUtils.clamp(requestedTargetTurnRate, -maxAngularSpeed, maxAngularSpeed);
 
         velocityRamp.ratePerSecond = accelerationConstant + accelerationProportionalCoefficient * Math.abs(requestedTargetTurnRate - targetAngularVelocity);

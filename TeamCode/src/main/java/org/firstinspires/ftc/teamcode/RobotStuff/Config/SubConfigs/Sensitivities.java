@@ -31,6 +31,12 @@ public class Sensitivities {
         return turningRateDPS;
     }
 
+    public static float slowTurningRateDPS = 30;
+
+    public float getSlowTurningRateDPS() {
+        return slowTurningRateDPS;
+    }
+
 
     public static float strafingSensitivity = 1;
 
