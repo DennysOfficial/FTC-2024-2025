@@ -174,7 +174,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            //intake.directControl();
+            leftArmStuff.updatePincher();
 
             leftLift.update();
             otherSpinnyBit.update();
