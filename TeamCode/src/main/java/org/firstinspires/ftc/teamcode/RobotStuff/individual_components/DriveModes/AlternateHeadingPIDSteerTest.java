@@ -20,7 +20,7 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
     public static double turnFeedforwardCoefficient = 0.007;
     public static double accelerationFeedforwardCoefficient = -0.0003;
 
-    public static double angleKp = 0.03;
+    public static double angleKp = 0.05;
     public static double angleKi = 0;
     public static double angleKd = 0.003;
 
