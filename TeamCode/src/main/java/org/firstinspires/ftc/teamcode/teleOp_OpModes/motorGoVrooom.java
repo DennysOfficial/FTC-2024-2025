@@ -48,7 +48,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.InertialMeasurem
 
 import java.util.List;
 
-@TeleOp(name = "Motor Go Vrooom", group = "Linear OpMode")
+@TeleOp(name = "Motor Go Vrooom", group = "AZ testing thing")
 //@Disabled
 public class motorGoVrooom extends LinearOpMode { // this is basically theotheroneandonlyopmode but with imu stuff
 

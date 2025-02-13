@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DebugConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DeviceConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.InputMap;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.Sensitivities;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 @Config
 public class RobotConfig {
@@ -17,7 +18,7 @@ public class RobotConfig {
         return rearExtensionLimitInch;
     }
 
-    public static double frontExtensionLimitInch = 20;
+    public static double frontExtensionLimitInch = 25;
 
     public double getFrontExtensionLimitInch() {
         return frontExtensionLimitInch;
@@ -33,6 +34,7 @@ public class RobotConfig {
     public final Sensitivities sensitivities = new Sensitivities();
 
     public final SensorData sensorData;
+    public final StopWatch stopWatch = new StopWatch();
 
 
     public RobotConfig(OpMode opMode) {

@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes.IntakeTest;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -42,7 +43,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.PositionDerivatives;
 
 @TeleOp(name = "Intake Test", group = "Linear OpMode")
-//@Disabled
+@Disabled
 public class IntakeTestingThing extends LinearOpMode {
 
 

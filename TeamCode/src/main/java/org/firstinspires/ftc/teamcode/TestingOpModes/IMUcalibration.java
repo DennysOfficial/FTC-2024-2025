@@ -27,10 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ReadWriteFile;
@@ -97,7 +96,7 @@ import java.util.Locale;
  * The BNO055 product page: https://www.bosch-sensortec.com/bst/products/all_products/bno055
  * The BNO055 datasheet: https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
  */
-@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "Sensor")
+@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "ZZ testing")
 //@Disabled                            // Uncomment this to add to the OpMode list
 public class IMUcalibration extends LinearOpMode
     {

@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
@@ -51,14 +52,13 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The Claw", group = "Linear OpMode")
+@TeleOp(name = "Harpoon go stab", group = "AB important Testing")
 //@Disabled
-public class TheClaw extends LinearOpMode {
+public class HarpoonTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    StopWatch stopWatch = new StopWatch();
 
     @Override
     public void runOpMode() {
@@ -77,27 +77,7 @@ public class TheClaw extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-
-        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        spinnyBit.assignLift(rightLift);
-        rightLift.assignPivot(spinnyBit);
-
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
-
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
-
-        otherSpinnyBit.assignLift(leftLift);
-        leftLift.assignPivot(otherSpinnyBit);
-
-        ClawAndStuff leftArmStuff = new ClawAndStuff(this,activeConfig,leftLift,otherSpinnyBit);
-
-        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
-
-        speedyServos prayers = new speedyServos(this, activeConfig);
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
+        HarpoonArm harpoonArm = new HarpoonArm(this, activeConfig);
 
 
         waitForStart();
@@ -109,8 +89,8 @@ public class TheClaw extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            stopWatch.reset();
-            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+            activeConfig.stopWatch.reset();
+            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -123,68 +103,15 @@ public class TheClaw extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            if (gamepad2.y) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(61, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-            }
-
-
-            if (gamepad2.b) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-69, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-
-                suck.intakeForDuration(0.3);
-            }// presets
-
-            if(gamepad2.x){
-                leftArmStuff.Score();
-            }
-            if(gamepad2.a){
-                leftArmStuff.Collect();
-            }
-
-
-//            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (prayers.isHold(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(76.9);
-                    suck.intakeForDuration(2);
-                    prayers.Intake();
-                }
-            }
-//                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-//                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-//
-//            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-//                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            rightLift.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
-
-            spinnyBit.update();
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
+            harpoonArm.update();
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total HarpoonArm update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
 
-            //intake.directControl();
-
-            leftLift.update();
-            otherSpinnyBit.update();
-            suck.directControl();
-
-            leftArmStuff.updatePincher();
-
-
+            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

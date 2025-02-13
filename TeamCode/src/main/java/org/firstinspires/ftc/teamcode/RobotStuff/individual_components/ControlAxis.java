@@ -26,7 +26,7 @@ public abstract class ControlAxis {  //schrödinger's code
     public final String axisName;
     public final String unitName;
 
-    public final double unitsPerEncoderCount;
+    public double unitsPerEncoderCount;
 
 
     protected OpMode opMode;
@@ -219,6 +219,8 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void setTargetPosition(double targetPosition) {
+        if(Double.isNaN(targetPosition))
+            throw new ArithmeticException("target Position cant be nan you goober");
         this.targetPosition = softLimits.clamp(targetPosition);
     }
 

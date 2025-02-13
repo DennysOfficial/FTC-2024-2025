@@ -51,7 +51,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "The One and Only OpMode", group = "AA main opMode")
 //@Disabled
 public class TheOneAndOnlyOpMode extends LinearOpMode {
 
@@ -96,10 +96,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         ClawAndStuff leftArmStuff = new ClawAndStuff(this,activeConfig,leftLift,otherSpinnyBit);
 
-        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
 
         speedyServos prayers = new speedyServos(this, activeConfig);
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
 
 
         waitForStart();
@@ -194,11 +192,10 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            //intake.directControl();
+            leftArmStuff.updatePincher();
 
             leftLift.update();
             otherSpinnyBit.update();
-            suck.directControl();
             prayers.update();
 
 
