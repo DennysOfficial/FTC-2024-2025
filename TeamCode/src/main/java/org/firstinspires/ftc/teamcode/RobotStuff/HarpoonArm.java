@@ -169,7 +169,7 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public double calculateIntakeHeight() {
-        return -(rightLift.retractedExtension + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
+        return armIK.getHeight(rightPivot.getPosition() + intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
     }
 
 }

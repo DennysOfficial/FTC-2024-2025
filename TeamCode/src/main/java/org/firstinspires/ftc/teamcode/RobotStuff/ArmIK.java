@@ -4,6 +4,7 @@ public class ArmIK {
     double extensionDistance;
     double extensionAxisOffset;
     double targetHeightOffset;
+    double pivotAngleRad;
 
 
     void updateCoefficients() {
@@ -44,4 +45,12 @@ public class ArmIK {
 
         return Math.toDegrees(Math.asin(getSinTheta()));
     }
+
+    public double getHeight(double pivotAngle, double extensionDistance, double extensionAxisOffset) {
+        this.pivotAngleRad = Math.toRadians(pivotAngle);
+
+        return Math.cos(pivotAngleRad) * extensionDistance - extensionAxisOffset * Math.sin(pivotAngleRad);
+    }
+
+
 }
