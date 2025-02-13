@@ -45,7 +45,7 @@ public class Sensitivities {
     }
 
 
-    public static float liftRate = 10; // inches per second
+    public static float liftRate = 30; // inches per second
 
     public float getLiftRate() {
         return liftRate;

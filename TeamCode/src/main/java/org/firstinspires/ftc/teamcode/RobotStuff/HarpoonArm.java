@@ -61,6 +61,8 @@ public class HarpoonArm {
     public static double extensionAxisOffset = 5;
     public static double intakeHeightOffset = -1;
 
+    public static double intakeAngleOffset = 0;
+
 
     final OpMode opMode;
     final RobotConfig config;
@@ -116,22 +118,23 @@ public class HarpoonArm {
         if (armState != previousArmState) {
             switch (armState) {
                 case store:
-                    if (!rightPivot.isBusy())
-                        rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
-                    if (!rightLift.isBusy())
-                        rightLift.fancyMoveToPosition(StoreLiftPosition, 0.75);
+                    rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
+                    rightLift.fancyMoveToPosition(StoreLiftPosition, 0.75);
+                    rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+                    rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     break;
                 case depositLow:
-                    if (!rightPivot.isBusy())
-                        rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
-                    if (!rightLift.isBusy())
-                        rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
+                    rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
+                    rightLift.fancyMoveToPosition(ObservationDepositLiftPosition, 0.75);
+                    rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+                    rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     break;
                 case intakeHeightBasedGrab:
-                    if (!rightPivot.isBusy())
-                        rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 1);
-                    if (!rightLift.isBusy())
-                        rightLift.fancyMoveToPosition(intakeLiftExtension, 0.75);
+                    rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 1);
+                    rightLift.fancyMoveToPosition(intakeLiftExtension, 0.75);
+
+                    rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+                    rightPivot.defaultControlMode = ControlAxis.ControlMode.positionControl;
                     break;
             }
         } else
@@ -155,7 +158,7 @@ public class HarpoonArm {
     }
 
     public double calculateIntakePivotAngle() {
-        return armIK.getTargetAngle(rightLift.retractedExtension, extensionAxisOffset, intakeHeightOffset);
+        return intakeAngleOffset + armIK.getTargetAngle(rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset, intakeHeightOffset);
     }
 
     /**

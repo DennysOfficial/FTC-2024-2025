@@ -30,8 +30,10 @@ public class ArmIK {
         c = targetHeightOffset * targetHeightOffset - extensionDistance * extensionDistance;
     }
 
+    private double sinTheta;
+
     double getSinTheta() {
-        return (-b + Math.sqrt(b * b - 4 * a * c)) / 2 * a;
+        return (-b + Math.sqrt(b * b - 4.0 * a * c)) / (2.0 * a);
     }
 
     public double getTargetAngle(double extensionDistanced, double extensionAxisOffset, double targetHeightOffset) {
@@ -41,6 +43,8 @@ public class ArmIK {
 
         updateCoefficients();
 
-        return 180 - Math.asin(getSinTheta());
+        sinTheta = getSinTheta();
+
+        return Math.toDegrees(Math.asin(sinTheta));
     }
 }
