@@ -41,6 +41,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.
 @Config
 public class HarpoonArm {
 
+    public static double grabPosition = 0;
+
     public static double ObservationDepositArmAngle = -70;
     public static double ObservationDepositLiftPosition = 0;
 
@@ -51,7 +53,7 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public static double intakeLiftExtension = 0;
-    public static double intakeTorque = 1;
+    public static double intakeTorque = 0;
     public static double clawTriggerHeightOffset = -2;
     public static double clawTriggerScale = 1;
 
@@ -70,7 +72,7 @@ public class HarpoonArm {
     final RightLift rightLift;
     final RightPivot rightPivot;
 
-    final Harpoon harpoon;
+    public static Harpoon harpoon;
 
     ArmIK armIK = new ArmIK();
 
@@ -142,13 +144,15 @@ public class HarpoonArm {
                 case intakeHeightBasedGrab:
                     rightPivot.setTargetPosition(calculateIntakePivotAngle());
 
+                    harpoon.setGrabPosition(grabPosition);
+
                     if (config.inputMap.getYoinkButton()
                             && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
                             && !rightPivot.isBusy()
                             && rightPivot.getPosition() > 55) {
 
                         rightPivot.targetTorque = intakeTorque;
-                        rightPivot.setControlModeUnsafe(ControlAxis.ControlMode.torqueControl);
+                        rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
                         harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
                     } else if (!rightPivot.isBusy())
@@ -164,7 +168,7 @@ public class HarpoonArm {
     /**
      * relative to the center of the pivot
      */
-    public double calculateIntakeHeight() {
+    public double  calculateIntakeHeight() {
         return -(rightLift.retractedExtension + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
     }
 

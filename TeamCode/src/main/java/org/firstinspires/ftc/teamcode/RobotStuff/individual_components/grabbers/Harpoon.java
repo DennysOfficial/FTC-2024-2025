@@ -2,19 +2,19 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-
 public class Harpoon {
 
     Servo harpoonServo;
     //Servo wristServo;
     RobotConfig config;
 
-    public static double openPos = 0.5, closePos = 0.5;
+    public double openPos = 0.5, closePos = 0.6;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
@@ -36,7 +36,7 @@ public class Harpoon {
     public void setGrabPosition(double position) {
         position = MathUtils.clamp(position,0,1);
         position = MathStuff.map(position,0,1,openPos,closePos);
-        setGrabPosition(position);
+        harpoonServo.setPosition(position);
     }
 
 
