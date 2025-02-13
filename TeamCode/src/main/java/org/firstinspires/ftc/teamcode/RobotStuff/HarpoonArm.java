@@ -53,7 +53,7 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public static double intakeLiftExtension = 0;
-    public static double intakeTorque = 0;
+    public static double intakeTorque = 0.2;
     public static double clawTriggerHeightOffset = -2;
     public static double clawTriggerScale = 1;
 
@@ -63,7 +63,7 @@ public class HarpoonArm {
     public static double extensionAxisOffset = 5;
     public static double intakeHeightOffset = -1;
 
-    public static double intakeAngleOffset = 0;
+    public static double intakeAngleOffset = -4;
 
 
     final OpMode opMode;
@@ -72,7 +72,7 @@ public class HarpoonArm {
     final RightLift rightLift;
     final RightPivot rightPivot;
 
-    public static Harpoon harpoon;
+    final Harpoon harpoon;
 
     ArmIK armIK = new ArmIK();
 
@@ -144,8 +144,6 @@ public class HarpoonArm {
                 case intakeHeightBasedGrab:
                     rightPivot.setTargetPosition(calculateIntakePivotAngle());
 
-                    harpoon.setGrabPosition(grabPosition);
-
                     if (config.inputMap.getYoinkButton()
                             && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
                             && !rightPivot.isBusy()
@@ -155,8 +153,10 @@ public class HarpoonArm {
                         rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
                         harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
-                    } else if (!rightPivot.isBusy())
+                    } else if (!rightPivot.isBusy()) {
                         rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
+                        harpoon.setGrabPosition(grabPosition);
+                    }
                     break;
             }
     }
@@ -168,7 +168,7 @@ public class HarpoonArm {
     /**
      * relative to the center of the pivot
      */
-    public double  calculateIntakeHeight() {
+    public double calculateIntakeHeight() {
         return -(rightLift.retractedExtension + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
     }
 

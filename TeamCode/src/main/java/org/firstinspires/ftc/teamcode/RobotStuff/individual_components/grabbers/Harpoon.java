@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
+@Config
 public class Harpoon {
 
     Servo harpoonServo;
     //Servo wristServo;
     RobotConfig config;
 
-    public double openPos = 0.5, closePos = 0.6;
+    public static double openPos = 0.25, closePos = 0.48;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
