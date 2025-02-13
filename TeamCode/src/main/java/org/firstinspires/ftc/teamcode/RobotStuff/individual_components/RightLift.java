@@ -16,7 +16,7 @@ public class RightLift extends ControlAxis {
 
     RightPivot rightPivot;
 
-    public final double retractedRadius = 10;
+    public final double retractedExtension = 10;
 
     public void assignPivot(RightPivot rightPivot) {
         if (rightPivot == null)
@@ -111,7 +111,7 @@ public class RightLift extends ControlAxis {
         if (targetPosition == getTargetPosition() && previousRightPivotTargetPosition == (previousRightPivotTargetPosition = rightPivot.getTargetPosition()))
             return;
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getTargetPosition())) - retractedRadius;
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getTargetPosition())) - retractedExtension;
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 

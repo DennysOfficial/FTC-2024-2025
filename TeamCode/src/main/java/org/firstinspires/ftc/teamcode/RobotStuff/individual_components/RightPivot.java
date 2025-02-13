@@ -66,7 +66,7 @@ public class RightPivot extends ControlAxis{
         if (targetPosition == getTargetPosition() && previousRightLiftTargetPosition == (previousRightLiftTargetPosition = rightLift.getTargetPosition()))
             return;
 
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedRadius + rightLift.getTargetPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedExtension + rightLift.getTargetPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 

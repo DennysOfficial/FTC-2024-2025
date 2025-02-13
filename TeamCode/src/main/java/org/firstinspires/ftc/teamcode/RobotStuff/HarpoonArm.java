@@ -50,11 +50,16 @@ public class HarpoonArm {
     /**
      * relative to the center of the pivot
      */
-    public static double intakeHeightOffset = -1;
     public static double intakeLiftExtension = 0;
     public static double intakeTorque = 1;
     public static double clawTriggerHeightOffset = -2;
     public static double clawTriggerScale = 1;
+
+    /**
+     * the distance between the axis of rotation and the line in the direction of extension through the controlled point
+     */
+    public static double extensionAxisOffset = 5;
+    public static double intakeHeightOffset = -1;
 
 
     final OpMode opMode;
@@ -64,6 +69,8 @@ public class HarpoonArm {
     final RightPivot rightPivot;
 
     final Harpoon harpoon;
+
+    ArmIK armIK = new ArmIK();
 
     public enum ArmState {
         store,
@@ -95,13 +102,16 @@ public class HarpoonArm {
         rightPivot.update();
 
         opMode.telemetry.addData("target intake pivot angle = %f", calculateIntakePivotAngle());
-        opMode.telemetry.addData("intake height = %f", calculateIntakePivotAngle());
+        opMode.telemetry.addData("intake height = %f", calculateIntakeHeight());
         previousArmState = armState;
     }
 
     void updatePresets() {
         if (config.inputMap.getIntakeForward())
             armState = ArmState.intakeHeightBasedGrab;
+
+        if (config.inputMap.getObservationDepositPreset())
+            armState = ArmState.depositLow;
 
         if (armState != previousArmState) {
             switch (armState) {
@@ -138,21 +148,21 @@ public class HarpoonArm {
                         rightPivot.setControlModeUnsafe(ControlAxis.ControlMode.torqueControl);
 
                         harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
-                    } else
+                    } else if (!rightPivot.isBusy())
                         rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
                     break;
             }
     }
 
     public double calculateIntakePivotAngle() {
-        return 90 - Math.toDegrees(Math.asin(intakeHeightOffset / (rightLift.retractedRadius + rightLift.getPosition())));
+        return armIK.getTargetAngle(rightLift.retractedExtension, extensionAxisOffset, intakeHeightOffset);
     }
 
     /**
      * relative to the center of the pivot
      */
     public double calculateIntakeHeight() {
-        return -(rightLift.retractedRadius + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
+        return -(rightLift.retractedExtension + rightLift.getPosition()) * Math.sin(Math.toRadians(90 - rightPivot.getPosition()));
     }
 
 }
