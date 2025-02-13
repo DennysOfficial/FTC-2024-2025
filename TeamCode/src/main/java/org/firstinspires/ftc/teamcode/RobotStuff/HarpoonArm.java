@@ -54,7 +54,7 @@ public class HarpoonArm {
      */
     public static double intakeLiftExtension = 0;
     public static double intakeTorque = 0.2;
-    public static double clawTriggerHeightOffset = -2;
+    public static double clawTriggerHeightOffset = -1.5;
     public static double clawTriggerScale = 1;
 
     /**
