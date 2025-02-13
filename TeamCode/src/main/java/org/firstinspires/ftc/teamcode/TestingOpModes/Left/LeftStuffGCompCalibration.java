@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
 
-@TeleOp(name = "Left gravity Compensation calibration: OpMode", group = "Linear OpMode")
+@TeleOp(name = "Left gravity Compensation calibration: OpMode", group = "ZA calibration")
 //@Disabled
 public class LeftStuffGCompCalibration extends LinearOpMode {
 

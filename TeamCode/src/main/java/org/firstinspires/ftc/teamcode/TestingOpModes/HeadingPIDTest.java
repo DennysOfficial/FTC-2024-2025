@@ -53,7 +53,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Heading PID Test", group = "Test?")
+@TeleOp(name = "Heading PID Test", group = "ZZ testing")
 //@Disabled
 public class   HeadingPIDTest extends LinearOpMode {
 

@@ -96,7 +96,7 @@ import java.util.Locale;
  * The BNO055 product page: https://www.bosch-sensortec.com/bst/products/all_products/bno055
  * The BNO055 datasheet: https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
  */
-@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "Sensor")
+@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "ZZ testing")
 //@Disabled                            // Uncomment this to add to the OpMode list
 public class IMUcalibration extends LinearOpMode
     {

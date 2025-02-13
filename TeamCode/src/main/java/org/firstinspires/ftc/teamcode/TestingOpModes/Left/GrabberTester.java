@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 
-@TeleOp(name = "Grabber Tester", group = "Linear OpMode")
+@TeleOp(name = "Grabber Tester", group = "ZA calibration")
 //@Disabled
 public class GrabberTester extends LinearOpMode {
 

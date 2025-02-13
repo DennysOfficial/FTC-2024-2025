@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Harpoon go stab", group = "Linear OpMode")
+@TeleOp(name = "Harpoon go stab", group = "AB important Testing")
 //@Disabled
 public class HarpoonTestOpMode extends LinearOpMode {
 

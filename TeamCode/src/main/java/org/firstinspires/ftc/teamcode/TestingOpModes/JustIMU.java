@@ -45,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
-@TeleOp(name = "Sensor: BNO055 IMU", group = "Sensor")
+@TeleOp(name = "Sensor: BNO055 IMU", group = "ZZ testing")
 //@Disabled   // Comment this out to add to the OpMode list
 public class JustIMU extends LinearOpMode
     {

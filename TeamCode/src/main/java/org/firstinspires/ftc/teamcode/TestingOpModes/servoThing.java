@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "servo tester", group = "Linear OpMode")
+@TeleOp(name = "servo tester", group = "ZZ testing")
 //@Disabled
 public class servoThing extends LinearOpMode {
 
