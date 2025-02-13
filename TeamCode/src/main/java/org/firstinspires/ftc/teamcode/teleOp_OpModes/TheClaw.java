@@ -46,7 +46,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
@@ -138,7 +137,7 @@ public class TheClaw extends LinearOpMode {
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.deposit();
+
                 suck.intakeForDuration(0.3);
             }// presets
 
@@ -152,7 +151,7 @@ public class TheClaw extends LinearOpMode {
 
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (prayers.inSubRout(gamepad2.right_trigger)){
+                if (prayers.isHold(gamepad2.right_trigger)){
                     spinnyBit.setTargetPosition(76.9);
                     suck.intakeForDuration(2);
                     prayers.Intake();

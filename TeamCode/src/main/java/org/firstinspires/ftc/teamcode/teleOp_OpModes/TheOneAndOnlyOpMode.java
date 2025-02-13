@@ -46,7 +46,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
@@ -59,6 +58,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    public boolean yPre = false;
+    public boolean rTrigger = false;
     StopWatch stopWatch = new StopWatch();
 
     @Override
@@ -130,6 +131,14 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     spinnyBit.fancyMoveToPosition(65, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
+                yPre = true;
+                prayers.subStuff(1);
+            }
+
+            if (yPre && !spinnyBit.isBusy() && !rightLift.isBusy())
+            {
+                rightLift.setTargetPosition(13);
+                yPre = false;
             }
 
 
@@ -146,16 +155,25 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             if(gamepad2.a){
                 leftArmStuff.Collect();
             }
-
-            if(gamepad2.right_trigger > 0.2){
+            if (gamepad2.left_bumper){
                 prayers.Intake();
             }
 
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (prayers.inSubRout(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(86);
+                if (gamepad2.right_trigger > 0.2){
+                    spinnyBit.setTargetPosition(82);
                 }
+                if (prayers.isHold(gamepad2.right_trigger)){
+                    spinnyBit.setTargetPosition(86);
+                    rTrigger = true;
+                }
+
+            }
+
+            if (!spinnyBit.isBusy() && rTrigger){
+                spinnyBit.setTargetPosition(75);
+                rTrigger = false;
             }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 //                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());

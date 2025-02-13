@@ -12,30 +12,27 @@ public class speedyServos {
     OpMode opmode;
     RobotConfig config;
     public static double point = 0.25;
-    public static double deposit = 0.85;
     public static double subEntrance = 0.425;
     public static double pullBack = 0.5;
     public double targetPos = 0;
     public boolean hold = false;
-    public static double holding = 0;
     public boolean inSub = false;
+    public boolean first = true;
     public speedyServos(OpMode opmode, RobotConfig config){
         this.opmode = opmode;
         this.config = config;
         wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
     }
 
-    public void deposit(){
-        wrist.setPosition(deposit);
-        targetPos = deposit;
-        inSub = false;
+    public void subStuff(int part){
+        if (part == 1){
+            wrist.setPosition(point);
+            first = false;
+        }
     }
 
-    public void holding(){
-        wrist.setPosition(holding);
-    }
     public void enterSub(boolean phase){
-         if(phase){
+        if(phase){
              wrist.setPosition(subEntrance);
              targetPos = subEntrance;
              inSub = false;
@@ -52,20 +49,21 @@ public class speedyServos {
         targetPos = point;
     }
 
-    public boolean inSubRout(double pos){
+    public boolean isHold(double pos){
         if (!hold && pos > 0.2){
             hold = true;
         }
         if (pos < 0.2 && hold){
             hold = false;
             inSub = true;
+            first = true;
             return true;
         }
         return false;
     }
 
     public void update(){
-        if(!hold){
+        if(!hold && first){
             wrist.setPosition(pullBack);
         }
     }
