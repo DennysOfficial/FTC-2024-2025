@@ -53,6 +53,7 @@ public class EKF_Localization extends LinearOpMode {
         }
     }
 
+
     private double[] getAprilTagPosition() {
         // Simulated data (replace with actual FTC AprilTag detection)
         return new double[]{Math.random(), Math.random(), Math.random()};

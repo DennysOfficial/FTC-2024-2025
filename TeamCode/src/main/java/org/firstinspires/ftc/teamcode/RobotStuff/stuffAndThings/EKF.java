@@ -32,6 +32,7 @@ public class EKF {
                 0, 0, 1
         });
 
+
         // Process noise
         SimpleMatrix Q = SimpleMatrix.diag(0.01, 0.01, 0.001).scale(deltaTime);
 
