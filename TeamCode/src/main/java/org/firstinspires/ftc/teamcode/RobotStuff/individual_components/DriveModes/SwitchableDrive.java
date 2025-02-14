@@ -12,7 +12,7 @@ public class SwitchableDrive extends DriveModeBase {
 
     private List<DriveModeBase> driveModes = new ArrayList<>();
 
-    private int activeDriveIndex;
+    private int activeDriveIndex = 0;
     private DriveModeBase activeDrive;
     private String activeDriveName;
 

@@ -94,7 +94,7 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
         double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
-        if(config.inputMap.getSlowDown()){
+        if (config.inputMap.getSlowDown()) {
             requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getSlowTurningRateDPS();
         }
 
@@ -132,6 +132,16 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
 
         previousTargetTurnRate = targetAngularVelocity;
+    }
+
+    @Override
+    public void resetDrive() {
+        imu.resetYaw();
+        rotationCount = 0;
+        velocityRamp.reset(imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+        previousHeading = getHeadingDeg();
+        targetHeading = getHeadingDeg();
+
     }
 
     double[] normalizeArrayKinda(double[] inputArray) {
