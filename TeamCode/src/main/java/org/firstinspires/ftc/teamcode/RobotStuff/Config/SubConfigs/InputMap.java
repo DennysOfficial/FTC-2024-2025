@@ -58,11 +58,11 @@ public class InputMap {
     }
 
     public boolean getAbort() {
-        return gamepad1.dpad_left || gamepad2.dpad_left;
+        return false;//gamepad1.dpad_left || gamepad2.dpad_left;
     }
 
     public boolean getUnAbort() {
-        return gamepad1.dpad_right || gamepad2.dpad_right;
+        return false;//gamepad1.dpad_right || gamepad2.dpad_right;
     }
 
     public boolean getFlapButton() {
@@ -90,6 +90,13 @@ public class InputMap {
 
     public boolean getYoinkButton() {
         return gamepad1.right_trigger > 0.2;
+    }
+
+    public boolean getDriveModeCycleRightButton() {
+        return gamepad1.dpad_right;
+    }
+    public boolean getDriveModeCycleLeftButton() {
+        return gamepad1.dpad_left;
     }
 
 
