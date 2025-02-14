@@ -25,11 +25,13 @@ public class SwitchableDrive extends DriveModeBase {
     public void setActiveDrive(DriveModeBase driveMode) {
         activeDrive = driveMode;
         activeDriveName = activeDrive.getClass().getSimpleName();
+        activeDrive.resetDrive();
     }
 
     public void setActiveDrive(int driveIndex) {
         activeDrive = driveModes.get(driveIndex);
         activeDriveName = activeDrive.getClass().getSimpleName();
+        activeDrive.resetDrive();
     }
 
     ButtonEdgeDetector cycleRightButton;
@@ -54,8 +56,9 @@ public class SwitchableDrive extends DriveModeBase {
             setActiveDrive(activeDriveIndex);
         }
 
-
         activeDrive.updateDrive(deltaTime);
+
+        opMode.telemetry.addData("activeDriveMode:", activeDriveName);
     }
 
     @Override

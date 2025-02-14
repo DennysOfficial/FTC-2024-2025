@@ -52,7 +52,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "AA main opMode")
+@TeleOp(name = "The One and Only OpMode", group = "AB main opMode")
 //@Disabled
 public class TheOneAndOnlyOpMode extends LinearOpMode {
 
