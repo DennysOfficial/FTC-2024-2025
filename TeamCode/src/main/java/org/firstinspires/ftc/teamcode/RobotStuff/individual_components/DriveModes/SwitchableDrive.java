@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +27,33 @@ public class SwitchableDrive extends DriveModeBase {
         activeDriveName = activeDrive.getClass().getSimpleName();
     }
 
+    public void setActiveDrive(int driveIndex) {
+        activeDrive = driveModes.get(driveIndex);
+        activeDriveName = activeDrive.getClass().getSimpleName();
+    }
+
+    ButtonEdgeDetector cycleRightButton;
+    ButtonEdgeDetector cycleLeftButton;
 
     public SwitchableDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
+        cycleRightButton = new ButtonEdgeDetector(config.inputMap.getDriveModeCycleRightButton());
+        cycleLeftButton = new ButtonEdgeDetector(config.inputMap.getDriveModeCycleLeftButton());
     }
 
-    boolean previous
+
     @Override
     public void updateDrive(double deltaTime) {
-        if (config.inputMap.getDriveModeCycleRightButton()) {
-            if(activeDriveIndex + 1 < driveModes.size())
-            activeDriveIndex
+        if (cycleRightButton.getButtonDown(config.inputMap.getDriveModeCycleRightButton())) {
+            activeDriveIndex = (activeDriveIndex + 1 < driveModes.size()) ? activeDriveIndex + 1 : 0;
+            setActiveDrive(activeDriveIndex);
         }
+
+        if (cycleLeftButton.getButtonDown(config.inputMap.getDriveModeCycleLeftButton())) {
+            activeDriveIndex = (activeDriveIndex > 0) ? activeDriveIndex - 1 : 0;
+            setActiveDrive(activeDriveIndex);
+        }
+
 
         activeDrive.updateDrive(deltaTime);
     }
