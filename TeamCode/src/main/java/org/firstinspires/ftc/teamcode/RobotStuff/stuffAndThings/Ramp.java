@@ -22,4 +22,8 @@ public class Ramp {
         return previousTarget = rampedTargetValue;
     }
 
+    public void reset(double previousTarget){
+        this.previousTarget = previousTarget;
+    }
+
 }

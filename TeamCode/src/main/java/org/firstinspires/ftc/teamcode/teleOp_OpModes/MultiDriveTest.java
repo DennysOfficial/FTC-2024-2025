@@ -38,23 +38,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.AlternateHeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveIntakeMotor;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.SwitchableDrive;
 
 import java.util.List;
 
-@TeleOp(name = "Harpoon go stab", group = "AC important Testing")
+@TeleOp(name = "Multi Drive", group = "AC important Testing")
 //@Disabled
-public class HarpoonTestOpMode extends LinearOpMode {
+public class MultiDriveTest extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -74,10 +67,11 @@ public class HarpoonTestOpMode extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
+        SwitchableDrive switchableDrive = new SwitchableDrive(this, activeConfig);
+        switchableDrive.addDriveMode(new AlternateHeadingPIDSteerTest(this, activeConfig));
+        switchableDrive.addDriveMode(new BasicMechanumDrive(this, activeConfig));
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-        HarpoonArm harpoonArm = new HarpoonArm(this, activeConfig);
+        DriveModeBase activeDriveMode = switchableDrive;
 
 
         waitForStart();
@@ -104,9 +98,6 @@ public class HarpoonTestOpMode extends LinearOpMode {
 
 
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            harpoonArm.update();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total HarpoonArm update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");

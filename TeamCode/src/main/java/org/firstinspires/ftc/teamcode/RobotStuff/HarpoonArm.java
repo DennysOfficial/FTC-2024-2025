@@ -53,15 +53,15 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public static double intakeLiftExtension = 0;
-    public static double intakeTorque = 0.2;
-    public static double clawTriggerHeightOffset = -1.5;
-    public static double clawTriggerScale = 1;
+    public static double intakeTorque = 0.4;
+    public static double clawTriggerHeightOffset = 2.7;
+    public static double clawTriggerScale = -1;
 
     /**
      * the distance between the axis of rotation and the line in the direction of extension through the controlled point
      */
     public static double extensionAxisOffset = 5;
-    public static double intakeHeightOffset = -1;
+    public static double intakeHeightOffset = -1.5;
 
     public static double intakeAngleOffset = -4;
 
@@ -110,6 +110,8 @@ public class HarpoonArm {
         previousArmState = armState;
     }
 
+    boolean grabOpen = true;
+
     void updatePresets() {
         if (config.inputMap.getIntakeForward())
             armState = ArmState.intakeHeightBasedGrab;
@@ -153,10 +155,23 @@ public class HarpoonArm {
                         rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
                         harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
+
+                        grabOpen = false;
                     } else if (!rightPivot.isBusy()) {
                         rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
-                        harpoon.setGrabPosition(grabPosition);
+
+                        if(config.inputMap.gamepad1.b)
+                            grabOpen = true;
+                        if(config.inputMap.gamepad1.y)
+                            grabOpen = false;
+
+                        if (grabOpen)
+                            harpoon.setGrabPosition(0);
+                        else
+                            harpoon.setGrabPosition(1);
                     }
+
+
                     break;
             }
     }
@@ -169,7 +184,7 @@ public class HarpoonArm {
      * relative to the center of the pivot
      */
     public double calculateIntakeHeight() {
-        return armIK.getHeight(rightPivot.getPosition() + intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
+        return armIK.getHeight(rightPivot.getPosition() - intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
     }
 
 }
