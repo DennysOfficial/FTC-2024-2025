@@ -60,6 +60,8 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
     public boolean yPre = false;
     public boolean rTrigger = false;
+    public boolean gotSample = false;
+    public boolean wait = false;
     StopWatch stopWatch = new StopWatch();
 
     @Override
@@ -124,54 +126,70 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
 
 
-            if (gamepad2.y) {
-                if (!spinnyBit.isBusy())
+            if (gamepad1.y && !gotSample) {
+                if (!spinnyBit.isBusy() && spinnyBit.getPosition() < 60)
                     spinnyBit.fancyMoveToPosition(65, 1);
-                if (!rightLift.isBusy())
+                if (!rightLift.isBusy() && spinnyBit.getPosition() < 60)
                     rightLift.fancyMoveToPosition(0, 0.75);
                 yPre = true;
                 prayers.subStuff(1);
             }
+            if (gamepad1.y && gotSample){
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(76.5, 0.3);
+            }
 
             if (yPre && !spinnyBit.isBusy() && !rightLift.isBusy())
             {
-                rightLift.setTargetPosition(13);
+
+                rightLift.fancyMoveToPosition(13 ,0.5);
+                spinnyBit.fancyMoveToPosition(76, 0.5);
                 yPre = false;
             }
 
 
-            if (gamepad2.b) {
+            if (gamepad1.b) {
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
                     rightLift.fancyMoveToPosition(0, 0.75);
             }// presets
 
-            if(gamepad2.x){
+            if(gamepad1.x){
                 leftArmStuff.Score();
             }
-            if(gamepad2.a){
+            if(gamepad1.a){
                 leftArmStuff.Collect();
             }
-            if (gamepad2.left_bumper){
+            if (gamepad1.left_bumper){
                 prayers.Intake();
+                gotSample = false;
             }
 
 //            // make the arm smack into the ground and intake
             if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (gamepad2.right_trigger > 0.2){
-                    spinnyBit.setTargetPosition(82);
+                if (gamepad1.right_trigger > 0.2){
+                    spinnyBit.fancyMoveToPosition(83, 0.5);
                 }
-                if (prayers.isHold(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(86);
+                if (prayers.isHold(gamepad1.right_trigger)){
+                    spinnyBit.setTargetPosition(88);
                     rTrigger = true;
                 }
-
             }
-
             if (!spinnyBit.isBusy() && rTrigger){
-                spinnyBit.setTargetPosition(75);
-                rTrigger = false;
+                if (spinnyBit.getPosition() > 85.3){
+                    spinnyBit.fancyMoveToPosition(87, 0.5);
+                    rTrigger = false;
+                    gotSample = true;
+                    wait = true;
+                }
+            }
+            if (!spinnyBit.isBusy() && wait){
+                if (!spinnyBit.isBusy())
+                    spinnyBit.fancyMoveToPosition(-69, 1);
+                if (!rightLift.isBusy())
+                    rightLift.fancyMoveToPosition(0, 0.75);
+                wait = false;
             }
 //                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
 //                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());

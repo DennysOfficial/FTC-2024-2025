@@ -118,6 +118,11 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
     }
 
+    @Override
+    public void resetDrive() {
+
+    }
+
     double[] normalizeArrayKinda(double[] inputArray) {
 
         double max;

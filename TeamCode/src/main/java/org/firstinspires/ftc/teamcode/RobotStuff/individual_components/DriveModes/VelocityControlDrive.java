@@ -73,6 +73,11 @@ public class VelocityControlDrive extends DriveModeBase {
 
     }
 
+    @Override
+    public void resetDrive() {
+
+    }
+
     public boolean adamIsShort() {
         return true;
     }
