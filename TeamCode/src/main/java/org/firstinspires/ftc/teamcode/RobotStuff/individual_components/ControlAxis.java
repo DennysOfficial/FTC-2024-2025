@@ -85,6 +85,15 @@ public abstract class ControlAxis {  //schrödinger's code
         testing
     }
 
+    enum HomingState{
+        initHoming,
+        homing,
+        finishingHoming,
+        homed,
+    }
+
+    HomingState homingState = HomingState.homed;
+
     public void setControlMode(ControlMode controlMode) {
         if (this.controlMode == controlMode)
             return;
@@ -219,7 +228,7 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void setTargetPosition(double targetPosition) {
-        if(Double.isNaN(targetPosition))
+        if (Double.isNaN(targetPosition))
             throw new ArithmeticException("target Position cant be nan you goober");
         this.targetPosition = softLimits.clamp(targetPosition);
     }
@@ -260,9 +269,10 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public void setCurrentPosition(double position){
+    public void setCurrentPosition(double position) {
         positionOffset = position - getNonCachedPosition();
     }
+
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -426,7 +436,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case followTheLeader:
-                if(leaderControlAxis == null)
+                if (leaderControlAxis == null)
                     throw new NullPointerException("use assignLeaderControlAxis to assign the leader before update is called");
                 setTargetPosition(leaderControlAxis.getTargetPosition() + leaderPositionOffset);
                 targetVelocity = leaderControlAxis.targetVelocity;

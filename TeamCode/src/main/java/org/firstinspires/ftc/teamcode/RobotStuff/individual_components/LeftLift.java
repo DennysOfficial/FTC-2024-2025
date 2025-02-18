@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 
 @Config
 public class LeftLift extends ControlAxis {
@@ -19,7 +21,9 @@ public class LeftLift extends ControlAxis {
 
     DigitalChannel limitSwitch;
     public static double homingPosition = 0;
-    public static double homingPower = 0.5;
+    public static double homingRetractPower = 0.5;
+    public static double homingDwellPower = 0.2;
+    public static double homingDwellPeriod = 0.3;
 
 
     final double retractedRadius = 10;
@@ -43,10 +47,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     public void homeAxis() {
-        setControlMode(ControlMode.torqueControl);
-        //motors.getCurrentAlert()
-        targetTorque = homingPower;
-
+        homingState = HomingState.initHoming;
     }
 
     @Override
@@ -139,25 +140,48 @@ public class LeftLift extends ControlAxis {
     }
 
     boolean previousButtonState = false;
+    double minExtension = Double.POSITIVE_INFINITY;
+
+    ButtonEdgeDetector homingButton = new ButtonEdgeDetector(false);
+
+    ElapsedTime homingDwellTimer;
+
     @Override
     void miscUpdate() {
 
-
-
-        //opMode.telemetry.addLine("misc update running");
-
-        if (config.inputMap.gamepad1.dpad_down) {
-            targetTorque = homingPower;
-            setControlModeUnsafe(ControlMode.torqueControl);
-        } else
-            setControlMode(defaultControlMode);
-
-        if(previousButtonState && !config.inputMap.gamepad1.dpad_down){
-            opMode.telemetry.addData("position offset = %f", positionOffset);
-            setCurrentPosition(homingPosition);
+        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
+            homeAxis();
         }
 
-        previousButtonState = config.inputMap.gamepad1.dpad_down;
-    }
+        if (homingState == HomingState.initHoming) {
+            minExtension = Double.POSITIVE_INFINITY;
+            homingState = HomingState.homing;
 
+            setControlMode(ControlMode.torqueControl);
+        }
+
+        if (homingState == HomingState.homing) {
+            targetTorque = homingRetractPower;
+
+            minExtension = Math.min(getPosition(), minExtension);
+            if (!limitSwitch.getState()) {
+                homingDwellTimer = new ElapsedTime();
+                homingState = HomingState.finishingHoming;
+            }
+        }
+
+        if (homingState == HomingState.finishingHoming) {
+            targetTorque = homingDwellPower;
+
+            minExtension = Math.min(getPosition(), minExtension);
+            if (homingDwellTimer.seconds() > homingDwellPeriod) {
+                homingState = HomingState.homed;
+            }
+        }
+
+        if (homingState == HomingState.homed) {
+            positionOffset -= minExtension - homingPosition;
+            setControlMode(defaultControlMode);
+        }
+    }
 }
