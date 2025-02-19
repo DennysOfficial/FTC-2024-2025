@@ -100,7 +100,7 @@ public class Lift extends ControlAxis {
     public Lift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
-        softLimits = new Range<>(0.5, 31.0);
+        softLimits = new Range<>(0.5, 13.625);
 
         physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }
