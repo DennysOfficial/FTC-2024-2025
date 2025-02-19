@@ -102,8 +102,8 @@ public class Pivot extends ControlAxis { //schrödinger's code
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.REVERSE);
+        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
         motors.setTargetPosition(0);
         //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+@Config
 public class PassiveGrabber {
 
     Servo elbow;
@@ -13,8 +15,8 @@ public class PassiveGrabber {
     OpMode opmode;
     RobotConfig config;
 
-    double elbowPos = 0.12;
-    double wristPos = 0;
+    public static double elbowPos = 0.12;
+    public static double wristPos = 0;
 
     public PassiveGrabber(OpMode opmode, RobotConfig config) {
         this.opmode = opmode;
