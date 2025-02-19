@@ -112,6 +112,8 @@ public class HarpoonArm {
 
     boolean grabOpen = true;
 
+    boolean lastGroundSlam = false;
+
     void updatePresets() {
         if (config.inputMap.getIntakeForward())
             armState = ArmState.intakeHeightBasedGrab;
@@ -144,7 +146,13 @@ public class HarpoonArm {
         } else
             switch (armState) {
                 case intakeHeightBasedGrab:
-                    rightPivot.setTargetPosition(calculateIntakePivotAngle());
+
+
+                    if (config.inputMap.gamepad1.b)
+                        grabOpen = true;
+                    if (config.inputMap.gamepad1.y)
+                        grabOpen = false;
+
 
                     if (config.inputMap.getYoinkButton()
                             && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
@@ -154,22 +162,34 @@ public class HarpoonArm {
                         rightPivot.targetTorque = intakeTorque;
                         rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
-                        harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
+
+                        if (config.inputMap.gamepad1.b) // emergency override
+                            harpoon.setGrabPosition(0);
+                        else if (config.inputMap.gamepad1.y)
+                            harpoon.setGrabPosition(1);
+                        else
+                            harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
 
                         grabOpen = false;
-                    } else if (!rightPivot.isBusy()) {
-                        rightPivot.setControlModeUnsafe(rightPivot.defaultControlMode);
+                        lastGroundSlam = true;
 
-                        if(config.inputMap.gamepad1.b)
-                            grabOpen = true;
-                        if(config.inputMap.gamepad1.y)
-                            grabOpen = false;
-
-                        if (grabOpen)
-                            harpoon.setGrabPosition(0);
-                        else
-                            harpoon.setGrabPosition(1);
+                        break;
                     }
+
+                    if (lastGroundSlam) { // if the last update was a ground slam go back to intake height less violently
+                        lastGroundSlam = false;
+                        rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 0.420);
+                    }
+
+                    if (!rightPivot.isBusy()) {
+                        rightPivot.setControlMode(ControlAxis.ControlMode.positionControl);
+                        rightPivot.setTargetPosition(calculateIntakePivotAngle());
+                    }
+
+                    if (grabOpen)
+                        harpoon.setGrabPosition(0);
+                    else
+                        harpoon.setGrabPosition(1);
 
 
                     break;
