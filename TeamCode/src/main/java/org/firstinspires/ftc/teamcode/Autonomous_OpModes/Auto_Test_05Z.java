@@ -40,11 +40,11 @@ public class Auto_Test_05Z extends OpMode{
     Point rungPoint3 = new Point(33.5, 64.5, Point.CARTESIAN);
     Point rungPoint4 = new Point(33.5, 69, Point.CARTESIAN);
     Point rungPoint5 = new Point(33.5, 70.5, Point.CARTESIAN);
-    Point rungPoint1a = new Point(28, 67.5, Point.CARTESIAN);
-    Point rungPoint2a = new Point(28, 66, Point.CARTESIAN);
-    Point rungPoint3a = new Point(28, 64.5, Point.CARTESIAN);
-    Point rungPoint4a = new Point(28, 69, Point.CARTESIAN);
-    Point rungPoint5a = new Point(28, 70.5, Point.CARTESIAN);
+    Point rungPoint1a = new Point(25, 67.5, Point.CARTESIAN);
+    Point rungPoint2a = new Point(25, 66, Point.CARTESIAN);
+    Point rungPoint3a = new Point(25, 64.5, Point.CARTESIAN);
+    Point rungPoint4a = new Point(25, 69, Point.CARTESIAN);
+    Point rungPoint5a = new Point(25, 70.5, Point.CARTESIAN);
 
     Point rungPointControl1 = new Point(20,28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
@@ -197,9 +197,9 @@ public class Auto_Test_05Z extends OpMode{
 
         moveSamples = follower.pathBuilder()
                 .addPath(score1a)
-                .addParametricCallback(1, () -> leftLift.setTargetPosition(0))
                 .addPath(toSample1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0, () -> leftLift.setTargetPosition(0))
                 .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> grabber.Collect())
@@ -402,6 +402,7 @@ public class Auto_Test_05Z extends OpMode{
         telemetry.addData("deltaTime", deltaTime);
         telemetry.addData("waitTime", time);
         telemetry.addData("pathtimer", pathTimer.getElapsedTimeSeconds());
+        telemetry.addData("Path State", listPointer);
         telemetry.update();
     }
 
