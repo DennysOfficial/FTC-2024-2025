@@ -258,12 +258,12 @@ public class Auto_Test_05Z extends OpMode{
                 listPointer = 1;
                 break;
             case 1:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(moveSamples);
                     listPointer = 2;
                 }
             case 2:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     listPointer = 3;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
@@ -279,19 +279,19 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 4:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score2a);
                     listPointer = 5;
                 }
                 break;
             case 5:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     grabber.openClaw();
                     follower.followPath(collect3);
                     listPointer = 6;
                 }
             case 6:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     listPointer = 7;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
@@ -307,19 +307,19 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 8:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score3a);
                     listPointer = 9;
                 }
                 break;
             case 9:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     grabber.openClaw();
                     follower.followPath(collect4);
                     listPointer = 10;
                 }
             case 10:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     listPointer = 11;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
@@ -335,26 +335,26 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 12:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score4a);
                     listPointer = 13;
                 }
                 break;
             case 13:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     grabber.openClaw();
                     follower.followPath(collect5);
                     listPointer = 14;
                 }
             case 14:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     listPointer = 15;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
                 }
                 break;
             case 15:
-                if (follower.atParametricEnd()) {
+                if (!follower.isBusy()) {
                     listPointer = 16;
                     pathTimer.resetTimer();
                     grabber.closeClaw();
@@ -370,7 +370,7 @@ public class Auto_Test_05Z extends OpMode{
                 }
                 break;
             case 17:
-                if (follower.atParametricEnd() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score5a);
                     listPointer = 18;
                 }
