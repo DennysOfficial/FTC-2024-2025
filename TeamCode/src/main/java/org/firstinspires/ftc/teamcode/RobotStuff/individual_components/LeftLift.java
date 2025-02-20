@@ -70,7 +70,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightLiftStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getLiftStick();
     }
 
     @Override

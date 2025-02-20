@@ -76,7 +76,7 @@ public class ClawAndStuffOld {
 
 
     public void updatePincher() {
-        if (config.inputMap.getClawOpen())
+        if (config.inputMap.getSpecimenClawOpen())
             pinchServo.setPosition(openPosition);
         else
             pinchServo.setPosition(closedPosition);

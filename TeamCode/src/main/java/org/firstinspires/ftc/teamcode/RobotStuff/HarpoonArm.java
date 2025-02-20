@@ -77,7 +77,7 @@ public class HarpoonArm {
 
     ArmIK armIK = new ArmIK();
 
-    public enum ArmState {
+    public enum SampleArmState {
         store,
         intakeHeightBasedGrab,
         intakeTimeBasedGrab,
@@ -85,8 +85,8 @@ public class HarpoonArm {
         depositHigh,
     }
 
-    ArmState armState = ArmState.store;
-    ArmState previousArmState;
+    SampleArmState sampleArmState = SampleArmState.store;
+    SampleArmState previousSampleArmState;
 
     public HarpoonArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
@@ -108,7 +108,7 @@ public class HarpoonArm {
 
         opMode.telemetry.addData("target intake pivot angle = %f", calculateIntakePivotAngle());
         opMode.telemetry.addData("intake height = %f", calculateIntakeHeight());
-        previousArmState = armState;
+        previousSampleArmState = sampleArmState;
     }
 
     boolean grabOpen = true;
@@ -117,13 +117,13 @@ public class HarpoonArm {
 
     void updatePresets() {
         if (config.inputMap.getIntakeForward())
-            armState = ArmState.intakeHeightBasedGrab;
+            sampleArmState = SampleArmState.intakeHeightBasedGrab;
 
         if (config.inputMap.getObservationDepositPreset())
-            armState = ArmState.depositLow;
+            sampleArmState = SampleArmState.depositLow;
 
-        if (armState != previousArmState) {
-            switch (armState) {
+        if (sampleArmState != previousSampleArmState) {
+            switch (sampleArmState) {
                 case store:
                     rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
                     rightLift.fancyMoveToPosition(StoreLiftPosition, 0.75);
@@ -145,7 +145,7 @@ public class HarpoonArm {
                     break;
             }
         } else
-            switch (armState) {
+            switch (sampleArmState) {
                 case intakeHeightBasedGrab:
 
 

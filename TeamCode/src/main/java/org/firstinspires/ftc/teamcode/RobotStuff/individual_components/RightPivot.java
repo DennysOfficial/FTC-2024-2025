@@ -24,7 +24,7 @@ public class RightPivot extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightPivotStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getPivotStick();
     }
 
     static final int encoderCountsPerRevMotor = 28;

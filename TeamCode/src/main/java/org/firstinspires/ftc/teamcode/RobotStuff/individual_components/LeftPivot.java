@@ -6,10 +6,7 @@ import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
@@ -29,7 +26,7 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightPivotStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getPivotStick();
     }
 
 

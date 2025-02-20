@@ -29,7 +29,7 @@ public class ActiveSpecimenClaw {
     }
 
     public void basicGampadPinchControl() {
-        if (config.inputMap.getClawOpen())
+        if (config.inputMap.getSpecimenClawOpen())
             pinchServo.setPosition(openPosition);
         else
             pinchServo.setPosition(hardClosedPosition);
