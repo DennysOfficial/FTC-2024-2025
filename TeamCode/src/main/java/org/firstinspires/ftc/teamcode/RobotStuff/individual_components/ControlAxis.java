@@ -26,7 +26,7 @@ public abstract class ControlAxis {  //schrödinger's code
     public final String axisName;
     public final String unitName;
 
-    public final double unitsPerEncoderCount;
+    public double unitsPerEncoderCount;
 
 
     protected OpMode opMode;
@@ -43,7 +43,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected MultiMotor motors;
 
-    protected abstract void initMotors();
+    protected abstract void addMotors();
 
     int getEncoder() {
         return motors.getCurrentPosition();
@@ -84,6 +84,15 @@ public abstract class ControlAxis {  //schrödinger's code
         followTheLeader,
         testing
     }
+
+    enum HomingState{
+        initHoming,
+        homing,
+        finishingHoming,
+        homed,
+    }
+
+    HomingState homingState = HomingState.homed;
 
     public void setControlMode(ControlMode controlMode) {
         if (this.controlMode == controlMode)
@@ -219,6 +228,8 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void setTargetPosition(double targetPosition) {
+        if (Double.isNaN(targetPosition))
+            throw new ArithmeticException("target Position cant be nan you goober");
         this.targetPosition = softLimits.clamp(targetPosition);
     }
 
@@ -258,9 +269,10 @@ public abstract class ControlAxis {  //schrödinger's code
         }
     }
 
-    public void setCurrentPosition(double position){
+    public void setCurrentPosition(double position) {
         positionOffset = position - getNonCachedPosition();
     }
+
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -306,7 +318,7 @@ public abstract class ControlAxis {  //schrödinger's code
         this.defaultControlMode = defaultControlMode;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
-        initMotors();
+        addMotors();
 
         updateCachedPosition();
         setControlMode(defaultControlMode);
@@ -424,7 +436,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 break;
 
             case followTheLeader:
-                if(leaderControlAxis == null)
+                if (leaderControlAxis == null)
                     throw new NullPointerException("use assignLeaderControlAxis to assign the leader before update is called");
                 setTargetPosition(leaderControlAxis.getTargetPosition() + leaderPositionOffset);
                 targetVelocity = leaderControlAxis.targetVelocity;

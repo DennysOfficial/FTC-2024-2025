@@ -24,6 +24,11 @@ public class testingDrive extends DriveModeBase {
         telemetryAccelerations();
     }
 
+    @Override
+    public void resetDrive() {
+
+    }
+
     public void telemetryAngularVelocity(){
         opMode.telemetry.addData("xAngularVelocityDPS",imu.getAngularVelocity().toAngleUnit(AngleUnit.DEGREES).xRotationRate);
         opMode.telemetry.addData("yAngularVelocityDPS",imu.getAngularVelocity().toAngleUnit(AngleUnit.DEGREES).yRotationRate);

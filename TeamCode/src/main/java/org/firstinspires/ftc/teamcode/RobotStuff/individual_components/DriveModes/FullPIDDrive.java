@@ -66,4 +66,9 @@ public class FullPIDDrive extends DriveModeBase {
 
 
     }
+
+    @Override
+    public void resetDrive() {
+
+    }
 }

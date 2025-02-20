@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
+import androidx.core.math.MathUtils;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.hardware.bosch.BHI260IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -8,27 +11,30 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Ramp;
 
 @Config
 public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
-    public static double turnFeedforwardCoefficient = 0.02;
-    public static double angleKp = 0;
+    public static double turnFeedforwardCoefficient = 0.007;
+    public static double accelerationFeedforwardCoefficient = -0.0003;
+
+    public static double angleKp = 0.05;
     public static double angleKi = 0;
-    public static double angleKd = 0;
+    public static double angleKd = 0.003;
 
 
-    public static PIDCoefficients turnPID = new PIDCoefficients(0,0,0);
+    public static PIDCoefficients turnPID = new PIDCoefficients(0, 0, 0);
 
-    public static double accelerationConstant = 10;
-    public static double accelerationProportionalCoefficient = 10;
+    public static double accelerationConstant = 100;
+    public static double accelerationProportionalCoefficient = 3;
+
+    public static double maxAngularSpeed = 150;
     double targetAcceleration;
 
     double targetAngularVelocity = 0;
     Ramp velocityRamp;
-
-    public static double maxAngularVelocity;
 
 
     CustomPID steeringAnglePID;
@@ -51,13 +57,14 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
     double getHeadingDeg() {
         double imuHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        if (previousHeading * imuHeading <= 1) {
+        if (previousHeading * imuHeading < 0) {
             if (previousHeading - imuHeading > 100)
                 rotationCount++;
             else if (previousHeading - imuHeading < -100)
                 rotationCount--;
         }
 
+        previousHeading = imuHeading;
         return imuHeading + rotationCount * 360;
     }
 
@@ -87,6 +94,12 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
 
         double requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
 
+        if (config.inputMap.getSlowDown()) {
+            requestedTargetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getSlowTurningRateDPS();
+        }
+
+        requestedTargetTurnRate = MathUtils.clamp(requestedTargetTurnRate, -maxAngularSpeed, maxAngularSpeed);
+
         velocityRamp.ratePerSecond = accelerationConstant + accelerationProportionalCoefficient * Math.abs(requestedTargetTurnRate - targetAngularVelocity);
 
         targetAngularVelocity = velocityRamp.getRampedValue(requestedTargetTurnRate, deltaTime);
@@ -96,6 +109,9 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         steeringAnglePID.setCoefficients(angleKp, angleKi, angleKd);
 
         double turn = turnFeedforwardCoefficient * targetAngularVelocity;
+
+        if (requestedTargetTurnRate != targetAngularVelocity)
+            turn += Math.copySign(accelerationFeedforwardCoefficient * velocityRamp.ratePerSecond, targetAngularVelocity - previousTargetTurnRate);
 
         turn += steeringAnglePID.runPID(targetHeading, getHeadingDeg(), deltaTime);
 
@@ -114,6 +130,18 @@ public class AlternateHeadingPIDSteerTest extends DriveModeBase {
         frontRightDrive.setPower(motorPowers[1] * config.sensitivities.getDriveSensitivity());
         backLeftDrive.setPower(motorPowers[2] * config.sensitivities.getDriveSensitivity());
         backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
+
+        previousTargetTurnRate = targetAngularVelocity;
+    }
+
+    @Override
+    public void resetDrive() {
+        imu.resetYaw();
+        rotationCount = 0;
+        velocityRamp.reset(imu.getRobotAngularVelocity(AngleUnit.DEGREES).zRotationRate);
+        previousHeading = getHeadingDeg();
+        targetHeading = getHeadingDeg();
+
     }
 
     double[] normalizeArrayKinda(double[] inputArray) {

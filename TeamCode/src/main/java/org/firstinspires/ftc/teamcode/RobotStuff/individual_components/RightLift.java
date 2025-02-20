@@ -16,7 +16,7 @@ public class RightLift extends ControlAxis {
 
     RightPivot rightPivot;
 
-    final double retractedRadius = 10;
+    public final double retractedExtension = 10;
 
     public void assignPivot(RightPivot rightPivot) {
         if (rightPivot == null)
@@ -54,7 +54,7 @@ public class RightLift extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getRightLiftStick();
+        return (config.inputMap == null) ? 0 : (float) config.inputMap.getLiftStick();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RightLift extends ControlAxis {
     }
 
     @Override
-    protected void initMotors() {
+    protected void addMotors() {
         motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -95,7 +95,7 @@ public class RightLift extends ControlAxis {
 
 
     public RightLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "RightLift", "inches", (19.25-55)/(-44-2560));
+        super(defaultControlMode, opMode, config, "RightLift", "inches", 1);
 
         softLimits = new Range<>(0.5, 34.69);
 
@@ -111,7 +111,7 @@ public class RightLift extends ControlAxis {
         if (targetPosition == getTargetPosition() && previousRightPivotTargetPosition == (previousRightPivotTargetPosition = rightPivot.getTargetPosition()))
             return;
 
-        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getTargetPosition())) - retractedRadius;
+        double dynamicUpperLimit = config.getFrontExtensionLimitInch() / Math.sin(Math.toRadians(rightPivot.getTargetPosition())) - retractedExtension;
         dynamicUpperLimit = Math.abs(dynamicUpperLimit);
         targetPosition = MathUtils.clamp(targetPosition, Double.NEGATIVE_INFINITY, dynamicUpperLimit);
 

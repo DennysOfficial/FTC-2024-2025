@@ -31,6 +31,12 @@ public class Sensitivities {
         return turningRateDPS;
     }
 
+    public static float slowTurningRateDPS = 30;
+
+    public float getSlowTurningRateDPS() {
+        return slowTurningRateDPS;
+    }
+
 
     public static float strafingSensitivity = 1;
 
@@ -39,7 +45,7 @@ public class Sensitivities {
     }
 
 
-    public static float liftRate = 10; // inches per second
+    public static float liftRate = 30; // inches per second
 
     public float getLiftRate() {
         return liftRate;

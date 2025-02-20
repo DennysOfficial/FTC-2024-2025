@@ -71,6 +71,11 @@ public class BasicMechanumDrive extends DriveModeBase {
 
     }
 
+    @Override
+    public void resetDrive() {
+
+    }
+
     public boolean adamIsShort() {
         return true;
     }

@@ -70,4 +70,6 @@ public abstract class DriveModeBase {
     }
 
     abstract public void updateDrive(double deltaTime);
+
+    abstract public void resetDrive();
 }

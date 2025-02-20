@@ -13,6 +13,7 @@ public class InputMap {
         this.gamepad2 = gamepad2;
     }
 
+    /// drive control ##################################################################################################################################################
     public double getForwardStick() {
         return gamepad1.left_stick_y;
     } // button mapping
@@ -25,49 +26,6 @@ public class InputMap {
         return gamepad1.right_stick_x;
     }
 
-    public double getRightLiftStick() {
-        return -1 * gamepad2.left_stick_y;
-    }
-
-    public double getLeftLiftStick() {
-        return 0;
-    }
-
-    public double getRightPivotStick() {
-        return -1 * gamepad2.right_stick_y;
-    }
-
-    public double getLeftPivotStick() {
-        return 0;
-    }
-
-    public boolean getClawOpen() {
-        return gamepad1.right_trigger > 0.2;
-    }
-
-    public boolean getClawTwistToggleButton() {
-        return gamepad1.left_bumper;
-    }
-
-    public boolean getIntakeButton() {
-        return gamepad2.right_bumper || (gamepad2.right_trigger > 0.2);
-    }
-
-    public boolean getOuttakeButton() {
-        return gamepad2.left_bumper;
-    }
-
-    public boolean getAbort() {
-        return gamepad1.dpad_left || gamepad2.dpad_left;
-    }
-
-    public boolean getUnAbort() {
-        return gamepad1.dpad_right || gamepad2.dpad_right;
-    }
-
-    public boolean getFlapButton() {
-        return gamepad2.left_trigger > 0.5;
-    }
 
     public boolean getSlowDown() {
         return gamepad1.left_trigger > 0.5;
@@ -77,12 +35,81 @@ public class InputMap {
         return false;
     }
 
-    public boolean getIntakeWristDown() {
-        return gamepad2.right_trigger > 0.5;
+    /// Pivot and lift control ##################################################################################################################################################
+
+    public double getLiftStick() {
+        return -1 * gamepad2.left_stick_y;
     }
 
+    public double getPivotStick() {
+        return -1 * gamepad2.right_stick_y;
+    }
 
-    ElapsedTime doubleClickTimer = new ElapsedTime();
+    /// claw control ##################################################################################################################################################
 
+    public boolean getSpecimenClawOpen() {
+        return gamepad1.left_trigger > 0.2;
+    }
+
+    public boolean getYoinkButton() {
+        return gamepad1.right_trigger > 0.2;
+    }
+
+    /// intake control ##################################################################################################################################################
+
+    public boolean getIntakeButton() {
+        return gamepad2.right_bumper || (gamepad2.right_trigger > 0.2);
+    }
+
+    public boolean getOuttakeButton() {
+        return gamepad2.left_bumper;
+    }
+
+    public boolean getFlapButton() {
+        return gamepad2.left_trigger > 0.5;
+    }
+
+    /// abort/unabort ##################################################################################################################################################
+
+    public boolean getAbort() {
+        return false;//gamepad1.dpad_left || gamepad2.dpad_left;
+    }
+
+    public boolean getUnAbort() {
+        return false;//gamepad1.dpad_right || gamepad2.dpad_right;
+    }
+
+    /// specimen Presets ##################################################################################################################################################
+
+    public boolean getSpecimenHangButton(){
+        return gamepad2.x;
+    }
+
+    public boolean getSpecimenCollectButton(){
+        return gamepad2.a;
+    }
+
+    public boolean getSpecimenRestButton(){
+        return false;
+    }
+    /// sample Presets ##################################################################################################################################################
+
+    public boolean getIntakeForward() {
+        return gamepad2.y;
+    }
+
+    public boolean getObservationDepositPreset() {
+        return gamepad2.b;
+    }
+
+    /// testing / misc ##################################################################################################################################################
+
+    public boolean getDriveModeCycleRightButton() {
+        return gamepad1.dpad_right;
+    }
+
+    public boolean getDriveModeCycleLeftButton() {
+        return gamepad1.dpad_left;
+    }
 
 }
