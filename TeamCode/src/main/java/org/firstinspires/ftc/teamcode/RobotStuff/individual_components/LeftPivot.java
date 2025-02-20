@@ -17,23 +17,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
 public class LeftPivot extends ControlAxis {
 
-    CRServo servo1;
-    CRServo servo2;
 
-    DcMotor encoderMotor;
-
-    @Override
-    void setPower(double power) {
-        if(Double.isNaN(power))
-            return;
-        servo1.setPower(-power);
-        servo2.setPower(-power);
-    }
-
-    @Override
-    int getEncoder() {
-        return encoderMotor.getCurrentPosition();
-    }
 
     LeftLift leftLift;
 
@@ -49,8 +33,8 @@ public class LeftPivot extends ControlAxis {
     }
 
 
-    static final int encoderCountsPerRevMotor = 8192;
-    static final double finalGearRatio = 1. / 10.; // rotations of final over rotations of encoder
+    static final int encoderCountsPerRevMotor = 28;
+    static final double finalGearRatio = (28.0/150.0)*(1./4.)*(1./3.); // rotations of final over rotations of encoder
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
@@ -69,11 +53,10 @@ public class LeftPivot extends ControlAxis {
     }
 
     @Override
-    protected void initMotors() {
-        servo1 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo1);
-        servo2 = opMode.hardwareMap.get(CRServo.class, config.deviceConfig.leftPivotServo2);
-        encoderMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.leftPivotEncoder);
+    protected void addMotors() {
+        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.REVERSE);
     }
+
 
     public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftPivot", "Degrees", 1.0 / encoderCountsPerDeg);

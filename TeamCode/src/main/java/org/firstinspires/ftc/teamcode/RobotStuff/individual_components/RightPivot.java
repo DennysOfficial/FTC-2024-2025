@@ -28,10 +28,9 @@ public class RightPivot extends ControlAxis {
     }
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = 1. / 200.; // rotations of final over rotations of motor
+    static final double finalGearRatio = (28.0/150.0)*(1./4.)*(1./3.); // rotations of final over rotations of motor
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360.0;
-    public static double movementScaleMultiplier = 1;
 
     static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
@@ -51,7 +50,7 @@ public class RightPivot extends ControlAxis {
     }
 
     @Override
-    protected void initMotors() {
+    protected void addMotors() {
         motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.FORWARD);
 
         motors.setTargetPosition(0);
@@ -59,7 +58,7 @@ public class RightPivot extends ControlAxis {
     }
 
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / (encoderCountsPerDeg * movementScaleMultiplier));
+        super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-69.0, 97.0);
     }
