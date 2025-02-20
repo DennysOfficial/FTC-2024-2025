@@ -88,10 +88,13 @@ public class AccurateMechanumDrive extends AccurateDriveModeBase {
     }
 
     public double fixYaw(double imuYaw, double SensitivityModifier) {
-        if ((imuYaw > 0 && imuYaw < 3 || imuYaw > 357) || (imuYaw > 87 && imuYaw < 93) || (imuYaw > 177 && imuYaw < 183) || (imuYaw > 267 && imuYaw < 273)) {
-            return config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
-        } else {
-            return 1 * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+        if (config.inputMap.getTurnStick() == 0) {
+            if ((imuYaw > 0 && imuYaw < 3 || imuYaw > 357) || (imuYaw > 87 && imuYaw < 93) || (imuYaw > 177 && imuYaw < 183) || (imuYaw > 267 && imuYaw < 273)) {
+                return config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+            } else {
+                return 1 * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+            }
         }
+        else {return config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;}
     }
 }
