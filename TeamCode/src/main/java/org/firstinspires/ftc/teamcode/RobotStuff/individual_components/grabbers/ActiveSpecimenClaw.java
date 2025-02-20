@@ -7,10 +7,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class ActiveSpecimenClaw {
 
-    Servo twistServo;
-    public static double wristCollectPos = 0.5;
-    public static double wristScorePos = 0.5;
-
+    Servo wristServo;
     Servo pinchServo;
     public static double hardClosedPosition = .269f;
     public static double softClosedPosition = .269f;
@@ -20,11 +17,11 @@ public class ActiveSpecimenClaw {
     OpMode opmode;
     RobotConfig config;
 
-    ActiveSpecimenClaw(OpMode opMode, RobotConfig config) {
+    public ActiveSpecimenClaw(OpMode opMode, RobotConfig config) {
         this.opmode = opMode;
         this.config = config;
 
-        twistServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
+        wristServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
         pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.clawServo);
     }
 
@@ -47,11 +44,7 @@ public class ActiveSpecimenClaw {
         pinchServo.setPosition(softClosedPosition);
     }
 
-    public void wristScorePos() {
-        twistServo.setPosition(wristScorePos);
-    }
-
-    public void setWristCollectPos() {
-        twistServo.setPosition(wristScorePos);
+    public void setWristPosition(double position) {
+        wristServo.setPosition(position);
     }
 }

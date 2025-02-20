@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 
@@ -70,6 +71,8 @@ public class FullTest extends LinearOpMode {
 
         HarpoonArm harpoonArm = new HarpoonArm(this, activeConfig);
 
+        SpecimenArm specimenArm = new SpecimenArm(this, activeConfig);
+
 
         waitForStart();
         frameTimer.reset();
@@ -94,15 +97,17 @@ public class FullTest extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
+
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
             harpoonArm.update();
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total HarpoonArm update Time ----------------------------");
 
+            specimenArm.update();
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total SpecimenArm update Time ----------------------------");
+
             activeDriveMode.updateDrive(deltaTime);
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
-
-            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

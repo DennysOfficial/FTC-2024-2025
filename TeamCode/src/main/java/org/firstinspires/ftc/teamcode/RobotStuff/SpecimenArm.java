@@ -1,25 +1,25 @@
 package org.firstinspires.ftc.teamcode.RobotStuff;
 
+import android.util.Range;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveSpecimenClaw;
 
 public class SpecimenArm {
 
-    public static double wristPosRest = 0.5;
-    public static double liftPosRest = 0;
-    public static double pivotPosRest = -80;
+    public static SpecimenArmPose restPose = new SpecimenArmPose(0.5, 0, -80);
+    public static double resetPresetDurationSec = 1;
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(0.5, 10, 32);
+    public static double scorePresetDurationSec = 1;
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.5, 2, -80);
+    public static double collectPresetDurationSec = 1;
 
-    public static double wristPosScore = 0.5;
-    public static double liftPosScore = 11.3;
-    public static double pivotPosScore = 32;
-
-    public static double wristPosCollect = 0.5;
-    public static double liftPosCollect = 2;
-    public static double pivotPosCollect = -80;
+    public static Range<Double> scorePivotDeadZone = new Range<>(10.0, scorePose.pivotPosition);
 
     enum SpecimenArmState {
         collect,
@@ -28,17 +28,19 @@ public class SpecimenArm {
     }
 
     SpecimenArmState armState = SpecimenArmState.rest;
+    SpecimenArmState previousState = null;
 
 
     OpMode opmode;
     RobotConfig config;
 
     LeftLift leftLift;
-
     LeftPivot otherSpinnyBit;
 
+    ActiveSpecimenClaw claw;
 
-    SpecimenArm(OpMode opMode, RobotConfig config) {
+
+    public SpecimenArm(OpMode opMode, RobotConfig config) {
         this.opmode = opMode;
         this.config = config;
 
@@ -47,16 +49,41 @@ public class SpecimenArm {
 
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
+
+        claw = new ActiveSpecimenClaw(opMode, config);
     }
+
 
     public void update() {
+        updateState();
+        if (previousState != armState) {
+            switch (armState) {
+                case rest:
+                    moveToPose(restPose, resetPresetDurationSec);
+                    break;
 
+                case score:
+                    moveToPose(scorePose, scorePresetDurationSec);
+                    break;
 
+                case collect:
+                    moveToPose(collectPose, collectPresetDurationSec);
+                    break;
+            }
+        }
+
+        switch (armState) {
+            case score:
+                // if (scorePivotDeadZone.contains(otherSpinnyBit.getPosition()))
+
+                break;
+        }
         leftLift.update();
         otherSpinnyBit.update();
+        previousState = armState;
     }
 
-    void updatePresets() {
+    void updateState() {
         if (config.inputMap.getSpecimenHangButton())
             armState = SpecimenArmState.score;
 
@@ -65,8 +92,13 @@ public class SpecimenArm {
 
         if (config.inputMap.getSpecimenRestButton())
             armState = SpecimenArmState.rest;
-
     }
 
 
+    public void moveToPose(SpecimenArmPose pose, double duration) {
+        leftLift.setControlMode(ControlAxis.ControlMode.positionControl);
+        leftLift.setTargetPosition(pose.liftPosition);
+        otherSpinnyBit.fancyMoveToPosition(pose.liftPosition, duration);
+        claw.setWristPosition(pose.wristPosition);
+    }
 }
