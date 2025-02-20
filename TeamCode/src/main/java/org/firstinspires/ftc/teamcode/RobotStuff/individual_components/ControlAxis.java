@@ -43,7 +43,7 @@ public abstract class ControlAxis {  //schrödinger's code
 
     protected MultiMotor motors;
 
-    protected abstract void initMotors();
+    protected abstract void addMotors();
 
     int getEncoder() {
         return motors.getCurrentPosition();
@@ -308,7 +308,7 @@ public abstract class ControlAxis {  //schrödinger's code
         this.defaultControlMode = defaultControlMode;
 
         motors = new MultiTorqueMotor(opMode.hardwareMap, config.sensorData);
-        initMotors();
+        addMotors();
 
         updateCachedPosition();
         setControlMode(defaultControlMode);

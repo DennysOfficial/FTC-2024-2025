@@ -83,7 +83,7 @@ public class LeftLift extends ControlAxis {
     }
 
     @Override
-    protected void initMotors() {
+    protected void addMotors() {
         motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.FORWARD);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
