@@ -88,8 +88,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
-        double e; //eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-
 
         PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
 
@@ -160,19 +158,19 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             }
 
 
-            if (gamepad2.dpad_up) {
+            if (gamepad1.y) {
                 grabber.Score();
                 spinnyBit.fancyMoveToPosition(21.15, 0.5);
                 lift.setTargetPosition(5.12);
             }
 
-            if (gamepad2.dpad_down) {
+            if (gamepad1.a) {
                 grabber.Collect();
                 spinnyBit.fancyMoveToPosition(21.15, 0.5); // test & change with ftc dashboard
                 lift.setTargetPosition(5.12); // test & change with ftc dashboard
             }
 
-            if (gamepad2.dpad_left || gamepad2.dpad_right) {
+            if (gamepad1.x || gamepad1.b) {
                 grabber.moveElbow();
             }
 
