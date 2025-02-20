@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import java.util.List;
 
-@TeleOp(name = "The Other Only OpMode", group = "Linear OpMode")
+@TeleOp(name = "The Other Only OpMode", group = "Linear OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
 public class TheOtherOnlyOpMode extends LinearOpMode {
 
@@ -83,12 +83,12 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
-        double e;
+        double e; //eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 
 
         PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
@@ -97,7 +97,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         imu = hardwareMap.get(IMU.class, "imu");
 
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection. RIGHT;
 
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
@@ -168,16 +168,12 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
             if (gamepad2.dpad_down) {
                 grabber.Collect();
+                spinnyBit.fancyMoveToPosition(21.15, 0.5); // test & change with ftc dashboard
+                lift.setTargetPosition(5.12); // test & change with ftc dashboard
             }
 
-            if (gamepad2.dpad_left) {
-                e = grabber.getElbowPos();
-                grabber.setElbowPos(e + 0.01);
-            }
-
-            if (gamepad2.dpad_right) {
-                e = grabber.getElbowPos();
-                grabber.setElbowPos(e - 0.01);
+            if (gamepad2.dpad_left || gamepad2.dpad_right) {
+                grabber.moveElbow();
             }
 
 

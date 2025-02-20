@@ -32,38 +32,26 @@ public class PassiveGrabber {
 
     public void Collect() {
         wristPos = 0.8;
+        elbowPos = 0.3; // test & change with ftc dashboard
     }
 
-    public void setPosition(double elbowPos, double wristPos) {
-        this.elbowPos = elbowPos;
-        this.wristPos = wristPos;
-    }
-
-    public void setElbowPos(double elbowPos) {
-        if (elbowPos >= 1) {
-            elbowPos = 1;
-        } else if (elbowPos <= 0) {
-            elbowPos = 0;
+    public void moveElbow() { // had to change this because of ftc dashboard
+        if (config.inputMap.getElbowRight() == config.inputMap.getElbowLeft()) {
+            elbowPos += 0;
         }
-        this.elbowPos = elbowPos;
+        else if (config.inputMap.getElbowLeft()) {
+            elbowPos += 0.01;
+        }
+        else if (config.inputMap.getElbowRight()) {
+            elbowPos -= 0.01;
+        }
     }
 
-    public void setWristPos(double wristPos) {
-        if (wristPos >= 1) {
-            wristPos = 1;
-        } else if (wristPos <= 0) {
-            wristPos = 0;
-        }
-        this.wristPos = wristPos;
-    }
 
     public double getElbowPos() {
         return elbowPos;
     }
 
-    public double getWristPos() {
-        return wristPos;
-    }
 
     public void Update() {
         elbow.setPosition(elbowPos);
