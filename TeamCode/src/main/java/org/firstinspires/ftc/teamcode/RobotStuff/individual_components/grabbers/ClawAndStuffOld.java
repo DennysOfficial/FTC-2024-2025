@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
 @Config
-public class ClawAndStuff {
+public class ClawAndStuffOld {
 
     Servo twistServo;
 
@@ -35,7 +35,7 @@ public class ClawAndStuff {
     public static double liftPosCollect = 2;
     public static double pivotPosCollect = -80;
 
-    public ClawAndStuff(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
+    public ClawAndStuffOld(OpMode opmode, RobotConfig config, LeftLift lift, LeftPivot pivot) {
         this.opmode = opmode;
         this.config = config;
         this.lift = lift;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.RobotStuff;
+package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
 public class ArmIK {
     double extensionDistance;

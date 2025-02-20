@@ -43,9 +43,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 
 import java.util.List;
 
-@TeleOp(name = "Harpoon go stab", group = "AC important Testing")
+@TeleOp(name = "Harpoon go stab", group = "AB important Testing / main opMode ")
 //@Disabled
-public class HarpoonTestOpMode extends LinearOpMode {
+public class FullTest extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();

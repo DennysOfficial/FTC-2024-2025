@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAx
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.Harpoon;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ArmIK;
 
 @Config
 public class HarpoonArm {
