@@ -61,7 +61,7 @@ public class InputMap {
         return gamepad1.left_trigger > 0.5;
     }
 
-    public boolean getBrake(){return gamepad1.right_trigger > 0.5;}
+    public boolean getAccurateDrive() {return gamepad1.right_trigger > 0.5;} // don't bind gamepad1.right_trigger to anything because i am using it
 
     ElapsedTime doubleClickTimer = new ElapsedTime();
 

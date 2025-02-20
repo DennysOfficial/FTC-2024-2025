@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.fancyMotorThings.MultiMotor;
 
-public abstract class DriveModeBase {
+public abstract class AccurateDriveModeBase {
 
     protected OpMode opMode;
 
@@ -18,7 +18,7 @@ public abstract class DriveModeBase {
 
     protected MultiMotor motors;
 
-    public DriveModeBase(OpMode opMode, RobotConfig config) {
+    public AccurateDriveModeBase(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
@@ -44,7 +44,6 @@ public abstract class DriveModeBase {
         frontRightDrive.setDirection(config.deviceConfig.frontRightDriveDir);
     }
 
-
-    abstract public void updateDrive(double deltaTime);
+    abstract public void AccurateUpdateDrive(double deltaTime, double imuYaw);
 
 }

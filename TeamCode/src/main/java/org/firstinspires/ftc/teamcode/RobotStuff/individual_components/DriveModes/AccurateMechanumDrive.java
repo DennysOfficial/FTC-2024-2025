@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,12 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 @Config
-public class BasicMechanumDrive extends DriveModeBase {
+public class AccurateMechanumDrive extends AccurateDriveModeBase {
 
 
     double[] motorPowers = new double[4];
 
-    public BasicMechanumDrive(OpMode opMode, RobotConfig config) {
+    public AccurateMechanumDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -22,17 +21,16 @@ public class BasicMechanumDrive extends DriveModeBase {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void AccurateUpdateDrive(double deltaTime, double imuYaw) {
 
         double SensitivityModifier = config.sensitivities.getDriveSensitivity();
 
-
         if (config.inputMap.getSlowDown()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
-
 
         double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
         double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
-        double yaw = config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+        double yaw = fixYaw(imuYaw, SensitivityModifier);
+
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -89,4 +87,11 @@ public class BasicMechanumDrive extends DriveModeBase {
         return inputArray;
     }
 
+    public double fixYaw(double imuYaw, double SensitivityModifier) {
+        if ((imuYaw > 0 && imuYaw < 3 || imuYaw > 357) || (imuYaw > 87 && imuYaw < 93) || (imuYaw > 177 && imuYaw < 183) || (imuYaw > 267 && imuYaw < 273)) {
+            return config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+        } else {
+            return 1 * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+        }
+    }
 }

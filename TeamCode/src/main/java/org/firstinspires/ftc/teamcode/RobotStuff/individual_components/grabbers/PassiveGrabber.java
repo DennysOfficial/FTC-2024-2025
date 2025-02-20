@@ -35,7 +35,7 @@ public class PassiveGrabber {
         elbowPos = 0.3; // test & change with ftc dashboard
     }
 
-    public void moveElbow() { // had to change this because of ftc dashboard
+    public void moveElbow() { //can't move the elbow outside of the file so here
         if (config.inputMap.getElbowRight() == config.inputMap.getElbowLeft()) {
             elbowPos += 0;
         }
