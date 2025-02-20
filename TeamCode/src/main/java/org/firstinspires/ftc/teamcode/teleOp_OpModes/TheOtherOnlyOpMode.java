@@ -38,8 +38,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.AccurateDriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.AccurateMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
@@ -81,8 +79,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-        AccurateDriveModeBase accurateDriveMode = new AccurateMechanumDrive(this, activeConfig);
 
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
@@ -197,8 +193,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             spinnyBit.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
-            if (gamepad1.right_trigger > 0.5) {accurateDriveMode.AccurateUpdateDrive(deltaTime, orientation.getYaw(AngleUnit.DEGREES));}
-            else {activeDriveMode.updateDrive(deltaTime);}
+            activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             grabber.Update();
