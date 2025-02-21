@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
@@ -15,46 +17,52 @@ public class PassiveGrabber {
     OpMode opmode;
     RobotConfig config;
 
-    public static double elbowPos = 0.12;
-    public static double wristPos = 0;
+    Lift lift;
+    Pivot pivot;
 
-    public PassiveGrabber(OpMode opmode, RobotConfig config) {
+    public static double elbowPosScore = 0.3;
+    public static double wristPosScore = 0.12;
+    public static double liftPosScore = 5.12;
+    public static double pivotPosScore = 21.15;
+
+    public static double elbowPosCollect = 0.8;
+    public static double wristPosCollect = 0.3;
+    public static double liftPosCollect = 5.12; //TODO: TEST AND CHANGE
+    public static double pivotPosCollect = 21.15; //TODO: TEST AND CHANGE
+
+    public static double elbowPosRest = 0; //TODO: TEST AND CHANGE
+    public static double wristPosRest = 0; //TODO: TEST AND CHANGE
+    public static double liftPosRest = 5.12; //TODO: TEST AND CHANGE
+    public static double pivotPosRest = 21.15; //TODO: TEST AND CHANGE
+
+
+    public PassiveGrabber(OpMode opmode, RobotConfig config, Lift lift, Pivot pivot) {
         this.opmode = opmode;
         this.config = config;
+        this.lift = lift;
+        this.pivot = pivot;
         elbow = opmode.hardwareMap.get(Servo.class, config.deviceConfig.elbowServo);
         wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
     }
 
     public void Score() {
-        wristPos = 0.12;
-        elbowPos = 0.3;
+        wrist.setPosition(wristPosScore);
+        elbow.setPosition(elbowPosScore);
+        lift.setTargetPosition(liftPosScore);
+        pivot.setTargetPosition(pivotPosScore);
     }
 
     public void Collect() {
-        wristPos = 0.8;
-        elbowPos = 0.3; // test & change with ftc dashboard
+        wrist.setPosition(wristPosCollect);
+        elbow.setPosition(elbowPosCollect);
+        lift.setTargetPosition(liftPosCollect);
+        pivot.setTargetPosition(pivotPosCollect);
     }
 
-    public void moveElbow() { //can't move the elbow outside of the file so here
-        if (config.inputMap.getElbowRight() == config.inputMap.getElbowLeft()) {
-            elbowPos += 0;
-        }
-        else if (config.inputMap.getElbowLeft()) {
-            elbowPos += 0.01;
-        }
-        else if (config.inputMap.getElbowRight()) {
-            elbowPos -= 0.01;
-        }
-    }
-
-
-    public double getElbowPos() {
-        return elbowPos;
-    }
-
-
-    public void Update() {
-        elbow.setPosition(elbowPos);
-        wrist.setPosition(wristPos);
+    public void Rest() {
+        wrist.setPosition(wristPosRest);
+        elbow.setPosition(elbowPosRest);
+        lift.setTargetPosition(liftPosRest);
+        pivot.setTargetPosition(pivotPosRest);
     }
 }

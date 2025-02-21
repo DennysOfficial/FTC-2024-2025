@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import java.util.List;
 
-@TeleOp(name = "The Other Only OpMode", group = "Linear OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "The One And Only Passive Grabber", group = "Linear OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
 public class TheOtherOnlyOpMode extends LinearOpMode {
 
@@ -89,7 +89,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         lift.assignPivot(spinnyBit);
 
 
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig);
+        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, lift, spinnyBit);
 
 
         imu = hardwareMap.get(IMU.class, "imu");
@@ -158,20 +158,16 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             }
 
 
-            if (gamepad1.y) {
+            if (gamepad1.x) {
                 grabber.Score();
-                spinnyBit.fancyMoveToPosition(21.15, 0.5);
-                lift.setTargetPosition(5.12);
             }
 
-            if (gamepad1.a) {
+            if (gamepad1.b) {
                 grabber.Collect();
-                spinnyBit.fancyMoveToPosition(21.15, 0.5); // test & change with ftc dashboard
-                lift.setTargetPosition(5.12); // test & change with ftc dashboard
             }
 
-            if (gamepad1.x || gamepad1.b) {
-                grabber.moveElbow();
+            if (gamepad1.y) {
+                grabber.Rest();
             }
 
 
@@ -195,10 +191,6 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
 
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
-            grabber.Update();
-
-            telemetry.addData("ElbowPos:", grabber.getElbowPos());
 
             telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
             telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
