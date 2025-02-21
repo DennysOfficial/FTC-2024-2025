@@ -50,6 +50,8 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     void setPower(double power) {
+        if (config.debugConfig.getMotorPowerDebug())
+            opMode.telemetry.addData(positionPID.instanceName + " motor power:", power);
         motors.setPower(power);
     }
 
@@ -85,7 +87,7 @@ public abstract class ControlAxis {  //schrödinger's code
         testing
     }
 
-    enum HomingState{
+    enum HomingState {
         initHoming,
         homing,
         finishingHoming,
@@ -274,7 +276,6 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
 
-
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
     public double targetVelocity;
 
@@ -409,12 +410,9 @@ public abstract class ControlAxis {  //schrödinger's code
                 updateVelocityControl();
                 break;
 
-            case torqueControl:
-                setPower(targetTorque + getStaticFeedforward(targetTorque));
-                break;
-
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
+            case torqueControl:
                 setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 

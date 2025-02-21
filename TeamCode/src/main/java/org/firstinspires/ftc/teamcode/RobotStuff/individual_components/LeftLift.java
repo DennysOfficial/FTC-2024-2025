@@ -34,11 +34,11 @@ public class LeftLift extends ControlAxis {
         this.leftPivot = leftPivot;
     }
 
-    public static double gCompMultiplier = -0.069;
+    public static double gCompMultiplier = 0.069;
 
-    public static double Kp = -2;
+    public static double Kp = 3;
     public static double Ki = 0;
-    public static double Kd = -0.03;
+    public static double Kd = 0.05;
 
     public static double staticFrictionCoefficient = 0;
     public static double kineticFrictionCoefficient = 0;
@@ -85,7 +85,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     protected void addMotors() {
-        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -111,7 +111,7 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056);
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0 );
         limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
@@ -148,40 +148,40 @@ public class LeftLift extends ControlAxis {
 
     @Override
     void miscUpdate() {
-
-        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
-            homeAxis();
-        }
-
-        if (homingState == HomingState.initHoming) {
-            minExtension = Double.POSITIVE_INFINITY;
-            homingState = HomingState.homing;
-
-            setControlMode(ControlMode.torqueControl);
-        }
-
-        if (homingState == HomingState.homing) {
-            targetTorque = homingRetractPower;
-
-            minExtension = Math.min(getPosition(), minExtension);
-            if (!limitSwitch.getState()) {
-                homingDwellTimer = new ElapsedTime();
-                homingState = HomingState.finishingHoming;
-            }
-        }
-
-        if (homingState == HomingState.finishingHoming) {
-            targetTorque = homingDwellPower;
-
-            minExtension = Math.min(getPosition(), minExtension);
-            if (homingDwellTimer.seconds() > homingDwellPeriod) {
-                homingState = HomingState.homed;
-            }
-        }
-
-        if (homingState == HomingState.homed) {
-            positionOffset -= minExtension - homingPosition;
-            setControlMode(defaultControlMode);
-        }
+//
+//        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
+//            homeAxis();
+//        }
+//
+//        if (homingState == HomingState.initHoming) {
+//            minExtension = Double.POSITIVE_INFINITY;
+//            homingState = HomingState.homing;
+//
+//            setControlMode(ControlMode.torqueControl);
+//        }
+//
+//        if (homingState == HomingState.homing) {
+//            targetTorque = homingRetractPower;
+//
+//            minExtension = Math.min(getPosition(), minExtension);
+//            if (!limitSwitch.getState()) {
+//                homingDwellTimer = new ElapsedTime();
+//                homingState = HomingState.finishingHoming;
+//            }
+//        }
+//
+//        if (homingState == HomingState.finishingHoming) {
+//            targetTorque = homingDwellPower;
+//
+//            minExtension = Math.min(getPosition(), minExtension);
+//            if (homingDwellTimer.seconds() > homingDwellPeriod) {
+//                homingState = HomingState.homed;
+//            }
+//        }
+//
+//        if (homingState == HomingState.homed) {
+//            positionOffset -= minExtension - homingPosition;
+//            setControlMode(defaultControlMode);
+//        }
     }
 }

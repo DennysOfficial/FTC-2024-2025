@@ -28,13 +28,16 @@ public class RightPivot extends ControlAxis {
     }
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = (28.0/150.0)*(1./4.)*(1./3.); // rotations of final over rotations of motor
+    static final double finalGearRatio = (28.0 / 150.0) * (1. / 5.23) * (1. / 5.23); // rotations of final over rotations of motor
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360.0;
 
     static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.05;
+
+    public static double gCompAngleOffset = 0;
+
 
     public static Range<Double> softLimits;
 
@@ -83,14 +86,14 @@ public class RightPivot extends ControlAxis {
 
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0.3;
+    public static double KpRetracted = 0.2;
     public static double KiRetracted = 0.0;
-    public static double KdRetracted = 0.00;
+    public static double KdRetracted = 0.005;
 
     public static double velocityFeedforwardCoefficientExtended = 0;
-    public static double KpExtended = 0.3;
+    public static double KpExtended = 0.2;
     public static double KiExtended = 0.0;
-    public static double KdExtended = 0.004;
+    public static double KdExtended = 0.008;
 
     @Override
     double getKp() {
@@ -140,7 +143,7 @@ public class RightPivot extends ControlAxis {
     @Override
     void miscUpdate() {
 
-       // unitsPerEncoderCount = 1.0 / (encoderCountsPerDeg * movementScaleMultiplier);
+        // unitsPerEncoderCount = 1.0 / (encoderCountsPerDeg * movementScaleMultiplier);
 
     }
 
@@ -148,6 +151,6 @@ public class RightPivot extends ControlAxis {
         double interpolationAmount = liftExtension / extendedLiftPosition;
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
-        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+        return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 }

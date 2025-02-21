@@ -94,13 +94,6 @@ public class FollowTheLeader extends LinearOpMode {
         leftLift.assignLeaderControlAxis(rightLift);
         otherSpinnyBit.assignLeaderControlAxis(spinnyBit);
 
-        //PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
-
-        ActiveIntakeMotor suck = new ActiveIntakeMotor(this,activeConfig);
-
-        speedyServos prayers = new speedyServos(this, activeConfig);
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
-
 
         waitForStart();
         frameTimer.reset();
@@ -128,45 +121,6 @@ public class FollowTheLeader extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-
-            if (gamepad2.y) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(60, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-                prayers.enterSub(true);
-            }
-
-
-            if (gamepad2.b) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-69, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-
-                suck.intakeForDuration(0.3);
-            }// presets
-
-
-//            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (prayers.isHold(gamepad2.right_trigger)){
-                    spinnyBit.setTargetPosition(75);
-                    suck.intakeForDuration(1);
-                    prayers.Intake();
-                }
-                if (gamepad2.left_trigger > 0.2) {
-
-                }
-            }
-//                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-//                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-//
-//            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-//                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
             rightLift.update();
@@ -178,12 +132,9 @@ public class FollowTheLeader extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            //intake.directControl();
 
             leftLift.update();
             otherSpinnyBit.update();
-            suck.directControl();
-
 
 
             telemetry.update();
