@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 @Config
 public class PassiveGrabber {
 
+
     Servo elbow;
     Servo wrist;
 
@@ -20,10 +21,18 @@ public class PassiveGrabber {
     Lift lift;
     Pivot pivot;
     // yay it work
+
+    public static boolean reverseScore = false;
+
     public static double elbowPosScore = 0.6;
     public static double wristPosScore = 0.17;
     public static double liftPosScore = 3.5;
     public static double pivotPosScore = 21.15;
+
+    public static double elbowPosReverseScore = 0.6; //copied values from normal scores for now, TODO: TEST AND CHANGE
+    public static double wristPosReverseScore = 0.17;
+    public static double liftPosReverseScore = 3.5;
+    public static double pivotPosReverseScore = 21.15;
 
     public static double elbowPosCollect = 0.37;
     public static double wristPosCollect = 0.17;
@@ -46,23 +55,30 @@ public class PassiveGrabber {
     }
 
     public void Score() {
-        wrist.setPosition(wristPosScore);
-        elbow.setPosition(elbowPosScore);
-        lift.setTargetPosition(liftPosScore);
-        pivot.setTargetPosition(pivotPosScore);
+        if (reverseScore) {
+            wrist.setPosition(wristPosReverseScore);
+            elbow.setPosition(elbowPosReverseScore);
+            lift.fancyMoveToPosition(liftPosReverseScore, 0.5);
+            pivot.fancyMoveToPosition(pivotPosReverseScore, 0.5);
+        } else {
+            wrist.setPosition(wristPosScore);
+            elbow.setPosition(elbowPosScore);
+            lift.fancyMoveToPosition(liftPosScore, 0.5);
+            pivot.fancyMoveToPosition(pivotPosScore, 0.5);
+        }
     }
 
     public void Collect() {
         wrist.setPosition(wristPosCollect);
         elbow.setPosition(elbowPosCollect);
-        lift.setTargetPosition(liftPosCollect);
-        pivot.setTargetPosition(pivotPosCollect);
+        lift.fancyMoveToPosition(liftPosCollect, 0.5);
+        pivot.fancyMoveToPosition(pivotPosCollect, 0.5);
     }
 
     public void Rest() {
         wrist.setPosition(wristPosRest);
         elbow.setPosition(elbowPosRest);
-        lift.setTargetPosition(liftPosRest);
-        pivot.setTargetPosition(pivotPosRest);
+        lift.fancyMoveToPosition(liftPosRest,1);
+        pivot.fancyMoveToPosition(pivotPosRest, 1);
     }
 }

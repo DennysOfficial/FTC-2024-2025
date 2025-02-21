@@ -69,7 +69,7 @@ public class Lift extends ControlAxis {
 
     @Override
     protected void initMotors() {
-        motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.rightLift, DcMotorSimple.Direction.REVERSE);
         // motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
         //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
