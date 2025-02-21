@@ -27,8 +27,6 @@ public class PassiveGrabber {
     public static double liftPosRest = 0;
     public static double pivotPosRest = -80;
 
-    public static double elbowPosRest1 = 0.5;
-
     public static double wristPosScore = 0.83;
     public static double elbowPosScore = 0.469;
     public static double liftPosScore = 6.8;
@@ -67,26 +65,5 @@ public class PassiveGrabber {
         elbow.setPosition(elbowPosRest);
         lift.setTargetPosition(liftPosRest);
         pivot.setTargetPosition(pivotPosRest);
-    }
-
-    public void setPosition(double elbowPos, double wristPos) {
-        wrist.setPosition(wristPos);
-        elbow.setPosition(elbowPos);
-    }
-
-    public void setElbowPos(double elbowPos) {
-        elbow.setPosition(elbowPos);
-    }
-
-    public void setWristPos(double wristPos) {
-        wrist.setPosition(wristPos);
-    }
-
-    public double getElbowPos() {
-        return elbow.getPosition();
-    }
-
-    public double getWristPos() {
-        return wrist.getPosition();
     }
 }
