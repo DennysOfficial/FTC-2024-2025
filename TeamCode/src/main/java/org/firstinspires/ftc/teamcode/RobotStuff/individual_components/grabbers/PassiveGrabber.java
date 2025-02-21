@@ -19,7 +19,7 @@ public class PassiveGrabber {
 
     Lift lift;
     Pivot pivot;
-    // yaya it work
+    // yay it work
     public static double elbowPosScore = 0.6;
     public static double wristPosScore = 0.17;
     public static double liftPosScore = 3.5;

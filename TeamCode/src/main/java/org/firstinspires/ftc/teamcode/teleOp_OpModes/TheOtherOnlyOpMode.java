@@ -57,6 +57,7 @@ import java.util.List;
 //@Disabled
 public class TheOtherOnlyOpMode extends LinearOpMode {
 
+    public static boolean Driver2PresetsEnabled = false;
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
@@ -128,14 +129,14 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             activeConfig.sensorData.update();
 
 
-            if (gamepad2.x) {
+            if (gamepad2.x && Driver2PresetsEnabled) {
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(16, 1);
                 if (!lift.isBusy())
                     lift.fancyMoveToPosition(12.5, 1);
             }
 
-            if (gamepad2.y) {
+            if (gamepad2.y && Driver2PresetsEnabled) {
                 if (lift.getPosition() < 15)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(-18, 1);
@@ -147,7 +148,7 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             }
 
 
-            if (gamepad2.a) {
+            if (gamepad2.a && Driver2PresetsEnabled) {
                 if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
                     if (!spinnyBit.isBusy())
                         spinnyBit.fancyMoveToPosition(0, 1);
