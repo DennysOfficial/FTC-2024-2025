@@ -20,20 +20,20 @@ public class PassiveGrabber {
     Lift lift;
     Pivot pivot;
 
-    public static double elbowPosScore = 0.3;
-    public static double wristPosScore = 0.12;
-    public static double liftPosScore = 5.12;
+    public static double elbowPosScore = 0.6;
+    public static double wristPosScore = 0.17;
+    public static double liftPosScore = 3.5;
     public static double pivotPosScore = 21.15;
 
-    public static double elbowPosCollect = 0.8;
-    public static double wristPosCollect = 0.3;
-    public static double liftPosCollect = 5.12; //TODO: TEST AND CHANGE
-    public static double pivotPosCollect = 21.15; //TODO: TEST AND CHANGE
+    public static double elbowPosCollect = 0.37;
+    public static double wristPosCollect = 0.17;
+    public static double liftPosCollect = 0;
+    public static double pivotPosCollect = 47;
 
-    public static double elbowPosRest = 0; //TODO: TEST AND CHANGE
-    public static double wristPosRest = 0; //TODO: TEST AND CHANGE
-    public static double liftPosRest = 5.12; //TODO: TEST AND CHANGE
-    public static double pivotPosRest = 21.15; //TODO: TEST AND CHANGE
+    public static double elbowPosRest = 0.16;
+    public static double wristPosRest = 0.17;
+    public static double liftPosRest = 0;
+    public static double pivotPosRest = -39;
 
 
     public PassiveGrabber(OpMode opmode, RobotConfig config, Lift lift, Pivot pivot) {
