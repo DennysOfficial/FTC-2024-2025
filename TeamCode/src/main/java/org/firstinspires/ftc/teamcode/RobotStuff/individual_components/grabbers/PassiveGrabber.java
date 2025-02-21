@@ -24,23 +24,23 @@ public class PassiveGrabber {
 
     public static boolean reverseScore = false;
 
-    public static double elbowPosScore = 0.6;
-    public static double wristPosScore = 0.17;
-    public static double liftPosScore = 3.5;
+    public static double elbowPosScore = 0.585;
+    public static double wristPosScore = 0.155;
+    public static double liftPosScore = 3.8;
     public static double pivotPosScore = 21.15;
 
-    public static double elbowPosReverseScore = 0.6; //copied values from normal scores for now, TODO: TEST AND CHANGE
-    public static double wristPosReverseScore = 0.17;
-    public static double liftPosReverseScore = 3.5;
-    public static double pivotPosReverseScore = 21.15;
+    public static double elbowPosReverseScore = 0;
+    public static double wristPosReverseScore = 0.8;
+    public static double liftPosReverseScore = 13.6;
+    public static double pivotPosReverseScore = 15;
 
-    public static double elbowPosCollect = 0.37;
-    public static double wristPosCollect = 0.17;
+    public static double elbowPosCollect = 0.36;
+    public static double wristPosCollect = 0.155;
     public static double liftPosCollect = 0;
-    public static double pivotPosCollect = 47;
+    public static double pivotPosCollect = 36;
 
     public static double elbowPosRest = 0.16;
-    public static double wristPosRest = 0.17;
+    public static double wristPosRest = 0.155;
     public static double liftPosRest = 0;
     public static double pivotPosRest = -39;
 
