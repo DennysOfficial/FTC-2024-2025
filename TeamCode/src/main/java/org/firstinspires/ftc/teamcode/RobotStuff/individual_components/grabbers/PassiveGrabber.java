@@ -20,7 +20,7 @@ public class PassiveGrabber {
 
     Lift lift;
     Pivot pivot;
-    // yay it work
+
 
     public static boolean reverseScore = false;
 
