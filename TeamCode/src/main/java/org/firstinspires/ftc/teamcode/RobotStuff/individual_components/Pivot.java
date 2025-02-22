@@ -114,7 +114,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-40.0, 86.9);
+        softLimits = new Range<>(-55.0, 86.9);
     }
 
     double previousTargetLiftPosition = Double.NaN;
