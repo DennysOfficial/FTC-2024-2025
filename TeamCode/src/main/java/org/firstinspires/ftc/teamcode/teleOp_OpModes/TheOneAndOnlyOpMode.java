@@ -100,7 +100,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
         speedyServos prayers = new speedyServos(this, activeConfig);
 
-
         waitForStart();
         frameTimer.reset();
         //leftArmStuff.Rest();
@@ -132,6 +131,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     rightLift.fancyMoveToPosition(0, 0.75);
                 yPre = true;
                 prayers.subStuff(1);
+                prayers.supportIntake();
             }
             if (gamepad1.y && gotSample){
                 if (!spinnyBit.isBusy())
@@ -162,6 +162,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             if (gamepad1.left_bumper){
                 prayers.Intake();
+                prayers.supportIntake();
                 gotSample = false;
             }
 
@@ -184,6 +185,7 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 }
             }
             if (!spinnyBit.isBusy() && wait){
+                prayers.support();
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())

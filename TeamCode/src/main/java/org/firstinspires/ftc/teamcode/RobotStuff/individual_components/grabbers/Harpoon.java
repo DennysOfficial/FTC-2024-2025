@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 public class Harpoon {
 
     Servo harpoonServo;
-    //Servo wristServo;
+    Servo wristServo;
     RobotConfig config;
 
     public static double openPos = 0.25, closePos = 0.48;
@@ -28,7 +28,7 @@ public class Harpoon {
         this.opMode = opMode;
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrab);
-        //wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
+        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
     }
 
     /**

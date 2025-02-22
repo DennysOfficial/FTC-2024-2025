@@ -35,17 +35,18 @@ public class DeviceConfig {
     public final String intakeMotor = "suck";
 
     public final String flapServo = "Flap";
-    public final String wristServo = "Wrist";
+    public final String wristServo = "Twist";
 
     public final String elbowServo = "Elbow";
     public final String spWristServo = "SpWrist";
 
-    public final String clawTwistServo = "SpWrist";
-    public final String clawServo = "Elbow";
+    public final String SPclawServo = "claw";
 
-    public final String harpoonWrist = "Wrist";
+    public final String harpoonWrist = "Right";
 
-    public final String harpoonGrab = "Harpoon";
+    public final String harpoonGrab = "Pointy";
+
+    //public final String supportServo = "R";
 
 
 
