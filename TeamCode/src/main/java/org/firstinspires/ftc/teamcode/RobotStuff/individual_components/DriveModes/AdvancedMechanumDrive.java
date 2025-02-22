@@ -73,31 +73,10 @@ public class AdvancedMechanumDrive extends DriveModeBase {
 
         motorPowers = normalizeArray(motorPowers);
 
-
-        // Send calculated power to wheels
         frontLeftDrive.setPower(motorPowers[0] * config.sensitivities.getDriveSensitivity());
         frontRightDrive.setPower(motorPowers[1] * config.sensitivities.getDriveSensitivity());
         backLeftDrive.setPower(motorPowers[2] * config.sensitivities.getDriveSensitivity());
         backRightDrive.setPower(motorPowers[3] * config.sensitivities.getDriveSensitivity());
-
-        //frontRightDrive.setPower(1);
-
-        /*
-        opMode.telemetry.addLine("motor power");
-        opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPowers[0], motorPowers[1]);
-        opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPowers[2], motorPowers[3]);
-
-        opMode.telemetry.addLine();
-
-        opMode.telemetry.addLine("target velocity");
-        opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", motorPowers[0] * 2000 * settings.driveSensitivity,motorPowers[1] * 2000 * settings.driveSensitivity);
-        opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", motorPowers[2] * 2000 * settings.driveSensitivity, motorPowers[3] * 2000 * settings.driveSensitivity);
-        opMode.telemetry.addLine();
-
-        opMode.telemetry.addLine("actual velocity");
-        opMode.telemetry.addData("Front left/Right", "%4.2f, %4.2f", frontLeftDrive.getVelocity(), frontRightDrive.getVelocity());
-        opMode.telemetry.addData("Back  left/Right", "%4.2f, %4.2f", backLeftDrive.getVelocity(), backRightDrive.getVelocity());
-        */
 
     }
 
