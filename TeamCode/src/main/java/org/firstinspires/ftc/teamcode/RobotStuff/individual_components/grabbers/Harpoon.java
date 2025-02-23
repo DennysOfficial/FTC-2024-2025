@@ -27,8 +27,8 @@ public class Harpoon {
         this.config = config;
         this.opMode = opMode;
 
-        harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrab);
-        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
+        harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
+        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
     }
 
     /**

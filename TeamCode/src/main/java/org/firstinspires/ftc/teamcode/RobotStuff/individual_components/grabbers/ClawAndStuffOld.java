@@ -40,8 +40,8 @@ public class ClawAndStuffOld {
         this.config = config;
         this.lift = lift;
         this.pivot = pivot;
-        twistServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
-        pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.SPclawServo);
+        twistServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenWristServo);
+        pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenClawServo);
     }
 
     public void Score() {

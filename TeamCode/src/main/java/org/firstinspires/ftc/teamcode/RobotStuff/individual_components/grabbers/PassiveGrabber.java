@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 
 @Config
 public class PassiveGrabber {
@@ -43,7 +41,7 @@ public class PassiveGrabber {
         this.lift = lift;
         this.pivot = pivot;
         elbow = opmode.hardwareMap.get(Servo.class, config.deviceConfig.elbowServo);
-        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
+        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenWristServo);
     }
 
     public void Score() {

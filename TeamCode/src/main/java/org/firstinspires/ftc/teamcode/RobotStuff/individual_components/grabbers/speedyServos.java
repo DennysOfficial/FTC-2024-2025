@@ -25,7 +25,7 @@ public class speedyServos {
     public speedyServos(OpMode opmode, RobotConfig config){
         this.opmode = opmode;
         this.config = config;
-        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
+        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
     }
 
     public void subStuff(int part){
