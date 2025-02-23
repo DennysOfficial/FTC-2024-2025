@@ -43,6 +43,9 @@ public class ArmIK {
 
         updateCoefficients();
 
+        if (extensionAxisOffset + targetHeightOffset < 0)
+            return 180 - Math.toDegrees(Math.asin(getSinTheta()));
+
         return Math.toDegrees(Math.asin(getSinTheta()));
     }
 

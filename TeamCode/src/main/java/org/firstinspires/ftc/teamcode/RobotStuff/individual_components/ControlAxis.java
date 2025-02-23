@@ -353,7 +353,7 @@ public abstract class ControlAxis {  //schrödinger's code
     abstract void miscUpdate();
 
     protected void debugUpdate() {
-        if (config.debugConfig.getControlModeDebug())
+        if (config.debugConfig.getStateDebug())
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
         if (config.debugConfig.positionDerivativesDebug())

@@ -55,6 +55,9 @@ public class SpecimenArm {
 
 
     public void update() {
+        if (config.debugConfig.getStateDebug())
+            opmode.telemetry.addData("Harpoon Arm State: ", armState.toString());
+
         updateState();
         if (previousState != armState) {
             switch (armState) {

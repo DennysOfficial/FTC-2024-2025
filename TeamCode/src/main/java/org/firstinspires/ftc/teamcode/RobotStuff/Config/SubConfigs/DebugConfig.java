@@ -42,7 +42,7 @@ public class DebugConfig {
 
     public static boolean controlModeDebug = false;
 
-    public boolean getControlModeDebug() {
+    public boolean getStateDebug() {
         return controlModeDebug;
     }
 

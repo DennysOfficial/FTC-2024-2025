@@ -32,13 +32,13 @@ public class DeviceConfig {
 
     /// specimen claw ##############################################################################################################
     public final String specimenWristServo = "SpWrist";
-    public final String specimenClawServo = "claw";
+    public final String specimenClawServo = "SpClaw";
 
 
     /// harpoon ##############################################################################################################
-    public final String harpoonGrabServo = "hg";
-    public final String harpoonDepositWristServo = "hd";
-    public final String harpoonBlockAlignmentWristServo = "hbal";
+    public final String harpoonGrabServo = "hg"; // harpoon grab
+    public final String harpoonDepositWristServo = "hd"; // harpoon deposit
+    public final String harpoonBlockAlignmentWristServo = "hba"; // harpoon block alignment zxdzxd4
 
 
     /// stuff ##############################################################################################################

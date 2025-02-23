@@ -15,7 +15,7 @@ public class Harpoon {
     Servo wristServo;
     RobotConfig config;
 
-    public static double openPos = 0.25, closePos = 0.48;
+    public static double openPos = .78, closePos = .25;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
@@ -34,10 +34,14 @@ public class Harpoon {
     /**
      * ranges from 0 - 1   for open - close
      */
-    public void setGrabPosition(double position) {
+    public void  setGrabPosition(double position) {
         position = MathUtils.clamp(position,0,1);
         position = MathStuff.map(position,0,1,openPos,closePos);
         harpoonServo.setPosition(position);
+    }
+
+    public void setWristPosition(double position){
+        wristServo.setPosition(position);
     }
 
 

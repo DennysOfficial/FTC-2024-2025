@@ -63,7 +63,7 @@ public class RightPivot extends ControlAxis {
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-69.0, 97.0);
+        softLimits = new Range<>(-60.0, 97.0);
     }
 
     double previousRightLiftTargetPosition = Double.NaN;
