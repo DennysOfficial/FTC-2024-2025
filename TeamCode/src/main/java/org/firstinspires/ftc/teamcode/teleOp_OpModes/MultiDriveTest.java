@@ -37,8 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.AlternateHeadingPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.SwitchableDrive;
@@ -68,7 +67,7 @@ public class MultiDriveTest extends LinearOpMode {
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
         SwitchableDrive switchableDrive = new SwitchableDrive(this, activeConfig);
-        switchableDrive.addDriveMode(new AlternateHeadingPIDSteerTest(this, activeConfig));
+        switchableDrive.addDriveMode(new HeadingPIDSteerTest(this, activeConfig));
         switchableDrive.addDriveMode(new BasicMechanumDrive(this, activeConfig));
 
         DriveModeBase activeDriveMode = switchableDrive;

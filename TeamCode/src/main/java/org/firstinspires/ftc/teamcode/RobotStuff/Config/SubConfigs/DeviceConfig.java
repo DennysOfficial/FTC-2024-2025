@@ -30,7 +30,6 @@ public class DeviceConfig {
     public final String rightLift = "LiftR";
 
 
-
     /// specimen claw ##############################################################################################################
     public final String specimenWristServo = "SpWrist";
     public final String specimenClawServo = "claw";
