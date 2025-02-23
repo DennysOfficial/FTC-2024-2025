@@ -38,6 +38,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.Harpoon;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ArmIK;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 @Config
 public class HarpoonArm {
@@ -63,7 +64,14 @@ public class HarpoonArm {
     public static double intakeLiftExtension = 0;
     public static double intakeTorque = 0.4;
     public static double IntakeWristPosition = 0.3;
-    public static double clawTriggerHeightOffset = 2.7;
+    public static double clawTriggerHeightOffsetExtended = 2.7;
+    public static double clawTriggerHeightOffsetRetracted = 2.7;
+    double interpolationExtendedLiftDistance = 20;
+
+    double clawTriggerHeightOffset() {
+        return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
+    }
+
     public static double clawTriggerScale = -1;
 
     /**
@@ -208,7 +216,7 @@ public class HarpoonArm {
                         else if (config.inputMap.gamepad1.y)
                             harpoon.setGrabPosition(1);
                         else
-                            harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset) * clawTriggerScale);
+                            harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
 
                         grabOpen = false;
                         lastGroundSlam = true;

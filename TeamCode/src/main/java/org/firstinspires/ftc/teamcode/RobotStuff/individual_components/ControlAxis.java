@@ -230,8 +230,10 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void setTargetPosition(double targetPosition) {
-        if (Double.isNaN(targetPosition))
-            throw new ArithmeticException("target Position cant be nan you goober");
+        if (Double.isNaN(targetPosition)) {
+            return;
+            //throw new ArithmeticException("target Position cant be nan you goober");
+        }
         this.targetPosition = softLimits.clamp(targetPosition);
     }
 
