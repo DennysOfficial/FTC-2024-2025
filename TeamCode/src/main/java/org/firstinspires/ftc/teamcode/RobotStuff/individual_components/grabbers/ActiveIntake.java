@@ -54,16 +54,16 @@ public class ActiveIntake {
     public void wheelControl() {
         spinnyServo.setPower(0);
 
-        if (config.inputMap.getIntakeButton())
+        if (config.playerTwo.intakeTrigger.getState())
             spinnyServo.setPower(intakeSpeed);
 
-        else if (config.inputMap.getOuttakeButton())
+        else if (config.playerTwo.outtakeBumper.getState())
             spinnyServo.setPower(outtakeSpeed);
     }
 
     public void flapControl() {
 
-        if (config.inputMap.getFlapButton()) {
+        if (config.playerTwo.flapTrigger.getState()) {
             flapServo.setPosition(flapOpen);
             return;
         }

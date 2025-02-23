@@ -40,10 +40,10 @@ public class VelocityPIDSteerTest extends DriveModeBase {
 
         telemetryAngleVelocity();
 
-        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
-        double drive = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();
+        double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
+        double drive = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
 
-        double targetTurnRate = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningRateDPS();
+        double targetTurnRate = -1 * config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningRateDPS();
 
         steeringPID.setCoefficients(Kp, Ki, Kd);
         double turn = turnFeedforwardCoefficient * targetTurnRate;

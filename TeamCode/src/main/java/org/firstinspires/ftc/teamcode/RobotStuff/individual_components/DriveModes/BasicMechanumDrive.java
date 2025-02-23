@@ -27,12 +27,12 @@ public class BasicMechanumDrive extends DriveModeBase {
         double SensitivityModifier = config.sensitivities.getDriveSensitivity();
 
 
-        if (config.inputMap.getSlowDown()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
+        if (config.playerOne.slowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
 
 
-        double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
-        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
-        double yaw = config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
+        double forwardBackward = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
+        double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
+        double yaw = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.

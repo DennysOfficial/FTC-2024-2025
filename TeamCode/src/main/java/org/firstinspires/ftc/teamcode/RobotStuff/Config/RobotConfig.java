@@ -7,7 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DebugConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.DeviceConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.InputMap;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.playerOne;
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.playerTwo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.Sensitivities;
+import org.jetbrains.annotations.NotNull;
 
 @Config
 public class RobotConfig {
@@ -35,7 +38,9 @@ public class RobotConfig {
     public final DeviceConfig deviceConfig = new DeviceConfig();
     public final DebugConfig debugConfig = new DebugConfig();
 
-    public final InputMap inputMap;
+    public final playerOne playerOne;
+    public final playerTwo playerTwo;
+
     public final Sensitivities sensitivities = new Sensitivities();
 
     public final SensorData sensorData;
@@ -43,13 +48,15 @@ public class RobotConfig {
 
     public RobotConfig(OpMode opMode) {
         this.opMode = opMode;
-        inputMap = new InputMap(opMode.gamepad1, opMode.gamepad2);
+        playerOne = new playerOne(opMode.gamepad1);
+        playerTwo = new playerTwo(opMode.gamepad2);
         sensorData = new SensorData(opMode.hardwareMap);
     }
 
     public RobotConfig(HardwareMap hardwareMap) {
+        this.playerOne = null;
+        this.playerTwo = null;
         this.opMode = null;
-        inputMap = null;
         sensorData = new SensorData(hardwareMap);
     }
 

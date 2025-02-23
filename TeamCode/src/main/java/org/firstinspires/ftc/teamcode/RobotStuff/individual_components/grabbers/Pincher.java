@@ -38,9 +38,9 @@ public class Pincher {
     boolean previousPinchButton = false;
 
     void updatePincher() {
-        if (config.inputMap.getPinchButton() && (config.inputMap.getPinchButton()) != previousPinchButton)
+        if (config.playerTwo.pinchBumper.getState() && (config.playerTwo.pinchBumper.getState() != previousPinchButton))
             togglePincher();
-        previousPinchButton = config.inputMap.getPinchButton();
+        previousPinchButton = config.playerTwo.pinchBumper.getState();
 
         switch (pincherState){
             case Closed:

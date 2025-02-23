@@ -13,6 +13,8 @@ public class InputMap {
         this.gamepad2 = gamepad2;
     }
 
+
+    /*
     public double getForwardStick() {
         return gamepad1.left_stick_y;
     } // button mapping
@@ -49,20 +51,14 @@ public class InputMap {
 
     public boolean getUnAbort() {return gamepad1.dpad_right;}
 
-    public boolean getElbowLeft() {return gamepad1.x;}
-
-    public boolean getElbowRight() {return gamepad1.b;}
-
     public boolean getFlapButton() {
         return gamepad2.left_trigger > 0.5;
     }
 
     public boolean getSlowDown() {
-        return gamepad1.left_trigger > 0.5;
+
     }
-
-    public boolean getAccurateDrive() {return gamepad1.right_trigger > 0.5;} // don't bind gamepad1.right_trigger to anything because i am using it
-
+    */
     ElapsedTime doubleClickTimer = new ElapsedTime();
 
 

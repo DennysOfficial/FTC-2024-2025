@@ -32,9 +32,9 @@ public class VelocityControlDrive extends DriveModeBase {
 
     @Override
     public void updateDrive(double deltaTime) {
-        double forwardBackward = -1 * config.inputMap.getForwardStick() * config.sensitivities.getForwardSensitivity();  //Note: pushing stick forward gives negative value
-        double strafe = -1 * config.inputMap.getStrafeStick() * config.sensitivities.getStrafingSensitivity();
-        double yaw = -1 * config.inputMap.getTurnStick() * config.sensitivities.getTurningSensitivity();
+        double forwardBackward = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();  //Note: pushing stick forward gives negative value
+        double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
+        double yaw = -1 * config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.
         // Set up a variable for each drive wheel to save the power level for telemetry.

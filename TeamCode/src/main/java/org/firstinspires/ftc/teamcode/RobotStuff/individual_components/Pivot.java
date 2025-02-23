@@ -87,7 +87,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getPivotStick();
+        return (config.playerTwo == null) ? 0 : (float) config.playerTwo.pivotAxis.getValue();
     }
 
     @Override

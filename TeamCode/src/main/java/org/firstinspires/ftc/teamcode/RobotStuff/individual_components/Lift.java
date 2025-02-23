@@ -54,7 +54,7 @@ public class Lift extends ControlAxis {
 
     @Override
     float getInput() {
-        return (config.inputMap == null) ? 0 : (float) config.inputMap.getLiftStick();
+        return (config.playerTwo == null) ? 0 : (float) config.playerTwo.liftAxis.getValue();
     }
 
     @Override
