@@ -201,6 +201,9 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
             telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
+            activeConfig.playerOne.update_all();
+            activeConfig.playerTwo.update_all();
+
             telemetry.update();
         }
     }

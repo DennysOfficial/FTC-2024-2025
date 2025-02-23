@@ -337,7 +337,7 @@ public abstract class ControlAxis {  //schrödinger's code
         positionDerivatives.update(getPosition(), deltaTime);
 
 
-        if (config.playerTwo != null && config.playerOne.abortButton.getState())
+        if (config.playerOne != null && config.playerOne.unabortButton.getState())
             setControlMode(defaultControlMode);
 
         if (controlMode == ControlMode.trajectoryControl) {
@@ -345,7 +345,7 @@ public abstract class ControlAxis {  //schrödinger's code
                 setControlMode(defaultControlMode);
         }
 
-        if (config.playerTwo != null && config.playerOne.abortButton.getState())
+        if (config.playerOne != null && config.playerOne.abortButton.getState())
             setControlMode(ControlMode.disabled);
 
         switch (controlMode) {
