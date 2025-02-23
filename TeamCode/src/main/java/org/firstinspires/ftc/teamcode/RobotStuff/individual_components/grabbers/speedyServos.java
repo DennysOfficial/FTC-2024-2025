@@ -26,7 +26,6 @@ public class speedyServos {
         this.opmode = opmode;
         this.config = config;
         wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
-        support = opmode.hardwareMap.get(Servo.class, config.deviceConfig.supportServo);
     }
 
     public void subStuff(int part){
