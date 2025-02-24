@@ -48,8 +48,8 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
         telemetryAngleVelocity();
 
-        double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
-        double drive = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
+        double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
+        double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
 
         double turn = getTurn(deltaTime);
 

@@ -30,7 +30,7 @@ public class BasicMechanumDrive extends DriveModeBase {
         if (config.playerOne.slowDown.getState()){SensitivityModifier = config.sensitivities.getSlowDownModifier();}
 
 
-        double forwardBackward = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
+        double forwardBackward = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
         double yaw = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
 
