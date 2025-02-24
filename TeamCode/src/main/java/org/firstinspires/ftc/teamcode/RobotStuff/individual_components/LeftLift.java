@@ -47,7 +47,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     public void homeAxis() {
-        homingState = HomingState.initHoming;
+        homingState = HomingState.homed;
     }
 
     @Override
@@ -187,6 +187,7 @@ public class LeftLift extends ControlAxis {
             case finishingHoming:
                 positionOffset -= minExtension - homingPosition;
                 setControlMode(defaultControlMode);
+                homingState = HomingState.homed;
                 break;
 
             case homed:

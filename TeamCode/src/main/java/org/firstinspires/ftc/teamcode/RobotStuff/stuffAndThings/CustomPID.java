@@ -17,6 +17,8 @@ public class CustomPID {
     Telemetry telemetry;
     RobotConfig config;
 
+    double maxDeltaTime = 0.5;
+
     public final String instanceName;
 
 
@@ -42,17 +44,16 @@ public class CustomPID {
     }
 
 
-
-
     public double runPID(double targetValue, double actualValue, double deltaTime) {
 
         final double error = targetValue - actualValue;
 
         P = kP * error; // proportional
 
-        I += kI * error * deltaTime; // integral
+        if (deltaTime < maxDeltaTime) // prevents funny
+            I += kI * error * deltaTime; // integral
 
-        D = kD * (previousError - (previousError = error)) / deltaTime;
+        D = -kD * (previousError - (previousError = error)) / deltaTime;
 
 
         if (config.debugConfig.getPIDDebug()) {
