@@ -8,17 +8,15 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
-public class Lift extends ControlAxis { //schrödinger's code
+public class LiftTEST extends ControlAxisTEST { //schrödinger's code
 
-    Pivot pivot;
+    PivotTEST pivot;
 
-    public void assignPivot(Pivot pivot) {
+    public void assignPivot(PivotTEST pivot) {
         if (pivot == null)
             throw new NullPointerException("the pivot you tried to assign is null you goober");
         this.pivot = pivot;
@@ -97,7 +95,7 @@ public class Lift extends ControlAxis { //schrödinger's code
     }
 
 
-    public Lift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
+    public LiftTEST(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Lift", "inches", 27.0 / 4300.0);
 
         softLimits = new Range<>(0.0, 13.625);

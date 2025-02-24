@@ -1,32 +1,36 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 
 @Config
-public class HeadingPIDSteerTest extends DriveModeBase {
+public class HoldHeading extends DriveModeBase {
 
     public static double turnFeedforwardCoefficient = 0.02;
     public static double Kp = 0;
     public static double Ki = 0;
     public static double Kd = 0;
+    double sumIntegral = 0;
+    private double lastError = 0;
 
-    CustomPID steeringPID;
+    CustomPID HeadingPID;
     IMU imu;
 
     double[] motorPowers = new double[4];
 
     double targetHeading;
 
-    public HeadingPIDSteerTest(OpMode opMode, RobotConfig config) {
+    ElapsedTime timer = new ElapsedTime();
+
+    public HoldHeading(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        steeringPID = new CustomPID(opMode.telemetry, config, "steeringPID");
+        HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
         targetHeading = getHeadingDeg();
     }
@@ -48,10 +52,17 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
         telemetryAngleVelocity();
 
+
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
+        double turn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
 
-        double turn = getTurn(deltaTime);
+        if (!config.playerOne.turnAxis.getState()) {//config.playerOne.turnAxis.getState() returns true if the joystick is being moved- this inverts it to false, so the
+            double targetRad = Math.toRadians(getHeadingDeg());//code only runs when the joystick is not moved- otherwise the robot would autocorrect even if we want to turn
+            turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
+        }
+
+
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
@@ -82,37 +93,5 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         return inputArray;
     }
 
-    double getTurn(double deltaTime) {
-        if (config.playerOne.turnAxis.getState()) { // if joystick is displaced (past the threshold)
-            return config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
-        } else { // if joystick is not being used
-            double targetTurnRate = -1 * config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningRateDPS();
-
-            steeringPID.setCoefficients(Kp, Ki, Kd);
-
-            double turn = turnFeedforwardCoefficient * targetTurnRate;
-
-            turn += steeringPID.runPID(angleWrap(), getHeadingDeg(), deltaTime);
-
-            return turn;
-        }
-    }
-
-
-    public double angleWrap() {
-        return Math.toDegrees(angleWrap(Math.toRadians(targetHeading - getHeadingDeg())));
-    }
-
-    public double angleWrap(double radians) {
-
-        while (radians > Math.PI) {
-            radians -= 2 * Math.PI;
-        }
-        while (radians < -Math.PI) {
-            radians += 2 * Math.PI;
-        }
-
-        return radians;
-    }
 
 }

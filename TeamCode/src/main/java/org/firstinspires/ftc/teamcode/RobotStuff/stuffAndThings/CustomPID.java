@@ -13,6 +13,9 @@ public class CustomPID {
     double I = 0;
     double D = 0;
 
+    double lastError = 0;
+    double integralSum = 0;
+
     double previousActualPosition = Double.NaN;
     Telemetry telemetry;
     RobotConfig config;
@@ -39,6 +42,14 @@ public class CustomPID {
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
+    }
+
+    public double lockYaw(double targetPos, double currentPos, double deltaTime) {
+        double error = angleWrap(targetPos - currentPos);
+        integralSum += error * deltaTime;
+        double derivative = (error - lastError) / deltaTime;
+        lastError = error;
+        return (error * kP) + (derivative * kD) + (integralSum * kI);
     }
 
 
@@ -78,5 +89,16 @@ public class CustomPID {
         return P + I + D;
     }
 
+    public double angleWrap(double radians) { // so robot doesn't rotate 350deg to get from 5deg to 355deg
+
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        return radians;
+    }
 
 }

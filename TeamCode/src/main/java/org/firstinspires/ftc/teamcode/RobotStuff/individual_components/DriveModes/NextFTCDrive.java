@@ -31,9 +31,9 @@ public class NextFTCDrive extends DriveModeBase {
     MecanumDriverControlled vroom = new MecanumDriverControlled(motors, forwardBackward, strafe, yaw, true, imu);
 
 
-    public NextFTCDrive(OpMode opMode, RobotConfig config, IMU imu) {
+    public NextFTCDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
-        this.imu = imu;
+        imu = opMode.hardwareMap.get(IMU.class, "imu");
         frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 

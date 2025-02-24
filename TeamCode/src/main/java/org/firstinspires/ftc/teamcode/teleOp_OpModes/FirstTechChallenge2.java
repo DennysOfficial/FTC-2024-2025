@@ -80,7 +80,7 @@ public class FirstTechChallenge2 extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        NextFTCDrive vroom = new NextFTCDrive(this, activeConfig, imu);
+        NextFTCDrive vroom = new NextFTCDrive(this, activeConfig);
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 

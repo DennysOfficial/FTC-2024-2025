@@ -38,24 +38,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
-import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxisTEST;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.PivotTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabberTEST;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Hold Heading Test", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "funny pid stuff", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
-public class HeadingPIDTest extends LinearOpMode {
+public class funnyPidStuff extends LinearOpMode {
 
     public static boolean driver2PresetsEnabled = false;
 
@@ -81,19 +77,18 @@ public class HeadingPIDTest extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
+        DriveModeBase activeDriveMode = new HoldHeading(this, activeConfig);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+        LiftTEST lift = new LiftTEST(ControlAxisTEST.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
+        PivotTEST spinnyBit = new PivotTEST(ControlAxisTEST.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
 
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, lift, spinnyBit);
-
+        PassiveGrabberTEST grabber = new PassiveGrabberTEST(this, activeConfig, lift, spinnyBit);
 
         imu = hardwareMap.get(IMU.class, "imu");
 
@@ -115,10 +110,6 @@ public class HeadingPIDTest extends LinearOpMode {
 
             stopWatch.reset();
             stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
-
-
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.DEGREES);
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -175,12 +166,12 @@ public class HeadingPIDTest extends LinearOpMode {
 
 
             // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+            if (spinnyBit.getControlMode() != ControlAxisTEST.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
+                spinnyBit.setControlMode(ControlAxisTEST.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
+            } else if (spinnyBit.getControlMode() == ControlAxisTEST.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
@@ -193,13 +184,6 @@ public class HeadingPIDTest extends LinearOpMode {
 
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
-            telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
-            telemetry.addData("pitch", "%.2f deg", orientation.getPitch(AngleUnit.DEGREES));
-            telemetry.addData("roll", "%.2f deg\n", orientation.getRoll(AngleUnit.DEGREES));
-            telemetry.addData("yaw velocity", "%.2f deg/sec", angularVelocity.zRotationRate);
-            telemetry.addData("pitch velocity", "%.2f deg/sec", angularVelocity.xRotationRate);
-            telemetry.addData("roll velocity", "%.2f deg/sec", angularVelocity.yRotationRate);
 
             activeConfig.playerOne.update_all();
             activeConfig.playerTwo.update_all();
