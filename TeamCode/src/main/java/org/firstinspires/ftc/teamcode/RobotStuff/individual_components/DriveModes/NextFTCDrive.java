@@ -24,7 +24,7 @@ public class NextFTCDrive extends DriveModeBase {
 
     Controllable[] motors = new Controllable[]{frontLeft, frontRight, backLeft, backRight};
 
-    Function0<Float> forwardBackward = () -> (float) (-1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
+    Function0<Float> forwardBackward = () -> (float) (config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * getSensitivityMod());
     Function0<Float> strafe = () -> (float) (config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * getSensitivityMod());
     Function0<Float> yaw = () -> (float) (config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * getSensitivityMod());
 

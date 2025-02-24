@@ -91,15 +91,19 @@ public class Sensitivities {
 
     public static boolean isPlayerOneLeftXInverted = false;
 
-    public static boolean isPlayerOneLeftYInverted = false;
+    public static boolean isPlayerOneLeftYInverted = true;
 
     public static boolean isPlayerOneRightXInverted = false;
 
     public static boolean isPlayerOneRightYInverted = false;
 
-    public static boolean isPlayerTwoLeftInverted = false;
+    public static boolean isPlayerTwoLeftXInverted = false;
 
-    public static boolean isPlayerTwoRightInverted = false;
+    public static boolean isPlayerTwoLeftYInverted = true;
+
+    public static boolean isPlayerTwoRightXInverted = false;
+
+    public static boolean isPlayerTwoRightYInverted = false;
 
     public static float playerOneLeftTriggerThreshold = 0.0f;
 
