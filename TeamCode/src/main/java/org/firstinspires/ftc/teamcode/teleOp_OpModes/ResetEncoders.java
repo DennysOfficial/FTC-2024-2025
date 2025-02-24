@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@TeleOp(name = "Reset Encoders", group = "Linear OpMode")
+@TeleOp(name = "Reset Encoders", group = "Utility")
 //@Disabled
 public class ResetEncoders extends LinearOpMode {
 

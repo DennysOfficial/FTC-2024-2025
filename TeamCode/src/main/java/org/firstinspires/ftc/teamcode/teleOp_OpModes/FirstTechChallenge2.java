@@ -52,7 +52,7 @@ import com.rowanmcalpin.nextftc.ftc.driving.MecanumDriverControlled;
 
 import java.util.List;
 
-@TeleOp(name = "First Tech Challenge 2", group = "Linear OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "First Tech Challenge 2", group = "OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
 public class FirstTechChallenge2 extends LinearOpMode {
 
