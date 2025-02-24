@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.InputMap;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.playerOne;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.playerTwo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs.Sensitivities;
-import org.jetbrains.annotations.NotNull;
 
 @Config
 public class RobotConfig {

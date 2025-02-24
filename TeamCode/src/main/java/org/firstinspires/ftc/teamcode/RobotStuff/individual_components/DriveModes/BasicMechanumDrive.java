@@ -31,7 +31,7 @@ public class BasicMechanumDrive extends DriveModeBase {
 
 
         double forwardBackward = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity() * SensitivityModifier;  //Note: pushing stick forward gives negative value
-        double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
+        double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity() * SensitivityModifier;
         double yaw = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity() * SensitivityModifier;
 
         // Combine the joystick requests for each axis-motion to determine each wheel's power.

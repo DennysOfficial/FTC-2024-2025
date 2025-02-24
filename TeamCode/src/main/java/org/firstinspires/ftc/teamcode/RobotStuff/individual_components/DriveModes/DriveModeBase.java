@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -42,6 +43,11 @@ public abstract class DriveModeBase {
         backLeftDrive.setDirection(config.deviceConfig.backLeftDriveDir);
         backRightDrive.setDirection(config.deviceConfig.backRightDriveDir);
         frontRightDrive.setDirection(config.deviceConfig.frontRightDriveDir);
+
+        frontLeftDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        frontRightDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backLeftDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        backRightDrive.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
 

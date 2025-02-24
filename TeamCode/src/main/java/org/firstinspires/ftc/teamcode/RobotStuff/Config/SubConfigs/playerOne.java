@@ -83,15 +83,15 @@ public class playerOne {
     );
 
     public JoystickAxis forwardAxis = new JoystickAxis(
-            getLeftX,
-            Sensitivities.playerOneLeftXAxisThreshold,
-            Sensitivities.isPlayerOneLeftXInverted
-    );
-
-    public JoystickAxis strafeAxis = new JoystickAxis(
             getLeftY,
             Sensitivities.playerOneLeftYAxisThreshold,
             Sensitivities.isPlayerOneLeftYInverted
+    );
+
+    public JoystickAxis strafeAxis = new JoystickAxis(
+            getLeftX,
+            Sensitivities.playerOneLeftXAxisThreshold,
+            Sensitivities.isPlayerOneLeftXInverted
     );
 
     public Button left_button = new Button(getLeftButton);
