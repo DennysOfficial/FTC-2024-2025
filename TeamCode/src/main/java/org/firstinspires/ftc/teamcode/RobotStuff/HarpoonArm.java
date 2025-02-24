@@ -44,7 +44,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 public class HarpoonArm {
 
     public static double grabPosition = 0;
-
     public static double ObservationDepositArmAngle = -60;
     public static double ObservationWristPosition = 0.5;
     public static double ObservationDepositLiftPosition = 0;
@@ -144,10 +143,22 @@ public class HarpoonArm {
             armState = SampleArmState.depositLow;
 
         if (config.inputMap.gamepad1.b)
+        {
             grabOpen = true;
+            grabPosition = -1;
+        }
         if (config.inputMap.gamepad1.y)
+        {
             grabOpen = false;
-
+            grabPosition = 0;
+        }
+        if (config.inputMap.gamepad1.left_bumper && grabPosition != 1){
+            grabPosition += 1;
+        }
+        else if(config.inputMap.gamepad1.right_bumper && grabPosition != -1){
+            grabPosition -= 1;
+        }
+        harpoon.twistServo(grabPosition);
         if (armState != previousArmState) {
             switch (armState) {
                 case store:
