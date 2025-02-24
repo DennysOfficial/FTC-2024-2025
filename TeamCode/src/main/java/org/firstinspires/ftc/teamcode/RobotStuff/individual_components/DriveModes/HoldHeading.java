@@ -26,8 +26,6 @@ public class HoldHeading extends DriveModeBase {
 
     double targetHeading;
 
-    ElapsedTime timer = new ElapsedTime();
-
     public HoldHeading(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
@@ -48,7 +46,7 @@ public class HoldHeading extends DriveModeBase {
     }
 
     @Override
-    public void updateDrive(double deltaTime) {
+    public void updateDrive(double deltaTime) { //TODO: USE NEXTFTC MECANUMDRIVERCONTROLLED WHEN THIS WORKS
 
         telemetryAngleVelocity();
 
