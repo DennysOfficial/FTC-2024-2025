@@ -45,6 +45,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
@@ -80,7 +81,7 @@ public class HeadingPIDTest extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
 
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
