@@ -51,16 +51,7 @@ public class HeadingPIDSteerTest extends DriveModeBase {
         double strafe = -1 * config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = -1 * config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
 
-        double targetTurnRate = -1 * config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningRateDPS();
-
-        targetHeading += targetTurnRate * deltaTime;
-
-        steeringPID.setCoefficients(Kp, Ki, Kd);
-
-        double turn = turnFeedforwardCoefficient * targetTurnRate;
-
-        turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
-
+        double turn = getTurn(deltaTime);
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
@@ -89,5 +80,21 @@ public class HeadingPIDSteerTest extends DriveModeBase {
                 inputArray[i] /= max;
 
         return inputArray;
+    }
+
+    double getTurn(double deltaTime) {
+        if (config.playerOne.turnAxis.getState()) { // if joystick is displaced (past the threshold)
+            return config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
+        } else { // if joystick is not being used
+            double targetTurnRate = -1 * config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningRateDPS();
+
+            steeringPID.setCoefficients(Kp, Ki, Kd);
+
+            double turn = turnFeedforwardCoefficient * targetTurnRate;
+
+            turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
+
+            return turn;
+        }
     }
 }
