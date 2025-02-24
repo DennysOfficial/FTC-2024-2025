@@ -325,6 +325,7 @@ public abstract class ControlAxis {  //schrödinger's code
         addMotors();
 
         updateCachedPosition();
+
         setControlMode(defaultControlMode);
 
         initPid();

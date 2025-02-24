@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.RobotStuff;
 
 import android.util.Range;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -10,19 +11,19 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveSpecimenClaw;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
-
+@Config
 public class SpecimenArm {
 
-    public static SpecimenArmPose restPose = new SpecimenArmPose(0.5, 0, -80);
+    public static SpecimenArmPose restPose = new SpecimenArmPose(1, 0, -60);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(0.5, 10, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(1, 17, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.5, 2, -80);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.3, 1, -55);
     public static double collectPresetDurationSec = 1;
 
-    public static double kPForwards = 0;
-    public static double kPBackwards = 0;
-    public static double damping = 0;
+    public static double kPForwards = 0.008;
+    public static double kPBackwards = 0.08;
+    public static double damping = 0.001;
 
     public static Range<Double> scorePivotDeadZone = new Range<>(10.0, scorePose.pivotPosition);
 
@@ -47,6 +48,9 @@ public class SpecimenArm {
 
     GoofyPID scoringPid;
 
+    void updatePidCoefficients() {
+        scoringPid.setCoefficients(kPForwards, kPBackwards, 0, damping);
+    }
 
     public SpecimenArm(OpMode opMode, RobotConfig config) {
         this.opmode = opMode;
@@ -66,7 +70,7 @@ public class SpecimenArm {
 
     public void update() {
         if (config.debugConfig.getStateDebug())
-            opmode.telemetry.addData("Harpoon Arm State: ", armState.toString());
+            opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
         updateState();
         if (previousState != armState) {
@@ -91,13 +95,18 @@ public class SpecimenArm {
 
         switch (armState) {
             case movingToScore:
-                if (!leftLift.isBusy())
+                if (!otherSpinnyBit.isBusy())
                     armState = SpecimenArmState.score;
+                break;
             case score:
                 // if (scorePivotDeadZone.contains(otherSpinnyBit.getPosition()))
+                updatePidCoefficients();
+                otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                 otherSpinnyBit.targetTorque = scoringPid.runPID(scorePose.pivotPosition, otherSpinnyBit.getPosition(), otherSpinnyBit.deltaTime);
                 break;
         }
+
+        claw.basicGampadPinchControl();
 
         leftLift.update();
         otherSpinnyBit.update();

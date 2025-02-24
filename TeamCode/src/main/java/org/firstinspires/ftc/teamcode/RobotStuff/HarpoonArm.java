@@ -103,7 +103,7 @@ public class HarpoonArm {
     }
 
     SampleArmState armState = SampleArmState.store;
-    SampleArmState previousArmState;
+    SampleArmState previousArmState = null;
 
     public HarpoonArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;

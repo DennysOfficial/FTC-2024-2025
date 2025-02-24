@@ -115,7 +115,7 @@ public class LeftLift extends ControlAxis {
         limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        softLimits = new Range<>(0.5, 20.0);
+        softLimits = new Range<>(0.5, 25.420);
 
         physicalLimits = new Range<>(0.0, 25.25);
     }

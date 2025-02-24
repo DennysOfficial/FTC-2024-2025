@@ -63,16 +63,13 @@ public class LeftPivot extends ControlAxis {
         softLimits = new Range<>(-95.0, 50.0);
     }
 
-    double previousRightLiftTargetPosition = Double.NaN;
+    double previousLeftLiftPosition = Double.NaN;
 
     public void setTargetPosition(double targetPosition) {
         if (leftLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        if (targetPosition == getTargetPosition() && previousRightLiftTargetPosition == (previousRightLiftTargetPosition = leftLift.getTargetPosition()))
-            return;
-
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (leftLift.retractedRadius + leftLift.getTargetPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (leftLift.retractedRadius + leftLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 

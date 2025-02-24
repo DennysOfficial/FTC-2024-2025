@@ -13,7 +13,7 @@ public class CustomPID {
     double I = 0;
     double D = 0;
 
-    double previousError = 0;
+    double previousActualPosition = 0;
     Telemetry telemetry;
     RobotConfig config;
 
@@ -53,7 +53,7 @@ public class CustomPID {
         if (deltaTime < maxDeltaTime) // prevents funny
             I += kI * error * deltaTime; // integral
 
-        D = -kD * (previousError - (previousError = error)) / deltaTime;
+        D = kD * (previousActualPosition - (previousActualPosition = actualValue)) / deltaTime;
 
 
         if (config.debugConfig.getPIDDebug()) {
