@@ -125,8 +125,8 @@ public class HarpoonArm {
 
         previousArmState = armState;
 
-        opMode.telemetry.addData("target intake pivot angle = %f", calculateIntakePivotAngle());
-        opMode.telemetry.addData("intake height = %f", calculateIntakeHeight());
+        //opMode.telemetry.addData("target intake pivot angle = %f", calculateIntakePivotAngle());
+        //opMode.telemetry.addData("intake height = %f", calculateIntakeHeight());
 
         if (config.debugConfig.getStateDebug())
             opMode.telemetry.addData("Harpoon Arm State: ", armState.toString());
@@ -234,21 +234,12 @@ public class HarpoonArm {
                         rightPivot.setTargetPosition(calculateIntakePivotAngle());
                     }
 
+                default:
                     if (grabOpen)
                         harpoon.setGrabPosition(0);
                     else
                         harpoon.setGrabPosition(1);
-
-
-                    break;
             }
-
-
-        if (grabOpen)
-            harpoon.setGrabPosition(0);
-        else
-            harpoon.setGrabPosition(1);
-
     }
 
     public double calculateIntakePivotAngle() {

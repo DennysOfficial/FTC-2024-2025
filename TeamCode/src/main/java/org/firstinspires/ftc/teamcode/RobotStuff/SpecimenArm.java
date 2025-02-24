@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAx
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ActiveSpecimenClaw;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
 
 public class SpecimenArm {
 
@@ -20,16 +19,11 @@ public class SpecimenArm {
     public static SpecimenArmPose collectPose = new SpecimenArmPose(0.5, 2, -80);
     public static double collectPresetDurationSec = 1;
 
-    public static double kPForwards = 0;
-    public static double kPBackwards = 0;
-    public static double damping = 0;
-
     public static Range<Double> scorePivotDeadZone = new Range<>(10.0, scorePose.pivotPosition);
 
     enum SpecimenArmState {
         collect,
         rest,
-        movingToScore,
         score,
     }
 
@@ -45,8 +39,6 @@ public class SpecimenArm {
 
     ActiveSpecimenClaw claw;
 
-    GoofyPID scoringPid;
-
 
     public SpecimenArm(OpMode opMode, RobotConfig config) {
         this.opmode = opMode;
@@ -59,8 +51,6 @@ public class SpecimenArm {
         leftLift.assignPivot(otherSpinnyBit);
 
         claw = new ActiveSpecimenClaw(opMode, config);
-
-        scoringPid = new GoofyPID(opMode.telemetry, config, "specimen scoring PID");
     }
 
 
@@ -75,12 +65,8 @@ public class SpecimenArm {
                     moveToPose(restPose, resetPresetDurationSec);
                     break;
 
-                case movingToScore:
-                    moveToPose(scorePose, scorePresetDurationSec);
-                    break;
-
                 case score:
-                    otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+                    moveToPose(scorePose, scorePresetDurationSec);
                     break;
 
                 case collect:
@@ -90,15 +76,11 @@ public class SpecimenArm {
         }
 
         switch (armState) {
-            case movingToScore:
-                if (!leftLift.isBusy())
-                    armState = SpecimenArmState.score;
             case score:
                 // if (scorePivotDeadZone.contains(otherSpinnyBit.getPosition()))
-                otherSpinnyBit.targetTorque = scoringPid.runPID(scorePose.pivotPosition, otherSpinnyBit.getPosition(), otherSpinnyBit.deltaTime);
+
                 break;
         }
-
         leftLift.update();
         otherSpinnyBit.update();
         previousState = armState;
@@ -106,7 +88,7 @@ public class SpecimenArm {
 
     void updateState() {
         if (config.inputMap.getSpecimenHangButton())
-            armState = SpecimenArmState.movingToScore;
+            armState = SpecimenArmState.score;
 
         if (config.inputMap.getSpecimenCollectButton())
             armState = SpecimenArmState.collect;
