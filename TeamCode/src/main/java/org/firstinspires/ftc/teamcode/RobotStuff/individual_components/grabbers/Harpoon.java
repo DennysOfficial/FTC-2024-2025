@@ -13,6 +13,7 @@ public class Harpoon {
 
     Servo harpoonServo;
     Servo wristServo;
+    Servo hba;
     RobotConfig config;
 
     public static double openPos = .78, closePos = .25;
@@ -29,6 +30,7 @@ public class Harpoon {
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
         wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
+        hba = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonBlockAlignmentWristServo);
     }
 
     /**
@@ -44,5 +46,16 @@ public class Harpoon {
         wristServo.setPosition(position);
     }
 
+    public void twistServo(double pos){
+        if (pos == 1){
+            hba.setPosition(0.75);
+        }
+        if (pos == 0){
+            hba.setPosition(0.5);
+        }
+        if (pos == -1){
+            hba.setPosition(0.25);
+        }
+    }
 
 }
