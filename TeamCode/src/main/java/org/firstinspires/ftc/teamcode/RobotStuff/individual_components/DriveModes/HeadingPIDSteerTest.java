@@ -92,9 +92,27 @@ public class HeadingPIDSteerTest extends DriveModeBase {
 
             double turn = turnFeedforwardCoefficient * targetTurnRate;
 
-            turn += steeringPID.runPID(targetHeading, getHeadingDeg(), deltaTime);
+            turn += steeringPID.runPID(angleWrap(), getHeadingDeg(), deltaTime);
 
             return turn;
         }
     }
+
+
+    public double angleWrap() {
+        return Math.toDegrees(angleWrap(Math.toRadians(targetHeading - getHeadingDeg())));
+    }
+
+    public double angleWrap(double radians) {
+
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        return radians;
+    }
+
 }
