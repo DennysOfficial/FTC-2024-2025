@@ -119,7 +119,7 @@ public class SpecimenArm {
     public void moveToPose(SpecimenArmPose pose, double duration) {
         leftLift.setControlMode(ControlAxis.ControlMode.positionControl);
         leftLift.setTargetPosition(pose.liftPosition);
-        otherSpinnyBit.fancyMoveToPosition(pose.liftPosition, duration);
+        otherSpinnyBit.fancyMoveToPosition(pose.pivotPosition, duration);
         claw.setWristPosition(pose.wristPosition);
     }
 }
