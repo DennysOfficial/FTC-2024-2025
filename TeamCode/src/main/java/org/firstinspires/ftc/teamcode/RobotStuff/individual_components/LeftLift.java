@@ -111,7 +111,7 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0 );
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0);
         limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
@@ -148,40 +148,50 @@ public class LeftLift extends ControlAxis {
 
     @Override
     void miscUpdate() {
-//
-//        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
-//            homeAxis();
-//        }
-//
-//        if (homingState == HomingState.initHoming) {
-//            minExtension = Double.POSITIVE_INFINITY;
-//            homingState = HomingState.homing;
-//
-//            setControlMode(ControlMode.torqueControl);
-//        }
-//
-//        if (homingState == HomingState.homing) {
-//            targetTorque = homingRetractPower;
-//
-//            minExtension = Math.min(getPosition(), minExtension);
-//            if (!limitSwitch.getState()) {
-//                homingDwellTimer = new ElapsedTime();
-//                homingState = HomingState.finishingHoming;
-//            }
-//        }
-//
-//        if (homingState == HomingState.finishingHoming) {
-//            targetTorque = homingDwellPower;
-//
-//            minExtension = Math.min(getPosition(), minExtension);
-//            if (homingDwellTimer.seconds() > homingDwellPeriod) {
-//                homingState = HomingState.homed;
-//            }
-//        }
-//
-//        if (homingState == HomingState.homed) {
-//            positionOffset -= minExtension - homingPosition;
-//            setControlMode(defaultControlMode);
-//        }
+
+        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
+            homeAxis();
+        }
+
+        opMode.telemetry.addData("limit switch state:", limitSwitch.getState());
+
+        switch (homingState) {
+            case initHoming:
+                minExtension = Double.POSITIVE_INFINITY;
+                homingState = HomingState.retracting;
+
+                setControlMode(ControlMode.torqueControl);
+                break;
+
+            case retracting:
+                targetTorque = homingRetractPower;
+
+                minExtension = Math.min(getPosition(), minExtension);
+
+                if (!limitSwitch.getState()) {
+                    homingDwellTimer = new ElapsedTime();
+                    homingState = HomingState.dwelling;
+                }
+                break;
+
+            case dwelling:
+                targetTorque = homingDwellPower;
+
+                minExtension = Math.min(getPosition(), minExtension);
+
+                if (homingDwellTimer.seconds() > homingDwellPeriod) {
+                    homingState = HomingState.finishingHoming;
+                }
+                break;
+
+            case finishingHoming:
+                positionOffset -= minExtension - homingPosition;
+                setControlMode(defaultControlMode);
+                break;
+
+            case homed:
+                //congratulations
+        }
+
     }
 }

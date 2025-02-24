@@ -3,9 +3,14 @@ package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-public class CustomPID {
 
-    double kP = 0;
+/**
+ * global damping and different kp terms for each direction
+ */
+public class GoofyPID {
+
+    double kPForwards = 0;
+    double kPBackwards = 0;
     double kI = 0;
     double kD = 0;
 
@@ -13,46 +18,48 @@ public class CustomPID {
     double I = 0;
     double D = 0;
 
-    double previousError = 0;
+    double previousActualValue = 0;
     Telemetry telemetry;
     RobotConfig config;
 
     public final String instanceName;
 
 
-    public CustomPID(Telemetry telemetry, RobotConfig config, String instanceName) {
+    public GoofyPID(Telemetry telemetry, RobotConfig config, String instanceName) {
         this.config = config;
         this.telemetry = telemetry;
         this.instanceName = instanceName;
     }
 
-    public CustomPID(Telemetry telemetry, RobotConfig config, double P, double kI, double kD, String instanceName) {
+    public GoofyPID(Telemetry telemetry, RobotConfig config, double P, double kI, double kD, String instanceName) {
         this.config = config;
         this.telemetry = telemetry;
-        this.kP = P;
+        this.kPForwards = P;
         this.kI = kI;
         this.kD = kD;
         this.instanceName = instanceName;
     }
 
-    public void setCoefficients(double kP, double kI, double kD) {
-        this.kP = kP;
+    public void setCoefficients(double kPForwards, double kPBackwards, double kI, double kD) {
+        this.kPForwards = kPForwards;
+        this.kPBackwards = kPBackwards;
         this.kI = kI;
         this.kD = kD;
     }
-
-
 
 
     public double runPID(double targetValue, double actualValue, double deltaTime) {
 
         final double error = targetValue - actualValue;
 
-        P = kP * error; // proportional
+        if (error > 0)
+            P = kPForwards * error; // proportional
+        else
+            P = kPBackwards * error; // proportional
 
         I += kI * error * deltaTime; // integral
 
-        D = kD * (previousError - (previousError = error)) / deltaTime;
+        D = kD * (previousActualValue - (previousActualValue = actualValue)) / deltaTime;
 
 
         if (config.debugConfig.getPIDDebug()) {

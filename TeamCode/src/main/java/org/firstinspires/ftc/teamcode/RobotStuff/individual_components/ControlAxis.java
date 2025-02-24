@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Tra
 
 public abstract class ControlAxis {  //schrödinger's code
 
-    double deltaTime = 0;
+    public double deltaTime = 0;
 
     protected PositionDerivatives positionDerivatives;
 
@@ -89,7 +89,8 @@ public abstract class ControlAxis {  //schrödinger's code
 
     enum HomingState {
         initHoming,
-        homing,
+        retracting,
+        dwelling,
         finishingHoming,
         homed,
     }
