@@ -16,7 +16,7 @@ public class SpecimenArm {
 
     public static SpecimenArmPose restPose = new SpecimenArmPose(1, 0, -60);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(1, 17, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(1, 19, 32);
     public static double scorePresetDurationSec = 1;
     public static SpecimenArmPose collectPose = new SpecimenArmPose(0.3, 1, -55);
     public static double collectPresetDurationSec = 1;

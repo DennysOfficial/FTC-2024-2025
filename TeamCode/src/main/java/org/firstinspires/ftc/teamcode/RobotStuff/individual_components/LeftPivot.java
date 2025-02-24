@@ -80,7 +80,7 @@ public class LeftPivot extends ControlAxis {
 
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0.05;
+    public static double KpRetracted = 0.1;
     public static double KiRetracted = 0;
     public static double KdRetracted = 0.0015;
 
