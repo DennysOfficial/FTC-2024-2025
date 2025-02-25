@@ -45,6 +45,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveSwitch;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.TankDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
@@ -83,9 +84,8 @@ public class CentricSwitch extends LinearOpMode {
         assert activeConfig.playerTwo != null;
 
         DriveSwitch vroom = new DriveSwitch(this, activeConfig);
-        vroom.addDriveMode(new BasicMechanumDrive(this, activeConfig));
+        vroom.addDriveMode(new FieldCentricDrive(this, activeConfig));
         vroom.addDriveMode(new NextFTCDrive(this, activeConfig));
-        vroom.addDriveMode(new TankDrive(this, activeConfig));
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 

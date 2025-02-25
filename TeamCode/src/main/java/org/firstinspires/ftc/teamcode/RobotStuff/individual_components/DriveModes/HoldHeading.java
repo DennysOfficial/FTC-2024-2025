@@ -52,8 +52,12 @@ public class HoldHeading extends DriveModeBase {
 
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
+        double turn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
         targetRad = Math.toRadians(0);
-        double turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
+
+        if (!config.playerOne.turnAxis.getState()) {
+            turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
+        }
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
