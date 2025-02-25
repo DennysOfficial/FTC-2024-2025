@@ -137,8 +137,9 @@ public class HarpoonArm {
     boolean lastGroundSlam = false;
 
     void updatePresets() {
-        if (config.inputMap.getIntakeForward())
+        if (config.inputMap.getIntakeForward()){
             armState = SampleArmState.intakeHeightBasedGrab;
+            grabPosition = 0;}
 
         if (config.inputMap.getObservationDepositPreset())
             armState = SampleArmState.depositLow;
@@ -146,6 +147,13 @@ public class HarpoonArm {
         if (config.inputMap.getBasketDepositPreset())
             armState = SampleArmState.depositHigh;
 
+        if (config.inputMap.gamepad1.right_bumper && grabPosition < 1){
+            grabPosition += 1;
+        }
+        if (config.inputMap.gamepad1.left_bumper && grabPosition > -1){
+            grabPosition -= 1;
+        }
+        harpoon.twistServo(grabPosition);
 
         if (config.inputMap.getClawCloseButton())
             grabOpen = false;
