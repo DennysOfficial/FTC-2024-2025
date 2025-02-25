@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 @Config
 public class HoldHeading extends DriveModeBase {
 
-    public static double kP = 0;
+    public static double kP = 0; //TODO: TUNE
     public static double kI = 0;
     public static double kD = 0;
 
@@ -61,14 +61,24 @@ public class HoldHeading extends DriveModeBase {
         double turn;
         targetRad = Math.toRadians(targetHeading);
 
-        if (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1)) {
+        if (config.playerOne.turnAxis.getState() || yawVelocity > 0.1 || yawVelocity < -0.1) {
             turn = normTurn;
             updateHeading();
         } else {
             turn = PIDturn;
         }
 
-        opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1))); // should be false at stationary
+        opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || yawVelocity > 0.1 || yawVelocity < -0.1));
+        //                                                          expected | actual
+        // while rotating:                                              true | na
+        // stick is let go, but robot still is rotating:                true | na
+        // while stationary or only moving forwards/backward/strafing: false | na
+
+        // data from opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1)));
+        //                                                          expected | actual
+        // while rotating:                                              true | true
+        // stick is let go, but robot still is rotating:                true | false
+        // while stationary or only moving forwards/backward/strafing: false | true
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
