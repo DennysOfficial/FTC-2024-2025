@@ -68,6 +68,7 @@ public class HoldHeading extends DriveModeBase {
             turn = PIDturn;
         }
 
+        opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1))); // should be false at stationary
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
