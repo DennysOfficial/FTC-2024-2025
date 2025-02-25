@@ -13,6 +13,7 @@ public class DriveSwitch extends DriveModeBase{
 
     private int activeDriveIndex = 0;
     private DriveModeBase activeDrive;
+    private String modeName;
 
     OpMode opmode;
     RobotConfig config;
@@ -27,6 +28,7 @@ public class DriveSwitch extends DriveModeBase{
 
     public void setActiveDrive(int modeIndex) {
         activeDrive = driveModes.get(modeIndex);
+        modeName = activeDrive.getClass().getSimpleName();
     }
 
     @Override
@@ -36,7 +38,13 @@ public class DriveSwitch extends DriveModeBase{
         }
 
         if (config.playerOne.driveModeDown.getRisingState()) {
-
+            activeDriveIndex = (activeDriveIndex - 1 < 0) ? driveModes.size() - 1 : activeDriveIndex - 1;
         }
+
+        setActiveDrive(activeDriveIndex);
+
+        opmode.telemetry.addData("Drive Mode", modeName);
+
+        activeDrive.updateDrive(deltaTime);
     }
 }
