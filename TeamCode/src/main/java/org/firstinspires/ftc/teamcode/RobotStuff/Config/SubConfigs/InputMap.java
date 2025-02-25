@@ -81,25 +81,37 @@ public class InputMap {
 
     /// specimen Presets ##################################################################################################################################################
 
-    public boolean getSpecimenHangButton(){
+    public boolean getSpecimenHangButton() {
         return gamepad2.x;
     }
 
-    public boolean getSpecimenCollectButton(){
+    public boolean getSpecimenCollectButton() {
         return gamepad2.a;
     }
 
-    public boolean getSpecimenRestButton(){
+    public boolean getSpecimenRestButton() {
         return false;
     }
+
     /// sample Presets ##################################################################################################################################################
 
     public boolean getIntakeForward() {
-        return gamepad2.y;
+        return gamepad2.dpad_right;
     }
 
     public boolean getObservationDepositPreset() {
-        return gamepad2.b;
+        return gamepad2.dpad_left;
+    }
+
+    public boolean getBasketDepositPreset() {
+        return gamepad2.dpad_up;
+    }
+
+    public boolean getClawOpenButton() {
+        return gamepad1.x;
+    }
+    public boolean getClawCloseButton() {
+        return gamepad1.a;
     }
 
     /// testing / misc ##################################################################################################################################################

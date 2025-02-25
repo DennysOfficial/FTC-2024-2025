@@ -3,42 +3,46 @@ package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-public class CustomPID {
 
-    public double kP = 0;
-    public double kI = 0;
-    public double kD = 0;
+/**
+ * global damping and different kp terms for each direction
+ */
+public class GoofyPID {
+
+    double kPForwards = 0;
+    double kPBackwards = 0;
+    double kI = 0;
+    double kD = 0;
 
     double P = 0;
     double I = 0;
     double D = 0;
 
-    double previousActualPosition = 0;
+    double previousActualValue = 0;
     Telemetry telemetry;
     RobotConfig config;
-
-    double maxDeltaTime = 0.5;
 
     public final String instanceName;
 
 
-    public CustomPID(Telemetry telemetry, RobotConfig config, String instanceName) {
+    public GoofyPID(Telemetry telemetry, RobotConfig config, String instanceName) {
         this.config = config;
         this.telemetry = telemetry;
         this.instanceName = instanceName;
     }
 
-    public CustomPID(Telemetry telemetry, RobotConfig config, double P, double kI, double kD, String instanceName) {
+    public GoofyPID(Telemetry telemetry, RobotConfig config, double P, double kI, double kD, String instanceName) {
         this.config = config;
         this.telemetry = telemetry;
-        this.kP = P;
+        this.kPForwards = P;
         this.kI = kI;
         this.kD = kD;
         this.instanceName = instanceName;
     }
 
-    public void setCoefficients(double kP, double kI, double kD) {
-        this.kP = kP;
+    public void setCoefficients(double kPForwards, double kPBackwards, double kI, double kD) {
+        this.kPForwards = kPForwards;
+        this.kPBackwards = kPBackwards;
         this.kI = kI;
         this.kD = kD;
     }
@@ -48,16 +52,17 @@ public class CustomPID {
 
         final double error = targetValue - actualValue;
 
-        P = kP * error; // proportional
+        if (error > 0)
+            P = kPForwards * error; // proportional
+        else
+            P = kPBackwards * error; // proportional
 
-        if (deltaTime < maxDeltaTime) // prevents funny
-            I += kI * error * deltaTime; // integral
+        I += kI * error * deltaTime; // integral
 
-        D = kD * (previousActualPosition - (previousActualPosition = actualValue)) / deltaTime;
+        D = kD * (previousActualValue - (previousActualValue = actualValue)) / deltaTime;
 
 
         if (config.debugConfig.getPIDDebug()) {
-            telemetry.addLine();
             telemetry.addData(instanceName + " " + "error", error);
             telemetry.addData(instanceName + " " + "value", actualValue);
             telemetry.addData(instanceName + " " + "target", targetValue);

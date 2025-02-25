@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.Trajectories.Tra
 
 public abstract class ControlAxis {  //schrödinger's code
 
-    double deltaTime = 0;
+    public double deltaTime = 0;
 
     protected PositionDerivatives positionDerivatives;
 
@@ -50,6 +50,8 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     void setPower(double power) {
+        if (config.debugConfig.getMotorPowerDebug())
+            opMode.telemetry.addData(positionPID.instanceName + " motor power:", power);
         motors.setPower(power);
     }
 
@@ -85,9 +87,10 @@ public abstract class ControlAxis {  //schrödinger's code
         testing
     }
 
-    enum HomingState{
+    enum HomingState {
         initHoming,
-        homing,
+        retracting,
+        dwelling,
         finishingHoming,
         homed,
     }
@@ -228,8 +231,10 @@ public abstract class ControlAxis {  //schrödinger's code
     }
 
     public void setTargetPosition(double targetPosition) {
-        if (Double.isNaN(targetPosition))
-            throw new ArithmeticException("target Position cant be nan you goober");
+        if (Double.isNaN(targetPosition)) {
+            return;
+            //throw new ArithmeticException("target Position cant be nan you goober");
+        }
         this.targetPosition = softLimits.clamp(targetPosition);
     }
 
@@ -272,7 +277,6 @@ public abstract class ControlAxis {  //schrödinger's code
     public void setCurrentPosition(double position) {
         positionOffset = position - getNonCachedPosition();
     }
-
 
 
     // Velocity stuff \/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -321,6 +325,7 @@ public abstract class ControlAxis {  //schrödinger's code
         addMotors();
 
         updateCachedPosition();
+
         setControlMode(defaultControlMode);
 
         initPid();
@@ -352,7 +357,7 @@ public abstract class ControlAxis {  //schrödinger's code
     abstract void miscUpdate();
 
     protected void debugUpdate() {
-        if (config.debugConfig.getControlModeDebug())
+        if (config.debugConfig.getStateDebug())
             opMode.telemetry.addData(axisName + "ControlMode", controlMode.toString());
 
         if (config.debugConfig.positionDerivativesDebug())
@@ -409,12 +414,9 @@ public abstract class ControlAxis {  //schrödinger's code
                 updateVelocityControl();
                 break;
 
-            case torqueControl:
-                setPower(targetTorque + getStaticFeedforward(targetTorque));
-                break;
-
             case gamePadTorqueControl:
                 targetTorque = getInput() * getTorqueControlSensitivity();
+            case torqueControl:
                 setPower(targetTorque + getStaticFeedforward(targetTorque));
                 break;
 

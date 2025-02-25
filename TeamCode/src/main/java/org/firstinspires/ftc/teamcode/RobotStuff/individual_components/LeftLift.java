@@ -34,11 +34,11 @@ public class LeftLift extends ControlAxis {
         this.leftPivot = leftPivot;
     }
 
-    public static double gCompMultiplier = -0.069;
+    public static double gCompMultiplier = 0.069;
 
-    public static double Kp = -2;
+    public static double Kp = 3;
     public static double Ki = 0;
-    public static double Kd = -0.03;
+    public static double Kd = 0.05;
 
     public static double staticFrictionCoefficient = 0;
     public static double kineticFrictionCoefficient = 0;
@@ -47,7 +47,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     public void homeAxis() {
-        homingState = HomingState.initHoming;
+        homingState = HomingState.homed;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class LeftLift extends ControlAxis {
 
     @Override
     protected void addMotors() {
-        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.FORWARD);
+        motors.addMotor(config.deviceConfig.leftLift, DcMotorSimple.Direction.REVERSE);
 
         motors.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -111,11 +111,11 @@ public class LeftLift extends ControlAxis {
 
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056);
+        super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0);
         limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
 
-        softLimits = new Range<>(0.5, 20.0);
+        softLimits = new Range<>(0.5, 25.420);
 
         physicalLimits = new Range<>(0.0, 25.25);
     }
@@ -153,35 +153,46 @@ public class LeftLift extends ControlAxis {
             homeAxis();
         }
 
-        if (homingState == HomingState.initHoming) {
-            minExtension = Double.POSITIVE_INFINITY;
-            homingState = HomingState.homing;
+        opMode.telemetry.addData("limit switch state:", limitSwitch.getState());
 
-            setControlMode(ControlMode.torqueControl);
-        }
+        switch (homingState) {
+            case initHoming:
+                minExtension = Double.POSITIVE_INFINITY;
+                homingState = HomingState.retracting;
 
-        if (homingState == HomingState.homing) {
-            targetTorque = homingRetractPower;
+                setControlMode(ControlMode.torqueControl);
+                break;
 
-            minExtension = Math.min(getPosition(), minExtension);
-            if (!limitSwitch.getState()) {
-                homingDwellTimer = new ElapsedTime();
-                homingState = HomingState.finishingHoming;
-            }
-        }
+            case retracting:
+                targetTorque = homingRetractPower;
 
-        if (homingState == HomingState.finishingHoming) {
-            targetTorque = homingDwellPower;
+                minExtension = Math.min(getPosition(), minExtension);
 
-            minExtension = Math.min(getPosition(), minExtension);
-            if (homingDwellTimer.seconds() > homingDwellPeriod) {
+                if (!limitSwitch.getState()) {
+                    homingDwellTimer = new ElapsedTime();
+                    homingState = HomingState.dwelling;
+                }
+                break;
+
+            case dwelling:
+                targetTorque = homingDwellPower;
+
+                minExtension = Math.min(getPosition(), minExtension);
+
+                if (homingDwellTimer.seconds() > homingDwellPeriod) {
+                    homingState = HomingState.finishingHoming;
+                }
+                break;
+
+            case finishingHoming:
+                positionOffset -= minExtension - homingPosition;
+                setControlMode(defaultControlMode);
                 homingState = HomingState.homed;
-            }
+                break;
+
+            case homed:
+                //congratulations
         }
 
-        if (homingState == HomingState.homed) {
-            positionOffset -= minExtension - homingPosition;
-            setControlMode(defaultControlMode);
-        }
     }
 }

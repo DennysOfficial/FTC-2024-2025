@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 
 import java.util.List;
 
-@TeleOp(name = "Harpoon go stab", group = "AB important Testing / main opMode ")
+@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
 //@Disabled
 public class FullTest extends LinearOpMode {
 

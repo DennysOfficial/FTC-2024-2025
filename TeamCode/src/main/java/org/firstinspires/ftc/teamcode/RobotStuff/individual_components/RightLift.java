@@ -24,11 +24,11 @@ public class RightLift extends ControlAxis {
         this.rightPivot = rightPivot;
     }
 
-    public static double gCompMultiplier = 0.1;
+    public static double gCompMultiplier = -0.05;
 
-    public static double Kp = 3;
+    public static double Kp = -3;
     public static double Ki = 0;
-    public static double Kd = 0.03;
+    public static double Kd = -0.06;
 
     public static double staticFrictionCoefficient = 0;
     public static double kineticFrictionCoefficient = 0;
@@ -95,9 +95,9 @@ public class RightLift extends ControlAxis {
 
 
     public RightLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
-        super(defaultControlMode, opMode, config, "RightLift", "inches", 1);
+        super(defaultControlMode, opMode, config, "RightLift", "inches", 38.6/4390.0);
 
-        softLimits = new Range<>(0.5, 34.69);
+        softLimits = new Range<>(0.5, 36.9);
 
         physicalLimits = new Range<>(0.0, Double.POSITIVE_INFINITY);
     }

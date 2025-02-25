@@ -1,19 +1,23 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
 import static java.lang.Math.abs;
-
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+@Config
 public class speedyServos {
     Servo wrist;
+    Servo support;
     OpMode opmode;
     RobotConfig config;
     public static double point = 0.25;
     public static double subEntrance = 0.425;
     public static double pullBack = 0.5;
+    public static double supportHold = 0;
+    public static double supportMove = 0.5;
     public double targetPos = 0;
     public boolean hold = false;
     public boolean inSub = false;
@@ -21,7 +25,7 @@ public class speedyServos {
     public speedyServos(OpMode opmode, RobotConfig config){
         this.opmode = opmode;
         this.config = config;
-        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.wristServo);
+        wrist = opmode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
     }
 
     public void subStuff(int part){
@@ -67,7 +71,12 @@ public class speedyServos {
             wrist.setPosition(pullBack);
         }
     }
-
+    public void support(){
+        support.setPosition(supportHold);
+    }
+    public void supportIntake(){
+        support.setPosition(supportMove);
+    }
     public double getWristPos(){
         return targetPos;
     }

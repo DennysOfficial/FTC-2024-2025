@@ -6,6 +6,7 @@ import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
 public class RightPivot extends ControlAxis {
     RightLift rightLift;
+
 
     public void assignLift(RightLift rightLift) {
         if (rightLift == null)
@@ -28,13 +30,16 @@ public class RightPivot extends ControlAxis {
     }
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = (28.0/150.0)*(1./4.)*(1./3.); // rotations of final over rotations of motor
+    static final double finalGearRatio = (28.0 / 150.0) * (1. / 5.23) * (1. / 5.23); // rotations of final over rotations of motor
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360.0;
 
     static final double extendedLiftPosition = 30;
     public static double extendedGComp = 0.2;
     public static double retractedGComp = 0.05;
+
+    public static double gCompAngleOffset = 0;
+
 
     public static Range<Double> softLimits;
 
@@ -60,7 +65,10 @@ public class RightPivot extends ControlAxis {
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
-        softLimits = new Range<>(-69.0, 97.0);
+        analogEncoder = opMode.hardwareMap.get(AnalogInput.class, config.deviceConfig.rightPivotAnalogEncoder);
+        initialAnalogPosition = analogEncoder.getVoltage();
+
+        softLimits = new Range<>(-60.0, 97.0);
     }
 
     double previousRightLiftTargetPosition = Double.NaN;
@@ -69,10 +77,7 @@ public class RightPivot extends ControlAxis {
         if (rightLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        if (targetPosition == getTargetPosition() && previousRightLiftTargetPosition == (previousRightLiftTargetPosition = rightLift.getTargetPosition()))
-            return;
-
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedExtension + rightLift.getTargetPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (rightLift.retractedExtension + rightLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
@@ -83,14 +88,14 @@ public class RightPivot extends ControlAxis {
 
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0.3;
+    public static double KpRetracted = 0.2;
     public static double KiRetracted = 0.0;
-    public static double KdRetracted = 0.00;
+    public static double KdRetracted = 0.005;
 
     public static double velocityFeedforwardCoefficientExtended = 0;
-    public static double KpExtended = 0.3;
+    public static double KpExtended = 0.2;
     public static double KiExtended = 0.0;
-    public static double KdExtended = 0.004;
+    public static double KdExtended = 0.008;
 
     @Override
     double getKp() {
@@ -137,17 +142,81 @@ public class RightPivot extends ControlAxis {
         return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, rightLift.getPosition() / extendedLiftPosition);
     }
 
+
+    AnalogInput analogEncoder;
+
+    double analogPosition;
+    double analogError;
+    double angleError;
+
+    final double initialAnalogPosition;
+    public static Range<Double> analogEncoderRange = new Range<>(0.0, 3.3);
+
+    static double getAnalogRange() {
+        return analogEncoderRange.getUpper() - analogEncoderRange.getLower();
+    }
+
+    static final double degreesOverAnalog = getAnalogRange() * 360 * (10.0 / 150.0);
+    static final double analogOverDegrees = 1.0 / degreesOverAnalog;
+
+    public static double correctionFactor = 0;
+    double angleCorrection = 0;
+    double correctedAngle;
+
+    double encoderCalculatedAnalogValue;
+
     @Override
     void miscUpdate() {
+        encoderCalculatedAnalogValue = (initialAnalogPosition + analogOverDegrees * (getPosition() + angleCorrection)) % getAnalogRange();
 
-       // unitsPerEncoderCount = 1.0 / (encoderCountsPerDeg * movementScaleMultiplier);
+        analogPosition = analogEncoder.getVoltage();
 
+        analogError = analogPosition - encoderCalculatedAnalogValue;
+
+        if (Math.abs(analogError) > getAnalogRange() * 0.5)
+            analogError = Math.copySign(getAnalogRange(), -analogError) - analogError;
+
+        angleCorrection += analogError * correctionFactor;
+
+        correctedAngle = getPosition() + angleCorrection;
+
+        opMode.telemetry.addLine();
+        opMode.telemetry.addLine();
+        opMode.telemetry.addData("calculated analog value", encoderCalculatedAnalogValue);
+        opMode.telemetry.addData("analog value", analogPosition);
+        opMode.telemetry.addData("analog error", analogError);
+        opMode.telemetry.addData("angle error", angleError = analogError * degreesOverAnalog);
+
+        opMode.telemetry.addLine();
+        opMode.telemetry.addData("angle correction", angleCorrection);
+        opMode.telemetry.addData("correctedAngle", correctedAngle);
+
+        opMode.telemetry.addLine();
+        opMode.telemetry.addLine();
+        opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
+        opMode.telemetry.addData("acceleration comp torque", calculateTorqueAcceleration());
     }
 
     double calculateTorqueGravity(double liftExtension) {
         double interpolationAmount = liftExtension / extendedLiftPosition;
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
-        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+        return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+    }
+
+    double calculateTorqueGravity() {
+        double interpolationAmount = rightLift.getPosition() / extendedLiftPosition;
+        //opMode.telemetry.addData("interpolation amount", interpolationAmount);
+
+        return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+    }
+
+    double calculateTorqueAcceleration() {
+        double accelerationCompCoefficient = MathStuff.lerp(retractedGComp, extendedGComp, rightLift.getPosition() / extendedLiftPosition);
+
+        double accelerationTorque = -config.sensorData.getUpAcceleration() * Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * accelerationCompCoefficient;
+        accelerationTorque -= config.sensorData.getForwardAcceleration() * Math.cos(gCompAngleOffset + Math.toRadians(getPosition())) * accelerationCompCoefficient;
+
+        return accelerationTorque;
     }
 }

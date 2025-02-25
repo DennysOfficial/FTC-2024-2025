@@ -34,19 +34,20 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.SwitchableDrive;
 
 import java.util.List;
 
-@TeleOp(name = "Multi Drive", group = "AC important Testing")
+@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
 //@Disabled
-public class MultiDriveTest extends LinearOpMode {
+public class AnalogThingTest extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -66,11 +67,7 @@ public class MultiDriveTest extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        SwitchableDrive switchableDrive = new SwitchableDrive(this, activeConfig);
-        switchableDrive.addDriveMode(new HeadingPIDSteerTest(this, activeConfig));
-        switchableDrive.addDriveMode(new BasicMechanumDrive(this, activeConfig));
-
-        DriveModeBase activeDriveMode = switchableDrive;
+        AnalogInput analogInput = hardwareMap.get(AnalogInput.class, "E");
 
 
         waitForStart();
@@ -96,12 +93,8 @@ public class MultiDriveTest extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
+            telemetry.addData("thing", analogInput.getVoltage());
 
-            activeDriveMode.updateDrive(deltaTime);
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
-
-            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

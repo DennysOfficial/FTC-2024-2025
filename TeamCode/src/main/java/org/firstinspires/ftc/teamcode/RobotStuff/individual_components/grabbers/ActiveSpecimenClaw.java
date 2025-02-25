@@ -23,8 +23,8 @@ public class ActiveSpecimenClaw {
         this.opmode = opMode;
         this.config = config;
 
-        wristServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.spWristServo);
-        pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.clawServo);
+        wristServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenWristServo);
+        pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenClawServo);
     }
 
     public void basicGampadPinchControl() {

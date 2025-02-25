@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 public class LeftPivot extends ControlAxis {
 
 
-
     LeftLift leftLift;
 
     public void assignLift(LeftLift leftLift) {
@@ -31,13 +30,16 @@ public class LeftPivot extends ControlAxis {
 
 
     static final int encoderCountsPerRevMotor = 28;
-    static final double finalGearRatio = (28.0/150.0)*(1./4.)*(1./3.); // rotations of final over rotations of encoder
+    static final double finalGearRatio = (28.0 / 150.0) * (1. / 3.61) * (1. / 5.23); // rotations of final over rotations of encoder
     static final double encoderCountsPerRevFinal = encoderCountsPerRevMotor / finalGearRatio;
     static final double encoderCountsPerDeg = encoderCountsPerRevFinal / 360;
 
     static final double extendedLiftPosition = 30;
-    public static double extendedGComp = 0.2;
-    public static double retractedGComp = 0.05;
+    public static double extendedGComp = 0.4;
+    public static double retractedGComp = .1;
+
+    public static double gCompAngleOffset = 0.1;
+
 
     @Override
     float getVelocityControlMaxRate() {
@@ -51,7 +53,7 @@ public class LeftPivot extends ControlAxis {
 
     @Override
     protected void addMotors() {
-        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.REVERSE);
+        motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
     }
 
 
@@ -61,16 +63,13 @@ public class LeftPivot extends ControlAxis {
         softLimits = new Range<>(-95.0, 50.0);
     }
 
-    double previousRightLiftTargetPosition = Double.NaN;
+    double previousLeftLiftPosition = Double.NaN;
 
     public void setTargetPosition(double targetPosition) {
         if (leftLift == null)
             throw new NullPointerException("run the assign lift method before setting target position");
 
-        if (targetPosition == getTargetPosition() && previousRightLiftTargetPosition == (previousRightLiftTargetPosition = leftLift.getTargetPosition()))
-            return;
-
-        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (leftLift.retractedRadius + leftLift.getTargetPosition()));
+        double dynamicLowerLimit = -1 * Math.asin(config.getRearExtensionLimitInch() / (leftLift.retractedRadius + leftLift.getPosition()));
         dynamicLowerLimit = Math.toDegrees(dynamicLowerLimit);
         targetPosition = MathUtils.clamp(targetPosition, dynamicLowerLimit, Double.POSITIVE_INFINITY);
 
@@ -81,7 +80,7 @@ public class LeftPivot extends ControlAxis {
 
 
     public static double velocityFeedforwardCoefficientRetracted = 0;
-    public static double KpRetracted = 0.05;
+    public static double KpRetracted = 0.1;
     public static double KiRetracted = 0;
     public static double KdRetracted = 0.0015;
 
@@ -144,6 +143,6 @@ public class LeftPivot extends ControlAxis {
         double interpolationAmount = liftExtension / extendedLiftPosition;
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
-        return Math.sin(Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+        return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
     }
 }

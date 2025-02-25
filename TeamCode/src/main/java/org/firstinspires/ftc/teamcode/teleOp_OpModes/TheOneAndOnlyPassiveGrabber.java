@@ -45,14 +45,15 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuffOld;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One and Only OpMode", group = "AB main opMode")
+@TeleOp(name = "The One And Only Passive Grabber", group = "AB main opMode")
 //@Disabled
-public class TheOneAndOnlyOpMode extends LinearOpMode {
+public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -95,10 +96,11 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
 
-        ClawAndStuffOld leftArmStuff = new ClawAndStuffOld(this,activeConfig,leftLift,otherSpinnyBit);
+        PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
 
 
         speedyServos prayers = new speedyServos(this, activeConfig);
+
 
         waitForStart();
         frameTimer.reset();
@@ -131,7 +133,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                     rightLift.fancyMoveToPosition(0, 0.75);
                 yPre = true;
                 prayers.subStuff(1);
-                prayers.supportIntake();
             }
             if (gamepad1.y && gotSample){
                 if (!spinnyBit.isBusy())
@@ -162,7 +163,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
             }
             if (gamepad1.left_bumper){
                 prayers.Intake();
-                prayers.supportIntake();
                 gotSample = false;
             }
 
@@ -185,7 +185,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
                 }
             }
             if (!spinnyBit.isBusy() && wait){
-                prayers.support();
                 if (!spinnyBit.isBusy())
                     spinnyBit.fancyMoveToPosition(-69, 1);
                 if (!rightLift.isBusy())
@@ -210,8 +209,6 @@ public class TheOneAndOnlyOpMode extends LinearOpMode {
 
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
-            leftArmStuff.updatePincher();
 
             leftLift.update();
             otherSpinnyBit.update();

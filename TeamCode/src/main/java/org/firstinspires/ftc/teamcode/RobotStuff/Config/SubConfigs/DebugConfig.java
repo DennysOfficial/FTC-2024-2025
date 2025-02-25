@@ -40,10 +40,10 @@ public class DebugConfig {
     }
 
 
-    public static boolean controlModeDebug = false;
+    public static boolean stateDebug = false;
 
-    public boolean getControlModeDebug() {
-        return controlModeDebug;
+    public boolean getStateDebug() {
+        return stateDebug;
     }
 
 
@@ -51,6 +51,12 @@ public class DebugConfig {
 
     public boolean getTimeBreakdownDebug() {
         return timeBreakdownDebug;
+    }
+
+    public static boolean analogEncoderDebug = true;
+
+    public boolean getAnalogEncoderDebug() {
+        return analogEncoderDebug;
     }
 
 }
