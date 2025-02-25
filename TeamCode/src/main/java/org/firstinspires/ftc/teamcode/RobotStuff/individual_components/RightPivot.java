@@ -67,7 +67,6 @@ public class RightPivot extends ControlAxis {
 
         analogEncoder = opMode.hardwareMap.get(AnalogInput.class, config.deviceConfig.rightPivotAnalogEncoder);
         initialAnalogPosition = analogEncoder.getVoltage();
-        intialArmAngle = getPosition();
 
         softLimits = new Range<>(-60.0, 97.0);
     }
