@@ -6,8 +6,6 @@ import com.rowanmcalpin.nextftc.ftc.gamepad.Joystick;
 import com.rowanmcalpin.nextftc.ftc.gamepad.JoystickAxis;
 import com.rowanmcalpin.nextftc.ftc.gamepad.Trigger;
 
-import org.jetbrains.annotations.NotNull;
-
 import kotlin.jvm.functions.Function0;
 
 public class playerOne {
@@ -55,14 +53,14 @@ public class playerOne {
     Function0<Boolean> getDpadLeft = () -> gamepad.dpad_left;
     Function0<Boolean> getDpadRight = () -> gamepad.dpad_right;
 
-    public Button dpad_up = new Button(getDpadUp);
-    public Button dpad_down = new Button(getDpadDown);
+    public Button driveModeUp = new Button(getDpadUp);
+    public Button driveModeDown = new Button(getDpadDown);
     public Button abortButton = new Button(getDpadLeft);
     public Button unabortButton = new Button(getDpadRight);
 
     public void update_dpad() {
-        dpad_up.update();
-        dpad_down.update();
+        driveModeUp.update();
+        driveModeDown.update();
         abortButton.update();
         unabortButton.update();
     }
