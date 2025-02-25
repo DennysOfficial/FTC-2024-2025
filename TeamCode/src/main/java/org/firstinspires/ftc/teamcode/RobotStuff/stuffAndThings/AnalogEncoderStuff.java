@@ -46,6 +46,7 @@ public class AnalogEncoderStuff {
         analogEncoderCalculatedAngle = analogPosition * analogToDegrees;
 
         if (config.debugConfig.getAnalogEncoderDebug()) {
+            opMode.telemetry.addLine();
             opMode.telemetry.addData(instanceName + " reading", analogEncoderLastPosition);
             opMode.telemetry.addData(instanceName + " count", analogEncoderRotationCount);
             opMode.telemetry.addData(instanceName + " calculated analog position", analogPosition);

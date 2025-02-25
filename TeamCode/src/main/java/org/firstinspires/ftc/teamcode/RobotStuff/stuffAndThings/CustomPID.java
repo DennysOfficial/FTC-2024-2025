@@ -57,6 +57,7 @@ public class CustomPID {
 
 
         if (config.debugConfig.getPIDDebug()) {
+            telemetry.addLine();
             telemetry.addData(instanceName + " " + "error", error);
             telemetry.addData(instanceName + " " + "value", actualValue);
             telemetry.addData(instanceName + " " + "target", targetValue);

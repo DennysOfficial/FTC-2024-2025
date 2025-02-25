@@ -176,11 +176,14 @@ public class RightPivot extends ControlAxis {
 
         correctedAngle = getPosition() + angleCorrection;
 
+        opMode.telemetry.addLine();
+        opMode.telemetry.addLine();
         opMode.telemetry.addData("calculated analog value", encoderCalculatedAnalogValue);
         opMode.telemetry.addData("analog value", analogPosition);
         opMode.telemetry.addData("analog error", analogError);
         opMode.telemetry.addData("angle error", angleError = analogError * degreesOverAnalog);
 
+        opMode.telemetry.addLine();
         opMode.telemetry.addData("angle correction", angleCorrection);
         opMode.telemetry.addData("correctedAngle", correctedAngle);
 
@@ -188,6 +191,8 @@ public class RightPivot extends ControlAxis {
 
     @Override
     void miscUpdate() {
+        opMode.telemetry.addLine();
+        opMode.telemetry.addLine();
         opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
         opMode.telemetry.addData("acceleration comp torque", calculateTorqueAcceleration());
     }
