@@ -49,36 +49,39 @@ public class UKF_Localization {
     }
 
 
+
+
+
     public void predict(double dt, double imuTheta, double imuOmega) {
         generateSigmaPoints();
 
         for (int i = 0; i < SIGMA_POINT_COUNT; i++) {
-            double x = sigmaPoints.get(0, i);
-            double y = sigmaPoints.get(1, i);
-            double theta = sigmaPoints.get(2, i);
-            double v = sigmaPoints.get(3, i);
-            double omega = sigmaPoints.get(4, i);
-
-            // Update theta using IMU if available
-            theta = imuTheta;
-            omega = imuOmega;
-
-            if (Math.abs(omega) > 1e-5) {
-                x += (v / omega) * (Math.sin(theta + omega * dt) - Math.sin(theta));
-                y += (v / omega) * (Math.cos(theta) - Math.cos(theta + omega * dt));
-            } else {
-                x += v * Math.cos(theta) * dt;
-                y += v * Math.sin(theta) * dt;
-            }
-            theta += omega * dt;
-
-            sigmaPoints.set(0, i, x);
-            sigmaPoints.set(1, i, y);
-            sigmaPoints.set(2, i, theta);
+            SimpleMatrix newSigma = stateTransition(sigmaPoints.extractVector(false, i), dt, imuOmega, imuTheta);
+            sigmaPoints.insertIntoThis(0, i, newSigma);
         }
+
 
         computeMeanAndCovariance();
     }
+
+    private SimpleMatrix stateTransition(SimpleMatrix sigmaPoint, double dt, double imuOmega, double imuTheta) {
+            double x = sigmaPoint.get(0);
+            double y = sigmaPoint.get(1);
+            double theta = sigmaPoint.get(2);
+            double v_x = sigmaPoint.get(3);
+            double v_y = sigmaPoint.get(4);
+            double omega = sigmaPoint.get(5);
+
+            // If IMU is available, use its readings
+
+            // Predict new state using kinematic model
+            x += v_x * dt;
+            y += v_y * dt;
+            theta += omega * dt;
+
+            return new SimpleMatrix(new double[][]{ {x}, {y}, {theta}, {v_x}, {v_y}, {omega} });
+        }
+
 
 
     private void computeMeanAndCovariance() {
