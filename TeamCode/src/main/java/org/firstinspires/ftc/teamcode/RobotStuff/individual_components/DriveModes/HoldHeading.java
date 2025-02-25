@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMod
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
@@ -12,12 +11,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 @Config
 public class HoldHeading extends DriveModeBase {
 
-    public static double turnFeedforwardCoefficient = 0.02;
-    public static double Kp = 0;
-    public static double Ki = 0;
-    public static double Kd = 0;
-    double sumIntegral = 0;
-    private double lastError = 0;
+    public static double kP = 0;
+    public static double kI = 0;
+    public static double kD = 0;
 
     CustomPID HeadingPID;
     IMU imu;
@@ -50,6 +46,7 @@ public class HoldHeading extends DriveModeBase {
 
         telemetryAngleVelocity();
 
+        HeadingPID.setCoefficients(kP, kI, kD);
 
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
