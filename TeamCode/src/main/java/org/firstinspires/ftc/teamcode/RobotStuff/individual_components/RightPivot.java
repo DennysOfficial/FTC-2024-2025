@@ -188,7 +188,8 @@ public class RightPivot extends ControlAxis {
 
     @Override
     void miscUpdate() {
-
+        opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
+        opMode.telemetry.addData("acceleration comp torque", calculateTorqueAcceleration());
     }
 
     double calculateTorqueGravity(double liftExtension) {
@@ -196,5 +197,21 @@ public class RightPivot extends ControlAxis {
         //opMode.telemetry.addData("interpolation amount", interpolationAmount);
 
         return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+    }
+
+    double calculateTorqueGravity() {
+        double interpolationAmount = rightLift.getPosition() / extendedLiftPosition;
+        //opMode.telemetry.addData("interpolation amount", interpolationAmount);
+
+        return Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * MathStuff.lerp(retractedGComp, extendedGComp, interpolationAmount);
+    }
+
+    double calculateTorqueAcceleration() {
+        double accelerationCompCoefficient = MathStuff.lerp(retractedGComp, extendedGComp, rightLift.getPosition() / extendedLiftPosition);
+
+        double accelerationTorque = -config.sensorData.getUpAcceleration() * Math.sin(gCompAngleOffset + Math.toRadians(getPosition())) * accelerationCompCoefficient;
+        accelerationTorque -= config.sensorData.getForwardAcceleration() * Math.cos(gCompAngleOffset + Math.toRadians(getPosition())) * accelerationCompCoefficient;
+
+        return accelerationTorque;
     }
 }
