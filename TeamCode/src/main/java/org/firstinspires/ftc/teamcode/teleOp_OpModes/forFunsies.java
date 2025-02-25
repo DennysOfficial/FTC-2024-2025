@@ -40,8 +40,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxisTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftTEST;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.PivotTEST;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabberTEST;
@@ -49,9 +51,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "new pid applied to drivetrain + controlaxis", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "new pid applied to controlaxis only", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
-public class funnyPidStuff extends LinearOpMode {
+public class forFunsies extends LinearOpMode {
 
     public static boolean driver2PresetsEnabled = false;
 
@@ -77,7 +79,7 @@ public class funnyPidStuff extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        DriveModeBase activeDriveMode = new HoldHeading(this, activeConfig);
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
 
         LiftTEST lift = new LiftTEST(ControlAxisTEST.ControlMode.gamePadVelocityControl, this, activeConfig);

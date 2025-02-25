@@ -39,19 +39,19 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxisTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HoldHeading;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LiftTEST;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.PivotTEST;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabberTEST;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "new pid applied to drivetrain + controlaxis", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "new pid applied to drivetrain only", group = "Test OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
-public class funnyPidStuff extends LinearOpMode {
+public class funnyPidStuff2 extends LinearOpMode {
 
     public static boolean driver2PresetsEnabled = false;
 
@@ -80,15 +80,15 @@ public class funnyPidStuff extends LinearOpMode {
         DriveModeBase activeDriveMode = new HoldHeading(this, activeConfig);
 
 
-        LiftTEST lift = new LiftTEST(ControlAxisTEST.ControlMode.gamePadVelocityControl, this, activeConfig);
+        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
-        PivotTEST spinnyBit = new PivotTEST(ControlAxisTEST.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
+        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
 
         spinnyBit.assignLift(lift);
         lift.assignPivot(spinnyBit);
 
 
-        PassiveGrabberTEST grabber = new PassiveGrabberTEST(this, activeConfig, lift, spinnyBit);
+        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, lift, spinnyBit);
 
         imu = hardwareMap.get(IMU.class, "imu");
 
@@ -166,12 +166,12 @@ public class funnyPidStuff extends LinearOpMode {
 
 
             // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxisTEST.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
 
-                spinnyBit.setControlMode(ControlAxisTEST.ControlMode.gamePadTorqueControl);
+                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
                 spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxisTEST.ControlMode.gamePadTorqueControl)
+            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
                 spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
