@@ -9,7 +9,7 @@ import java.util.List;
 
 public class DriveSwitch {
 
-    List<DriveModeBase> driveModes = new ArrayList<>();
+    private List<DriveModeBase> driveModes = new ArrayList<>();
 
     DriveModeBase defaultDriveMode = driveModes[0];
 
