@@ -11,7 +11,9 @@ public class DriveSwitch {
 
     private List<DriveModeBase> driveModes = new ArrayList<>();
 
-    DriveModeBase defaultDriveMode = driveModes[0];
+    private int activeDriveIndex = 0;
+    private DriveModeBase activeDrive;
+    private String activeDriveName;
 
     OpMode opmode;
     RobotConfig config;
@@ -19,9 +21,15 @@ public class DriveSwitch {
     public DriveSwitch(OpMode opmode, RobotConfig config) {
         this.opmode = opmode;
         this.config = config;
-        DriveModeBase defaultDriveMode = driveModes[0];
+        DriveModeBase defaultDriveMode = driveModes.get(0);
     }
     public void addDriveMode(DriveModeBase driveMode) {
+        driveModes.add(driveMode);
+        activeDrive = driveMode;
+
+    }
+
+    public void setActiveDrive(DriveModeBase activateDriveMode) {
 
     }
 }
