@@ -111,6 +111,8 @@ public class Auto_Test_05Z_noLift extends OpMode{
     public void buildPaths() {
         score1 = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(new Point(startPose), rungPoint1a)))
+                .setPathEndTimeoutConstraint(100)
+                .setPathEndVelocityConstraint(0.15)
                 .build();
 
         toSample1 = new Path(new BezierCurve(rungPoint1, samplecurvepoint1, samplecurvepoint2, samplepoint1));
@@ -164,7 +166,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toline3)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(2)
+                .setZeroPowerAccelerationMultiplier(3)
                 .build();
 
         score2 = follower.pathBuilder()
