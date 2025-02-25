@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.CustomPID;
 
@@ -28,7 +29,6 @@ public class HoldHeading extends DriveModeBase {
         super(opMode, config);
         HeadingPID = new CustomPID(opMode.telemetry, config, "HeadingPID");
         imu = opMode.hardwareMap.get(IMU.class, "imu");
-        targetHeading = getHeadingDeg();
     }
 
     double getHeadingDeg() {
@@ -48,16 +48,26 @@ public class HoldHeading extends DriveModeBase {
 
         telemetryAngleVelocity();
 
+        AngularVelocity angularVelocity = imu.getRobotAngularVelocity(AngleUnit.RADIANS);
+
+        double yawVelocity = angularVelocity.zRotationRate;
+
         HeadingPID.setCoefficients(kP, kI, kD);
 
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
-        double turn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
-        targetRad = Math.toRadians(0);
+        double normTurn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
+        double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
+        double turn = 0;
+        targetRad = Math.toRadians(targetHeading);
 
-        if (!config.playerOne.turnAxis.getState()) {
-            turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
+        if (config.playerOne.turnAxis.getState()) {
+            turn = normTurn;
+            updateHeading();
+        } else if (yawVelocity < 0.1 & yawVelocity > -0.1){
+            turn = PIDturn;
         }
+
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
@@ -65,7 +75,6 @@ public class HoldHeading extends DriveModeBase {
         motorPowers[3] = drive + strafe - turn;    // back right
 
         motorPowers = normalizeArrayKinda(motorPowers);
-
 
         // Send calculated power to wheels
         frontLeftDrive.setPower(motorPowers[0] * config.sensitivities.getDriveSensitivity());
@@ -88,5 +97,8 @@ public class HoldHeading extends DriveModeBase {
         return inputArray;
     }
 
+    public void updateHeading() {
+        targetHeading = getHeadingDeg();
+    }
 
 }
