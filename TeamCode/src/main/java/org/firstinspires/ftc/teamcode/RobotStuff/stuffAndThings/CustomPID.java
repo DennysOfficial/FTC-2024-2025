@@ -5,9 +5,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class CustomPID {
 
-    double kP = 0;
-    double kI = 0;
-    double kD = 0;
+    public double kP = 0;
+    public double kI = 0;
+    public double kD = 0;
 
     double P = 0;
     double I = 0;

@@ -6,6 +6,7 @@ import androidx.core.math.MathUtils;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -15,6 +16,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
 public class RightPivot extends ControlAxis {
     RightLift rightLift;
+
 
     public void assignLift(RightLift rightLift) {
         if (rightLift == null)
@@ -62,6 +64,10 @@ public class RightPivot extends ControlAxis {
 
     public RightPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
+
+        analogEncoder = opMode.hardwareMap.get(AnalogInput.class, config.deviceConfig.rightPivotAnalogEncoder);
+        initialAnalogPosition = analogEncoder.getVoltage();
+        intialArmAngle = getPosition();
 
         softLimits = new Range<>(-60.0, 97.0);
     }
@@ -137,10 +143,52 @@ public class RightPivot extends ControlAxis {
         return MathStuff.lerp(velocityFeedforwardCoefficientRetracted, velocityFeedforwardCoefficientExtended, rightLift.getPosition() / extendedLiftPosition);
     }
 
+
+    AnalogInput analogEncoder;
+
+    double analogPosition;
+    double analogError;
+    double angleError;
+
+    final double initialAnalogPosition;
+    public static Range<Double> analogEncoderRange = new Range<>(0.0, 3.3);
+
+    static double getAnalogRange() {
+        return analogEncoderRange.getUpper() - analogEncoderRange.getLower();
+    }
+
+    static final double degreesOverAnalog = getAnalogRange() * 360 * (10.0 / 150.0);
+    static final double analogOverDegrees = 1.0 / degreesOverAnalog;
+
+    public static double correctionFactor = 0;
+    double angleCorrection = 0;
+    double correctedAngle;
+
+    double encoderCalculatedAnalogValue;
+
+    public void calculatePredictedAnalogPosition() {
+        encoderCalculatedAnalogValue = (initialAnalogPosition + analogOverDegrees * getPosition()) % getAnalogRange();
+
+        analogPosition = analogEncoder.getVoltage();
+
+        analogError = analogPosition - encoderCalculatedAnalogValue;
+
+        angleCorrection += analogError * correctionFactor;
+
+        correctedAngle = getPosition() + angleCorrection;
+
+        opMode.telemetry.addData("calculated analog value", encoderCalculatedAnalogValue);
+        opMode.telemetry.addData("analog value", analogPosition);
+        opMode.telemetry.addData("analog error", analogError);
+        opMode.telemetry.addData("angle error", angleError = analogError * degreesOverAnalog);
+
+        opMode.telemetry.addData("angle correction", angleCorrection);
+        opMode.telemetry.addData("correctedAngle", correctedAngle);
+
+    }
+
     @Override
     void miscUpdate() {
-
-        // unitsPerEncoderCount = 1.0 / (encoderCountsPerDeg * movementScaleMultiplier);
 
     }
 

@@ -24,6 +24,8 @@ public class DeviceConfig {
     public final String leftPivot = "PivotL";
     public final String rightPivot = "PivotR";
 
+    public final String rightPivotAnalogEncoder = "E";
+
 
     public final String leftLift = "LiftL";
 
