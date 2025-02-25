@@ -58,13 +58,13 @@ public class HoldHeading extends DriveModeBase {
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
         double normTurn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
         double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
-        double turn = 0;
+        double turn;
         targetRad = Math.toRadians(targetHeading);
 
-        if (config.playerOne.turnAxis.getState()) {
+        if (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1)) {
             turn = normTurn;
             updateHeading();
-        } else if (yawVelocity < 0.1 & yawVelocity > -0.1){
+        } else {
             turn = PIDturn;
         }
 
