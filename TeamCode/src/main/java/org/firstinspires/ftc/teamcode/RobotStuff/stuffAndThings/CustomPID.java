@@ -110,8 +110,8 @@ public class CustomPID {
 
     public void yawTelemetry(double error, double derivative, double targetPos, double currentPos, double lastError) {
         telemetry.addData("error:", error);
-        telemetry.addData("target pos:", targetPos);
-        telemetry.addData("current pos:", currentPos);
+        telemetry.addData("target radians:", targetPos);
+        telemetry.addData("current radians:", currentPos);
         telemetry.addData("derivative:", derivative);
         telemetry.addData("last error:", lastError);
         telemetry.addData("P:", P);
