@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
 public class CustomPID {
@@ -49,7 +52,11 @@ public class CustomPID {
         integralSum += error * deltaTime;
         double derivative = (error - lastError) / deltaTime;
         lastError = error;
-        return (error * kP) + (derivative * kD) + (integralSum * kI);
+        P = (error * kP);
+        I = (integralSum * kI);
+        D = (derivative * kD);
+        yawTelemetry(error, derivative, targetPos, currentPos, lastError);
+        return P + I + D;
     }
 
 
@@ -99,6 +106,17 @@ public class CustomPID {
         }
 
         return radians;
+    }
+
+    public void yawTelemetry(double error, double derivative, double targetPos, double currentPos, double lastError) {
+        telemetry.addData("error:", error);
+        telemetry.addData("target pos:", targetPos);
+        telemetry.addData("current pos:", currentPos);
+        telemetry.addData("derivative:", derivative);
+        telemetry.addData("last error:", lastError);
+        telemetry.addData("P:", P);
+        telemetry.addData("I:", I);
+        telemetry.addData("D:", D);
     }
 
 }

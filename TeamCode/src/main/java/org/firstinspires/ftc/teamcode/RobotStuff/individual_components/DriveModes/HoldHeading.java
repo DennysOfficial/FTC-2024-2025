@@ -15,6 +15,10 @@ public class HoldHeading extends DriveModeBase {
     public static double kI = 0;
     public static double kD = 0;
 
+    double[] telemData = new double[8];
+
+    double targetRad;
+
     CustomPID HeadingPID;
     IMU imu;
 
@@ -50,14 +54,8 @@ public class HoldHeading extends DriveModeBase {
 
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
-        double turn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
-
-        if (!config.playerOne.turnAxis.getState()) {//config.playerOne.turnAxis.getState() returns true if the joystick is being moved- this inverts it to false, so the
-            double targetRad = Math.toRadians(getHeadingDeg());//code only runs when the joystick is not moved- otherwise the robot would autocorrect even if we want to turn
-            turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
-        }
-
-
+        targetRad = Math.toRadians(0);
+        double turn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
