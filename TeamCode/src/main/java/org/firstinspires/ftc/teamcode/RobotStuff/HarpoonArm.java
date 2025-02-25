@@ -45,12 +45,12 @@ public class HarpoonArm {
 
     public static double grabPosition = 0;
 
-    public static double ObservationDepositArmAngle = -60;
-    public static double ObservationWristPosition = 0.2;
+    public static double ObservationDepositArmAngle = -40;
+    public static double ObservationWristPosition = 0.8;
     public static double ObservationDepositLiftPosition = 0;
 
     public static double HighBasketDepositArmAngle = -20;
-    public static double HighBasketWristPosition = 1;
+    public static double HighBasketWristPosition = .8;
     public static double HighBasketDepositLiftPosition = 30;
 
 
