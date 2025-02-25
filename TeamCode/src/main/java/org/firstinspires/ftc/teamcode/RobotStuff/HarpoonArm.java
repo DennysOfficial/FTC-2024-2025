@@ -46,7 +46,7 @@ public class HarpoonArm {
     public static double grabPosition = 0;
 
     public static double ObservationDepositArmAngle = -60;
-    public static double ObservationWristPosition = 0.5;
+    public static double ObservationWristPosition = 0.2;
     public static double ObservationDepositLiftPosition = 0;
 
     public static double HighBasketDepositArmAngle = -20;
@@ -63,7 +63,7 @@ public class HarpoonArm {
      */
     public static double intakeLiftExtension = 0;
     public static double intakeTorque = 0.4;
-    public static double IntakeWristPosition = 0.3;
+    public static double IntakeWristPosition = 0.2;
     public static double clawTriggerHeightOffsetExtended = 2.7;
     public static double clawTriggerHeightOffsetRetracted = 2.7;
     double interpolationExtendedLiftDistance = 20;

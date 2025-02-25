@@ -16,7 +16,7 @@ public class Harpoon {
     Servo hba;
     RobotConfig config;
 
-    public static double openPos = .35, closePos = 0.69;
+    public static double openPos = .3, closePos = 0.69;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
