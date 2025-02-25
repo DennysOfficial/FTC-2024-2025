@@ -15,8 +15,6 @@ public class HoldHeading extends DriveModeBase {
     public static double kI = 0;
     public static double kD = 0;
 
-    double[] telemData = new double[8];
-
     double targetRad;
 
     CustomPID HeadingPID;

@@ -33,7 +33,7 @@ public class DriveSwitch extends DriveModeBase{
 
     @Override
     public void updateDrive(double deltaTime) {
-        if (config.playerOne.driveModeUp.getRisingState()) { // if there are two drive modes, drivemodes.size = 2 and index options are 0 and 1
+        if (config.playerOne.driveModeUp.getRisingState()) {
             activeDriveIndex = (activeDriveIndex + 1 == driveModes.size()) ? 0 : activeDriveIndex + 1;
         }
 
