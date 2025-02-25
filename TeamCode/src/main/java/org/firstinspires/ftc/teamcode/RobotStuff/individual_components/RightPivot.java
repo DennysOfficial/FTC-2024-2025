@@ -165,12 +165,16 @@ public class RightPivot extends ControlAxis {
 
     double encoderCalculatedAnalogValue;
 
-    public void calculatePredictedAnalogPosition() {
-        encoderCalculatedAnalogValue = (initialAnalogPosition + analogOverDegrees * getPosition()) % getAnalogRange();
+    @Override
+    void miscUpdate() {
+        encoderCalculatedAnalogValue = (initialAnalogPosition + analogOverDegrees * (getPosition() + angleCorrection)) % getAnalogRange();
 
         analogPosition = analogEncoder.getVoltage();
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
+
+        if (Math.abs(analogError) > getAnalogRange() * 0.5)
+            analogError = Math.copySign(getAnalogRange(), -analogError) - analogError;
 
         angleCorrection += analogError * correctionFactor;
 
@@ -187,10 +191,6 @@ public class RightPivot extends ControlAxis {
         opMode.telemetry.addData("angle correction", angleCorrection);
         opMode.telemetry.addData("correctedAngle", correctedAngle);
 
-    }
-
-    @Override
-    void miscUpdate() {
         opMode.telemetry.addLine();
         opMode.telemetry.addLine();
         opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
