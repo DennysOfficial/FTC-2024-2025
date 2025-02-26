@@ -44,6 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveSwitch;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.TankDrive;
@@ -86,6 +87,8 @@ public class DriveSwitchTest extends LinearOpMode {
         vroom.addDriveMode(new BasicMechanumDrive(this, activeConfig));
         vroom.addDriveMode(new NextFTCDrive(this, activeConfig));
         vroom.addDriveMode(new TankDrive(this, activeConfig));
+
+        DriveModeBase activeDriveMode = vroom;
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
