@@ -23,7 +23,9 @@ public class HoldHeading extends DriveModeBase {
 
     double[] motorPowers = new double[4];
 
+    boolean useNormTurn;
     double targetHeading;
+    double turn;
 
     public HoldHeading(OpMode opMode, RobotConfig config) {
         super(opMode, config);
@@ -52,33 +54,24 @@ public class HoldHeading extends DriveModeBase {
 
         double yawVelocity = angularVelocity.zRotationRate;
 
+        boolean hasExcessVelocity = (!config.playerOne.turnAxis.getState() && useNormTurn);
+
+        boolean hasVelocity = (yawVelocity > 0.1 || yawVelocity < -0.1);
+
         HeadingPID.setCoefficients(kP, kI, kD);
 
         double strafe = config.playerOne.strafeAxis.getValue() * config.sensitivities.getStrafingSensitivity();
         double drive = config.playerOne.forwardAxis.getValue() * config.sensitivities.getForwardSensitivity();
         double normTurn = config.playerOne.turnAxis.getValue() * config.sensitivities.getTurningSensitivity();
         double PIDturn = HeadingPID.lockYaw(targetRad, imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS), deltaTime);
-        double turn;
         targetRad = Math.toRadians(targetHeading);
 
-        if (config.playerOne.turnAxis.getState() || yawVelocity > 0.1 || yawVelocity < -0.1) {
-            turn = normTurn;
-            updateHeading();
-        } else {
-            turn = PIDturn;
-        }
+        if (config.playerOne.turnAxis.getState()) {useNormTurn = true;}
+        if (hasExcessVelocity && !hasVelocity) {useNormTurn = false;}
 
-        opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || yawVelocity > 0.1 || yawVelocity < -0.1));
-        //                                                          expected | actual
-        // while rotating:                                              true | na
-        // stick is let go, but robot still is rotating:                true | na
-        // while stationary or only moving forwards/backward/strafing: false | na
+        if (useNormTurn) {turn = normTurn; updateHeading();} else {turn = PIDturn;}
 
-        // data from opMode.telemetry.addData("using raw turn values:", (config.playerOne.turnAxis.getState() || (yawVelocity < 0.1 & yawVelocity > -0.1)));
-        //                                                          expected | actual
-        // while rotating:                                              true | true
-        // stick is let go, but robot still is rotating:                true | false
-        // while stationary or only moving forwards/backward/strafing: false | true
+        opMode.telemetry.addData("using raw turn values:", useNormTurn);
 
         motorPowers[0] = drive + strafe + turn;    // Front Left
         motorPowers[1] = drive - strafe - turn;    // front right
