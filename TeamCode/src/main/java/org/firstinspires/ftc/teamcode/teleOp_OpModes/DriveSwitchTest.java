@@ -80,9 +80,6 @@ public class DriveSwitchTest extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        assert activeConfig.playerOne != null; // i don't like yellow lines
-        assert activeConfig.playerTwo != null;
-
         DriveSwitch vroom = new DriveSwitch(this, activeConfig);
         vroom.addDriveMode(new BasicMechanumDrive(this, activeConfig));
         vroom.addDriveMode(new NextFTCDrive(this, activeConfig));
