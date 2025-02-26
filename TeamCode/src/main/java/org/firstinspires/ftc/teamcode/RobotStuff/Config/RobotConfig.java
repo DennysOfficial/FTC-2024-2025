@@ -53,8 +53,8 @@ public class RobotConfig {
     }
 
     public RobotConfig(HardwareMap hardwareMap) {
-        this.playerOne = null;
-        this.playerTwo = null;
+        playerOne = null;
+        playerTwo = null;
         this.opMode = null;
         sensorData = new SensorData(hardwareMap);
     }
