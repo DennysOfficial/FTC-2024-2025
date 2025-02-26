@@ -81,6 +81,7 @@ public class OPBLOB {
         //AllSampleGobalPositons.forEach(component -> opMode.telemetry.addLine(component.toString()));
         BSample.difference();
         BSample.deepCopy.forEach(component -> opMode.telemetry.addLine(component.toString()));
+        BSample.sort();
 
 
 

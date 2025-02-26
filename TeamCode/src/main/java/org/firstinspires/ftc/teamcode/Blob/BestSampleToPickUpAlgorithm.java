@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BestSampleToPickUpAlgorithm {
@@ -68,7 +69,23 @@ public class BestSampleToPickUpAlgorithm {
                 }
             }
         }
+
     }
+
+    public void sort(){
+        for (int i = 0; i < deepCopy.size() - 1; i++) {
+            for (int j = 0; j < deepCopy.size() - i - 1; j++) {
+                if (deepCopy.get(j).getX(DistanceUnit.INCH) > deepCopy.get(j + 1).getX(DistanceUnit.INCH)) {
+                    // Swap deepCopy[j] and deepCopy[j+1]
+                    Pose2D temp = deepCopy.get(j);
+                    deepCopy.set(j, deepCopy.get(j + 1));
+                    deepCopy.set(j + 1, temp);
+                }
+            }
+        }
+    }
+
+
 
 
 
