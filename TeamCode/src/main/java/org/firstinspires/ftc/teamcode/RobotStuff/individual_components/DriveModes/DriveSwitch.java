@@ -40,7 +40,7 @@ public class DriveSwitch extends DriveModeBase{
 
         setActiveDrive(activeDriveIndex);
 
-        opmode.telemetry.addData("Drive Mode", modeName);
+        opMode.telemetry.addData("Drive Mode", modeName);
 
         activeDrive.updateDrive(deltaTime);
     }
