@@ -35,11 +35,11 @@ public class Auto_Test_05Z_noLift extends OpMode{
     private final Pose startPose = new Pose(9,67.5, Math.toRadians(0));  // This is where the robot starts
 
     //Points of Interest
-    Point rungPoint1 = new Point(33.5, 67.5, Point.CARTESIAN);
-    Point rungPoint2 = new Point(33.5, 66, Point.CARTESIAN);
-    Point rungPoint3 = new Point(33.5, 64.5, Point.CARTESIAN);
-    Point rungPoint4 = new Point(33.5, 69, Point.CARTESIAN);
-    Point rungPoint5 = new Point(33.5, 70.5, Point.CARTESIAN);
+    Point rungPoint1 = new Point(30, 67.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(30, 66, Point.CARTESIAN);
+    Point rungPoint3 = new Point(30, 64.5, Point.CARTESIAN);
+    Point rungPoint4 = new Point(30, 69, Point.CARTESIAN);
+    Point rungPoint5 = new Point(30, 70.5, Point.CARTESIAN);
     Point rungPoint1a = new Point(25, 67.5, Point.CARTESIAN);
     Point rungPoint2a = new Point(25, 66, Point.CARTESIAN);
     Point rungPoint3a = new Point(25, 64.5, Point.CARTESIAN);
@@ -82,6 +82,14 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
     int listPointer = 0;
 
+    LeftLift leftLift;
+    LeftPivot leftPivot;
+    ActiveIntakeMotor intake;
+
+    RightLift rightLift;
+    RightPivot rightPivot;
+    ActiveSpecimenClaw grabber;
+
     @Override
     public void init() {
 
@@ -98,12 +106,37 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
         config = new RobotConfig(this);
 
+        leftLift = new LeftLift(ControlAxis.ControlMode.positionControl,this, config);
+        leftPivot = new LeftPivot(ControlAxis.ControlMode.positionControl,this, config);
+        intake = new ActiveIntakeMotor(this, config);
+
+        rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
+        rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
+        grabber = new ActiveSpecimenClaw(this, config, leftLift, leftPivot);
+
+        leftLift.assignPivot(leftPivot);
+        leftPivot.assignLift(leftLift);
+
+        rightLift.assignPivot(rightPivot);
+        rightPivot.assignLift(rightLift);
+
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+
+        rightLift.setTargetPosition(0);
+        rightPivot.setTargetPosition(-60);
+        grabber.Collect();
+        leftLift.setTargetPosition(0);
+        leftPivot.setTargetPosition(-55);
+        grabber.closeClawHard();
     }
 
     @Override
     public void init_loop() {
+        leftLift.update();
+        leftPivot.update();
+        rightLift.update();
+        rightPivot.update();
     }
 
 
@@ -131,6 +164,10 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    grabber.Collect();
+                    grabber.openClaw();
+                })
                 .build();
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
@@ -138,6 +175,10 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    grabber.Collect();
+                    grabber.openClaw();
+                })
                 .build();
         score4a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
@@ -145,17 +186,24 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    grabber.Collect();
+                    grabber.openClaw();
+                })
                 .build();
         score5a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint5a, rungPoint5)))
-                .addPath(new Path(new BezierLine(rungPoint5, pickupPoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(1, () -> {
+                    grabber.Collect();
+                    grabber.openClaw();
+                })
                 .build();
 
         moveSamples = follower.pathBuilder()
                 .addPath(score1a)
                 .addPath(toSample1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
+                .addParametricCallback(0, () -> grabber.Collect())
                 .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toSample2)
@@ -225,7 +273,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 listPointer = 1;
                 break;
             case 1:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(moveSamples);
                     listPointer = 2;
                 }
@@ -233,24 +281,27 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 if (!follower.isBusy()) {
                     listPointer = 3;
                     pathTimer.resetTimer();
+                    grabber.closeClawHard();
                 }
                 break;
             case 3:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    if (1 == 1) {
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score2);
                         listPointer = 4;
                     }
                 }
                 break;
             case 4:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score2a);
                     listPointer = 5;
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect3);
                     listPointer = 6;
                 }
@@ -258,24 +309,27 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 if (!follower.isBusy()) {
                     listPointer = 7;
                     pathTimer.resetTimer();
+                    grabber.closeClawHard();
                 }
                 break;
             case 7:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score3);
                         listPointer = 8;
-
+                    }
                 }
                 break;
             case 8:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score3a);
                     listPointer = 9;
                 }
                 break;
             case 9:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect4);
                     listPointer = 10;
                 }
@@ -283,24 +337,27 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 if (!follower.isBusy()) {
                     listPointer = 11;
                     pathTimer.resetTimer();
+                    grabber.closeClawHard();
                 }
                 break;
             case 11:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score4);
                         listPointer = 12;
-
+                    }
                 }
                 break;
             case 12:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score4a);
                     listPointer = 13;
                 }
                 break;
             case 13:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect5);
                     listPointer = 14;
                 }
@@ -308,24 +365,27 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 if (!follower.isBusy()) {
                     listPointer = 15;
                     pathTimer.resetTimer();
+                    grabber.closeClawHard();
                 }
                 break;
             case 15:
                 if (!follower.isBusy()) {
                     listPointer = 16;
                     pathTimer.resetTimer();
+                    grabber.closeClawHard();
                 }
                 break;
             case 16:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-
+                    grabber.Score();
+                    if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score5);
                         listPointer = 17;
-
+                    }
                 }
                 break;
             case 17:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && leftPivot.getPosition() >= 34 && leftLift.getPosition() >= 11) {
                     follower.followPath(score5a);
                     listPointer = 18;
                 }
@@ -345,6 +405,11 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
         routine();
         follower.update();
+        leftLift.update();
+        leftPivot.update();
+        rightLift.update();
+        rightPivot.update();
+        intake.update();
 
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
@@ -360,6 +425,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
     public void start() {
         buildPaths();
         pathTimer.resetTimer();
+        grabber.Score();
 
         deltaTime = 0;
         frameTimer.reset();
