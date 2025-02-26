@@ -15,9 +15,6 @@ public class DriveSwitch extends DriveModeBase{
     private DriveModeBase activeDrive;
     private String modeName;
 
-    OpMode opmode;
-    RobotConfig config;
-
     public DriveSwitch(OpMode opmode, RobotConfig config) {
         super(opmode, config);
     }
