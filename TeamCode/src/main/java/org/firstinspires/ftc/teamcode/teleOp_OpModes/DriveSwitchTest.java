@@ -198,7 +198,7 @@ public class DriveSwitchTest extends LinearOpMode {
             spinnyBit.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
-            vroom.updateDrive(deltaTime);
+            activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));
