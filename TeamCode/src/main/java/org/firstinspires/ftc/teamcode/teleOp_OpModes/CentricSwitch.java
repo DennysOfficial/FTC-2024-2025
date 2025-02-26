@@ -44,6 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveSwitch;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.FieldCentricDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
@@ -55,7 +56,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Robot / Field Centric", group = "OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "Field Centric", group = "OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
 public class CentricSwitch extends LinearOpMode {
 
@@ -83,9 +84,7 @@ public class CentricSwitch extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        DriveSwitch vroom = new DriveSwitch(this, activeConfig);
-        vroom.addDriveMode(new FieldCentricDrive(this, activeConfig));
-        vroom.addDriveMode(new NextFTCDrive(this, activeConfig));
+        DriveModeBase vroom = new FieldCentricDrive(this, activeConfig);
 
         Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
