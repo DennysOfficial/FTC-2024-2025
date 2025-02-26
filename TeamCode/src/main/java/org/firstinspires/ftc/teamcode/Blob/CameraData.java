@@ -18,8 +18,8 @@ public class CameraData {
     double CameraOffsetAngle;
     double xOffset ; // a set distance from otos to arm and camera
 
-    double yOffset; // based off extenston of lift and angle
-    double zOffset; // based off extenston of lift and angle
+    double yOffset ; // based off extenston of lift and angle
+    double zOffset ; // based off extenston of lift and angle
 
 
 }

@@ -15,8 +15,8 @@ import org.firstinspires.ftc.vision.opencv.ColorBlobLocatorProcessor;
 public class realOpMode extends LinearOpMode {
     public void runOpMode() {
 
-        double XCameraResolutionHeight = 320;
-        double YCameraResolutionWidth = 240;
+        double XCameraResolutionHeight = 640;
+        double YCameraResolutionWidth = 480;
         double CameraAngle = 54;
         double liftAngle = 90;
         double liftExtension = 0;
@@ -31,22 +31,25 @@ public class realOpMode extends LinearOpMode {
 
         // this RobotPose needs to be updated with robot pose from otos or roadrunner or whatever
         SparkFunOTOS.Pose2D RobotPose = new SparkFunOTOS.Pose2D();
+        RobotPose.x = 0;
+        RobotPose.y = 0;
+        RobotPose.h = 0;
 
 
         ColorBlobLocatorProcessor colorLocatorBlue ;
-        ColorBlobLocatorProcessor colorLocatorRed ;
-        ColorBlobLocatorProcessor colorLocatorYellow ;
+        //ColorBlobLocatorProcessor colorLocatorRed ;
+        //ColorBlobLocatorProcessor colorLocatorYellow ;
 
 
         //waitForStart();
         colorLocatorBlue = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
-        colorLocatorRed = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
-        colorLocatorYellow = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+        //colorLocatorRed = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
+        //colorLocatorYellow = NewBlob.CameraSetUp(PixelColorBlue, (int) XCameraResolutionHeight, (int) YCameraResolutionWidth);
 
         VisionPortal portal = new VisionPortal.Builder()
                 .addProcessor(colorLocatorBlue)
-                .addProcessor(colorLocatorRed)
-                .addProcessor(colorLocatorYellow)
+                //.addProcessor(colorLocatorRed)
+                //.addProcessor(colorLocatorYellow)
                 .setCameraResolution(new Size((int) XCameraResolutionHeight, (int) YCameraResolutionWidth))
                 .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
                 .build();
@@ -57,9 +60,10 @@ public class realOpMode extends LinearOpMode {
         while (opModeInInit()){
 
         thing.OPBlob(colorLocatorBlue, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
-        thing.OPBlob(colorLocatorRed, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
-        thing.OPBlob(colorLocatorYellow, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
-        sleep(30);
+        //thing.OPBlob(colorLocatorRed, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
+        //thing.OPBlob(colorLocatorYellow, XCameraResolutionHeight, YCameraResolutionWidth, CameraAngle, liftAngle, liftExtension, RobotPose);
+
+            sleep(30);
 
         }
     }

@@ -77,9 +77,11 @@ public class OPBLOB {
 
         BSample.NewListOfSamples(AllSampleGobalPositons);
         //BSample.normToSubCorner(RobotPose);
-        //BSample.difference();
-        AllSampleGobalPositons.forEach(component -> opMode.telemetry.addLine(component.toString()));
+
+        //AllSampleGobalPositons.forEach(component -> opMode.telemetry.addLine(component.toString()));
+        BSample.difference();
         BSample.deepCopy.forEach(component -> opMode.telemetry.addLine(component.toString()));
+
 
 
 

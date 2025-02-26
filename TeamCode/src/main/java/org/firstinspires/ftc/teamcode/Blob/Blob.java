@@ -36,7 +36,7 @@ public class Blob {
     public ColorBlobLocatorProcessor CameraSetUp(String PixelColor, int XCameraResolutionHeight, int YCameraResolutionWidth) {
 
         ColorBlobLocatorProcessor colorLocator = new ColorBlobLocatorProcessor.Builder()
-        //        .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
+                .setTargetColorRange(ColorRange.BLUE)         // use a predefined color match
                 .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
                 .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
                 .setDrawContours(true)                        // Show contours on the Stream Preview
@@ -48,15 +48,19 @@ public class Blob {
             case "Yellow":
                 colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.YELLOW)         // use a predefined color match// Smooth the transitions between different colors in image
+                        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+                        .setDrawContours(true)                        // Show contours on the Stream Preview
+                        .setBlurSize(5)
                         .build();
                 break;
             case "Blue":
                  colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.BLUE)
-                        //.setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                        //.setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
-                        //.setDrawContours(true)                        // Show contours on the Stream Preview
-                        //.setBlurSize(5)                               // Smooth the transitions between different colors in image
+                        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+                        .setDrawContours(true)                        // Show contours on the Stream Preview
+                        .setBlurSize(5)                               // Smooth the transitions between different colors in image
 
                         // use a predefined color match// Smooth the transitions between different colors in image
                         .build();
@@ -64,10 +68,10 @@ public class Blob {
             case "Red":
                  colorLocator = new ColorBlobLocatorProcessor.Builder()
                         .setTargetColorRange(ColorRange.RED)// use a predefined color match// Smooth the transitions between different colors in image
-                        //.setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
-                        //.setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
-                        //.setDrawContours(true)                        // Show contours on the Stream Preview
-                        //.setBlurSize(5)
+                        .setContourMode(ColorBlobLocatorProcessor.ContourMode.EXTERNAL_ONLY)    // exclude blobs inside blobs
+                        .setRoi(ImageRegion.asUnityCenterCoordinates(-1, 1, 1, -1))  // search central 1/4 of camera view
+                        .setDrawContours(true)                        // Show contours on the Stream Preview
+                        .setBlurSize(5)
                         .build();
                 break;
         }
@@ -107,17 +111,20 @@ public class Blob {
     }
 
     public void CameraOffsetSetup(CameraData cameraData) {
-        double OtosToLiftPivotX = 0; // measured
-        double OtosToLiftPivotY = 0; // measured
-        double OtosToLiftPivotZ = 8;// measured
-        double distanceFromAxisCamIsMounted = 0;
-        double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
-        double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
+        //double OtosToLiftPivotX = 0; // measured
+        //double OtosToLiftPivotY = 0; // measured
+        //double OtosToLiftPivotZ = 8;// measured
+        //double distanceFromAxisCamIsMounted = 0;
+        //double CamYOffset = Math.cos(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
+        //double CamZOffset = Math.sin(cameraData.liftAngle) * cameraData.liftExtension + distanceFromAxisCamIsMounted;
 
-        cameraData.yOffset = CamYOffset + OtosToLiftPivotY;
-        cameraData.zOffset = CamZOffset + OtosToLiftPivotZ;
+        //cameraData.yOffset = CamYOffset + OtosToLiftPivotY;
+        //cameraData.zOffset = CamZOffset + OtosToLiftPivotZ;
+        cameraData.yOffset = 10;
+        cameraData.zOffset = 12;
+        cameraData.xOffset = 2;
 
-        cameraData.xOffset = OtosToLiftPivotX;
+        //cameraData.xOffset = OtosToLiftPivotX;
 
         //CameraOffsets.add(0, cameraData.xOffset);
         //CameraOffsets.add(1, cameraData.yOffset);
@@ -142,7 +149,8 @@ public class Blob {
         //VectorCam.add(1, MagOffset* Math.sin(angle));
         //VectorCam.add(2, CameraOffsets.get(2));
 
-        return new Vector3D((MagOffset * Math.sin(cameraData.headingAngleOffset) + Vector.x), MagOffset * Math.cos(cameraData.headingAngleOffset) + Vector.y, cameraData.zOffset);
+
+        return new Vector3D( (MagOffset * Math.sin(cameraData.headingAngleOffset) + Vector.x) , MagOffset * Math.cos(cameraData.headingAngleOffset) + Vector.y , cameraData.zOffset);
     }
 
 
@@ -190,12 +198,12 @@ public class Blob {
         opMode.telemetry.addData("hAngle", HAngle);
         opMode.telemetry.addData("x", sampleX);
         opMode.telemetry.addData("y", sampleY);
-        opMode.telemetry.addData("xx", vectorToCam.getX());
-        opMode.telemetry.addData("yy", vectorToCam.getY());
-        opMode.telemetry.addData("y", vectorToCam.getZ());
+        //opMode.telemetry.addData("xx", vectorToCam.getX());
+        //opMode.telemetry.addData("yy", vectorToCam.getY());
+        opMode.telemetry.addData("z", vectorToCam.getZ());
 
-        sampleX += vectorToCam.getX();
-        sampleY += vectorToCam.getY();
+        //sampleX += vectorToCam.getX();
+        //sampleY += vectorToCam.getY();
 
 
 
