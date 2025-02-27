@@ -16,7 +16,7 @@ public class Harpoon {
     Servo hba;
     RobotConfig config;
 
-    public static double openPos = .3, closePos = 0.69;
+    public static double openPos = .6, closePos = 0.8420, rTwist = 1, lTwist = 0.69, mTwist = 0.69;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
@@ -48,13 +48,13 @@ public class Harpoon {
 
     public void twistServo(double pos){
         if (pos == 1){
-            hba.setPosition(0.75);
+            hba.setPosition(rTwist);
         }
         if (pos == 0){
-            hba.setPosition(0.5);
+            hba.setPosition(mTwist);
         }
         if (pos == -1){
-            hba.setPosition(0.25);
+            hba.setPosition(lTwist);
         }
     }
 

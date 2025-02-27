@@ -46,11 +46,11 @@ public class HarpoonArm {
     public static double grabPosition = 0;
 
     public static double ObservationDepositArmAngle = -40;
-    public static double ObservationWristPosition = 0.8;
+    public static double ObservationWristPosition = 0.4 ;
     public static double ObservationDepositLiftPosition = 0;
 
     public static double HighBasketDepositArmAngle = -20;
-    public static double HighBasketWristPosition = .8;
+    public static double HighBasketWristPosition = .2;
     public static double HighBasketDepositLiftPosition = 30;
 
 
@@ -63,22 +63,22 @@ public class HarpoonArm {
      */
     public static double intakeLiftExtension = 0;
     public static double intakeTorque = 0.4;
-    public static double IntakeWristPosition = 0.25;
-    public static double clawTriggerHeightOffsetExtended = 3.5;
-    public static double clawTriggerHeightOffsetRetracted = 3.5;
+    public static double IntakeWristPosition = 0.7420;
+    public static double clawTriggerHeightOffsetExtended = 4;
+    public static double clawTriggerHeightOffsetRetracted = 4;
     double interpolationExtendedLiftDistance = 20;
 
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
     }
 
-    public static double clawTriggerScale = -1;
+    public static double clawTriggerScale = -4.20;
 
     /**
      * the distance between the axis of rotation and the line in the direction of extension through the controlled point
      */
     public static double extensionAxisOffset = 4.2;
-    public static double intakeHeightOffset = -1.5;
+    public static double intakeHeightOffset = -2.69;
 
     public static double intakeAngleOffset = -3.5;
 

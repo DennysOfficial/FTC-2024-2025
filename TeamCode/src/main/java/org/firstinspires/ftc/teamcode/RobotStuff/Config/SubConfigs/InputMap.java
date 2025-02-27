@@ -108,10 +108,10 @@ public class InputMap {
     }
 
     public boolean getClawOpenButton() {
-        return gamepad1.x;
+        return gamepad1.a;
     }
     public boolean getClawCloseButton() {
-        return gamepad1.a;
+        return gamepad1.x;
     }
 
     /// testing / misc ##################################################################################################################################################
