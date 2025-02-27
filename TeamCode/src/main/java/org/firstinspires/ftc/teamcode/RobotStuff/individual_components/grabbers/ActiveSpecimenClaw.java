@@ -1,17 +1,19 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
+@Config
 public class ActiveSpecimenClaw {
 
     Servo wristServo;
     Servo pinchServo;
-    public static double hardClosedPosition = .269f;
-    public static double softClosedPosition = .269f;
-    public static double openPosition = .5f;
+    public static double hardClosedPosition = 0.5420;
+    public static double softClosedPosition = 0.51;
+    public static double openPosition = 0.2;
 
 
     OpMode opmode;
@@ -25,11 +27,17 @@ public class ActiveSpecimenClaw {
         pinchServo = opmode.hardwareMap.get(Servo.class, config.deviceConfig.specimenClawServo);
     }
 
-    public void basicGampadPinchControl() {
+    public void basicGampadPinchControlHardClose() {
         if (config.inputMap.getSpecimenClawOpen())
             pinchServo.setPosition(openPosition);
         else
             pinchServo.setPosition(hardClosedPosition);
+    }
+    public void basicGampadPinchControlSoftClose() {
+        if (config.inputMap.getSpecimenClawOpen())
+            pinchServo.setPosition(openPosition);
+        else
+            pinchServo.setPosition(softClosedPosition);
     }
 
     public void openClaw() {
