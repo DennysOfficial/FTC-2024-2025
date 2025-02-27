@@ -15,15 +15,15 @@ public class InputMap {
 
     /// drive control ##################################################################################################################################################
     public double getForwardStick() {
-        return gamepad1.left_stick_y;
+        return gamepad1.right_stick_y;
     } // button mapping
 
     public double getStrafeStick() {
-        return -1 * gamepad1.left_stick_x;
+        return -1 * gamepad1.right_stick_x;
     }
 
     public double getTurnStick() {
-        return gamepad1.right_stick_x;
+        return gamepad1.left_stick_x;
     }
 
 
@@ -51,8 +51,11 @@ public class InputMap {
         return gamepad1.left_trigger > 0.2;
     }
 
+    public double getYoinkTrigger() {
+        return gamepad1.right_trigger;
+    }
     public boolean getYoinkButton() {
-        return gamepad1.right_trigger > 0.2;
+        return getYoinkTrigger() > 0.2;
     }
 
     /// intake control ##################################################################################################################################################
@@ -108,10 +111,10 @@ public class InputMap {
     }
 
     public boolean getClawOpenButton() {
-        return gamepad1.x;
+        return gamepad1.a;
     }
     public boolean getClawCloseButton() {
-        return gamepad1.a;
+        return gamepad1.x;
     }
 
     /// testing / misc ##################################################################################################################################################

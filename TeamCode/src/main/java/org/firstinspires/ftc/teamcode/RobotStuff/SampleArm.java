@@ -36,49 +36,54 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.Harpoon;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.SampleClaw;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ArmIK;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
+import java.util.Objects;
+
 @Config
-public class HarpoonArm {
+public class SampleArm {
 
     public static double grabPosition = 0;
 
-    public static double ObservationDepositArmAngle = -60;
-    public static double ObservationWristPosition = 0.5;
-    public static double ObservationDepositLiftPosition = 0;
 
-    public static double HighBasketDepositArmAngle = -20;
-    public static double HighBasketWristPosition = 1;
-    public static double HighBasketDepositLiftPosition = 30;
+    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .4, 0, -40);
+    public static double DefaultObservationDepositDuration = 1;
 
+    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 30, -20);
+    public static double DefaultHighBasketDepositPresetDuration = 1;
 
-    public static double StoreWristPosition = 0.3;
-    public static double StoreArmAngle = -70;
-    public static double StoreLiftPosition = 0;
+    public static SampleArmPose RestPose = new SampleArmPose(0, .69, 0, -50);
+    public static double DefaultRestPresetDuration = 1;
+
+    public static double DefaultIntakePresetDuration = 1;
+    public static double FromHighBasketIntakePresetDuration = 1.69;
 
     /**
      * relative to the center of the pivot
      */
-    public static double intakeLiftExtension = 0;
-    public static double intakeTorque = 0.4;
-    public static double IntakeWristPosition = 0.3;
-    public static double clawTriggerHeightOffsetExtended = 2.7;
-    public static double clawTriggerHeightOffsetRetracted = 2.7;
-    double interpolationExtendedLiftDistance = 20;
+    public static double maxIntakeTorque = 0.4;
 
+
+
+    public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .7420, 0, Double.NaN);
+    public static double intakeHeightOffset = -2.69;
+
+    public static double clawTriggerHeightOffsetExtended = 4;
+    public static double clawTriggerHeightOffsetRetracted = 4;
+    public static double clawTriggerScale = -4.20;
+
+
+    double interpolationExtendedLiftDistance = 20;
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
     }
-
-    public static double clawTriggerScale = -1;
 
     /**
      * the distance between the axis of rotation and the line in the direction of extension through the controlled point
      */
     public static double extensionAxisOffset = 4.2;
-    public static double intakeHeightOffset = -1.5;
 
     public static double intakeAngleOffset = -3.5;
 
@@ -89,7 +94,7 @@ public class HarpoonArm {
     final RightLift rightLift;
     final RightPivot rightPivot;
 
-    final Harpoon harpoon;
+    final SampleClaw sampleClaw;
 
     ArmIK armIK = new ArmIK();
 
@@ -105,7 +110,7 @@ public class HarpoonArm {
     SampleArmState armState = SampleArmState.store;
     SampleArmState previousArmState = null;
 
-    public HarpoonArm(OpMode opMode, RobotConfig config) {
+    public SampleArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
@@ -115,7 +120,7 @@ public class HarpoonArm {
         rightLift.assignPivot(rightPivot);
         rightPivot.assignLift(rightLift);
 
-        harpoon = new Harpoon(opMode, config);
+        sampleClaw = new SampleClaw(opMode, config);
     }
 
     public void update() {
@@ -133,19 +138,32 @@ public class HarpoonArm {
     }
 
     boolean grabOpen = true;
-
     boolean lastGroundSlam = false;
 
-    void updatePresets() {
-        if (config.inputMap.getIntakeForward())
+    void updateTargetState() {
+        if (config.inputMap.getIntakeForward()) {
             armState = SampleArmState.intakeHeightBasedGrab;
+            grabPosition = 0;
+        }
 
         if (config.inputMap.getObservationDepositPreset())
             armState = SampleArmState.depositLow;
 
         if (config.inputMap.getBasketDepositPreset())
             armState = SampleArmState.depositHigh;
+    }
 
+    void updatePresets() {
+
+        updateTargetState();
+
+        if (config.inputMap.gamepad1.right_bumper && grabPosition < 1) {
+            grabPosition += 1;
+        }
+        if (config.inputMap.gamepad1.left_bumper && grabPosition > -1) {
+            grabPosition -= 1;
+        }
+        sampleClaw.twistServo(grabPosition);
 
         if (config.inputMap.getClawCloseButton())
             grabOpen = false;
@@ -156,45 +174,40 @@ public class HarpoonArm {
         if (armState != previousArmState)
             switch (armState) {
                 case store:
-                    harpoon.setWristPosition(StoreWristPosition);
-
-                    rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
-                    rightLift.linearMoveToPosition(StoreLiftPosition,0.69);
-
+                    moveToPose(RestPose, DefaultRestPresetDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case depositLow:
-                    harpoon.setWristPosition(ObservationWristPosition);
-
-                    rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(ObservationDepositLiftPosition,0.69);
+                    moveToPose(ObservationDepositPose, DefaultObservationDepositDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case depositHigh:
-                    harpoon.setWristPosition(HighBasketWristPosition);
-
-                    rightPivot.fancyMoveToPosition(HighBasketDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(HighBasketDepositLiftPosition,0.69);
-
+                    moveToPose(HighBasketDepositPose, DefaultHighBasketDepositPresetDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case intakeHeightBasedGrab:
-                    harpoon.setWristPosition(IntakeWristPosition);
+                    IntakeInitialPose.pivotPosition = calculateIntakePivotAngle(IntakeInitialPose.liftPosition);
 
-                    rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(intakeLiftExtension), 1);
-                    rightLift.linearMoveToPosition(intakeLiftExtension,0.69);
+                    if (Objects.requireNonNull(previousArmState) == SampleArmState.depositHigh) {
+                        moveToPose(IntakeInitialPose, FromHighBasketIntakePresetDuration);
+                    } else {
+                        moveToPose(IntakeInitialPose, DefaultIntakePresetDuration);
+                    }
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.positionControl;
@@ -207,16 +220,16 @@ public class HarpoonArm {
                         && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
                         && rightPivot.getPosition() > 55) {
 
-                    rightPivot.targetTorque = intakeTorque;
+                    rightPivot.targetTorque = maxIntakeTorque * config.inputMap.getYoinkTrigger();
                     rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
                     if (config.inputMap.getClawCloseButton()) // emergency override
-                        harpoon.setGrabPosition(1);
+                        sampleClaw.setGrabPosition(1);
                     else if (config.inputMap.getClawOpenButton())
-                        harpoon.setGrabPosition(0);
+                        sampleClaw.setGrabPosition(0);
                     else
-                        harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
+                        sampleClaw.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
 
                     grabOpen = false;
                     lastGroundSlam = true;
@@ -236,9 +249,9 @@ public class HarpoonArm {
 
             default:
                 if (grabOpen)
-                    harpoon.setGrabPosition(0);
+                    sampleClaw.setGrabPosition(0);
                 else
-                    harpoon.setGrabPosition(1);
+                    sampleClaw.setGrabPosition(1);
         }
     }
 
@@ -255,6 +268,13 @@ public class HarpoonArm {
      */
     public double calculateIntakeHeight() {
         return armIK.getHeight(rightPivot.getPosition() - intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
+    }
+
+    void moveToPose(SampleArmPose pose, double duration) {
+        rightLift.linearMoveToPosition(pose.liftPosition, duration);
+        rightPivot.fancyMoveToPosition(pose.pivotPosition, duration);
+        sampleClaw.setBigWristPosition(pose.wristBigTwistAlignmentPosition);
+        sampleClaw.setSmolWristPosition(pose.wristLittleTwistAlignmentAngle);
     }
 
 }
