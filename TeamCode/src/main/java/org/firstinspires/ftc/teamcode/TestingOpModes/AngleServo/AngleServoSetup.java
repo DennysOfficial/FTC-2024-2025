@@ -27,77 +27,64 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.AngleServo;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.lynx.LynxModule;
+import androidx.core.math.MathUtils;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.HarpoonArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 
-import java.util.List;
-
-@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
+@TeleOp(name = "Angle Servo Setup", group = "Abbc testing")
 //@Disabled
-public class AnalogThingTest extends LinearOpMode {
+public class AngleServoSetup extends LinearOpMode {
 
 
+    double targetPosition;
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    ButtonEdgeDetector refreshServoButton = new ButtonEdgeDetector(false);
+
+    AngleServo servo = null;
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
-
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
-
-        RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
-
-        AnalogInput analogInput = hardwareMap.get(AnalogInput.class, "E");
-
-
-        waitForStart();
-        frameTimer.reset();
-        //leftArmStuff.Rest();
 
         double deltaTime = 0;
 
-        // run until the end of the match (driver presses STOP)
+        waitForStart();
         while (opModeIsActive()) {
-
-            activeConfig.stopWatch.reset();
-            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
-
-
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
-            telemetry.addData("deltaTime", deltaTime);
+            //telemetry.addData(" deltaTime", deltaTime);
             frameTimer.reset();
 
-            for (LynxModule hub : allHubs) {
-                hub.clearBulkCache();
+            targetPosition += gamepad1.left_stick_y * deltaTime * AngleServoTestConfig.f_testingSensitivity;
+            targetPosition = MathUtils.clamp(targetPosition, 0, 1);
+
+            if (refreshServoButton.getButtonDown(gamepad1.a)) {
+                try {
+                    servo = new AngleServo(AngleServoTestConfig.a_TestingServoName, hardwareMap, AngleServoTestConfig.b_point1Position, AngleServoTestConfig.c_point1Angle, AngleServoTestConfig.d_point2Position, AngleServoTestConfig.e_point2Angle);
+                } finally {
+                    telemetry.addLine("bad servo name prob");
+
+                }
             }
-            activeConfig.sensorData.update(); // bulk caching
+
+            if (servo == null)
+                return;
+
+            servo.setPosition(targetPosition);
+
+            telemetry.addLine("press a to refresh the servo");
+            telemetry.addData("servo position", targetPosition);
+            telemetry.addData("servo angle", servo.getAngle());
 
 
-            telemetry.addData("thing", analogInput.getVoltage());
-
-
-            telemetry.update();
         }
     }
-
 }

@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -37,20 +37,27 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.SampleArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.InertialMeasurementUnit;
 
 import java.util.List;
 
-@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
+@TeleOp(name = "Motor Go Vrooom", group = "AZ testing thing")
 //@Disabled
-public class FullTest extends LinearOpMode {
+public class IMUQuestionMark extends LinearOpMode { // this is basically theotheroneandonlyopmode but with imu stuff
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    StopWatch stopWatch = new StopWatch();
+
+    InertialMeasurementUnit IMU = new InertialMeasurementUnit();
 
     @Override
     public void runOpMode() {
@@ -69,23 +76,41 @@ public class FullTest extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-        SampleArm sampleArm = new SampleArm(this, activeConfig);
 
-        SpecimenArm specimenArm = new SpecimenArm(this, activeConfig);
+        //RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
 
+        //RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        //spinnyBit.assignLift(rightLift);
+        //rightLift.assignPivot(spinnyBit);
+
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        otherSpinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(otherSpinnyBit);
+
+        PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
+
+        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
+
+        IMU.initialize(hardwareMap);
 
         waitForStart();
         frameTimer.reset();
-        //leftArmStuff.Rest();
+        IMU.afterStart(); // starts measuring
 
         double deltaTime = 0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            activeConfig.stopWatch.reset();
-            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+            stopWatch.reset();
+            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
+            IMU.updateIMU(telemetry);
+            IMU.returnIMU(telemetry);
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -96,18 +121,20 @@ public class FullTest extends LinearOpMode {
             }
             activeConfig.sensorData.update(); // bulk caching
 
+            otherSpinnyBit.update();
+            leftLift.update();
 
-
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
-
-            sampleArm.update();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total HarpoonArm update Time ----------------------------");
-
-            specimenArm.update();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total SpecimenArm update Time ----------------------------");
+            if(gamepad2.b)
+                dohicky.Collect();
+            if(gamepad2.y)
+                dohicky.Rest();
+            if(gamepad2.x)
+                dohicky.Score();
 
             activeDriveMode.updateDrive(deltaTime);
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
+
+            //intake.directControl();
 
             telemetry.update();
         }

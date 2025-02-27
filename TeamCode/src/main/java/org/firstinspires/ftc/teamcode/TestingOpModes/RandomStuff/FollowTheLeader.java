@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.RandomStuff;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -44,24 +44,17 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.ClawAndStuffOld;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.speedyServos;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One And Only Passive Grabber", group = "AB main opMode")
+@TeleOp(name = "Follow The Leader Test", group = "ZZ testing")
 //@Disabled
-public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
+public class FollowTheLeader extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    public boolean yPre = false;
-    public boolean rTrigger = false;
-    public boolean gotSample = false;
-    public boolean wait = false;
     StopWatch stopWatch = new StopWatch();
 
     @Override
@@ -89,17 +82,15 @@ public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
         spinnyBit.assignLift(rightLift);
         rightLift.assignPivot(spinnyBit);
 
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.positionControl, this, activeConfig);
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
 
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.positionControl, this, activeConfig);
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
 
         otherSpinnyBit.assignLift(leftLift);
         leftLift.assignPivot(otherSpinnyBit);
 
-        PassiveGrabber leftArmStuff = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
-
-
-        speedyServos prayers = new speedyServos(this, activeConfig);
+        leftLift.assignLeaderControlAxis(rightLift);
+        otherSpinnyBit.assignLeaderControlAxis(spinnyBit);
 
 
         waitForStart();
@@ -107,6 +98,9 @@ public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
         //leftArmStuff.Rest();
 
         double deltaTime = 0;
+
+        leftLift.fancyMoveToPosition(rightLift.getPosition(), 2);
+        otherSpinnyBit.fancyMoveToPosition(spinnyBit.getPosition(), 2);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -125,80 +119,6 @@ public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-
-            if (gamepad1.y && !gotSample) {
-                if (!spinnyBit.isBusy() && spinnyBit.getPosition() < 60)
-                    spinnyBit.fancyMoveToPosition(65, 1);
-                if (!rightLift.isBusy() && spinnyBit.getPosition() < 60)
-                    rightLift.fancyMoveToPosition(0, 0.75);
-                yPre = true;
-                prayers.subStuff(1);
-            }
-            if (gamepad1.y && gotSample){
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(76.5, 0.3);
-            }
-
-            if (yPre && !spinnyBit.isBusy() && !rightLift.isBusy())
-            {
-
-                rightLift.fancyMoveToPosition(13 ,0.5);
-                spinnyBit.fancyMoveToPosition(76, 0.5);
-                yPre = false;
-            }
-
-
-            if (gamepad1.b) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-69, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-            }// presets
-
-            if(gamepad1.x){
-                leftArmStuff.Score();
-            }
-            if(gamepad1.a){
-                leftArmStuff.Collect();
-            }
-            if (gamepad1.left_bumper){
-                prayers.Intake();
-                gotSample = false;
-            }
-
-//            // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && spinnyBit.getPosition() > 55) {
-                if (gamepad1.right_trigger > 0.2){
-                    spinnyBit.fancyMoveToPosition(83, 0.5);
-                }
-                if (prayers.isHold(gamepad1.right_trigger)){
-                    spinnyBit.setTargetPosition(88);
-                    rTrigger = true;
-                }
-            }
-            if (!spinnyBit.isBusy() && rTrigger){
-                if (spinnyBit.getPosition() > 85.3){
-                    spinnyBit.fancyMoveToPosition(87, 0.5);
-                    rTrigger = false;
-                    gotSample = true;
-                    wait = true;
-                }
-            }
-            if (!spinnyBit.isBusy() && wait){
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(-69, 1);
-                if (!rightLift.isBusy())
-                    rightLift.fancyMoveToPosition(0, 0.75);
-                wait = false;
-            }
-//                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-//                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
-//
-//            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-//                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode); //
-
-
-
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
             rightLift.update();
@@ -210,9 +130,9 @@ public class TheOneAndOnlyPassiveGrabber extends LinearOpMode {
             activeDriveMode.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
+
             leftLift.update();
             otherSpinnyBit.update();
-            prayers.update();
 
 
             telemetry.update();

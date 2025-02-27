@@ -7,16 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
-public class Harpoon {
+public class SampleClaw {
 
     Servo harpoonServo;
-    Servo wristServo;
-    Servo hba;
+    Servo bigWristServo;
+    AngleServo smolWristServo;
     RobotConfig config;
 
-    public static double openPos = .78, closePos = .25;
+    public static double openPos = .6, closePos = 0.8420, rTwist = 1, lTwist = 0.69, mTwist = 0.69;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
@@ -24,13 +25,13 @@ public class Harpoon {
 
     OpMode opMode;
 
-    public Harpoon(OpMode opMode, RobotConfig config) {
+    public SampleClaw(OpMode opMode, RobotConfig config) {
         this.config = config;
         this.opMode = opMode;
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
-        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
-        hba = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonBlockAlignmentWristServo);
+        bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
+        smolWristServo = new AngleServo(config.deviceConfig.harpoonBlockAlignmentWristServo,opMode.hardwareMap,0,-100,1,100);
     }
 
     /**
@@ -42,19 +43,23 @@ public class Harpoon {
         harpoonServo.setPosition(position);
     }
 
-    public void setWristPosition(double position){
-        wristServo.setPosition(position);
+    public void setBigWristPosition(double position){
+        bigWristServo.setPosition(position);
+    }
+
+    public void setSmolWristPosition(double position){
+        smolWristServo.setPosition(position);
     }
 
     public void twistServo(double pos){
         if (pos == 1){
-            hba.setPosition(0.75);
+            smolWristServo.setPosition(rTwist);
         }
         if (pos == 0){
-            hba.setPosition(0.5);
+            smolWristServo.setPosition(mTwist);
         }
         if (pos == -1){
-            hba.setPosition(0.25);
+            smolWristServo.setPosition(lTwist);
         }
     }
 

@@ -90,12 +90,12 @@ public class RightPivot extends ControlAxis {
     public static double velocityFeedforwardCoefficientRetracted = 0;
     public static double KpRetracted = 0.2;
     public static double KiRetracted = 0.0;
-    public static double KdRetracted = 0.005;
+    public static double KdRetracted = 0.003;
 
     public static double velocityFeedforwardCoefficientExtended = 0;
     public static double KpExtended = 0.2;
     public static double KiExtended = 0.0;
-    public static double KdExtended = 0.008;
+    public static double KdExtended = 0.005;
 
     @Override
     double getKp() {

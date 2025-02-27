@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -44,9 +44,9 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveMode
 
 import java.util.List;
 
-@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
+@TeleOp(name = "specimen arm test", group = "AC important Testing")
 //@Disabled
-public class FullTest extends LinearOpMode {
+public class SpecimenTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -68,8 +68,6 @@ public class FullTest extends LinearOpMode {
 
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-        SampleArm sampleArm = new SampleArm(this, activeConfig);
 
         SpecimenArm specimenArm = new SpecimenArm(this, activeConfig);
 
@@ -97,17 +95,15 @@ public class FullTest extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            sampleArm.update();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total HarpoonArm update Time ----------------------------");
-
             specimenArm.update();
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total SpecimenArm update Time ----------------------------");
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total specimen arm update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
             activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
+
+            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

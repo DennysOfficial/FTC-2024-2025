@@ -14,11 +14,12 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
 @Config
 public class SpecimenArm {
 
-    public static SpecimenArmPose restPose = new SpecimenArmPose(1, 0, -60);
+
+    public static SpecimenArmPose restPose = new SpecimenArmPose(.2, 0, -60);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(1, 19, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 19, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.3, 1, -55);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.62, 1, -55);
     public static double collectPresetDurationSec = 1;
 
     public static double kPForwards = 0.008;
@@ -27,14 +28,14 @@ public class SpecimenArm {
 
     public static Range<Double> scorePivotDeadZone = new Range<>(10.0, scorePose.pivotPosition);
 
-    enum SpecimenArmState {
+    public enum SpecimenArmState {
         collect,
         rest,
         movingToScore,
         score,
     }
 
-    SpecimenArmState armState = SpecimenArmState.rest;
+    public SpecimenArmState armState = SpecimenArmState.rest;
     SpecimenArmState previousState = null;
 
 
@@ -45,6 +46,12 @@ public class SpecimenArm {
     LeftPivot otherSpinnyBit;
 
     ActiveSpecimenClaw claw;
+    public void openClaw(){
+        claw.openClaw();
+    }
+    public void closeClawHard(){
+        claw.closeClawHard();
+    }
 
     GoofyPID scoringPid;
 
@@ -73,6 +80,7 @@ public class SpecimenArm {
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
         updateState();
+
         if (previousState != armState) {
             switch (armState) {
                 case rest:
@@ -80,10 +88,16 @@ public class SpecimenArm {
                     break;
 
                 case movingToScore:
+                    claw.closeClawSoft();
                     moveToPose(scorePose, scorePresetDurationSec);
                     break;
 
                 case score:
+                    if(previousState != SpecimenArmState.movingToScore){
+                        armState = SpecimenArmState.movingToScore;
+                        return;
+                    }
+
                     otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                     break;
 
@@ -125,10 +139,12 @@ public class SpecimenArm {
     }
 
 
-    public void moveToPose(SpecimenArmPose pose, double duration) {
+    void moveToPose(SpecimenArmPose pose, double duration) {
         leftLift.setControlMode(ControlAxis.ControlMode.positionControl);
         leftLift.setTargetPosition(pose.liftPosition);
         otherSpinnyBit.fancyMoveToPosition(pose.pivotPosition, duration);
         claw.setWristPosition(pose.wristPosition);
     }
+
+
 }
