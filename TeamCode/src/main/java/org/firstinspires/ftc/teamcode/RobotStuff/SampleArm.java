@@ -40,34 +40,31 @@ import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ArmIK;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
+import java.util.Objects;
+
 @Config
 public class SampleArm {
 
     public static double grabPosition = 0;
 
-    public static double ObservationDepositArmAngle = -40;
-    public static double ObservationWristPosition = 0.4;
-    public static double ObservationDepositLiftPosition = 0;
 
     public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .4, 0, -40);
-
-    public static double HighBasketDepositArmAngle = -20;
-    public static double HighBasketWristPosition = .2;
-    public static double HighBasketDepositLiftPosition = 30;
+    public static double DefaultObservationDepositDuration = 1;
 
     public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 30, -20);
-
-    public static double StoreWristPosition = 0.3;
-    public static double StoreArmAngle = -70;
-    public static double StoreLiftPosition = 0;
+    public static double DefaultHighBasketDepositPresetDuration = 1;
 
     public static SampleArmPose RestPose = new SampleArmPose(0, .69, 0, -50);
+    public static double DefaultRestPresetDuration = 1;
+
+    public static double DefaultIntakePresetDuration = 1;
+    public static double FromHighBasketIntakePresetDuration = 1.69;
 
     /**
      * relative to the center of the pivot
      */
     public static double intakeLiftExtension = 0;
-    public static double intakeTorque = 0.4;
+    public static double maxIntakeTorque = 0.4;
     public static double IntakeWristPosition = 0.7420;
     public static double clawTriggerHeightOffsetExtended = 4;
     public static double clawTriggerHeightOffsetRetracted = 4;
@@ -176,45 +173,40 @@ public class SampleArm {
         if (armState != previousArmState)
             switch (armState) {
                 case store:
-                    sampleClaw.setBigWristPosition(StoreWristPosition);
-
-                    rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
-                    rightLift.linearMoveToPosition(StoreLiftPosition, 0.69);
-
+                    moveToPose(RestPose, DefaultRestPresetDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case depositLow:
-                    sampleClaw.setBigWristPosition(ObservationWristPosition);
-
-                    rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(ObservationDepositLiftPosition, 0.69);
+                    moveToPose(ObservationDepositPose, DefaultObservationDepositDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case depositHigh:
-                    sampleClaw.setBigWristPosition(HighBasketWristPosition);
-
-                    rightPivot.fancyMoveToPosition(HighBasketDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(HighBasketDepositLiftPosition, 0.69);
-
+                    moveToPose(HighBasketDepositPose, DefaultHighBasketDepositPresetDuration);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
+
                     armState = SampleArmState.positionControl;
                     break;
 
                 case intakeHeightBasedGrab:
-                    sampleClaw.setBigWristPosition(IntakeWristPosition);
+                    IntakeInitialPose.pivotPosition = calculateIntakePivotAngle(IntakeInitialPose.liftPosition);
 
-                    rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(intakeLiftExtension), 1);
-                    rightLift.linearMoveToPosition(intakeLiftExtension, 0.69);
+                    if (Objects.requireNonNull(previousArmState) == SampleArmState.depositHigh) {
+                        moveToPose(IntakeInitialPose, FromHighBasketIntakePresetDuration);
+                    } else {
+                        moveToPose(IntakeInitialPose, DefaultIntakePresetDuration);
+                    }
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.positionControl;
@@ -227,7 +219,7 @@ public class SampleArm {
                         && rightPivot.getControlMode() != ControlAxis.ControlMode.disabled
                         && rightPivot.getPosition() > 55) {
 
-                    rightPivot.targetTorque = intakeTorque;
+                    rightPivot.targetTorque = maxIntakeTorque * config.inputMap.getYoinkTrigger();
                     rightPivot.setControlMode(ControlAxis.ControlMode.torqueControl);
 
 
@@ -277,9 +269,9 @@ public class SampleArm {
         return armIK.getHeight(rightPivot.getPosition() - intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
     }
 
-    void moveToPose(SampleArmPose pose, double duration){
-        rightLift.linearMoveToPosition(pose.liftPosition,duration);
-        rightPivot.fancyMoveToPosition(pose.pivotPosition,duration);
+    void moveToPose(SampleArmPose pose, double duration) {
+        rightLift.linearMoveToPosition(pose.liftPosition, duration);
+        rightPivot.fancyMoveToPosition(pose.pivotPosition, duration);
         sampleClaw.setBigWristPosition(pose.wristBigTwistAlignmentPosition);
         sampleClaw.setSmolWristPosition(pose.wristLittleTwistAlignmentAngle);
     }
