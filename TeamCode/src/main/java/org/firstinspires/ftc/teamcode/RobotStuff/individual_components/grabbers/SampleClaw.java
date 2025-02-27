@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
 public class SampleClaw {
 
     Servo harpoonServo;
     Servo bigWristServo;
-    Servo smolWristServo;
+    AngleServo smolWristServo;
     RobotConfig config;
 
     public static double openPos = .6, closePos = 0.8420, rTwist = 1, lTwist = 0.69, mTwist = 0.69;
@@ -30,7 +31,7 @@ public class SampleClaw {
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
         bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
-        smolWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonBlockAlignmentWristServo);
+        smolWristServo = new AngleServo(config.deviceConfig.harpoonBlockAlignmentWristServo,opMode.hardwareMap,0,-100,1,100);
     }
 
     /**

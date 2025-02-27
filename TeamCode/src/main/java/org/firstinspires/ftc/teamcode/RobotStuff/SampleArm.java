@@ -281,7 +281,7 @@ public class SampleArm {
         rightLift.linearMoveToPosition(pose.liftPosition,duration);
         rightPivot.fancyMoveToPosition(pose.pivotPosition,duration);
         sampleClaw.setBigWristPosition(pose.wristBigTwistAlignmentPosition);
-        sampleClaw.s
+        sampleClaw.setSmolWristPosition(pose.wristLittleTwistAlignmentAngle);
     }
 
 }
