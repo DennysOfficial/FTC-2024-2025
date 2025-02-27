@@ -75,7 +75,7 @@ public class SpecimenArm {
     }
 
 
-    public void update() {
+    public void autoUpdate() {
         if (config.debugConfig.getStateDebug())
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
@@ -118,9 +118,65 @@ public class SpecimenArm {
                 otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                 otherSpinnyBit.targetTorque = scoringPid.runPID(scorePose.pivotPosition, otherSpinnyBit.getPosition(), otherSpinnyBit.deltaTime);
                 break;
+            default:
         }
 
-        claw.basicGampadPinchControl();
+
+        leftLift.update();
+        otherSpinnyBit.update();
+        previousState = armState;
+    }
+
+    public void update() {
+        if (config.debugConfig.getStateDebug())
+            opmode.telemetry.addData("Specimen Arm State", armState.toString());
+
+        updateState();
+
+        if (previousState != armState) {
+            switch (armState) {
+                case rest:
+                    moveToPose(restPose, resetPresetDurationSec);
+                    break;
+
+                case movingToScore:
+                    claw.closeClawSoft();
+                    moveToPose(scorePose, scorePresetDurationSec);
+                    break;
+
+                case score:
+                    if(previousState != SpecimenArmState.movingToScore){
+                        armState = SpecimenArmState.movingToScore;
+                        return;
+                    }
+
+                    otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+                    break;
+
+                case collect:
+                    moveToPose(collectPose, collectPresetDurationSec);
+                    break;
+            }
+        }
+
+        switch (armState) {
+            case movingToScore:
+                if (!otherSpinnyBit.isBusy())
+                    armState = SpecimenArmState.score;
+                claw.basicGampadPinchControlSoftClose();
+                break;
+            case score:
+                // if (scorePivotDeadZone.contains(otherSpinnyBit.getPosition()))
+                updatePidCoefficients();
+                otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
+                otherSpinnyBit.targetTorque = scoringPid.runPID(scorePose.pivotPosition, otherSpinnyBit.getPosition(), otherSpinnyBit.deltaTime);
+                claw.basicGampadPinchControlSoftClose();
+                break;
+            default:
+                claw.basicGampadPinchControlHardClose();
+        }
+
+
 
         leftLift.update();
         otherSpinnyBit.update();

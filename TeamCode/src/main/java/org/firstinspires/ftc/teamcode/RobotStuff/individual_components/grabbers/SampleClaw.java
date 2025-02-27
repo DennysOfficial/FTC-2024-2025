@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
+
 @Config
 public class SampleClaw {
 
@@ -29,38 +30,48 @@ public class SampleClaw {
         this.config = config;
         this.opMode = opMode;
 
-        harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
-        bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
-        smolWristServo = new AngleServo(config.deviceConfig.harpoonBlockAlignmentWristServo,opMode.hardwareMap,0,-100,1,100);
+        harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawGrabServo);
+        bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawDepositWristServo);
+        smolWristServo = new AngleServo(config.deviceConfig.sampleClawBlockAlignmentWristServo, opMode.hardwareMap, 0, -100, 1, 100);
     }
 
     /**
      * ranges from 0 - 1   for open - close
      */
-    public void  setGrabPosition(double position) {
-        position = MathUtils.clamp(position,0,1);
-        position = MathStuff.map(position,0,1,openPos,closePos);
+    public void setGrabPosition(double position) {
+        position = MathUtils.clamp(position, 0, 1);
+        position = MathStuff.map(position, 0, 1, openPos, closePos);
         harpoonServo.setPosition(position);
     }
 
-    public void setBigWristPosition(double position){
+    public void setBigWristPosition(double position) {
         bigWristServo.setPosition(position);
     }
 
-    public void setSmolWristPosition(double position){
+    public void setSmolWristPosition(double position) {
         smolWristServo.setPosition(position);
     }
 
-    public void twistServo(double pos){
-        if (pos == 1){
+    public void twistServo(double pos) {
+        if (pos == 1) {
             smolWristServo.setPosition(rTwist);
         }
-        if (pos == 0){
+        if (pos == 0) {
             smolWristServo.setPosition(mTwist);
         }
-        if (pos == -1){
+        if (pos == -1) {
             smolWristServo.setPosition(lTwist);
         }
     }
+
+    public void blockAlignmentIncrement(double incrementAmount) {
+        double newTargetAngle = smolWristServo.getAngle();
+        newTargetAngle = newTargetAngle - (newTargetAngle % Math.abs(incrementAmount));
+        newTargetAngle += incrementAmount;
+
+        smolWristServo.setAngle(newTargetAngle);
+    }
+
+    
 
 }

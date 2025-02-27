@@ -150,13 +150,15 @@ public class RightPivot extends ControlAxis {
     double angleError;
 
     final double initialAnalogPosition;
-    public static Range<Double> analogEncoderRange = new Range<>(0.0, 3.3);
+    public static double analogRangeMax = 3.3;
+    public static double analogRangeMin = 0;
+
 
     static double getAnalogRange() {
-        return analogEncoderRange.getUpper() - analogEncoderRange.getLower();
+        return analogRangeMax - analogRangeMin;
     }
 
-    static final double degreesOverAnalog = getAnalogRange() * 360 * (10.0 / 150.0);
+    static final double degreesOverAnalog = (360 / getAnalogRange()) * (15.0 / 150.0);
     static final double analogOverDegrees = 1.0 / degreesOverAnalog;
 
     public static double correctionFactor = 0;

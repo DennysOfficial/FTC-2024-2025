@@ -15,15 +15,15 @@ public class InputMap {
 
     /// drive control ##################################################################################################################################################
     public double getForwardStick() {
-        return gamepad1.right_stick_y;
+        return gamepad1.left_stick_y;
     } // button mapping
 
     public double getStrafeStick() {
-        return -1 * gamepad1.right_stick_x;
+        return -1 * gamepad1.left_stick_x;
     }
 
     public double getTurnStick() {
-        return gamepad1.left_stick_x;
+        return gamepad1.right_stick_x;
     }
 
 
