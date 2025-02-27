@@ -37,7 +37,7 @@ public class ActiveIntakeMotor {
         this.config = config;
         spinnyMotor = opMode.hardwareMap.get(DcMotor.class, config.deviceConfig.intakeMotor);
         flapServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.flapServo);
-        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
+        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawDepositWristServo);
     }
 
     Timer stopTimer = null;
