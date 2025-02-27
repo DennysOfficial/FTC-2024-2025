@@ -169,14 +169,18 @@ public class RightPivot extends ControlAxis {
 
     @Override
     void miscUpdate() {
-        encoderCalculatedAnalogValue = (initialAnalogPosition + analogOverDegrees * (getPosition() + angleCorrection)) % getAnalogRange();
+        encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition() + angleCorrection)) % getAnalogRange());
 
         analogPosition = analogEncoder.getVoltage();
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
 
-        if (Math.abs(analogError) > getAnalogRange() * 0.5)
-            analogError = Math.copySign(getAnalogRange(), -analogError) - analogError;
+        if (Math.abs(analogError) > getAnalogRange() * 0.5) {
+            double goodAnalogError = Math.abs(analogError);
+            goodAnalogError = getAnalogRange() - analogError;
+            analogError = Math.copySign(goodAnalogError, analogError);
+        }
+
 
         angleCorrection += analogError * correctionFactor;
 
