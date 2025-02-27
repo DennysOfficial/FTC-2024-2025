@@ -11,7 +11,7 @@ public class ActiveSpecimenClaw {
     Servo pinchServo;
     public static double hardClosedPosition = .269f;
     public static double softClosedPosition = .269f;
-    public static double openPosition = .6f;
+    public static double openPosition = .5f;
 
 
     OpMode opmode;
