@@ -46,17 +46,22 @@ public class SampleArm {
     public static double grabPosition = 0;
 
     public static double ObservationDepositArmAngle = -40;
-    public static double ObservationWristPosition = 0.4 ;
+    public static double ObservationWristPosition = 0.4;
     public static double ObservationDepositLiftPosition = 0;
+
+    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .4, 0, -40);
 
     public static double HighBasketDepositArmAngle = -20;
     public static double HighBasketWristPosition = .2;
     public static double HighBasketDepositLiftPosition = 30;
 
+    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 30, -20);
 
     public static double StoreWristPosition = 0.3;
     public static double StoreArmAngle = -70;
     public static double StoreLiftPosition = 0;
+
+    public static SampleArmPose RestPose = new SampleArmPose(0, .69, 0, -50);
 
     /**
      * relative to the center of the pivot
@@ -67,6 +72,8 @@ public class SampleArm {
     public static double clawTriggerHeightOffsetExtended = 4;
     public static double clawTriggerHeightOffsetRetracted = 4;
     double interpolationExtendedLiftDistance = 20;
+
+    public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .7420, 0, Double.NaN);
 
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
@@ -133,24 +140,29 @@ public class SampleArm {
     }
 
     boolean grabOpen = true;
-
     boolean lastGroundSlam = false;
 
-    void updatePresets() {
-        if (config.inputMap.getIntakeForward()){
+    void updateTargetState() {
+        if (config.inputMap.getIntakeForward()) {
             armState = SampleArmState.intakeHeightBasedGrab;
-            grabPosition = 0;}
+            grabPosition = 0;
+        }
 
         if (config.inputMap.getObservationDepositPreset())
             armState = SampleArmState.depositLow;
 
         if (config.inputMap.getBasketDepositPreset())
             armState = SampleArmState.depositHigh;
+    }
 
-        if (config.inputMap.gamepad1.right_bumper && grabPosition < 1){
+    void updatePresets() {
+
+        updateTargetState();
+
+        if (config.inputMap.gamepad1.right_bumper && grabPosition < 1) {
             grabPosition += 1;
         }
-        if (config.inputMap.gamepad1.left_bumper && grabPosition > -1){
+        if (config.inputMap.gamepad1.left_bumper && grabPosition > -1) {
             grabPosition -= 1;
         }
         sampleClaw.twistServo(grabPosition);
@@ -164,10 +176,10 @@ public class SampleArm {
         if (armState != previousArmState)
             switch (armState) {
                 case store:
-                    sampleClaw.setWristPosition(StoreWristPosition);
+                    sampleClaw.setBigWristPosition(StoreWristPosition);
 
                     rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
-                    rightLift.linearMoveToPosition(StoreLiftPosition,0.69);
+                    rightLift.linearMoveToPosition(StoreLiftPosition, 0.69);
 
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
@@ -176,10 +188,10 @@ public class SampleArm {
                     break;
 
                 case depositLow:
-                    sampleClaw.setWristPosition(ObservationWristPosition);
+                    sampleClaw.setBigWristPosition(ObservationWristPosition);
 
                     rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(ObservationDepositLiftPosition,0.69);
+                    rightLift.linearMoveToPosition(ObservationDepositLiftPosition, 0.69);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
@@ -187,10 +199,10 @@ public class SampleArm {
                     break;
 
                 case depositHigh:
-                    sampleClaw.setWristPosition(HighBasketWristPosition);
+                    sampleClaw.setBigWristPosition(HighBasketWristPosition);
 
                     rightPivot.fancyMoveToPosition(HighBasketDepositArmAngle, 1);
-                    rightLift.linearMoveToPosition(HighBasketDepositLiftPosition,0.69);
+                    rightLift.linearMoveToPosition(HighBasketDepositLiftPosition, 0.69);
 
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
@@ -199,10 +211,10 @@ public class SampleArm {
                     break;
 
                 case intakeHeightBasedGrab:
-                    sampleClaw.setWristPosition(IntakeWristPosition);
+                    sampleClaw.setBigWristPosition(IntakeWristPosition);
 
                     rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(intakeLiftExtension), 1);
-                    rightLift.linearMoveToPosition(intakeLiftExtension,0.69);
+                    rightLift.linearMoveToPosition(intakeLiftExtension, 0.69);
 
                     rightLift.defaultControlMode = ControlAxis.ControlMode.gamePadVelocityControl;
                     rightPivot.defaultControlMode = ControlAxis.ControlMode.positionControl;
@@ -263,6 +275,13 @@ public class SampleArm {
      */
     public double calculateIntakeHeight() {
         return armIK.getHeight(rightPivot.getPosition() - intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
+    }
+
+    void moveToPose(SampleArmPose pose, double duration){
+        rightLift.linearMoveToPosition(pose.liftPosition,duration);
+        rightPivot.fancyMoveToPosition(pose.pivotPosition,duration);
+        sampleClaw.setBigWristPosition(pose.wristBigTwistAlignmentPosition);
+        sampleClaw.s
     }
 
 }

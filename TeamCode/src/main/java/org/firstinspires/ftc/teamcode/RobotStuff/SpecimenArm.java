@@ -46,6 +46,12 @@ public class SpecimenArm {
     LeftPivot otherSpinnyBit;
 
     ActiveSpecimenClaw claw;
+    public void openClaw(){
+        claw.openClaw();
+    }
+    public void closeClawHard(){
+        claw.closeClawHard();
+    }
 
     GoofyPID scoringPid;
 
@@ -74,6 +80,7 @@ public class SpecimenArm {
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
         updateState();
+
         if (previousState != armState) {
             switch (armState) {
                 case rest:
@@ -132,17 +139,12 @@ public class SpecimenArm {
     }
 
 
-    public void moveToPose(SpecimenArmPose pose, double duration) {
+    void moveToPose(SpecimenArmPose pose, double duration) {
         leftLift.setControlMode(ControlAxis.ControlMode.positionControl);
         leftLift.setTargetPosition(pose.liftPosition);
         otherSpinnyBit.fancyMoveToPosition(pose.pivotPosition, duration);
         claw.setWristPosition(pose.wristPosition);
     }
 
-    public void openClaw(){
-        claw.openClaw();
-    }
-    public void closeClawHard(){
-        claw.closeClawHard();
-    }
+
 }

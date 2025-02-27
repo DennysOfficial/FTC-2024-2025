@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 public class SampleClaw {
 
     Servo harpoonServo;
-    Servo wristServo;
-    Servo hba;
+    Servo bigWristServo;
+    Servo smolWristServo;
     RobotConfig config;
 
     public static double openPos = .6, closePos = 0.8420, rTwist = 1, lTwist = 0.69, mTwist = 0.69;
@@ -29,8 +29,8 @@ public class SampleClaw {
         this.opMode = opMode;
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonGrabServo);
-        wristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
-        hba = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonBlockAlignmentWristServo);
+        bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonDepositWristServo);
+        smolWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.harpoonBlockAlignmentWristServo);
     }
 
     /**
@@ -42,19 +42,23 @@ public class SampleClaw {
         harpoonServo.setPosition(position);
     }
 
-    public void setWristPosition(double position){
-        wristServo.setPosition(position);
+    public void setBigWristPosition(double position){
+        bigWristServo.setPosition(position);
+    }
+
+    public void setSmolWristPosition(double position){
+        smolWristServo.setPosition(position);
     }
 
     public void twistServo(double pos){
         if (pos == 1){
-            hba.setPosition(rTwist);
+            smolWristServo.setPosition(rTwist);
         }
         if (pos == 0){
-            hba.setPosition(mTwist);
+            smolWristServo.setPosition(mTwist);
         }
         if (pos == -1){
-            hba.setPosition(lTwist);
+            smolWristServo.setPosition(lTwist);
         }
     }
 
