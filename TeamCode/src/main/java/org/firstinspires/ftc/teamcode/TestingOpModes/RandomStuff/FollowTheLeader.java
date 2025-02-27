@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.RandomStuff;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -37,20 +37,25 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.SwitchableDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "Multi Drive", group = "AC important Testing")
+@TeleOp(name = "Follow The Leader Test", group = "ZZ testing")
 //@Disabled
-public class MultiDriveTest extends LinearOpMode {
+public class FollowTheLeader extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
+    StopWatch stopWatch = new StopWatch();
 
     @Override
     public void runOpMode() {
@@ -66,11 +71,26 @@ public class MultiDriveTest extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        SwitchableDrive switchableDrive = new SwitchableDrive(this, activeConfig);
-        switchableDrive.addDriveMode(new HeadingPIDSteerTest(this, activeConfig));
-        switchableDrive.addDriveMode(new BasicMechanumDrive(this, activeConfig));
 
-        DriveModeBase activeDriveMode = switchableDrive;
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+
+
+        RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
+
+        spinnyBit.assignLift(rightLift);
+        rightLift.assignPivot(spinnyBit);
+
+        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
+
+        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.followTheLeader, this, activeConfig);
+
+        otherSpinnyBit.assignLift(leftLift);
+        leftLift.assignPivot(otherSpinnyBit);
+
+        leftLift.assignLeaderControlAxis(rightLift);
+        otherSpinnyBit.assignLeaderControlAxis(spinnyBit);
 
 
         waitForStart();
@@ -79,11 +99,14 @@ public class MultiDriveTest extends LinearOpMode {
 
         double deltaTime = 0;
 
+        leftLift.fancyMoveToPosition(rightLift.getPosition(), 2);
+        otherSpinnyBit.fancyMoveToPosition(spinnyBit.getPosition(), 2);
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            activeConfig.stopWatch.reset();
-            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+            stopWatch.reset();
+            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
@@ -96,12 +119,21 @@ public class MultiDriveTest extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
+
+            rightLift.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
+
+            spinnyBit.update();
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
             activeDriveMode.updateDrive(deltaTime);
-            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
+            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
-            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
+
+            leftLift.update();
+            otherSpinnyBit.update();
+
 
             telemetry.update();
         }

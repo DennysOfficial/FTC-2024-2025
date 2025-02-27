@@ -27,53 +27,59 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.TestingOpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes.RandomStuff;
 
-import androidx.core.math.MathUtils;
-
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "servo tester", group = "ZZ testing")
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
+
+@TeleOp(name = "Heading PID Test", group = "ZZ testing")
 //@Disabled
-public class servoThing extends LinearOpMode {
+public class   HeadingPIDTest extends LinearOpMode {
 
 
-    /**
-     * Override this method and place your code here.
-     * <p>
-     * Please do not catch {@link InterruptedException}s that are thrown in your OpMode
-     * unless you are doing it to perform some brief cleanup, in which case you must exit
-     * immediately afterward. Once the OpMode has been told to stop, your ability to
-     * control hardware will be limited.
-     *
-     * @throws InterruptedException When the OpMode is stopped while calling a method
-     *                              that can throw {@link InterruptedException}
-     */
-    double targetPostion;
     private final ElapsedTime frameTimer = new ElapsedTime();
-    @Override
-    public void runOpMode() throws InterruptedException {
-        Servo coolSampleGrab = hardwareMap.get(Servo.class, "bob");
 
+    StopWatch stopWatch = new StopWatch();
+
+    @Override
+    public void runOpMode() {
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
+
+        RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
+
+        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
+
+
+        waitForStart();
+        frameTimer.reset();
         double deltaTime = 0;
 
-        double servoSenstivty = .5;
-        waitForStart();
+        // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            stopWatch.reset();
+            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+
+
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
-            //telemetry.addData(" deltaTime", deltaTime);
+            telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
-            targetPostion += gamepad1.left_stick_y * deltaTime* servoSenstivty;
-            targetPostion = MathUtils.clamp(targetPostion, 0, 1);
-            coolSampleGrab.setPosition(targetPostion);
+            activeConfig.sensorData.update(); // bulk caching
 
-            telemetry.addData(" servo position  = %f", targetPostion);
+            activeDriveMode.updateDrive(deltaTime);
 
-
+            telemetry.update();
         }
     }
+
 }

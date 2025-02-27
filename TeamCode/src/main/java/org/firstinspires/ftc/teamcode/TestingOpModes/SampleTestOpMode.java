@@ -31,52 +31,78 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.HeadingPIDSteerTest;
+import org.firstinspires.ftc.teamcode.RobotStuff.SampleArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
-@TeleOp(name = "Heading PID Test", group = "ZZ testing")
+import java.util.List;
+
+@TeleOp(name = "sample arm test", group = "AC important Testing")
 //@Disabled
-public class   HeadingPIDTest extends LinearOpMode {
+public class SampleTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    StopWatch stopWatch = new StopWatch();
 
     @Override
     public void runOpMode() {
+
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk// bulk caching and ftc telemetry
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        DriveModeBase activeDriveMode = new HeadingPIDSteerTest(this, activeConfig);
+
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+
+        SampleArm sampleArm = new SampleArm(this, activeConfig);
 
 
         waitForStart();
         frameTimer.reset();
+        //leftArmStuff.Rest();
+
         double deltaTime = 0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            stopWatch.reset();
-            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+            activeConfig.stopWatch.reset();
+            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
             frameTimer.reset();
 
+            for (LynxModule hub : allHubs) {
+                hub.clearBulkCache();
+            }
             activeConfig.sensorData.update(); // bulk caching
 
+
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
+
+            sampleArm.update();
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total sample arm update Time ----------------------------");
+
             activeDriveMode.updateDrive(deltaTime);
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
+
+            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }

@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.TestingOpModes.AngleServo;
+package org.firstinspires.ftc.teamcode.TestingOpModes.RandomStuff;
 
 import androidx.core.math.MathUtils;
 
@@ -36,53 +36,42 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
-
-@TeleOp(name = "Angle Servo Setup", group = "Abbc testing")
+@TeleOp(name = "servo tester", group = "ZZ testing")
 //@Disabled
-public class AngleServoSetup extends LinearOpMode {
+public class servoThing extends LinearOpMode {
 
 
-    double targetPosition;
+    /**
+     * Override this method and place your code here.
+     * <p>
+     * Please do not catch {@link InterruptedException}s that are thrown in your OpMode
+     * unless you are doing it to perform some brief cleanup, in which case you must exit
+     * immediately afterward. Once the OpMode has been told to stop, your ability to
+     * control hardware will be limited.
+     *
+     * @throws InterruptedException When the OpMode is stopped while calling a method
+     *                              that can throw {@link InterruptedException}
+     */
+    double targetPostion;
     private final ElapsedTime frameTimer = new ElapsedTime();
-
-    ButtonEdgeDetector refreshServoButton = new ButtonEdgeDetector(false);
-
-    AngleServo servo = null;
-
     @Override
     public void runOpMode() throws InterruptedException {
-
+        Servo coolSampleGrab = hardwareMap.get(Servo.class, "bob");
 
         double deltaTime = 0;
 
+        double servoSenstivty = .5;
         waitForStart();
         while (opModeIsActive()) {
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             //telemetry.addData(" deltaTime", deltaTime);
             frameTimer.reset();
 
-            targetPosition += gamepad1.left_stick_y * deltaTime * AngleServoTestConfig.f_testingSensitivity;
-            targetPosition = MathUtils.clamp(targetPosition, 0, 1);
+            targetPostion += gamepad1.left_stick_y * deltaTime* servoSenstivty;
+            targetPostion = MathUtils.clamp(targetPostion, 0, 1);
+            coolSampleGrab.setPosition(targetPostion);
 
-            if (refreshServoButton.getButtonDown(gamepad1.a)) {
-                try {
-                    servo = new AngleServo(AngleServoTestConfig.a_TestingServoName, hardwareMap, AngleServoTestConfig.b_point1Position, AngleServoTestConfig.c_point1Angle, AngleServoTestConfig.d_point2Position, AngleServoTestConfig.e_point2Angle);
-                } finally {
-                    telemetry.addLine("bad servo name prob");
-
-                }
-            }
-
-            if (servo == null)
-                return;
-
-            servo.setPosition(targetPosition);
-
-            telemetry.addLine("press a to refresh the servo");
-            telemetry.addData("servo position", targetPosition);
-            telemetry.addData("servo angle", servo.getAngle());
+            telemetry.addData(" servo position  = %f", targetPostion);
 
 
         }

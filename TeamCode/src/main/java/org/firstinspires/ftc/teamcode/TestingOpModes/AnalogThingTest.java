@@ -27,37 +27,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.InertialMeasurementUnit;
 
 import java.util.List;
 
-@TeleOp(name = "Motor Go Vrooom", group = "AZ testing thing")
+@TeleOp(name = "AnalogTest", group = "Ac mild cringe ")
 //@Disabled
-public class motorGoVrooom extends LinearOpMode { // this is basically theotheroneandonlyopmode but with imu stuff
+public class AnalogThingTest extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
 
-    StopWatch stopWatch = new StopWatch();
-
-    InertialMeasurementUnit IMU = new InertialMeasurementUnit();
 
     @Override
     public void runOpMode() {
@@ -73,44 +63,21 @@ public class motorGoVrooom extends LinearOpMode { // this is basically theothero
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
+        AnalogInput analogInput = hardwareMap.get(AnalogInput.class, "E");
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
-
-
-        //RightLift rightLift = new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        //RightPivot spinnyBit = new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        //spinnyBit.assignLift(rightLift);
-        //rightLift.assignPivot(spinnyBit);
-
-        LeftLift leftLift = new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        LeftPivot otherSpinnyBit = new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        otherSpinnyBit.assignLift(leftLift);
-        leftLift.assignPivot(otherSpinnyBit);
-
-        PassiveGrabber dohicky = new PassiveGrabber(this,activeConfig,leftLift,otherSpinnyBit);
-
-        //ActiveIntakeServo intake = new ActiveIntakeServo(this, activeConfig);
-
-        IMU.initialize(hardwareMap);
 
         waitForStart();
         frameTimer.reset();
-        IMU.afterStart(); // starts measuring
+        //leftArmStuff.Rest();
 
         double deltaTime = 0;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            stopWatch.reset();
-            stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
+            activeConfig.stopWatch.reset();
+            activeConfig.stopWatch.debug = activeConfig.debugConfig.getTimeBreakdownDebug();
 
-            IMU.updateIMU(telemetry);
-            IMU.returnIMU(telemetry);
 
             deltaTime = frameTimer.seconds(); //gets the time since the start of last frame and then resets the timer
             telemetry.addData("deltaTime", deltaTime);
@@ -121,20 +88,9 @@ public class motorGoVrooom extends LinearOpMode { // this is basically theothero
             }
             activeConfig.sensorData.update(); // bulk caching
 
-            otherSpinnyBit.update();
-            leftLift.update();
 
-            if(gamepad2.b)
-                dohicky.Collect();
-            if(gamepad2.y)
-                dohicky.Rest();
-            if(gamepad2.x)
-                dohicky.Score();
+            telemetry.addData("thing", analogInput.getVoltage());
 
-            activeDriveMode.updateDrive(deltaTime);
-            stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
-
-            //intake.directControl();
 
             telemetry.update();
         }

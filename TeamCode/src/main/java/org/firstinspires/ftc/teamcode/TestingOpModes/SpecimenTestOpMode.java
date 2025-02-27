@@ -27,23 +27,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.teleOp_OpModes;
+package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.SampleArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 
 import java.util.List;
 
-@TeleOp(name = "full test", group = "AB important Testing / main opMode ")
+@TeleOp(name = "specimen arm test", group = "AC important Testing")
 //@Disabled
-public class AnalogThingTest extends LinearOpMode {
+public class SpecimenTestOpMode extends LinearOpMode {
 
 
     private final ElapsedTime frameTimer = new ElapsedTime();
@@ -63,7 +66,10 @@ public class AnalogThingTest extends LinearOpMode {
 
         RobotConfig activeConfig = new RobotConfig(this); // selects the active setting that will be used in the rest of the code
 
-        AnalogInput analogInput = hardwareMap.get(AnalogInput.class, "E");
+
+        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+
+        SpecimenArm specimenArm = new SpecimenArm(this, activeConfig);
 
 
         waitForStart();
@@ -89,8 +95,15 @@ public class AnalogThingTest extends LinearOpMode {
             activeConfig.sensorData.update(); // bulk caching
 
 
-            telemetry.addData("thing", analogInput.getVoltage());
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
+            specimenArm.update();
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "total specimen arm update Time ----------------------------");
+
+            activeDriveMode.updateDrive(deltaTime);
+            activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "drive update Time ----------------------------");
+
+            //activeConfig.stopWatch.addTimeToTelemetryAndReset(telemetry, "other stuff ----------------------------");
 
             telemetry.update();
         }
