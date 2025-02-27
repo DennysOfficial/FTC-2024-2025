@@ -7,16 +7,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
 public class BestSampleToPickUpAlgorithm {
-    //LinearOpMode opMode;
+    LinearOpMode opMode;
 
     List<Pose2D> deepCopy = new ArrayList<>();
 
     int listLength;
+    double finalCopy[][];
+    //List newcopt = new ArrayList();
+
 
     double xDistanceFrom00toSub = 56.5;
     double yDistanceFrom00toSub = 48;
@@ -86,7 +91,20 @@ public class BestSampleToPickUpAlgorithm {
     }
 
 
+    public double[][] getDeepCopy() {
 
-    
+        for (int h = 0; h < deepCopy.size() - 1; h++){
+            finalCopy[h][0]= deepCopy.get(h).getX(DistanceUnit.INCH);
+            finalCopy[h][1]= deepCopy.get(h).getY(DistanceUnit.INCH);
+            finalCopy[h][2]= deepCopy.get(h).getHeading(AngleUnit.RADIANS);
+            //finalCopy[h][3]= h + 1;
+        }
 
+        return finalCopy;
+    }
+
+    public void displaySamplePosition(int sampleCount){
+        opMode.telemetry.addData("Number","X", "Y", "H",sampleCount, finalCopy[sampleCount][0],finalCopy[sampleCount][1],finalCopy[sampleCount][2]);
+        opMode.telemetry.update();
+    }
 }
