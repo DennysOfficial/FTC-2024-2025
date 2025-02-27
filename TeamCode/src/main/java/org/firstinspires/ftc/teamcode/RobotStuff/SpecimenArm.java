@@ -138,4 +138,11 @@ public class SpecimenArm {
         otherSpinnyBit.fancyMoveToPosition(pose.pivotPosition, duration);
         claw.setWristPosition(pose.wristPosition);
     }
+
+    public void openClaw(){
+        claw.openClaw();
+    }
+    public void closeClawHard(){
+        claw.closeClawHard();
+    }
 }
