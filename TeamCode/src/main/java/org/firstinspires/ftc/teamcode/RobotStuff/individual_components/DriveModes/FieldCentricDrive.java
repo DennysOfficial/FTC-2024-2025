@@ -34,7 +34,6 @@ public class FieldCentricDrive extends DriveModeBase {
     public FieldCentricDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         imu = opMode.hardwareMap.get(IMU.class, "imu");
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
 

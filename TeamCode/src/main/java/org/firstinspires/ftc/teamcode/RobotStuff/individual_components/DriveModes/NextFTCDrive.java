@@ -34,7 +34,6 @@ public class NextFTCDrive extends DriveModeBase {
     public NextFTCDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         imu = opMode.hardwareMap.get(IMU.class, "imu");
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
 

@@ -33,7 +33,6 @@ public class TankDrive extends DriveModeBase {
     public TankDrive(OpMode opMode, RobotConfig config) {
         super(opMode, config);
         imu = opMode.hardwareMap.get(IMU.class, "imu");
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
     }
