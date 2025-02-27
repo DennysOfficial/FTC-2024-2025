@@ -198,5 +198,16 @@ public class SpecimenArm {
         claw.setWristPosition(pose.wristPosition);
     }
 
+    public boolean pivotIsBusy() {
+        return otherSpinnyBit.isBusy();
+    }
 
+    public double liftPos() {
+        return leftLift.getPosition();
+    }
+
+    public void toScore1() {
+        moveToPose(scorePose, 0.75);
+        armState = SpecimenArmState.score;
+    }
 }
