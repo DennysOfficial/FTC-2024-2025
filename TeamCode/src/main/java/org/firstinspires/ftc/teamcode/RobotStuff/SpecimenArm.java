@@ -79,8 +79,6 @@ public class SpecimenArm {
         if (config.debugConfig.getStateDebug())
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
-        updateState();
-
         if (previousState != armState) {
             switch (armState) {
                 case rest:
@@ -130,8 +128,6 @@ public class SpecimenArm {
     public void update() {
         if (config.debugConfig.getStateDebug())
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
-
-        updateState();
 
         if (previousState != armState) {
             switch (armState) {

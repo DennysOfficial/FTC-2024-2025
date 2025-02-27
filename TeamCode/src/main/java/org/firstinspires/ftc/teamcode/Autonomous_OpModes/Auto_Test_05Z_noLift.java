@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
@@ -84,11 +85,12 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
     LeftLift leftLift;
     LeftPivot leftPivot;
-    ActiveIntakeMotor intake;
 
     RightLift rightLift;
     RightPivot rightPivot;
     ActiveSpecimenClaw grabber;
+
+    SpecimenArm spArm;
 
     @Override
     public void init() {
@@ -108,11 +110,12 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
         leftLift = new LeftLift(ControlAxis.ControlMode.positionControl,this, config);
         leftPivot = new LeftPivot(ControlAxis.ControlMode.positionControl,this, config);
-        intake = new ActiveIntakeMotor(this, config);
 
         rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
         rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
-        grabber = new ActiveSpecimenClaw(this, config, leftLift, leftPivot);
+        grabber = new ActiveSpecimenClaw(this, config);
+
+        spArm = new SpecimenArm(this, config);
 
         leftLift.assignPivot(leftPivot);
         leftPivot.assignLift(leftLift);
@@ -125,7 +128,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
 
         rightLift.setTargetPosition(0);
         rightPivot.setTargetPosition(-60);
-        grabber.Collect();
+        spArm.armState = SpecimenArm.SpecimenArmState.collect;
         leftLift.setTargetPosition(0);
         leftPivot.setTargetPosition(-55);
         grabber.closeClawHard();
@@ -165,7 +168,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
-                    grabber.Collect();
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
                 .build();
@@ -176,7 +179,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
-                    grabber.Collect();
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
                 .build();
@@ -187,14 +190,14 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
-                    grabber.Collect();
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
                 .build();
         score5a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint5a, rungPoint5)))
                 .addParametricCallback(1, () -> {
-                    grabber.Collect();
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
                 .build();
@@ -203,7 +206,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 .addPath(score1a)
                 .addPath(toSample1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addParametricCallback(0, () -> grabber.Collect())
+                .addParametricCallback(0, () -> spArm.armState = SpecimenArm.SpecimenArmState.collect)
                 .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(toSample2)
@@ -286,7 +289,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 break;
             case 3:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score2);
                         listPointer = 4;
@@ -314,7 +317,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 break;
             case 7:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score3);
                         listPointer = 8;
@@ -342,7 +345,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 break;
             case 11:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score4);
                         listPointer = 12;
@@ -377,7 +380,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
                 break;
             case 16:
                 if (pathTimer.getElapsedTimeSeconds() >= 0.5) {
-                    grabber.Score();
+                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     if (leftPivot.getPosition() >= 0) {
                         follower.followPath(score5);
                         listPointer = 17;
@@ -409,7 +412,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
         leftPivot.update();
         rightLift.update();
         rightPivot.update();
-        intake.update();
+        spArm.autoUpdate();
 
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
@@ -425,7 +428,7 @@ public class Auto_Test_05Z_noLift extends OpMode{
     public void start() {
         buildPaths();
         pathTimer.resetTimer();
-        grabber.Score();
+        spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
 
         deltaTime = 0;
         frameTimer.reset();
