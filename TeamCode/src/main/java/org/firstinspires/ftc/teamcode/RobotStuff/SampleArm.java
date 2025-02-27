@@ -36,12 +36,12 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.Harpoon;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.SampleClaw;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ArmIK;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 @Config
-public class HarpoonArm {
+public class SampleArm {
 
     public static double grabPosition = 0;
 
@@ -89,7 +89,7 @@ public class HarpoonArm {
     final RightLift rightLift;
     final RightPivot rightPivot;
 
-    final Harpoon harpoon;
+    final SampleClaw sampleClaw;
 
     ArmIK armIK = new ArmIK();
 
@@ -105,7 +105,7 @@ public class HarpoonArm {
     SampleArmState armState = SampleArmState.store;
     SampleArmState previousArmState = null;
 
-    public HarpoonArm(OpMode opMode, RobotConfig config) {
+    public SampleArm(OpMode opMode, RobotConfig config) {
         this.opMode = opMode;
         this.config = config;
 
@@ -115,7 +115,7 @@ public class HarpoonArm {
         rightLift.assignPivot(rightPivot);
         rightPivot.assignLift(rightLift);
 
-        harpoon = new Harpoon(opMode, config);
+        sampleClaw = new SampleClaw(opMode, config);
     }
 
     public void update() {
@@ -153,7 +153,7 @@ public class HarpoonArm {
         if (config.inputMap.gamepad1.left_bumper && grabPosition > -1){
             grabPosition -= 1;
         }
-        harpoon.twistServo(grabPosition);
+        sampleClaw.twistServo(grabPosition);
 
         if (config.inputMap.getClawCloseButton())
             grabOpen = false;
@@ -164,7 +164,7 @@ public class HarpoonArm {
         if (armState != previousArmState)
             switch (armState) {
                 case store:
-                    harpoon.setWristPosition(StoreWristPosition);
+                    sampleClaw.setWristPosition(StoreWristPosition);
 
                     rightPivot.fancyMoveToPosition(StoreArmAngle, 1);
                     rightLift.linearMoveToPosition(StoreLiftPosition,0.69);
@@ -176,7 +176,7 @@ public class HarpoonArm {
                     break;
 
                 case depositLow:
-                    harpoon.setWristPosition(ObservationWristPosition);
+                    sampleClaw.setWristPosition(ObservationWristPosition);
 
                     rightPivot.fancyMoveToPosition(ObservationDepositArmAngle, 1);
                     rightLift.linearMoveToPosition(ObservationDepositLiftPosition,0.69);
@@ -187,7 +187,7 @@ public class HarpoonArm {
                     break;
 
                 case depositHigh:
-                    harpoon.setWristPosition(HighBasketWristPosition);
+                    sampleClaw.setWristPosition(HighBasketWristPosition);
 
                     rightPivot.fancyMoveToPosition(HighBasketDepositArmAngle, 1);
                     rightLift.linearMoveToPosition(HighBasketDepositLiftPosition,0.69);
@@ -199,7 +199,7 @@ public class HarpoonArm {
                     break;
 
                 case intakeHeightBasedGrab:
-                    harpoon.setWristPosition(IntakeWristPosition);
+                    sampleClaw.setWristPosition(IntakeWristPosition);
 
                     rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(intakeLiftExtension), 1);
                     rightLift.linearMoveToPosition(intakeLiftExtension,0.69);
@@ -220,11 +220,11 @@ public class HarpoonArm {
 
 
                     if (config.inputMap.getClawCloseButton()) // emergency override
-                        harpoon.setGrabPosition(1);
+                        sampleClaw.setGrabPosition(1);
                     else if (config.inputMap.getClawOpenButton())
-                        harpoon.setGrabPosition(0);
+                        sampleClaw.setGrabPosition(0);
                     else
-                        harpoon.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
+                        sampleClaw.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
 
                     grabOpen = false;
                     lastGroundSlam = true;
@@ -244,9 +244,9 @@ public class HarpoonArm {
 
             default:
                 if (grabOpen)
-                    harpoon.setGrabPosition(0);
+                    sampleClaw.setGrabPosition(0);
                 else
-                    harpoon.setGrabPosition(1);
+                    sampleClaw.setGrabPosition(1);
         }
     }
 

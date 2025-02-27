@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 @Config
-public class Harpoon {
+public class SampleClaw {
 
     Servo harpoonServo;
     Servo wristServo;
@@ -24,7 +24,7 @@ public class Harpoon {
 
     OpMode opMode;
 
-    public Harpoon(OpMode opMode, RobotConfig config) {
+    public SampleClaw(OpMode opMode, RobotConfig config) {
         this.config = config;
         this.opMode = opMode;
 

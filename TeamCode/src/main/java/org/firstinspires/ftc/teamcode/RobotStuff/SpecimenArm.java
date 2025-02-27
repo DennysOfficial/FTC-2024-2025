@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
 @Config
 public class SpecimenArm {
 
+
     public static SpecimenArmPose restPose = new SpecimenArmPose(.2, 0, -60);
     public static double resetPresetDurationSec = 1;
     public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 19, 32);
@@ -27,14 +28,14 @@ public class SpecimenArm {
 
     public static Range<Double> scorePivotDeadZone = new Range<>(10.0, scorePose.pivotPosition);
 
-    enum SpecimenArmState {
+    public enum SpecimenArmState {
         collect,
         rest,
         movingToScore,
         score,
     }
 
-    SpecimenArmState armState = SpecimenArmState.rest;
+    public SpecimenArmState armState = SpecimenArmState.rest;
     SpecimenArmState previousState = null;
 
 
@@ -80,10 +81,16 @@ public class SpecimenArm {
                     break;
 
                 case movingToScore:
+                    claw.closeClawSoft();
                     moveToPose(scorePose, scorePresetDurationSec);
                     break;
 
                 case score:
+                    if(previousState != SpecimenArmState.movingToScore){
+                        armState = SpecimenArmState.movingToScore;
+                        return;
+                    }
+
                     otherSpinnyBit.setControlMode(ControlAxis.ControlMode.torqueControl);
                     break;
 
