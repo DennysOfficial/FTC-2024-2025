@@ -63,26 +63,27 @@ public class SampleArm {
     /**
      * relative to the center of the pivot
      */
-    public static double intakeLiftExtension = 0;
     public static double maxIntakeTorque = 0.4;
-    public static double IntakeWristPosition = 0.7420;
-    public static double clawTriggerHeightOffsetExtended = 4;
-    public static double clawTriggerHeightOffsetRetracted = 4;
-    double interpolationExtendedLiftDistance = 20;
+
+
 
     public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .7420, 0, Double.NaN);
+    public static double intakeHeightOffset = -2.69;
 
+    public static double clawTriggerHeightOffsetExtended = 4;
+    public static double clawTriggerHeightOffsetRetracted = 4;
+    public static double clawTriggerScale = -4.20;
+
+
+    double interpolationExtendedLiftDistance = 20;
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
     }
-
-    public static double clawTriggerScale = -4.20;
 
     /**
      * the distance between the axis of rotation and the line in the direction of extension through the controlled point
      */
     public static double extensionAxisOffset = 4.2;
-    public static double intakeHeightOffset = -2.69;
 
     public static double intakeAngleOffset = -3.5;
 
