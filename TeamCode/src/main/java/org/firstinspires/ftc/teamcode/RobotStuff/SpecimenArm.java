@@ -17,9 +17,9 @@ public class SpecimenArm {
 
     public static SpecimenArmPose restPose = new SpecimenArmPose(.2, 0, -60);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 19, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 17, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.62, 1, -55);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.62, 1, -52);
     public static double collectPresetDurationSec = 1;
 
     public static double kPForwards = 0.008;
@@ -79,6 +79,8 @@ public class SpecimenArm {
         if (config.debugConfig.getStateDebug())
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
 
+        updateState();
+
         if (previousState != armState) {
             switch (armState) {
                 case rest:
@@ -128,6 +130,8 @@ public class SpecimenArm {
     public void update() {
         if (config.debugConfig.getStateDebug())
             opmode.telemetry.addData("Specimen Arm State", armState.toString());
+
+        updateState();
 
         if (previousState != armState) {
             switch (armState) {
@@ -204,10 +208,5 @@ public class SpecimenArm {
 
     public double liftPos() {
         return leftLift.getPosition();
-    }
-
-    public void toScore1() {
-        moveToPose(scorePose, 0.75);
-        armState = SpecimenArmState.score;
     }
 }
