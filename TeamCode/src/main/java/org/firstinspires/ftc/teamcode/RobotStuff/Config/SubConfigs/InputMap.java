@@ -99,11 +99,11 @@ public class InputMap {
     /// sample Presets ##################################################################################################################################################
 
     public boolean getIntakeForward() {
-        return gamepad2.dpad_right;
+        return gamepad2.y;
     }
 
     public boolean getObservationDepositPreset() {
-        return gamepad2.dpad_left;
+        return gamepad2.b;
     }
 
     public boolean getBasketDepositPreset() {
