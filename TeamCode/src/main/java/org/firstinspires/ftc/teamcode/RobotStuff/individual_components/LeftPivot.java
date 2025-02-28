@@ -75,7 +75,6 @@ public class LeftPivot extends ControlAxis {
 
         //opMode.telemetry.addData("pivotDynamicLimit", dynamicLowerLimit);
         super.setTargetPosition(targetPosition);
-
     }
 
 
