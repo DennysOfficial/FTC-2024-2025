@@ -51,7 +51,7 @@ public class SampleArm {
     public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .4, 0, -40);
     public static double DefaultObservationDepositDuration = 1;
 
-    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 30, -20);
+    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 32, -20);
     public static double DefaultHighBasketDepositPresetDuration = 1;
 
     public static SampleArmPose RestPose = new SampleArmPose(0, .69, 0, -50);
