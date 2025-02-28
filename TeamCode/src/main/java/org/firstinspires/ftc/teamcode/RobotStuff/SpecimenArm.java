@@ -202,5 +202,11 @@ public class SpecimenArm {
         claw.setWristPosition(pose.wristPosition);
     }
 
-//lll
+    public boolean pivotIsBusy() {
+        return otherSpinnyBit.isBusy();
+    }
+
+    public double liftPos() {
+        return leftLift.getPosition();
+    }
 }
