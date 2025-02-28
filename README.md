@@ -1,3 +1,4 @@
+## Welcome to the Offical Pedro Pathing Quickstart!  
 
-we put the FUN in dysfunctional!
-i love jack gibel!
+Follow the steps on our [website](https://pedropathing.com/) to tune and setup!  
+Feel Free to reach out on the [Offical Pedro Pathing Discord Server](https://discord.gg/2GfC4qBP5s)!
