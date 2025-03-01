@@ -12,12 +12,11 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArmPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
@@ -36,11 +35,11 @@ import pedroPathing.constants.LConstants;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "OneOpModetoRuleThemAll")
-public class Auto_Test_05Z extends OpMode {
+@Autonomous(name = "OtherOpModetoRuleThemAll")
+public class Auto_Test_05Z_Test extends OpMode {
 
     private Follower follower;
-    private Timer pathTimer;
+    private Timer pathTimer, actionTimer, opmodeTimer;
 
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
@@ -66,39 +65,39 @@ public class Auto_Test_05Z extends OpMode {
 
     private final Pose startPose = new Pose(9.25,48.5, Math.toRadians(0));  // This is where the robot starts
 
-    Point rungPoint3 =        new Point(30, 67.5, Point.CARTESIAN);
-    Point rungPoint4 =        new Point(30, 66, Point.CARTESIAN);
-    Point rungPoint5 =        new Point(34, 64.5, Point.CARTESIAN);
-    Point rungPoint2 =        new Point(30, 69, Point.CARTESIAN);
-    Point rungPoint1 =        new Point(30, 70.5, Point.CARTESIAN);
-    Point rungPoint3a =       new Point(20, 67.5, Point.CARTESIAN);
-    Point rungPoint4a =       new Point(20, 66, Point.CARTESIAN);
-    Point rungPoint5a =       new Point(20, 64.5, Point.CARTESIAN);
-    Point rungPoint2a =       new Point(20, 69, Point.CARTESIAN);
-    Point rungPoint1a =       new Point(20, 70.5, Point.CARTESIAN);
+    Point rungPoint3 = new Point(34, 67.5, Point.CARTESIAN);
+    Point rungPoint4 = new Point(30, 66, Point.CARTESIAN);
+    Point rungPoint5 = new Point(30, 64.5, Point.CARTESIAN);
+    Point rungPoint2 = new Point(30, 69, Point.CARTESIAN);
+    Point rungPoint1 = new Point(30, 70.5, Point.CARTESIAN);
+    Point rungPoint3a = new Point(22, 67.5, Point.CARTESIAN);
+    Point rungPoint4a = new Point(22, 66, Point.CARTESIAN);
+    Point rungPoint5a = new Point(22, 64.5, Point.CARTESIAN);
+    Point rungPoint2a = new Point(22, 69, Point.CARTESIAN);
+    Point rungPoint1a = new Point(22, 70.5, Point.CARTESIAN);
 
     Point rungPointControl1 = new Point(20,28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
     Point samplecurvepoint1 = new Point(17,20, Point.CARTESIAN);
-    Point samplecurvepoint2 = new Point(66,48, Point.CARTESIAN);
-    Point samplecurvepoint3 = new Point(66,30, Point.CARTESIAN);
-    Point samplecurvepoint4 = new Point(66,20, Point.CARTESIAN);
+    Point samplecurvepoint2 = new Point(72,48, Point.CARTESIAN);
+    Point samplecurvepoint3 = new Point(72,30, Point.CARTESIAN);
+    Point samplecurvepoint4 = new Point(72,20, Point.CARTESIAN);
 
-    Point samplepoint1 =      new Point(54,26.5, Point.CARTESIAN);
-    Point samplepoint2 =      new Point(54,17, Point.CARTESIAN);
-    Point samplepoint3 =      new Point(54,12.25, Point.CARTESIAN);
+    Point samplepoint1 =      new Point(60,26.5, Point.CARTESIAN);
+    Point samplepoint2 =      new Point(60,17, Point.CARTESIAN);
+    Point samplepoint3 =      new Point(60,12.5, Point.CARTESIAN);
 
-    Point linepoint1 =        new Point(30,25, Point.CARTESIAN);
-    Point linepoint2 =        new Point(30,17, Point.CARTESIAN);
-    Point linepoint3 =        new Point(30,12.25, Point.CARTESIAN);
+    Point linepoint1 =        new Point(32,25, Point.CARTESIAN);
+    Point linepoint2 =        new Point(32,17, Point.CARTESIAN);
+    Point linepoint3 =        new Point(32,12.5, Point.CARTESIAN);
 
-    Point pickupPoint2 =      new Point(11.25, 26, Point.CARTESIAN);
-    Point pickupPoint3 =      new Point(10, 26, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(14.5, 26, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(10.5, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2;
 
-    public PathChain score1, score2, collect3, score3, moveSamples, collect4, score4, collect5, score5, score2a, score3a, score4a;
+    public PathChain score1, score2, collect3, score3, moveSamples, collect4, score4, collect5, score5, score2a, score3a, score4a, score5a;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -139,43 +138,6 @@ public class Auto_Test_05Z extends OpMode {
 
         score1a = new Path(new BezierLine(rungPoint1a, rungPoint1));
 
-        score2a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
-                .addPath(new Path(new BezierCurve(rungPoint2, pickupPoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0, () -> {
-                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
-                })
-                .addParametricCallback(0.92, () -> grabber.closeClawHard())
-                .build();
-        score3a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0, () -> {
-                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
-                })
-                .addParametricCallback(0.92, () -> grabber.closeClawHard())
-                .build();
-        score4a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
-                .addPath(new Path(new BezierCurve(rungPoint4, pickupPoint2)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .setPathEndTimeoutConstraint(100)
-                .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0, () -> {
-                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
-                })
-                .addParametricCallback(0.92, () -> grabber.closeClawHard())
-                .build();
-
         moveSamples = follower.pathBuilder()
                 .addPath(score1a)
                 .addPath(toSample1)
@@ -196,14 +158,22 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(collect2)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addParametricCallback(0.8, () -> grabber.closeClawHard())
                 .build();
 
         score2 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint2a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
-                .setPathEndVelocityConstraint(1)
+                .setPathEndVelocityConstraint(0.3)
+                .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint2, pickupPoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(100)
+                .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
+                    grabber.openClaw();
+                })
                 .build();
 
         collect3 = follower.pathBuilder()
@@ -211,13 +181,21 @@ public class Auto_Test_05Z extends OpMode {
                 .setZeroPowerAccelerationMultiplier(5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
-                .addParametricCallback(0.1, () -> grabber.closeClawHard())
                 .build();
         score3 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint3a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
-                .setPathEndVelocityConstraint(1)
+                .setPathEndVelocityConstraint(0.3)
+                .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
+                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(100)
+                .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
+                    grabber.openClaw();
+                })
                 .build();
 
         collect4 = follower.pathBuilder()
@@ -225,14 +203,22 @@ public class Auto_Test_05Z extends OpMode {
                 .setZeroPowerAccelerationMultiplier(5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
-                .addParametricCallback(0.1, () -> grabber.closeClawHard())
                 .build();
 
         score4 = follower.pathBuilder()
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
-                .setPathEndVelocityConstraint(1)
+                .setPathEndVelocityConstraint(0.3)
+                .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
+                .addPath(new Path(new BezierCurve(rungPoint4, pickupPoint2)))
+                .setConstantHeadingInterpolation(Math.toRadians(0))
+                .setPathEndTimeoutConstraint(100)
+                .setPathEndVelocityConstraint(0.15)
+                .addParametricCallback(0, () -> {
+                    spArm.armState = SpecimenArm.SpecimenArmState.collect;
+                    grabber.openClaw();
+                })
                 .build();
 
         collect5 = follower.pathBuilder()
@@ -246,12 +232,13 @@ public class Auto_Test_05Z extends OpMode {
                 .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint5a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
-                .setPathEndVelocityConstraint(1)
+                .setPathEndVelocityConstraint(0.3)
                 .addPath(new Path(new BezierLine(rungPoint5a, rungPoint5)))
-                .addPath(new Path(new BezierLine(rungPoint5, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint4, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
+                    grabber.openClaw();
                 })
                 .build();
     }
@@ -274,10 +261,13 @@ public class Auto_Test_05Z extends OpMode {
                 }
                 break;
             case 2:
-                setPathState(3);
+                if (!follower.isBusy()) {
+                    setPathState(3);
+                    grabber.closeClawHard();
+                }
                 break;
             case 3:
-                if (!follower.isBusy()) {
+                if (pathTimer.getElapsedTimeSeconds() >= 0.4) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score2);
                     if (follower.isBusy()) setPathState(4);
@@ -285,21 +275,24 @@ public class Auto_Test_05Z extends OpMode {
                 break;
             case 4:
                 if (!follower.isBusy()) {
-                    follower.followPath(score2a);
                     if (follower.isBusy()) setPathState(5);
                 }
                 break;
             case 5:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect3);
                     if (follower.isBusy()) setPathState(6);
 
                 }
             case 6:
-                setPathState(7);
+                if (!follower.isBusy()) {
+                    setPathState(7);
+                    grabber.closeClawHard();
+                }
                 break;
             case 7:
-                if (!follower.isBusy()) {
+                if (pathTimer.getElapsedTimeSeconds() >= 0.4) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score3);
                     if (follower.isBusy()) setPathState(8);
@@ -307,21 +300,24 @@ public class Auto_Test_05Z extends OpMode {
                 break;
             case 8:
                 if (!follower.isBusy()) {
-                    follower.followPath(score3a);
                     if (follower.isBusy()) setPathState(9);
                 }
                 break;
             case 9:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect4);
                     if (follower.isBusy()) setPathState(10);
 
                 }
             case 10:
-                setPathState(11);
+                if (!follower.isBusy()) {
+                    setPathState(11);
+                    grabber.closeClawHard();
+                }
                 break;
             case 11:
-                if (!follower.isBusy()) {
+                if (pathTimer.getElapsedTimeSeconds() >= 0.4) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score4);
                     if (follower.isBusy()) setPathState(12);
@@ -329,28 +325,31 @@ public class Auto_Test_05Z extends OpMode {
                 break;
             case 12:
                 if (!follower.isBusy()) {
-                    follower.followPath(score4a);
                     if (follower.isBusy()) setPathState(13);
                 }
                 break;
             case 13:
                 if (!follower.isBusy()) {
+                    grabber.openClaw();
                     follower.followPath(collect5);
                     if (follower.isBusy()) setPathState(14);
                 }
             case 14:
-                setPathState(16);
-                break;
-            case 16:
                 if (!follower.isBusy()) {
-                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
-                    follower.followPath(score5);
-                    if (follower.isBusy()) setPathState(-1);
+                    setPathState(16);
+                    grabber.closeClawHard();
                 }
                 break;
-            case -1:
+            case 16:
+                if (pathTimer.getElapsedTimeSeconds() >= 0.4) {
+                    spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
+                    follower.followPath(score5);
+                    if (follower.isBusy()) setPathState(17);
+                }
+                break;
+            case 17:
                 if (!follower.isBusy()) {
-                    follower.breakFollowing();
+                    if (follower.isBusy()) setPathState(-1);
                 }
                 break;
         }
@@ -379,11 +378,14 @@ public class Auto_Test_05Z extends OpMode {
         telemetry.addData("x", follower.getPose().getX());
         telemetry.addData("y", follower.getPose().getY());
         telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("time left", 30 - opmodeTimer.getElapsedTimeSeconds());
         telemetry.addData("waitTime", time);
         telemetry.addData("pathtimer", pathTimer.getElapsedTimeSeconds());
         telemetry.addData("Path State", pathState);
         telemetry.addData("busy", follower.isBusy());
         telemetry.update();
+
+        if (opmodeTimer.getElapsedTimeSeconds() >= 30) stop();
     }
 
     /** This method is called once at the init of the OpMode. **/
@@ -393,6 +395,8 @@ public class Auto_Test_05Z extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry()); // does stuff for ftc dashboard idk
 
         pathTimer = new Timer();
+        opmodeTimer = new Timer();
+        opmodeTimer.resetTimer();
 
         config = new RobotConfig(this);
 
@@ -411,8 +415,8 @@ public class Auto_Test_05Z extends OpMode {
         buildPaths();
 
         rightLift.setTargetPosition(0);
-        rightPivot.setTargetPosition(-55);
-        spArm.moveToPose(new SpecimenArmPose(0.65, 0, -54), 1);
+        rightPivot.setTargetPosition(-50);
+        spArm.armState = SpecimenArm.SpecimenArmState.rest;
         grabber.closeClawHard();
     }
 
@@ -428,14 +432,17 @@ public class Auto_Test_05Z extends OpMode {
      * It runs all the setup actions, including building paths and starting the path system **/
     @Override
     public void start() {
+        opmodeTimer.resetTimer();
         setPathState(0);
-        spArm.moveToPose(new SpecimenArmPose(0.2, 17.5, 33), 0.75);
+        spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
         follower.followPath(score1);
     }
 
     /** We do not use this because everything should automatically disable **/
     @Override
     public void stop() {
+        follower.breakFollowing();
+        spArm.armState = SpecimenArm.SpecimenArmState.collect;
     }
 }
 

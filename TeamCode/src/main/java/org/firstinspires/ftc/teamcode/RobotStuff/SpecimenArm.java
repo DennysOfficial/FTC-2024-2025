@@ -17,9 +17,9 @@ public class SpecimenArm {
 
     public static SpecimenArmPose restPose = new SpecimenArmPose(.2, 0, -60);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 19, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 17.5, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.65, 2, -50);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.65, 2, -54);
     public static double collectPresetDurationSec = 1;
 
     public static double kPForwards = 0.008;
@@ -195,15 +195,15 @@ public class SpecimenArm {
     }
 
 
-    void moveToPose(SpecimenArmPose pose, double duration) {
+    public void moveToPose(SpecimenArmPose pose, double duration) {
         leftLift.setControlMode(ControlAxis.ControlMode.positionControl);
         leftLift.setTargetPosition(pose.liftPosition);
         otherSpinnyBit.fancyMoveToPosition(pose.pivotPosition, duration);
         claw.setWristPosition(pose.wristPosition);
     }
 
-    public boolean pivotIsBusy() {
-        return otherSpinnyBit.isBusy();
+    public boolean isBusy() {
+        return leftLift.isBusy() || otherSpinnyBit.isBusy();
     }
 
     public double liftPos() {
