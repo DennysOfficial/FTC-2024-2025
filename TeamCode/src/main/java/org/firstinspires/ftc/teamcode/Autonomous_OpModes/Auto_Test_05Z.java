@@ -39,6 +39,8 @@ import pedroPathing.constants.LConstants;
 @Autonomous(name = "OneOpModetoRuleThemAll")
 public class Auto_Test_05Z extends OpMode {
 
+    MultipleTelemetry telemetry;
+
     private Follower follower;
     private Timer pathTimer;
 
