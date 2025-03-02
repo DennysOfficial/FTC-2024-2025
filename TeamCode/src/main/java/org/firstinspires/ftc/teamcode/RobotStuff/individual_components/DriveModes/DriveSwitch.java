@@ -14,13 +14,16 @@ public class DriveSwitch extends DriveModeBase{
     private int activeDriveIndex = 0;
     private DriveModeBase activeDrive;
     private String modeName;
+    private boolean queuedMode;
 
     public DriveSwitch(OpMode opmode, RobotConfig config) {
         super(opmode, config);
     }
+
     public void addDriveMode(DriveModeBase driveMode) {
         driveModes.add(driveMode);
         activeDrive = driveMode;
+        modeName = activeDrive.getClass().getSimpleName();
     }
 
     public void setActiveDrive(int modeIndex) {
@@ -32,13 +35,16 @@ public class DriveSwitch extends DriveModeBase{
     public void updateDrive(double deltaTime) {
         if (config.playerOne.driveModeUp.getRisingState()) {
             activeDriveIndex = (activeDriveIndex + 1 == driveModes.size()) ? 0 : activeDriveIndex + 1;
+            queuedMode = true;
         }
 
         if (config.playerOne.driveModeDown.getRisingState()) {
             activeDriveIndex = (activeDriveIndex - 1 < 0) ? driveModes.size() - 1 : activeDriveIndex - 1;
+            queuedMode = true;
         }
 
-        setActiveDrive(activeDriveIndex);
+        if (queuedMode) {setActiveDrive(activeDriveIndex);}
+        queuedMode = false;
 
         opMode.telemetry.addData("Drive Mode", modeName);
 

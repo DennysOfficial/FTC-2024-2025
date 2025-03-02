@@ -49,14 +49,6 @@ public class playerTwo {
         pinchBumper.update();
     }
 
-    public void update_dpad() {
-        dpad_up.update();
-        dpad_down.update();
-        dpad_left.update();
-        dpad_right.update();
-    }
-
-
     ///////////////////////////////////////--- DPAD ---/////////////////////////////////////////
     Function0<Boolean> getDpadUp = () -> gamepad.dpad_up;
     Function0<Boolean> getDpadDown = () -> gamepad.dpad_down;
@@ -65,8 +57,15 @@ public class playerTwo {
 
     public Button dpad_up = new Button(getDpadUp);
     public Button dpad_down = new Button(getDpadDown);
-    public Button dpad_left = new Button(getDpadLeft);
-    public Button dpad_right = new Button(getDpadRight);
+    public Button setLeftArm = new Button(getDpadLeft);
+    public Button setRightArm = new Button(getDpadRight);
+
+    public void update_dpad() {
+        dpad_up.update();
+        dpad_down.update();
+        setLeftArm.update();
+        setRightArm.update();
+    }
 
 
     ///////////////////////////////////////--- LEFT JOYSTICK ---/////////////////////////////////////////

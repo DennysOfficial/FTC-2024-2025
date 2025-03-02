@@ -11,14 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ReadOnlyRuntime;
 
 @Config
-public class Pivot extends ControlAxis { //schrödinger's code
+public class LeftPivot extends ControlAxis { //schrödinger's code
 
-    Lift lift;
+    LeftLift lift;
 
-    public void assignLift(Lift lift) {
+    public void assignLift(LeftLift lift) {
         if (lift == null)
             throw new NullPointerException("the lift you tried to assign is null you goober");
         this.lift = lift;
@@ -103,7 +102,6 @@ public class Pivot extends ControlAxis { //schrödinger's code
     @Override
     protected void initMotors() {
         motors.addMotor(config.deviceConfig.leftPivot, DcMotorSimple.Direction.FORWARD);
-        motors.addMotor(config.deviceConfig.rightPivot, DcMotorSimple.Direction.REVERSE);
 
         motors.setTargetPosition(0);
         //motors.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -111,7 +109,7 @@ public class Pivot extends ControlAxis { //schrödinger's code
     }
 
 
-    public Pivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
+    public LeftPivot(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "Pivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         softLimits = new Range<>(-55.0, 86.9);
