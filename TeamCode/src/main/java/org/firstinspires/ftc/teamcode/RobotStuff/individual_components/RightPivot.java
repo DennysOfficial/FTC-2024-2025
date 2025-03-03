@@ -148,7 +148,7 @@ public class RightPivot extends ControlAxis {
     double analogError;
     double angleError;
 
-    public static double initialAnalogPosition = 0.420;
+    public static double initialAnalogPosition = 0.169;
     public static double analogRangeMax = 3.3;
     public static double analogRangeMin = 0;
 
@@ -170,6 +170,9 @@ public class RightPivot extends ControlAxis {
     void miscUpdate() {
         encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange()));
 
+        if (getPosition() < 0)
+            encoderCalculatedAnalogValue = getAnalogRange() - encoderCalculatedAnalogValue;
+
         analogPosition = analogEncoder.getVoltage();
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
@@ -179,29 +182,28 @@ public class RightPivot extends ControlAxis {
             analogError = Math.copySign(goodAnalogError, -analogError);
         }
 
-        if(getPosition() > 20)
+        if (getPosition() > 20)
             angleCorrection += analogError * correctionFactor;
 
-
-        correctedAngle = getPosition() + angleCorrection;
+            correctedAngle = getPosition() + angleCorrection;
 
         positionOffset = angleCorrection;
 
-        opMode.telemetry.addLine();
-        opMode.telemetry.addLine();
-        opMode.telemetry.addData("calculated analog value", encoderCalculatedAnalogValue);
-        opMode.telemetry.addData("analog value", analogPosition);
-        opMode.telemetry.addData("analog error", analogError);
-        opMode.telemetry.addData("angle error", angleError = analogError * degreesOverAnalog);
+        if (config.debugConfig.getAnalogEncoderDebug()) {
+            opMode.telemetry.addLine();
+            opMode.telemetry.addLine();
+            opMode.telemetry.addData(axisName + "analog value", analogPosition);
+            opMode.telemetry.addData(axisName + "analog error", analogError);
 
-        opMode.telemetry.addLine();
-        opMode.telemetry.addData("angle correction", angleCorrection);
-        opMode.telemetry.addData("correctedAngle", correctedAngle);
+            opMode.telemetry.addLine();
+            opMode.telemetry.addData(axisName + "angle correction", angleCorrection);
+            opMode.telemetry.addData(axisName + "correctedAngle", correctedAngle);
+        }
 
-        opMode.telemetry.addLine();
-        opMode.telemetry.addLine();
-        opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
-        opMode.telemetry.addData("acceleration comp torque", calculateTorqueAcceleration());
+//        opMode.telemetry.addLine();
+//        opMode.telemetry.addLine();
+//        opMode.telemetry.addData("gravity comp torque", calculateTorqueGravity());
+//        opMode.telemetry.addData("acceleration comp torque", calculateTorqueAcceleration());
     }
 
     double calculateTorqueGravity(double liftExtension) {

@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
 public class SpecimenArm {
 
 
-    public static SpecimenArmPose restPose = new SpecimenArmPose(.2, 0, -60);
+    public static SpecimenArmPose restPose = new SpecimenArmPose(.8, 0, -50);
     public static double resetPresetDurationSec = 1;
-    public static SpecimenArmPose scorePose = new SpecimenArmPose(.2, 19, 32);
+    public static SpecimenArmPose scorePose = new SpecimenArmPose(0.73, 18, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.65, 2, -50);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.26, 1.5, -53);
     public static double collectPresetDurationSec = 1;
 
     public static double kPForwards = 0.008;
