@@ -18,7 +18,7 @@ public class SampleClaw {
     AngleServo smolWristServo;
     RobotConfig config;
 
-    public static double openPos = .6, closePos = 0.81, rTwist = 0.69, lTwist = 0.2, mTwist = 0.2;
+    public static double openPos = .4, closePos = 0.69, rTwist = 0.69, lTwist = 0.4, mTwist = 0.2;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;

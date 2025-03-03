@@ -11,9 +11,9 @@ public class ActiveSpecimenClaw {
 
     Servo wristServo;
     Servo pinchServo;
-    public static double hardClosedPosition = 0.269;
-    public static double softClosedPosition = 0.3;
-    public static double openPosition = 0.69;
+    public static double hardClosedPosition = 0.25;
+    public static double softClosedPosition = 0.26;
+    public static double openPosition = 0.569;
 
 
     OpMode opmode;
@@ -55,6 +55,4 @@ public class ActiveSpecimenClaw {
     public void setWristPosition(double position) {
         wristServo.setPosition(position);
     }
-
-    public void clawPos(double position) {pinchServo.setPosition(position);}
 }
