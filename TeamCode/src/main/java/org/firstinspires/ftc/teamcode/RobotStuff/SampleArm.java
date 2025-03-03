@@ -48,13 +48,13 @@ public class SampleArm {
     public static double grabPosition = 0;
 
 
-    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .4, 0, -40);
+    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .69, 0, -40);
     public static double DefaultObservationDepositDuration = 1;
 
-    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, .2, 30, -20);
+    public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, 1, 32, -20);
     public static double DefaultHighBasketDepositPresetDuration = 1;
 
-    public static SampleArmPose RestPose = new SampleArmPose(0, .69, 0, -50);
+    public static SampleArmPose RestPose = new SampleArmPose(0, .42, 0, -40);
     public static double DefaultRestPresetDuration = 1;
 
     public static double DefaultIntakePresetDuration = 1;
@@ -67,8 +67,8 @@ public class SampleArm {
 
 
 
-    public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .7420, 0, Double.NaN);
-    public static double intakeHeightOffset = -2.69;
+    public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .420, 0, Double.NaN);
+    public static double intakeHeightOffset = -2;
 
     public static double clawTriggerHeightOffsetExtended = 4;
     public static double clawTriggerHeightOffsetRetracted = 4;

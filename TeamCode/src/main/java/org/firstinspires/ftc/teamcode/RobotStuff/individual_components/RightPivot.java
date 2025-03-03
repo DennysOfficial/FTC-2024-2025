@@ -66,7 +66,6 @@ public class RightPivot extends ControlAxis {
         super(defaultControlMode, opMode, config, "RightPivot", "Degrees", 1.0 / encoderCountsPerDeg);
 
         analogEncoder = opMode.hardwareMap.get(AnalogInput.class, config.deviceConfig.rightPivotAnalogEncoder);
-        initialAnalogPosition = analogEncoder.getVoltage();
 
         softLimits = new Range<>(-60.0, 97.0);
     }
@@ -149,7 +148,7 @@ public class RightPivot extends ControlAxis {
     double analogError;
     double angleError;
 
-    final double initialAnalogPosition;
+    public static double initialAnalogPosition = 0.420;
     public static double analogRangeMax = 3.3;
     public static double analogRangeMin = 0;
 
@@ -161,7 +160,7 @@ public class RightPivot extends ControlAxis {
     static final double degreesOverAnalog = (360 / getAnalogRange()) * (15.0 / 150.0);
     static final double analogOverDegrees = 1.0 / degreesOverAnalog;
 
-    public static double correctionFactor = 0;
+    public static double correctionFactor = 0.05;
     double angleCorrection = 0;
     double correctedAngle;
 
@@ -169,22 +168,24 @@ public class RightPivot extends ControlAxis {
 
     @Override
     void miscUpdate() {
-        encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition() + angleCorrection)) % getAnalogRange());
+        encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange()));
 
         analogPosition = analogEncoder.getVoltage();
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
 
         if (Math.abs(analogError) > getAnalogRange() * 0.5) {
-            double goodAnalogError = Math.abs(analogError);
-            goodAnalogError = getAnalogRange() - analogError;
-            analogError = Math.copySign(goodAnalogError, analogError);
+            double goodAnalogError = getAnalogRange() - Math.abs(analogError);
+            analogError = Math.copySign(goodAnalogError, -analogError);
         }
 
+        if(getPosition() > 20)
+            angleCorrection += analogError * correctionFactor;
 
-        angleCorrection += analogError * correctionFactor;
 
         correctedAngle = getPosition() + angleCorrection;
+
+        positionOffset = angleCorrection;
 
         opMode.telemetry.addLine();
         opMode.telemetry.addLine();
