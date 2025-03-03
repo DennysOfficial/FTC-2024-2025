@@ -12,6 +12,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -40,7 +41,8 @@ import pedroPathing.constants.LConstants;
     //2nd pickup: 30.25 from wall
     //3rd-5th pickup: 28 from wall
 
-@Autonomous(name = "One OpMode to Rule Them All")
+@Disabled
+@Autonomous(name = "Other OpMode to Rule Them All")
 public class MultiAuto extends OpMode {
 
     private Follower follower;
