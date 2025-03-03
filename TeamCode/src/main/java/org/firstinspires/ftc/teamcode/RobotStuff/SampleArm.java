@@ -68,7 +68,7 @@ public class SampleArm {
 
 
     public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .420, 0, Double.NaN);
-    public static double intakeHeightOffset = -2.69;
+    public static double intakeHeightOffset = -2;
 
     public static double clawTriggerHeightOffsetExtended = 4;
     public static double clawTriggerHeightOffsetRetracted = 4;
