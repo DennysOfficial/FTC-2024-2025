@@ -17,6 +17,10 @@ public class DoubleArm {
     private String activeArmName;
     private boolean queuedArm;
 
+    public armGroup getActiveArm() {
+        return activeArm;
+    }
+
     public DoubleArm(OpMode opmode, RobotConfig config) {
         this.config = config;
         this.opmode = opmode;

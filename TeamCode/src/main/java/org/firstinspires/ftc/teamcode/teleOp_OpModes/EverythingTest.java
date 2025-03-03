@@ -32,30 +32,31 @@ package org.firstinspires.ftc.teamcode.teleOp_OpModes;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Lift;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.Pivot;
-import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.grabbers.PassiveGrabber;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.hardware.IMU;
-
+import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DoubleArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.NextFTCDrive;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
+import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.armGroup;
+import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "The One And Only Passive Grabber", group = "ab - working") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "FULL TEST", group = "bb - testing") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
-public class TheOtherOnlyOpMode extends LinearOpMode {
+public class EverythingTest extends LinearOpMode {
 
     public static boolean driver2PresetsEnabled = false;
 
@@ -81,18 +82,32 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
         assert activeConfig.playerOne != null; // i don't like yellow lines
         assert activeConfig.playerTwo != null;
 
-        DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
+        NextFTCDrive vroom = new NextFTCDrive(this, activeConfig);
+
+        armGroup leftArm = new armGroup(
+                this,
+                activeConfig,
+                new LeftLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig),
+                new LeftPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig),
+                "left"
+        );
+
+        armGroup rightArm = new armGroup(
+                this,
+                activeConfig,
+                new RightLift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig),
+                new RightPivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig),
+                "right"
+        );
+
+        DoubleArm arms = new DoubleArm(this, activeConfig);
+        arms.setLeftArm(leftArm);
+        arms.setRightArm(rightArm);
 
 
-        Lift lift = new Lift(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig);
-
-        Pivot spinnyBit = new Pivot(ControlAxis.ControlMode.gamePadVelocityControl, this, activeConfig); //spin
-
-        spinnyBit.assignLift(lift);
-        lift.assignPivot(spinnyBit);
 
 
-        PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, lift, spinnyBit);
+        //PassiveGrabber grabber = new PassiveGrabber(this, activeConfig, );
 
 
         imu = hardwareMap.get(IMU.class, "imu");
@@ -130,68 +145,60 @@ public class TheOtherOnlyOpMode extends LinearOpMode {
             }
             activeConfig.sensorData.update();
 
+            if (arms.getActiveArm() == rightArm) { //all right arm preset n shit
+                if (gamepad2.x && driver2PresetsEnabled) {
+                    rightArm.fancyMoveArm(12.5, 1, 16, 1);
+                }
 
-            if (gamepad2.x && driver2PresetsEnabled) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(16, 1);
-                if (!lift.isBusy())
-                    lift.fancyMoveToPosition(12.5, 1);
-            }
-
-            if (gamepad2.y && driver2PresetsEnabled) {
-                if (lift.getPosition() < 15)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(-18, 1);
+                if (gamepad2.y && driver2PresetsEnabled) {
+                    if (rightArm.getLiftPos() < 15)
+                        rightArm.fancyMovePivot(-18, 1);
 
 
-                if (spinnyBit.getPosition() < 50)
-                    lift.setTargetPosition(33);
+                    if (rightArm.getPivotPos() < 50)
+                        rightArm.setTargetPosLift(33);
 
-            }
-
-
-            if (gamepad2.a && driver2PresetsEnabled) {
-                if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 1);
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 14)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 1);
-            }
-
-            if (activeConfig.playerOne.grabberScore.getState()) {
-                grabber.Score();
-            }
-
-            if (activeConfig.playerOne.grabberCollect.getState()) {
-                grabber.Collect();
-            }
-
-            if (activeConfig.playerOne.grabberRest.getState()) {
-                grabber.Rest();
-            }
+                }
 
 
+                if (gamepad2.a && driver2PresetsEnabled) {
+                    if (rightArm.getLiftPos() > 25 && rightArm.getPivotPos() < -5)
+                        rightArm.fancyMovePivot(0, 1);
+                    rightArm.setTargetPosLift(0);
+                    if (rightArm.getLiftPos() < 14)
+                        rightArm.fancyMovePivot(71, 1);
+                }
 
+                /*
+                if (activeConfig.playerOne.grabberScore.getState()) {
+                    grabber.Score();
+                }
+
+                if (activeConfig.playerOne.grabberCollect.getState()) {
+                    grabber.Collect();
+                }
+
+                if (activeConfig.playerOne.grabberRest.getState()) {
+                    grabber.Rest();
+                }
+                 */
             // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+                if (rightArm.getPivotControlMode() != ControlAxis.ControlMode.disabled && !rightArm.isPivotBusy() && gamepad2.right_trigger > 0.2 && rightArm.getPivotPos() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+                    rightArm.setPivotControlMode(ControlAxis.ControlMode.gamePadTorqueControl, true);
+                    rightArm.setPivotTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
+                } else if (rightArm.getPivotControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
+                    rightArm.setPivotControlMode(rightArm.pivotDefaultMode(), false);
+            }
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            lift.update();
+            arms.updateArm();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
-
-            spinnyBit.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
-            activeDriveMode.updateDrive(deltaTime);
+            vroom.updateDrive(deltaTime);
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop drive update Time ----------------------------");
 
             telemetry.addData("yaw (heading)", "%.2f deg", orientation.getYaw(AngleUnit.DEGREES));

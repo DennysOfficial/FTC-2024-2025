@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
 
-@TeleOp(name = "Reset Encoders", group = "Utility")
+@TeleOp(name = "Reset Encoders", group = "aaaaaaaaaaaaaaa - Utility")
 //@Disabled
 public class ResetEncoders extends LinearOpMode {
 

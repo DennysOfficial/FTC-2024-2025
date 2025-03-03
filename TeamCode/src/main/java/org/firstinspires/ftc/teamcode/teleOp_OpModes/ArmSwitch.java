@@ -56,7 +56,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.StopWatch;
 
 import java.util.List;
 
-@TeleOp(name = "First Tech Challenge 2", group = "OpMode") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+@TeleOp(name = "First Tech Challenge 2", group = "bb - testing") //brrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
 //@Disabled
 public class ArmSwitch extends LinearOpMode {
 
@@ -147,60 +147,52 @@ public class ArmSwitch extends LinearOpMode {
             }
             activeConfig.sensorData.update();
 
-            /*
-            if (gamepad2.x && driver2PresetsEnabled) {
-                if (!spinnyBit.isBusy())
-                    spinnyBit.fancyMoveToPosition(16, 1);
-                if (!lift.isBusy())
-                    lift.fancyMoveToPosition(12.5, 1);
-            }
+            if (arms.getActiveArm() == rightArm) { //all right arm preset n shit
+                if (gamepad2.x && driver2PresetsEnabled) {
+                    rightArm.fancyMoveArm(12.5, 1, 16, 1);
+                }
 
-            if (gamepad2.y && driver2PresetsEnabled) {
-                if (lift.getPosition() < 15)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(-18, 1);
+                if (gamepad2.y && driver2PresetsEnabled) {
+                    if (rightArm.getLiftPos() < 15)
+                        rightArm.fancyMovePivot(-18, 1);
 
 
-                if (spinnyBit.getPosition() < 50)
-                    lift.setTargetPosition(33);
+                    if (rightArm.getPivotPos() < 50)
+                        rightArm.setTargetPosLift(33);
 
-            }
-
-
-            if (gamepad2.a && driver2PresetsEnabled) {
-                if (lift.getPosition() > 25 && spinnyBit.getPosition() < -5)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(0, 1);
-                lift.setTargetPosition(0);
-                if (lift.getPosition() < 14)
-                    if (!spinnyBit.isBusy())
-                        spinnyBit.fancyMoveToPosition(71, 1);
-            }
+                }
 
 
-            if (activeConfig.playerOne.grabberScore.getState()) {
-                grabber.Score();
-            }
+                if (gamepad2.a && driver2PresetsEnabled) {
+                    if (rightArm.getLiftPos() > 25 && rightArm.getPivotPos() < -5)
+                        rightArm.fancyMovePivot(0, 1);
+                    rightArm.setTargetPosLift(0);
+                    if (rightArm.getLiftPos() < 14)
+                        rightArm.fancyMovePivot(71, 1);
+                }
 
-            if (activeConfig.playerOne.grabberCollect.getState()) {
-                grabber.Collect();
-            }
+                /*
+                if (activeConfig.playerOne.grabberScore.getState()) {
+                    grabber.Score();
+                }
 
-            if (activeConfig.playerOne.grabberRest.getState()) {
-                grabber.Rest();
-            }
+                if (activeConfig.playerOne.grabberCollect.getState()) {
+                    grabber.Collect();
+                }
 
-
-
+                if (activeConfig.playerOne.grabberRest.getState()) {
+                    grabber.Rest();
+                }
+                 */
             // make the arm smack into the ground and intake
-            if (spinnyBit.getControlMode() != ControlAxis.ControlMode.disabled && !spinnyBit.isBusy() && gamepad2.right_trigger > 0.2 && spinnyBit.getPosition() > 60) {
+                if (rightArm.getPivotControlMode() != ControlAxis.ControlMode.disabled && !rightArm.isPivotBusy() && gamepad2.right_trigger > 0.2 && rightArm.getPivotPos() > 60) {
 
-                spinnyBit.setControlMode(ControlAxis.ControlMode.gamePadTorqueControl);
-                spinnyBit.targetTorque = (gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
+                    rightArm.setPivotControlMode(ControlAxis.ControlMode.gamePadTorqueControl, true);
+                    rightArm.setPivotTargetTorque(gamepad2.right_trigger * activeConfig.sensitivities.getMaxGoDownAmount());
 
-            } else if (spinnyBit.getControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
-                spinnyBit.setControlModeUnsafe(spinnyBit.defaultControlMode);
-            */
+                } else if (rightArm.getPivotControlMode() == ControlAxis.ControlMode.gamePadTorqueControl)
+                    rightArm.setPivotControlMode(rightArm.pivotDefaultMode(), false);
+            }
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
