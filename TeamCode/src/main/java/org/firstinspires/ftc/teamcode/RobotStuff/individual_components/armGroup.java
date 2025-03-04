@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis.ControlMode;
-import org.firstinspires.ftc.teamcode.teleOp_OpModes.ArmSwitch;
 
 public class armGroup {
 
@@ -52,6 +51,16 @@ public class armGroup {
 
     }
 
+    public void activate() {
+        pivot.setControlMode(ControlMode.gamePadVelocityControl);
+        lift.setControlMode(ControlMode.gamePadVelocityControl);
+    }
+
+    public void deactivate() {
+        setTargetPosArm(lift.getPosition(), pivot.getPosition());
+        pivot.setControlMode(ControlMode.positionControl);
+        lift.setControlMode(ControlMode.positionControl);
+    }
 
     ///////////////////////////////// fancy move /////////////////////////////////
     public void fancyMoveLift(double pos, double dur) {

@@ -41,8 +41,10 @@ public class DoubleArm {
 
 
     public void setActiveArm(armGroup arm) {
-        activeArm = arm;
+        activeArm.deactivate(); // deactiate current arm
+        activeArm = arm; // set the active arm (to the other arm)
         activeArmName = activeArm.name;
+        activeArm.activate(); // activate the other arm
     }
 
 
@@ -62,6 +64,7 @@ public class DoubleArm {
 
         opmode.telemetry.addData("Active Arm", activeArmName);
 
-        activeArm.update();
+        leftArm.update();
+        rightArm.update();
     }
 }
