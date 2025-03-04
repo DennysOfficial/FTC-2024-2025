@@ -48,7 +48,7 @@ public class DoubleArm {
     }
 
 
-    public void updateArm() {
+    public void update() {
         if (config.playerTwo.setRightArm.getRisingState()) {
             requestedActiveArm = rightArm;
             queuedArm = true;

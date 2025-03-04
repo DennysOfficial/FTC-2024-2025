@@ -196,7 +196,7 @@ public class ArmSwitch extends LinearOpMode {
 
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop beginning Time -------------------------------");
 
-            arms.updateArm();
+            arms.update();
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop lift update Time -----------------------------");
             stopWatch.addTimeToTelemetryAndReset(telemetry, "main loop pivot update Time ----------------------------");
 
