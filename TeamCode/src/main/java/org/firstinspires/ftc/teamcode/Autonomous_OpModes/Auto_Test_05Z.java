@@ -97,7 +97,7 @@ public class Auto_Test_05Z extends OpMode {
     Point linepoint2 =        new Point(30,17.7, Point.CARTESIAN);
     Point linepoint3 =        new Point(28,11.85, Point.CARTESIAN);
 
-    Point pickupPoint2 =      new Point(14, 26, Point.CARTESIAN);
+    Point pickupPoint2 =      new Point(11, 26, Point.CARTESIAN);
     Point pickupPoint3 =      new Point(9.6, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
@@ -395,7 +395,10 @@ public class Auto_Test_05Z extends OpMode {
         telemetry.addData("pathtimer", pathTimer.getElapsedTimeSeconds());
         telemetry.addData("Path State", pathState);
         telemetry.addData("busy", follower.isBusy());
+        telemetry.addData("parametric time", follower.getCurrentTValue());
         telemetry.update();
+
+        follower.drawOnDashBoard();
     }
 
     /** This method is called once at the init of the OpMode. **/
