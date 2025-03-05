@@ -97,7 +97,7 @@ public class Auto_Test_05Z extends OpMode {
     Point linepoint2 =        new Point(30,17.7, Point.CARTESIAN);
     Point linepoint3 =        new Point(28,11.85, Point.CARTESIAN);
 
-    Point pickupPoint2 =      new Point(11.25, 26, Point.CARTESIAN);
+    Point pickupPoint2 =      new Point(14, 26, Point.CARTESIAN);
     Point pickupPoint3 =      new Point(9.6, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
@@ -155,7 +155,10 @@ public class Auto_Test_05Z extends OpMode {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
-                .addParametricCallback(0.915, () -> grabber.closeClawHard())
+                .addParametricCallback(0.1, () -> {
+                    grabber.openClaw();
+                })
+                .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .build();
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
@@ -168,7 +171,10 @@ public class Auto_Test_05Z extends OpMode {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
                     grabber.openClaw();
                 })
-                .addParametricCallback(0.91, () -> grabber.closeClawHard())
+                .addParametricCallback(0.1, () -> {
+                    grabber.openClaw();
+                })
+                .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .build();
         score4a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
@@ -186,7 +192,7 @@ public class Auto_Test_05Z extends OpMode {
                 .addParametricCallback(0.1, () -> {
                     grabber.openClaw();
                 })
-                .addParametricCallback(0.91, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .build();
 
         moveSamples = follower.pathBuilder()
@@ -212,9 +218,9 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0.92, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .addPath(collect2a)
-                .setZeroPowerAccelerationMultiplier(3)
+                .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
                 .build();

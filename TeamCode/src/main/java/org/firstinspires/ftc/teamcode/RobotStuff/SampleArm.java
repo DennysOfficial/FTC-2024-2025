@@ -270,11 +270,22 @@ public class SampleArm {
         return armIK.getHeight(rightPivot.getPosition() - intakeAngleOffset, rightLift.retractedExtension + rightLift.getPosition(), extensionAxisOffset);
     }
 
-    void moveToPose(SampleArmPose pose, double duration) {
+    public void moveToPose(SampleArmPose pose, double duration) {
         rightLift.linearMoveToPosition(pose.liftPosition, duration);
         rightPivot.fancyMoveToPosition(pose.pivotPosition, duration);
         sampleClaw.setBigWristPosition(pose.wristBigTwistAlignmentPosition);
         sampleClaw.setSmolWristPosition(pose.wristLittleTwistAlignmentAngle);
     }
 
+    public double getPivotPos() {
+        return rightPivot.getPosition();
+    }
+
+    public double getLiftPos() {
+        return rightLift.getPosition();
+    }
+
+    public boolean isBusy() {
+        return rightLift.isBusy() || rightPivot.isBusy();
+    }
 }

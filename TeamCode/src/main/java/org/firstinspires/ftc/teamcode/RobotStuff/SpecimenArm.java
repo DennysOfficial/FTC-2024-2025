@@ -15,11 +15,11 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.GoofyPID;
 public class SpecimenArm {
 
 
-    public static SpecimenArmPose restPose = new SpecimenArmPose(.8, 0, -50);
+    public static SpecimenArmPose restPose = new SpecimenArmPose(.6, 0, -65);
     public static double resetPresetDurationSec = 1;
     public static SpecimenArmPose scorePose = new SpecimenArmPose(0.73, 18, 32);
     public static double scorePresetDurationSec = 1;
-    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.26, 1.5, -54);
+    public static SpecimenArmPose collectPose = new SpecimenArmPose(0.26, 1.5, -570);
     public static double collectPresetDurationSec = 1;
 
     public static double kPForwards = 0.008;
@@ -206,7 +206,11 @@ public class SpecimenArm {
         return leftLift.isBusy() || otherSpinnyBit.isBusy();
     }
 
-    public double liftPos() {
+    public double getPivotPos() {
+        return otherSpinnyBit.getPosition();
+    }
+
+    public double getLiftPos() {
         return leftLift.getPosition();
     }
 }

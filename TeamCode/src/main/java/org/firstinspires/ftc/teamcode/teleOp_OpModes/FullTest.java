@@ -38,7 +38,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.SampleArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SampleArmPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArmPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.BasicMechanumDrive;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.DriveModes.DriveModeBase;
 
@@ -48,8 +50,45 @@ import java.util.List;
 //@Disabled
 public class FullTest extends LinearOpMode {
 
+    boolean hangStarted = false;
 
+    int hangStage = 0;
     private final ElapsedTime frameTimer = new ElapsedTime();
+
+    SampleArm sampleArm;
+
+    SpecimenArm specimenArm;
+
+    void hang() {
+        switch (hangStage) {
+            case 0:
+                sampleArm.moveToPose(new SampleArmPose(0, 0.420, 0, 0), 1);
+                specimenArm.moveToPose(new SpecimenArmPose(0.73, 0, 0), 1);
+                hangStage = 1;
+                break;
+            case 1:
+                if (!specimenArm.isBusy() &&  !sampleArm.isBusy()) {
+                    sampleArm.moveToPose(new SampleArmPose(0, 0.420, 17, 0), 1);
+                    specimenArm.moveToPose(new SpecimenArmPose(0.73, 17, 0), 1);
+                    hangStage = 2;
+                }
+                break;
+            case 2:
+                if (!specimenArm.isBusy() &&  !sampleArm.isBusy()) {
+                    sampleArm.moveToPose(new SampleArmPose(0, 0.420, 17, -40), 0.7);
+                    specimenArm.moveToPose(new SpecimenArmPose(0.73, 17, -40), 0.7);
+                    hangStage = 3;
+                }
+                break;
+            case 3:
+                if (!specimenArm.isBusy() &&  !sampleArm.isBusy()) {
+                    sampleArm.moveToPose(new SampleArmPose(0, 0.420, 5, -40), 4);
+                    specimenArm.moveToPose(new SpecimenArmPose(0.73, 5, -40), 4);
+                    hangStage = 4;
+                }
+                break;
+        }
+    }
 
 
     @Override
@@ -69,9 +108,9 @@ public class FullTest extends LinearOpMode {
 
         DriveModeBase activeDriveMode = new BasicMechanumDrive(this, activeConfig);
 
-        SampleArm sampleArm = new SampleArm(this, activeConfig);
+        sampleArm = new SampleArm(this, activeConfig);
 
-        SpecimenArm specimenArm = new SpecimenArm(this, activeConfig);
+        specimenArm = new SpecimenArm(this, activeConfig);
 
 
         waitForStart();
@@ -95,6 +134,10 @@ public class FullTest extends LinearOpMode {
                 hub.clearBulkCache();
             }
             activeConfig.sensorData.update(); // bulk caching
+
+            if (gamepad1.dpad_down && gamepad2.dpad_down) {
+                hang();
+            }
 
 
 
