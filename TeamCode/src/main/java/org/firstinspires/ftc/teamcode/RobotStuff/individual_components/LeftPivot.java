@@ -178,7 +178,7 @@ public class LeftPivot extends ControlAxis {
             double goodAnalogError = getAnalogRange() - Math.abs(analogError);
             analogError = Math.copySign(goodAnalogError, -analogError);
         }
-        if (getPosition() > 10)
+       // if (getPosition() > 10)
             //angleCorrection += analogError * correctionFactor;
 
 
