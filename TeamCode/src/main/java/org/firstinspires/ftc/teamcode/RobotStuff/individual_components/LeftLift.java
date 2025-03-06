@@ -149,11 +149,11 @@ public class LeftLift extends ControlAxis {
     @Override
     void miscUpdate() {
 
-        if (homingButton.getButtonDown(config.inputMap.gamepad1.x)) {
-            homingState = HomingState.initHoming;
-        }
+//        if (homingButton.getButtonDown(config.inputMap.gamepad1.y)) {
+//            homingState = HomingState.initHoming;
+//        }
 
-        if (config.inputMap.gamepad1.x) {
+        if (config.inputMap.gamepad1.y) {
             homingState = HomingState.initHoming;
         }
 
