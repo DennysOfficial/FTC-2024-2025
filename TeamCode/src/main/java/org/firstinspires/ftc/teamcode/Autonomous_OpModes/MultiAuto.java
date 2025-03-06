@@ -430,8 +430,7 @@ public class MultiAuto extends OpMode {
         rightLift.assignPivot(rightPivot);
         rightPivot.assignLift(rightLift);
 
-        Constants.setConstants(FConstants.class, LConstants.class);
-        follower = new Follower(hardwareMap);
+        follower = new Follower(hardwareMap, FConstants.class, LConstants.class);
         follower.setStartingPose(startPose);
         buildPaths();
 
