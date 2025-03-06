@@ -21,8 +21,8 @@ public class LeftLift extends ControlAxis {
 
     DigitalChannel limitSwitch;
     public static double homingPosition = 0;
-    public static double homingRetractPower = 0.5;
-    public static double homingDwellPower = 0.2;
+    public static double homingRetractPower = -0.5;
+    public static double homingDwellPower = -0.2;
     public static double homingDwellPeriod = 0.3;
 
 
@@ -47,7 +47,6 @@ public class LeftLift extends ControlAxis {
 
     @Override
     public void homeAxis() {
-        homingState = HomingState.homed;
     }
 
     @Override
@@ -112,8 +111,9 @@ public class LeftLift extends ControlAxis {
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0);
-        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
+        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "LLS");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
 
         softLimits = new Range<>(0.5, 25.420);
 
@@ -149,11 +149,17 @@ public class LeftLift extends ControlAxis {
     @Override
     void miscUpdate() {
 
-        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
-            homeAxis();
+        if (homingButton.getButtonDown(config.inputMap.gamepad1.x)) {
+            homingState = HomingState.initHoming;
         }
 
-        opMode.telemetry.addData("limit switch state:", limitSwitch.getState());
+        if (config.inputMap.gamepad1.x) {
+            homingState = HomingState.initHoming;
+        }
+
+        opMode.telemetry.addLine();
+        opMode.telemetry.addData("limit switch state:", !limitSwitch.getState());
+        opMode.telemetry.addData("homing state:", homingState);
 
         switch (homingState) {
             case initHoming:

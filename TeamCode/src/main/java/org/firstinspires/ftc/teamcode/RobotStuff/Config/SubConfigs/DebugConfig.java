@@ -53,7 +53,7 @@ public class DebugConfig {
         return timeBreakdownDebug;
     }
 
-    public static boolean analogEncoderDebug = true;
+    public static boolean analogEncoderDebug = false;
 
     public boolean getAnalogEncoderDebug() {
         return analogEncoderDebug;
