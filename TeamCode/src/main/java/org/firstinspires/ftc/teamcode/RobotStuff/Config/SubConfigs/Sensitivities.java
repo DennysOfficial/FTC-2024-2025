@@ -5,6 +5,11 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Sensitivities {
 
+    public static float blockAlignmentIncrementAngle = 45;
+    public float getBlockAlignmentIncrementAngle(){
+        return blockAlignmentIncrementAngle;
+    }
+
     public static float driveSensitivity = 1;
 
     public float getDriveSensitivity() {

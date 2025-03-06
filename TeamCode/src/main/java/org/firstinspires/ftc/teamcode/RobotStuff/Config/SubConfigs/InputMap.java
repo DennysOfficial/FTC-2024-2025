@@ -72,6 +72,14 @@ public class InputMap {
         return gamepad2.left_trigger > 0.5;
     }
 
+    public boolean getIntakeTwistRight(){
+        return gamepad1.right_bumper;
+    }
+
+    public boolean getIntakeTwistLeft(){
+        return gamepad1.left_bumper;
+    }
+
     /// abort/unabort ##################################################################################################################################################
 
     public boolean getAbort() {

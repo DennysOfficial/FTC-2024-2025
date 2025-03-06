@@ -64,6 +64,14 @@ public class SampleClaw {
         }
     }
 
+    public void blockAlignmentUpdate(){
+        if(config.inputMap.getIntakeTwistRight())
+            blockAlignmentIncrement(config.sensitivities.getBlockAlignmentIncrementAngle());
+
+        if(config.inputMap.getIntakeTwistLeft())
+            blockAlignmentIncrement(-config.sensitivities.getBlockAlignmentIncrementAngle());
+    }
+
     public void blockAlignmentIncrement(double incrementAmount) {
         double newTargetAngle = smolWristServo.getAngle();
         newTargetAngle = newTargetAngle - (newTargetAngle % Math.abs(incrementAmount));
