@@ -49,7 +49,7 @@ public class SampleArm {
 
     public static double a_ClawSmolOpenPosition = 0.5;
 
-    public static SampleArmPose ObservationDepositPose = new SampleArmPose(90, .1, 0, -40);
+    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .1, 0, -40);
     public static double DefaultObservationDepositDuration = 1;
 
     public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, 1, 32, -20);
