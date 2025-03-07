@@ -69,8 +69,9 @@ public class AngleServoSetup extends LinearOpMode {
             if (refreshServoButton.getButtonDown(gamepad1.a)) {
                 try {
                     servo = new AngleServo(AngleServoTestConfig.a_TestingServoName, hardwareMap, AngleServoTestConfig.b_point1Position, AngleServoTestConfig.c_point1Angle, AngleServoTestConfig.d_point2Position, AngleServoTestConfig.e_point2Angle);
-                } catch (Exception exception) {
-                    telemetry.addLine("bad servo name prob" + exception);
+                } finally {
+                    telemetry.addLine("bad servo name prob");
+
                 }
             }
 
