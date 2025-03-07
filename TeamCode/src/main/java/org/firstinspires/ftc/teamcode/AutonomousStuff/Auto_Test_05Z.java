@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous_OpModes;
+package org.firstinspires.ftc.teamcode.AutonomousStuff;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -17,7 +17,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
-import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArmPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
@@ -37,9 +36,9 @@ import pedroPathing.constants.LConstants;
  */
 
 // IMPORTANT: Setup
-    //Start: right edge 38.5 from wall
-    //2nd pickup: 30.25 from wall
-    //3rd-5th pickup: 28 from wall
+//Start: right edge 38.5 from wall
+//2nd pickup: 30.25 from wall
+//3rd-5th pickup: 28 from wall
 
 @Autonomous(name = "One OpMode to Rule Them All")
 public class Auto_Test_05Z extends OpMode {
@@ -47,8 +46,10 @@ public class Auto_Test_05Z extends OpMode {
     private Follower follower;
     private Timer pathTimer;
 
-    /** This is the variable where we store the state of our auto.
-     * It is used by the pathUpdate method. */
+    /**
+     * This is the variable where we store the state of our auto.
+     * It is used by the pathUpdate method.
+     */
     private int pathState;
 
     /* Create and Define Poses + Paths
@@ -69,43 +70,45 @@ public class Auto_Test_05Z extends OpMode {
     SpecimenArm spArm;
     Servo wristServo;
 
-    private final Pose startPose = new Pose(9.25,48.5, Math.toRadians(0));  // This is where the robot starts
+    private final Pose startPose = new Pose(9.25, 48.5, Math.toRadians(0));  // This is where the robot starts
 
-    Point rungPoint3 =        new Point(30, 71, Point.CARTESIAN);
-    Point rungPoint4 =        new Point(30, 69, Point.CARTESIAN);
-    Point rungPoint2 =        new Point(30, 73, Point.CARTESIAN);
-    Point rungPoint1 =        new Point(30, 74.35, Point.CARTESIAN);
+    Point rungPoint3 = new Point(30, 71, Point.CARTESIAN);
+    Point rungPoint4 = new Point(30, 69, Point.CARTESIAN);
+    Point rungPoint2 = new Point(30, 73, Point.CARTESIAN);
+    Point rungPoint1 = new Point(30, 74.35, Point.CARTESIAN);
 
-    Point rungPoint3a =       new Point(20, 69, Point.CARTESIAN);
-    Point rungPoint4a =       new Point(20, 67, Point.CARTESIAN);
-    Point rungPoint2a =       new Point(20, 71, Point.CARTESIAN);
-    Point rungPoint1a =       new Point(20, 73, Point.CARTESIAN);
+    Point rungPoint3a = new Point(20, 69, Point.CARTESIAN);
+    Point rungPoint4a = new Point(20, 67, Point.CARTESIAN);
+    Point rungPoint2a = new Point(20, 71, Point.CARTESIAN);
+    Point rungPoint1a = new Point(20, 73, Point.CARTESIAN);
 
-    Point rungPointControl1 = new Point(20,28, Point.CARTESIAN);
+    Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
-    Point samplecurvepoint1 = new Point(17,20, Point.CARTESIAN);
-    Point samplecurvepoint2 = new Point(66,48, Point.CARTESIAN);
-    Point samplecurvepoint3 = new Point(66,30, Point.CARTESIAN);
-    Point samplecurvepoint4 = new Point(66,20, Point.CARTESIAN);
+    Point samplecurvepoint1 = new Point(17, 20, Point.CARTESIAN);
+    Point samplecurvepoint2 = new Point(66, 48, Point.CARTESIAN);
+    Point samplecurvepoint3 = new Point(66, 30, Point.CARTESIAN);
+    Point samplecurvepoint4 = new Point(66, 20, Point.CARTESIAN);
 
-    Point samplepoint1 =      new Point(54,26.5, Point.CARTESIAN);
-    Point samplepoint2 =      new Point(54,17.5, Point.CARTESIAN);
-    Point samplepoint3 =      new Point(56,12, Point.CARTESIAN);
+    Point samplepoint1 = new Point(54, 26.5, Point.CARTESIAN);
+    Point samplepoint2 = new Point(54, 17.5, Point.CARTESIAN);
+    Point samplepoint3 = new Point(56, 12, Point.CARTESIAN);
 
-    Point linepoint1 =        new Point(30,25, Point.CARTESIAN);
-    Point linepoint2 =        new Point(30,17.7, Point.CARTESIAN);
-    Point linepoint3 =        new Point(28,11.85, Point.CARTESIAN);
+    Point linepoint1 = new Point(30, 25, Point.CARTESIAN);
+    Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
+    Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPoint2 =      new Point(11, 26, Point.CARTESIAN);
-    Point pickupPoint3 =      new Point(9.6, 26, Point.CARTESIAN);
+    Point pickupPoint2 = new Point(11, 26, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(9.6, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
 
     public PathChain score1, score2, collect3, score3, moveSamples, collect4, score4, collect5, score5, score2a, score3a, score4a;
 
-    /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
-     * It is necessary to do this so that all the paths are built before the auto starts. **/
+    /**
+     * Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
+     * It is necessary to do this so that all the paths are built before the auto starts.
+     **/
     public void buildPaths() {
 
         /* There are two major types of paths components: BezierCurves and BezierLines.
@@ -267,9 +270,11 @@ public class Auto_Test_05Z extends OpMode {
                 .build();
     }
 
-    /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
+    /**
+     * This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
      * Everytime the switch changes case, it will reset the timer. (This is because of the setPathState() method)
-     * The followPath() function sets the follower to run the specific path, but does NOT wait for it to finish before moving on. */
+     * The followPath() function sets the follower to run the specific path, but does NOT wait for it to finish before moving on.
+     */
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
@@ -368,14 +373,18 @@ public class Auto_Test_05Z extends OpMode {
         }
     }
 
-    /** These change the states of the paths and actions
-     * It will also reset the timers of the individual switches **/
+    /**
+     * These change the states of the paths and actions
+     * It will also reset the timers of the individual switches
+     **/
     public void setPathState(int pState) {
         pathState = pState;
         pathTimer.resetTimer();
     }
 
-    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
+    /**
+     * This is the main loop of the OpMode, it will run repeatedly after clicking "Play".
+     **/
     @Override
     public void loop() {
 
@@ -401,7 +410,9 @@ public class Auto_Test_05Z extends OpMode {
         follower.drawOnDashBoard();
     }
 
-    /** This method is called once at the init of the OpMode. **/
+    /**
+     * This method is called once at the init of the OpMode.
+     **/
     @Override
     public void init() {
 
@@ -411,8 +422,8 @@ public class Auto_Test_05Z extends OpMode {
 
         config = new RobotConfig(this);
 
-        rightLift = new RightLift(ControlAxis.ControlMode.positionControl,this, config);
-        rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl,this, config);
+        rightLift = new RightLift(ControlAxis.ControlMode.positionControl, this, config);
+        rightPivot = new RightPivot(ControlAxis.ControlMode.positionControl, this, config);
         grabber = new ActiveSpecimenClaw(this, config);
 
         spArm = new SpecimenArm(this, config);
@@ -431,7 +442,9 @@ public class Auto_Test_05Z extends OpMode {
         grabber.closeClawHard();
     }
 
-    /** This method is called continuously after Init while waiting for "play". **/
+    /**
+     * This method is called continuously after Init while waiting for "play".
+     **/
     @Override
     public void init_loop() {
         rightLift.update();
@@ -439,8 +452,10 @@ public class Auto_Test_05Z extends OpMode {
         spArm.autoUpdate();
     }
 
-    /** This method is called once at the start of the OpMode.
-     * It runs all the setup actions, including building paths and starting the path system **/
+    /**
+     * This method is called once at the start of the OpMode.
+     * It runs all the setup actions, including building paths and starting the path system
+     **/
     @Override
     public void start() {
         setPathState(0);
@@ -448,7 +463,9 @@ public class Auto_Test_05Z extends OpMode {
         follower.followPath(score1);
     }
 
-    /** We do not use this because everything should automatically disable **/
+    /**
+     * We do not use this because everything should automatically disable
+     **/
     @Override
     public void stop() {
     }
