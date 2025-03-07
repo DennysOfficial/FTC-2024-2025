@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetect
 public class AngleServoSetup extends LinearOpMode {
 
 
-    double targetPosition;
+    double targetPosition = 0.5;
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     ButtonEdgeDetector refreshServoButton = new ButtonEdgeDetector(false);
@@ -69,9 +69,8 @@ public class AngleServoSetup extends LinearOpMode {
             if (refreshServoButton.getButtonDown(gamepad1.a)) {
                 try {
                     servo = new AngleServo(AngleServoTestConfig.a_TestingServoName, hardwareMap, AngleServoTestConfig.b_point1Position, AngleServoTestConfig.c_point1Angle, AngleServoTestConfig.d_point2Position, AngleServoTestConfig.e_point2Angle);
-                } finally {
-                    telemetry.addLine("bad servo name prob");
-
+                } catch (Exception exception) {
+                    telemetry.addLine("bad servo name prob" + exception);
                 }
             }
 
