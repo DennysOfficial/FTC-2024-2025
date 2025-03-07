@@ -18,7 +18,7 @@ public class RobotConfig {
         return rearExtensionLimitInch;
     }
 
-    public static double frontExtensionLimitInch = 25;
+    public static double frontExtensionLimitInch = 21;
 
     public double getFrontExtensionLimitInch() {
         return frontExtensionLimitInch;
