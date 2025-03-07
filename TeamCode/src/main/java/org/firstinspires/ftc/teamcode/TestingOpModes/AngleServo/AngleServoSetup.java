@@ -44,7 +44,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetect
 public class AngleServoSetup extends LinearOpMode {
 
 
-    double targetPosition = 0.5;
+    double targetPosition;
     private final ElapsedTime frameTimer = new ElapsedTime();
 
     ButtonEdgeDetector refreshServoButton = new ButtonEdgeDetector(false);
