@@ -32,7 +32,7 @@ public class SampleClaw {
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawGrabServo);
         bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawDepositWristServo);
-        smolWristServo = new AngleServo(config.deviceConfig.sampleClawBlockAlignmentWristServo, opMode.hardwareMap, 0.58, 0, 0.38, -90);
+        smolWristServo = new AngleServo(config.deviceConfig.sampleClawBlockAlignmentWristServo, opMode.hardwareMap, 0, -100, 1, 100);
     }
 
     /**

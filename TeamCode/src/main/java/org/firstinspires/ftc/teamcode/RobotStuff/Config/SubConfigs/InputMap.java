@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class InputMap {
 
@@ -44,13 +45,11 @@ public class InputMap {
         return -1 * gamepad2.right_stick_y;
     }
 
-    /// specimen claw control ##################################################################################################################################################
+    /// claw control ##################################################################################################################################################
 
     public boolean getSpecimenClawOpen() {
         return gamepad1.left_trigger > 0.2;
     }
-
-    /// intake claw control ##################################################################################################################################################
 
     public double getYoinkTrigger() {
         return gamepad1.right_trigger;
@@ -59,15 +58,7 @@ public class InputMap {
         return getYoinkTrigger() > 0.2;
     }
 
-    public boolean getIntakeTwistRight(){
-        return gamepad1.right_bumper;
-    }
-
-    public boolean getIntakeTwistLeft(){
-        return gamepad1.left_bumper;
-    }
-
-    /// active intake control ##################################################################################################################################################
+    /// intake control ##################################################################################################################################################
 
     public boolean getIntakeButton() {
         return gamepad2.right_bumper || (gamepad2.right_trigger > 0.2);
@@ -81,6 +72,13 @@ public class InputMap {
         return gamepad2.left_trigger > 0.5;
     }
 
+    public boolean getIntakeTwistRight(){
+        return gamepad1.right_bumper;
+    }
+
+    public boolean getIntakeTwistLeft(){
+        return gamepad1.left_bumper;
+    }
 
     /// abort/unabort ##################################################################################################################################################
 
@@ -120,11 +118,8 @@ public class InputMap {
         return gamepad2.dpad_up;
     }
 
-    public boolean getClawBigOpenButton() {
+    public boolean getClawOpenButton() {
         return gamepad1.a;
-    }
-    public boolean getClawSmallOpenButton() {
-        return gamepad1.b;
     }
     public boolean getClawCloseButton() {
         return gamepad1.x;
