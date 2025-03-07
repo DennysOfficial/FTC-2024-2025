@@ -52,6 +52,8 @@ public class Auto_Test_05Z extends OpMode {
      */
     private int pathState;
 
+    boolean isGrabbing;
+
     /* Create and Define Poses + Paths
      * Poses are built with three constructors: x, y, and heading (in Radians).
      * Pedro uses 0 - 144 for x and y, with 0, 0 being on the bottom left.
@@ -150,52 +152,52 @@ public class Auto_Test_05Z extends OpMode {
         score2a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint2, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint2, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.9, () -> isGrabbing = true)
                 .build();
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.9, () -> isGrabbing = true)
                 .build();
         score4a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(rungPoint4, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, rungPointControl1, pickupPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.9, () -> isGrabbing = true)
                 .build();
 
         moveSamples = follower.pathBuilder()
@@ -205,7 +207,7 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -221,7 +223,7 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> isGrabbing = true)
                 .addPath(collect2a)
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -293,7 +295,7 @@ public class Auto_Test_05Z extends OpMode {
                 setPathState(3);
                 break;
             case 3:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() >= 0) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score2);
                     if (follower.isBusy()) setPathState(4);
@@ -315,7 +317,7 @@ public class Auto_Test_05Z extends OpMode {
                 setPathState(7);
                 break;
             case 7:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() >= 3) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score3);
                     if (follower.isBusy()) setPathState(8);
@@ -337,7 +339,7 @@ public class Auto_Test_05Z extends OpMode {
                 setPathState(11);
                 break;
             case 11:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() >= 3) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score4);
                     if (follower.isBusy()) setPathState(12);
@@ -358,7 +360,7 @@ public class Auto_Test_05Z extends OpMode {
                 setPathState(16);
                 break;
             case 16:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy() && pathTimer.getElapsedTimeSeconds() >= 3) {
                     spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                     follower.followPath(score4);
                     if (follower.isBusy()) setPathState(17);
@@ -408,6 +410,9 @@ public class Auto_Test_05Z extends OpMode {
         telemetry.update();
 
         follower.drawOnDashBoard();
+
+        if (isGrabbing) grabber.closeClawHard();
+        else grabber.openClaw();
     }
 
     /**
@@ -439,7 +444,7 @@ public class Auto_Test_05Z extends OpMode {
         rightLift.setTargetPosition(0);
         rightPivot.setTargetPosition(-55);
         spArm.armState = SpecimenArm.SpecimenArmState.rest;
-        grabber.closeClawHard();
+        isGrabbing = true;
     }
 
     /**
@@ -450,6 +455,9 @@ public class Auto_Test_05Z extends OpMode {
         rightLift.update();
         rightPivot.update();
         spArm.autoUpdate();
+
+        if (isGrabbing) grabber.closeClawHard();
+        else grabber.openClaw();
     }
 
     /**
