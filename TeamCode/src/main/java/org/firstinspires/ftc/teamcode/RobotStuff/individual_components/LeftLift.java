@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 
 @Config
 public class LeftLift extends ControlAxis {
@@ -21,9 +20,9 @@ public class LeftLift extends ControlAxis {
 
     DigitalChannel limitSwitch;
     public static double homingPosition = 0;
-    public static double homingRetractPower = 0.5;
-    public static double homingDwellPower = 0.2;
-    public static double homingDwellPeriod = 0.3;
+    public static double homingRetractPower = -0.9;
+    public static double homingDwellPower = -0.2;
+    public static double homingDwellPeriod = 0.1;
 
 
     final double retractedRadius = 10;
@@ -44,11 +43,6 @@ public class LeftLift extends ControlAxis {
     public static double kineticFrictionCoefficient = 0;
     public static double staticThreshold = 0.1;
 
-
-    @Override
-    public void homeAxis() {
-        homingState = HomingState.homed;
-    }
 
     @Override
     double getKp() {
@@ -112,8 +106,9 @@ public class LeftLift extends ControlAxis {
 
     public LeftLift(ControlMode defaultControlMode, OpMode opMode, RobotConfig config) {
         super(defaultControlMode, opMode, config, "LeftLift", "inches", 25.25 / 4056.0);
-        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "Left Limit Switch");
+        limitSwitch = opMode.hardwareMap.get(DigitalChannel.class, "LLS");
         limitSwitch.setMode(DigitalChannel.Mode.INPUT);
+
 
         softLimits = new Range<>(0.5, 25.420);
 
@@ -139,21 +134,19 @@ public class LeftLift extends ControlAxis {
         super.setTargetPosition(targetPosition);
     }
 
-    boolean previousButtonState = false;
     double minExtension = Double.POSITIVE_INFINITY;
-
-    ButtonEdgeDetector homingButton = new ButtonEdgeDetector(false);
-
     ElapsedTime homingDwellTimer;
 
     @Override
     void miscUpdate() {
 
-        if (homingButton.getButtonDown(config.inputMap.gamepad1.dpad_down)) {
-            homeAxis();
+        if (config.inputMap.gamepad1.y) {
+            homingState = HomingState.initHoming;
         }
 
-        opMode.telemetry.addData("limit switch state:", limitSwitch.getState());
+        opMode.telemetry.addLine();
+        opMode.telemetry.addData("limit switch state:", !limitSwitch.getState());
+        opMode.telemetry.addData("homing state:", homingState);
 
         switch (homingState) {
             case initHoming:

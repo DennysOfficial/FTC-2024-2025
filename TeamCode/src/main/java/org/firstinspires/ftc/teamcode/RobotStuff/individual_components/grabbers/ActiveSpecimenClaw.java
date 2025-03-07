@@ -12,7 +12,7 @@ public class ActiveSpecimenClaw {
     Servo wristServo;
     Servo pinchServo;
     public static double hardClosedPosition = 0.25;
-    public static double softClosedPosition = 0.26;
+    public static double softClosedPosition = 0.28;
     public static double openPosition = 0.569;
 
 
