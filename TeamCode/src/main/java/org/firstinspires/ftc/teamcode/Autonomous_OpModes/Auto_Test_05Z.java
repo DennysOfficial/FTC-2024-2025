@@ -51,6 +51,8 @@ public class Auto_Test_05Z extends OpMode {
      * It is used by the pathUpdate method. */
     private int pathState;
 
+    boolean isGrabbing;
+
     /* Create and Define Poses + Paths
      * Poses are built with three constructors: x, y, and heading (in Radians).
      * Pedro uses 0 - 144 for x and y, with 0, 0 being on the bottom left.
@@ -153,12 +155,12 @@ public class Auto_Test_05Z extends OpMode {
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> isGrabbing = true)
                 .build();
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
@@ -169,12 +171,12 @@ public class Auto_Test_05Z extends OpMode {
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> isGrabbing = true)
                 .build();
         score4a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
@@ -187,12 +189,12 @@ public class Auto_Test_05Z extends OpMode {
                 .setPathEndVelocityConstraint(0.15)
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addParametricCallback(0.1, () -> {
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> isGrabbing = true)
                 .build();
 
         moveSamples = follower.pathBuilder()
@@ -202,7 +204,7 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addParametricCallback(0, () -> {
                     spArm.armState = SpecimenArm.SpecimenArmState.collect;
-                    grabber.openClaw();
+                    isGrabbing = false;
                 })
                 .addPath(toline1)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -218,7 +220,7 @@ public class Auto_Test_05Z extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
-                .addParametricCallback(0.95, () -> grabber.closeClawHard())
+                .addParametricCallback(0.95, () -> isGrabbing = true)
                 .addPath(collect2a)
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -399,6 +401,9 @@ public class Auto_Test_05Z extends OpMode {
         telemetry.update();
 
         follower.drawOnDashBoard();
+
+        if (isGrabbing) grabber.closeClawHard();
+        else grabber.openClaw();
     }
 
     /** This method is called once at the init of the OpMode. **/
@@ -428,7 +433,7 @@ public class Auto_Test_05Z extends OpMode {
         rightLift.setTargetPosition(0);
         rightPivot.setTargetPosition(-55);
         spArm.armState = SpecimenArm.SpecimenArmState.rest;
-        grabber.closeClawHard();
+        isGrabbing = true;
     }
 
     /** This method is called continuously after Init while waiting for "play". **/
@@ -437,6 +442,9 @@ public class Auto_Test_05Z extends OpMode {
         rightLift.update();
         rightPivot.update();
         spArm.autoUpdate();
+
+        if (isGrabbing) grabber.closeClawHard();
+        else grabber.openClaw();
     }
 
     /** This method is called once at the start of the OpMode.
