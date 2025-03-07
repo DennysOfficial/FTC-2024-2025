@@ -281,20 +281,20 @@ public class _360NoScopeAuto extends OpMode {
             case 0:
                 if (stateTimer.getElapsedTimeSeconds() < 0.5)
                     return;
-                setPathState(6969);
+                setPathStateAndResetTimer(6969);
                 follower.followPath(score1);
             case 6969:
-                if (follower.isBusy()) setPathState(1);
+                if (follower.isBusy()) setPathStateAndResetTimer(1);
                 break;
 
             case 1:
                 if (follower.isBusy() && spArm.isBusy())
                     return;
                 follower.followPath(moveSamples);
-                setPathState(2);
+                setPathStateAndResetTimer(2);
             case 2:
                 if (follower.isBusy())
-                    setPathState(3);
+                    setPathStateAndResetTimer(3);
                 break;
 
             case 3:
@@ -302,28 +302,28 @@ public class _360NoScopeAuto extends OpMode {
                     return;
                 spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                 follower.followPath(score2);
-                setPathState(420);
+                setPathStateAndResetTimer(420);
             case 420:
-                if (follower.isBusy()) setPathState(4);
+                if (follower.isBusy()) setPathStateAndResetTimer(4);
                 break;
 
             case 4:
                 if (follower.isBusy())
                     return;
                 follower.followPath(score2a);
-                setPathState(69);
+                setPathStateAndResetTimer(69);
 
             case 69:
-                if (follower.isBusy()) setPathState(5);
+                if (follower.isBusy()) setPathStateAndResetTimer(5);
                 break;
 
             case 5:
                 if (!follower.isBusy()) {
                     follower.followPath(collect3);
-                    setPathState(6);
+                    setPathStateAndResetTimer(6);
                 }
             case 6:
-                if (follower.isBusy()) setPathState(7);
+                if (follower.isBusy()) setPathStateAndResetTimer(7);
                 break;
 
             case 7:
@@ -331,27 +331,27 @@ public class _360NoScopeAuto extends OpMode {
                     return;
                 spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                 follower.followPath(score3);
-                setPathState(123);
+                setPathStateAndResetTimer(123);
             case 123:
-                if (follower.isBusy()) setPathState(8);
+                if (follower.isBusy()) setPathStateAndResetTimer(8);
                 break;
 
             case 8:
                 if (follower.isBusy())
                     return;
                 follower.followPath(score3a);
-                setPathState(42069);
+                setPathStateAndResetTimer(42069);
             case 42069:
-                if (follower.isBusy()) setPathState(9);
+                if (follower.isBusy()) setPathStateAndResetTimer(9);
                 break;
 
             case 9:
                 if (follower.isBusy())
                     return;
                 follower.followPath(collect4);
-                setPathState(10);
+                setPathStateAndResetTimer(10);
             case 10:
-                if (follower.isBusy()) setPathState(11);
+                if (follower.isBusy()) setPathStateAndResetTimer(11);
                 break;
 
             case 11:
@@ -359,30 +359,30 @@ public class _360NoScopeAuto extends OpMode {
                     return;
                 spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                 follower.followPath(score4);
-                setPathState(635);
+                setPathStateAndResetTimer(635);
                 break;
 
             case 635:
-                if (follower.isBusy()) setPathState(12);
+                if (follower.isBusy()) setPathStateAndResetTimer(12);
                 break;
 
             case 12:
                 if (follower.isBusy())
                     return;
                 follower.followPath(score4a);
-                setPathState(2354);
+                setPathStateAndResetTimer(2354);
 
             case 2354:
-                if (follower.isBusy()) setPathState(13);
+                if (follower.isBusy()) setPathStateAndResetTimer(13);
                 break;
             case 13:
                 if (follower.isBusy())
                     return;
                 follower.followPath(collect5);
-                setPathState(14);
+                setPathStateAndResetTimer(14);
 
             case 14:
-                if (follower.isBusy()) setPathState(16);
+                if (follower.isBusy()) setPathStateAndResetTimer(16);
                 break;
 
             case 16:
@@ -390,19 +390,19 @@ public class _360NoScopeAuto extends OpMode {
                     return;
                 spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
                 follower.followPath(score4);
-                setPathState(69420);
+                setPathStateAndResetTimer(69420);
 
             case 69420:
-                if (follower.isBusy()) setPathState(17);
+                if (follower.isBusy()) setPathStateAndResetTimer(17);
                 break;
 
             case 17:
                 if (!follower.isBusy())
                     return;
                 follower.followPath(score4a);
-                setPathState(2343);
+                setPathStateAndResetTimer(2343);
             case 2343:
-                if (follower.isBusy()) setPathState(5318008);
+                if (follower.isBusy()) setPathStateAndResetTimer(5318008);
                 break;
 
             default:
@@ -414,13 +414,8 @@ public class _360NoScopeAuto extends OpMode {
      * These change the states of the paths and actions
      * It will also reset the timers of the individual switches
      **/
-    public void setPathState(int pState) {
+    public void setPathStateAndResetTimer(int pState) {
         pathState = pState;
-        stateTimer.resetTimer();
-    }
-
-    public void nextState() {
-        pathState++;
         stateTimer.resetTimer();
     }
 
@@ -501,7 +496,7 @@ public class _360NoScopeAuto extends OpMode {
      **/
     @Override
     public void start() {
-        setPathState(0);
+        setPathStateAndResetTimer(0);
         spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
         follower.followPath(score1);
     }
