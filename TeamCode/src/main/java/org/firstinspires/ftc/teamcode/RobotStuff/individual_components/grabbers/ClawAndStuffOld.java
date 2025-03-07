@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.LeftPivot;
 
-@Config
+//@Config
 public class ClawAndStuffOld {
 
     Servo twistServo;

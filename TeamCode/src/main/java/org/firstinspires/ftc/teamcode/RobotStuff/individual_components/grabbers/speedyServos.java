@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-@Config
+//@Config
 public class speedyServos {
     Servo wrist;
     Servo support;
