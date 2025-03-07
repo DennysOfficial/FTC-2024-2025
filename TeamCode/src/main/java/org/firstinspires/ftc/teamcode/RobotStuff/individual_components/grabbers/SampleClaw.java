@@ -18,9 +18,6 @@ public class SampleClaw {
     AngleServo smolWristServo;
     RobotConfig config;
 
-    public static double maxLittleTwistAngle = 75;
-    public static double minLittleTwistAngle = -75;
-
     public static double openPos = .4, closePos = 0.69, rTwist = 0.58, lTwist = 0.35, mTwist = 0.58;
 
 
@@ -67,11 +64,11 @@ public class SampleClaw {
         }
     }
 
-    public void blockAlignmentUpdate() {
-        if (config.inputMap.getIntakeTwistRight())
+    public void blockAlignmentUpdate(){
+        if(config.inputMap.getIntakeTwistRight())
             blockAlignmentIncrement(config.sensitivities.getBlockAlignmentIncrementAngle());
 
-        if (config.inputMap.getIntakeTwistLeft())
+        if(config.inputMap.getIntakeTwistLeft())
             blockAlignmentIncrement(-config.sensitivities.getBlockAlignmentIncrementAngle());
     }
 
@@ -79,10 +76,10 @@ public class SampleClaw {
         double newTargetAngle = smolWristServo.getAngle();
         newTargetAngle = newTargetAngle - (newTargetAngle % Math.abs(incrementAmount));
         newTargetAngle += incrementAmount;
-        newTargetAngle = MathUtils.clamp(newTargetAngle, minLittleTwistAngle, maxLittleTwistAngle);
 
         smolWristServo.setAngle(newTargetAngle);
     }
 
+    
 
 }
