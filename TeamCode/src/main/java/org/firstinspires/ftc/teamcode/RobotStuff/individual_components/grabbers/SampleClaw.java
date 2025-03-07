@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 @Config
@@ -68,14 +67,11 @@ public class SampleClaw {
         }
     }
 
-    ButtonEdgeDetector leftBAbutton = new ButtonEdgeDetector();
-    ButtonEdgeDetector rightBAbutton = new ButtonEdgeDetector();
-
     public void blockAlignmentUpdate() {
-        if (rightBAbutton.getButtonDown(config.inputMap.getIntakeTwistRight()))
+        if (config.inputMap.getIntakeTwistRight())
             blockAlignmentIncrement(config.sensitivities.getBlockAlignmentIncrementAngle());
 
-        if (leftBAbutton.getButtonDown(config.inputMap.getIntakeTwistLeft()))
+        if (config.inputMap.getIntakeTwistLeft())
             blockAlignmentIncrement(-config.sensitivities.getBlockAlignmentIncrementAngle());
     }
 
