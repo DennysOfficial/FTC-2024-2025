@@ -81,8 +81,8 @@ public class SampleClaw {
 
     public void blockAlignmentIncrement(double incrementAmount) {
         double newTargetAngle = smolWristServo.getAngle();
-        newTargetAngle += incrementAmount;
         newTargetAngle = newTargetAngle - (newTargetAngle % Math.abs(incrementAmount));
+        newTargetAngle += incrementAmount;
         newTargetAngle = MathUtils.clamp(newTargetAngle, minLittleTwistAngle, maxLittleTwistAngle);
 
         smolWristServo.setAngle(newTargetAngle);
