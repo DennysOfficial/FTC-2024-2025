@@ -18,14 +18,14 @@ public class EpicPoints {
     public static DashboardPoint bd_rungControlPoint4 = new DashboardPoint(20, 67, Point.CARTESIAN);
 
 
-    public static DashboardPoint pickupDepartureControlPoint = new DashboardPoint(20, 28, Point.CARTESIAN);
+    public static DashboardPoint pickupDepartureControlPoint = new DashboardPoint(11, 26, Point.CARTESIAN);
 
     //public static DashboardPoint rungPointControl2 = new DashboardPoint(20, 66, Point.CARTESIAN); idk
 
-    public static DashboardPoint samplecurvepoint1 = new DashboardPoint(17, 20, Point.CARTESIAN);
-    public static DashboardPoint samplecurvepoint2 = new DashboardPoint(66, 48, Point.CARTESIAN);
-    public static DashboardPoint samplecurvepoint3 = new DashboardPoint(66, 30, Point.CARTESIAN);
-    public static DashboardPoint samplecurvepoint4 = new DashboardPoint(66, 20, Point.CARTESIAN);
+    public static DashboardPoint sampleCurvePoint1 = new DashboardPoint(17, 20, Point.CARTESIAN);
+    public static DashboardPoint sampleCurvePoint2 = new DashboardPoint(66, 48, Point.CARTESIAN);
+    public static DashboardPoint sampleCurvePoint3 = new DashboardPoint(66, 30, Point.CARTESIAN);
+    public static DashboardPoint sampleCurvePoint4 = new DashboardPoint(66, 20, Point.CARTESIAN);
 
     public static DashboardPoint samplepoint1 = new DashboardPoint(54, 26.5, Point.CARTESIAN);
     public static DashboardPoint samplepoint2 = new DashboardPoint(54, 17.5, Point.CARTESIAN);

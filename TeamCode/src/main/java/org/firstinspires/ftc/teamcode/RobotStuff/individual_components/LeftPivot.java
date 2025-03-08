@@ -164,7 +164,7 @@ public class LeftPivot extends ControlAxis {
     void miscUpdate() {
 
 
-        encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange()));
+        encoderCalculatedAnalogValue = Math.abs(initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange());
 
         if (getPosition() > 0)
             encoderCalculatedAnalogValue = getAnalogRange() - encoderCalculatedAnalogValue;

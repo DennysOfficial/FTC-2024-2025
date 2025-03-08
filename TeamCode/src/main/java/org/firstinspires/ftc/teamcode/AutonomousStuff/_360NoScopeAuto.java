@@ -74,23 +74,23 @@ public class _360NoScopeAuto extends OpMode {
 
     private final Pose startPose = new Pose(9.25, 48.5, Math.toRadians(0));  // This is where the robot starts
 
-    Point rungPoint3 = new Point(30, 71, Point.CARTESIAN);
-    Point rungPoint4 = new Point(30, 69, Point.CARTESIAN);
-    Point rungPoint2 = new Point(30, 73, Point.CARTESIAN);
-    Point rungPoint1 = new Point(30, 74.35, Point.CARTESIAN);
+    Point rungPoint3 = EpicPoints.ab_rungPoint3.convertToPoint();
+    Point rungPoint4 = EpicPoints.ad_rungPoint4.convertToPoint();
+    Point rungPoint2 = EpicPoints.ac_rungPoint2.convertToPoint();
+    Point rungPoint1 = EpicPoints.aa_rungPoint1.convertToPoint();
 
-    Point rungPoint3a = new Point(20, 69, Point.CARTESIAN);
-    Point rungPoint4a = new Point(20, 67, Point.CARTESIAN);
-    Point rungPoint2a = new Point(20, 71, Point.CARTESIAN);
-    Point rungPoint1a = new Point(20, 73, Point.CARTESIAN);
+    Point rungPoint3a = EpicPoints.bc_rungControlPoint3.convertToPoint();
+    Point rungPoint4a = EpicPoints.bd_rungControlPoint4.convertToPoint();
+    Point rungPoint2a = EpicPoints.bb_rungControlPoint2.convertToPoint();
+    Point rungPoint1a = EpicPoints.ba_rungControlPoint1.convertToPoint();
 
     Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
 
-    Point samplecurvepoint1 = new Point(17, 20, Point.CARTESIAN);
-    Point samplecurvepoint2 = new Point(66, 48, Point.CARTESIAN);
-    Point samplecurvepoint3 = new Point(66, 30, Point.CARTESIAN);
-    Point samplecurvepoint4 = new Point(66, 20, Point.CARTESIAN);
+    Point sampleCurvePoint1 = EpicPoints.sampleCurvePoint1.convertToPoint();
+    Point sampleCurvePoint2 = EpicPoints.sampleCurvePoint2.convertToPoint();
+    Point sampleCurvePoint3 = EpicPoints.sampleCurvePoint3.convertToPoint();
+    Point sampleCurvePoint4 = EpicPoints.sampleCurvePoint4.convertToPoint();
 
     Point samplepoint1 = new Point(54, 26.5, Point.CARTESIAN);
     Point samplepoint2 = new Point(54, 17.5, Point.CARTESIAN);
@@ -100,7 +100,8 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPoint2 = new Point(11, 26, Point.CARTESIAN);
+
+    Point pickupPoint2 = EpicPoints.pickupDepartureControlPoint.convertToPoint();
     Point pickupPoint3 = new Point(9.6, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
@@ -136,9 +137,9 @@ public class _360NoScopeAuto extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .build();
 
-        toSample1 = new Path(new BezierCurve(rungPoint1, samplecurvepoint1, samplecurvepoint2, samplepoint1));
-        toSample2 = new Path(new BezierCurve(linepoint1, samplecurvepoint3, samplepoint2));
-        toSample3 = new Path(new BezierCurve(linepoint2, samplecurvepoint4, samplepoint3));
+        toSample1 = new Path(new BezierCurve(rungPoint1, sampleCurvePoint1, sampleCurvePoint2, samplepoint1));
+        toSample2 = new Path(new BezierCurve(linepoint1, sampleCurvePoint3, samplepoint2));
+        toSample3 = new Path(new BezierCurve(linepoint2, sampleCurvePoint4, samplepoint3));
 
         toline1 = new Path(new BezierLine(samplepoint1, linepoint1));
         toline2 = new Path(new BezierLine(samplepoint2, linepoint2));

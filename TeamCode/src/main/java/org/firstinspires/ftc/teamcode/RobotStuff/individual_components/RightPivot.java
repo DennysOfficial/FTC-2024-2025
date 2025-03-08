@@ -168,10 +168,8 @@ public class RightPivot extends ControlAxis {
 
     @Override
     void miscUpdate() {
-        encoderCalculatedAnalogValue = Math.abs((initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange()));
-
-        if (getPosition() < 0)
-            encoderCalculatedAnalogValue = getAnalogRange() - encoderCalculatedAnalogValue;
+        double thing = (analogOverDegrees * (getPosition())) % getAnalogRange();
+        encoderCalculatedAnalogValue = initialAnalogPosition + ((thing > 0) ? thing : getAnalogRange() - thing);
 
         analogPosition = analogEncoder.getVoltage();
 
@@ -185,13 +183,14 @@ public class RightPivot extends ControlAxis {
         if (getPosition() > 20)
             angleCorrection += analogError * correctionFactor;
 
-            correctedAngle = getPosition() + angleCorrection;
+        correctedAngle = getPosition() + angleCorrection;
 
         positionOffset = angleCorrection;
 
         if (config.debugConfig.getAnalogEncoderDebug()) {
             opMode.telemetry.addLine();
             opMode.telemetry.addLine();
+            opMode.telemetry.addData(axisName + "thing", analogPosition);
             opMode.telemetry.addData(axisName + "analog value", analogPosition);
             opMode.telemetry.addData(axisName + "analog error", analogError);
 
