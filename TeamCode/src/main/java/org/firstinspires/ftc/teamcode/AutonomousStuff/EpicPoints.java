@@ -11,7 +11,7 @@ public class EpicPoints {
 
     public static double aaa_hangX = 25;//30;
 
-    public static double initalWait = .5;
+    //public static double initalWait = .5;
     public static double AAA_initialArmSettleWait = .2;
 
     public static DashboardPoint aa_rungPoint1 = new DashboardPoint(aaa_hangX, 74.35, Point.CARTESIAN);
@@ -19,15 +19,18 @@ public class EpicPoints {
     public static DashboardPoint ac_rungPoint2 = new DashboardPoint(aaa_hangX, 73, Point.CARTESIAN);
     public static DashboardPoint ad_rungPoint4 = new DashboardPoint(aaa_hangX, 69, Point.CARTESIAN);
 
-    public static DashboardPoint ba_rungApproachPoint1 = new DashboardPoint(15, 73, Point.CARTESIAN);
+    public static DashboardPoint ba_rungApproachPoint1 = new DashboardPoint(18, 73, Point.CARTESIAN);
     public static DashboardPoint bb_rungApproachPoint2 = new DashboardPoint(18, 71, Point.CARTESIAN);
     public static DashboardPoint bc_rungApproachPoint3 = new DashboardPoint(18, 69, Point.CARTESIAN);
     public static DashboardPoint bd_rungApproachPoint4 = new DashboardPoint(18, 67, Point.CARTESIAN);
 
+    public static DashboardPoint ca_scorePathControlPoint1 = new DashboardPoint(15, 30, Point.CARTESIAN);
+    public static DashboardPoint cb_scorePathControlPoint2 = new DashboardPoint(15, 50, Point.CARTESIAN);
 
-    public static DashboardPoint pickupDepartureControlPoint = new DashboardPoint(11, 26, Point.CARTESIAN);
+    public static DashboardPoint da_pickupPointApproach = new DashboardPoint(14, 26, Point.CARTESIAN);
+    public static DashboardPoint db_pickupPointAtWallDefault = new DashboardPoint(9, 26, Point.CARTESIAN);
+    public static DashboardPoint dc_pickupPointFirstWallPickup = new DashboardPoint(9, 22, Point.CARTESIAN);
 
-    //public static DashboardPoint rungPointControl2 = new DashboardPoint(20, 66, Point.CARTESIAN); idk
 
     public static DashboardPoint sampleCurvePoint1 = new DashboardPoint(17, 20, Point.CARTESIAN);
     public static DashboardPoint sampleCurvePoint2 = new DashboardPoint(66, 48, Point.CARTESIAN);
@@ -42,10 +45,6 @@ public class EpicPoints {
     public static DashboardPoint linepoint2 = new DashboardPoint(30, 17.7, Point.CARTESIAN);
     public static DashboardPoint linepoint3 = new DashboardPoint(28, 11.85, Point.CARTESIAN);
 
-    public static DashboardPoint pickupPointApproach = new DashboardPoint(14, 26, Point.CARTESIAN);
-    public static DashboardPoint pickupPointAtWallDefault = new DashboardPoint(9, 26, Point.CARTESIAN);
-
-    public static DashboardPoint pickupPointFirstWallPickup = new DashboardPoint(9, 22, Point.CARTESIAN);
 
 
 }

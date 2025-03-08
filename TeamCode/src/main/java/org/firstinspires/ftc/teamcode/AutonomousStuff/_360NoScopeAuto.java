@@ -83,8 +83,8 @@ public class _360NoScopeAuto extends OpMode {
     Point rungPoint2Approach = EpicPoints.bb_rungApproachPoint2.convertToPoint();
     Point rungPoint1Approach = EpicPoints.ba_rungApproachPoint1.convertToPoint();
 
-    Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
-    Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
+    Point scorePathControlPoint1 = EpicPoints.ca_scorePathControlPoint1.convertToPoint();
+    Point scorePathControlPoint2 = EpicPoints.cb_scorePathControlPoint2.convertToPoint();
 
     Point sampleCurvePoint1 = EpicPoints.sampleCurvePoint1.convertToPoint();
     Point sampleCurvePoint2 = EpicPoints.sampleCurvePoint2.convertToPoint();
@@ -99,9 +99,9 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPointApproach = EpicPoints.pickupPointApproach.convertToPoint();
-    Point pickupPointAtWallLastFew = EpicPoints.pickupPointAtWallDefault.convertToPoint();
-    Point pickupPointAtWallFirst = EpicPoints.pickupPointFirstWallPickup.convertToPoint();
+    Point pickupPointApproach = EpicPoints.da_pickupPointApproach.convertToPoint();
+    Point pickupPointAtWallLastFew = EpicPoints.db_pickupPointAtWallDefault.convertToPoint();
+    Point pickupPointAtWallFirst = EpicPoints.dc_pickupPointFirstWallPickup.convertToPoint();
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
 
@@ -130,7 +130,7 @@ public class _360NoScopeAuto extends OpMode {
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
         score1 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(new Point(startPose), rungPointControl2, rungPoint1Approach)))
+                .addPath(new Path(new BezierCurve(new Point(startPose), scorePathControlPoint2, rungPoint1Approach)))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -184,9 +184,7 @@ public class _360NoScopeAuto extends OpMode {
         score4a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint4Approach, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierLine(rungPoint4, rungPoint3)))
-                .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointApproach)))
+                .addPath(new Path(new BezierCurve(rungPoint4, rungPoint4Approach, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -231,7 +229,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         score2 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint2Approach)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, scorePathControlPoint1, scorePathControlPoint2, rungPoint2Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
@@ -244,7 +242,7 @@ public class _360NoScopeAuto extends OpMode {
                 .setPathEndTimeoutConstraint(350)
                 .build();
         score3 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint3Approach)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, scorePathControlPoint1, scorePathControlPoint2, rungPoint3Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
@@ -258,7 +256,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint4Approach)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, scorePathControlPoint1, scorePathControlPoint2, rungPoint4Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
