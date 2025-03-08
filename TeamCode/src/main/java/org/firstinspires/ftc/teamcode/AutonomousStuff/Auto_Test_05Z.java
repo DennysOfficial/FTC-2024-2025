@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArm;
+import org.firstinspires.ftc.teamcode.RobotStuff.SpecimenArmPose;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.ControlAxis;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightLift;
 import org.firstinspires.ftc.teamcode.RobotStuff.individual_components.RightPivot;
@@ -467,7 +468,7 @@ public class Auto_Test_05Z extends OpMode {
     @Override
     public void start() {
         setPathState(0);
-        spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
+        spArm.moveToPose(new SpecimenArmPose(0.72, 18, 32), 1);
         follower.followPath(score1);
     }
 
