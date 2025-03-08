@@ -42,6 +42,9 @@ public class EpicPoints {
     public static DashboardPoint linepoint3 = new DashboardPoint(28, 11.85, Point.CARTESIAN);
 
     public static DashboardPoint pickupPoint2 = new DashboardPoint(11, 26, Point.CARTESIAN);
-    public static DashboardPoint pickupPoint3 = new DashboardPoint(9.6, 26, Point.CARTESIAN);    
-    
+    public static DashboardPoint pickupPoint3 = new DashboardPoint(9.6, 26, Point.CARTESIAN);
+
+    public static DashboardPoint pickupPointFirstWallPickup = new DashboardPoint(9.6, 26, Point.CARTESIAN);
+
+
 }

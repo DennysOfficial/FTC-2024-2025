@@ -12,7 +12,6 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -100,8 +99,9 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPoint2 = EpicPoints.pickupPoint2.convertToPoint();
-    Point pickupPoint3 = EpicPoints.pickupPoint3.convertToPoint();
+    Point pickupPointAproach = EpicPoints.pickupPoint2.convertToPoint();
+    Point pickupPointAtWallLastFew = EpicPoints.pickupPoint3.convertToPoint();
+    Point pickupPointAtWallFirst = EpicPoints.pickupPointFirstWallPickup.convertToPoint();
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
 
@@ -144,15 +144,15 @@ public class _360NoScopeAuto extends OpMode {
         toline2 = new Path(new BezierLine(samplepoint2, linepoint2));
         toline3 = new Path(new BezierLine(samplepoint3, linepoint3));
 
-        collect2 = new Path(new BezierLine(linepoint3, pickupPoint2));
-        collect2a = new Path(new BezierLine(pickupPoint2, pickupPoint3));
+        collect2 = new Path(new BezierLine(linepoint3, pickupPointAproach));
+        collect2a = new Path(new BezierLine(pickupPointAproach, pickupPointAtWallFirst));
 
         score1a = new Path(new BezierLine(rungPoint1a, rungPoint1));
 
         score2a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint2, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint2, pickupPointAproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -168,7 +168,7 @@ public class _360NoScopeAuto extends OpMode {
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointAproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -186,7 +186,7 @@ public class _360NoScopeAuto extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(rungPoint4, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPoint2)))
+                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointAproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -231,41 +231,41 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         score2 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint2a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint2a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
                 .build();
 
         collect3 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
                 .build();
         score3 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint3a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint3a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
                 .build();
 
         collect4 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
                 .build();
 
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPoint3, rungPointControl1, rungPointControl2, rungPoint4a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint4a)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
                 .build();
 
         collect5 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPoint2, pickupPoint3)))
+                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
