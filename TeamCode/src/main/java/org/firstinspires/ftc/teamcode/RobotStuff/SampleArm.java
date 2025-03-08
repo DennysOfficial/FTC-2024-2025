@@ -47,9 +47,8 @@ public class SampleArm {
 
     public static double grabPosition = 0;
 
-    public static double a_ClawSmolOpenPosition = 0.5;
 
-    public static SampleArmPose ObservationDepositPose = new SampleArmPose(90, .1, 0, -40);
+    public static SampleArmPose ObservationDepositPose = new SampleArmPose(0, .1, 0, -65);
     public static double DefaultObservationDepositDuration = 1;
 
     public static SampleArmPose HighBasketDepositPose = new SampleArmPose(0, 1, 32, -20);
@@ -67,6 +66,7 @@ public class SampleArm {
     public static double maxIntakeTorque = 0.4;
 
 
+
     public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .420, 0, Double.NaN);
     public static double intakeHeightOffset = -2;
 
@@ -76,7 +76,6 @@ public class SampleArm {
 
 
     double interpolationExtendedLiftDistance = 20;
-
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
     }
@@ -138,13 +137,7 @@ public class SampleArm {
             opMode.telemetry.addData("Harpoon Arm State: ", armState.toString());
     }
 
-    enum GrabPosition {
-        closed,
-        bigOpen,
-        smolOpen
-    }
-
-    GrabPosition clawTargetPosition = GrabPosition.closed;
+    boolean grabOpen = true;
     boolean lastGroundSlam = false;
 
     void updateTargetState() {
@@ -164,14 +157,18 @@ public class SampleArm {
 
         updateTargetState();
 
-        sampleClaw.blockAlignmentUpdate();
+        if (config.inputMap.gamepad1.right_bumper && grabPosition < 1) {
+            grabPosition += 1;
+        }
+        if (config.inputMap.gamepad1.left_bumper && grabPosition > -1) {
+            grabPosition -= 1;
+        }
+        sampleClaw.twistServo(grabPosition);
 
-        if (config.inputMap.getClawBigOpenButton())
-            clawTargetPosition = GrabPosition.bigOpen;
-        if (config.inputMap.getClawSmallOpenButton())
-            clawTargetPosition = GrabPosition.smolOpen;
         if (config.inputMap.getClawCloseButton())
-            clawTargetPosition = GrabPosition.closed;
+            grabOpen = false;
+        if (config.inputMap.getClawOpenButton())
+            grabOpen = true;
 
 
         if (armState != previousArmState)
@@ -229,12 +226,12 @@ public class SampleArm {
 
                     if (config.inputMap.getClawCloseButton()) // emergency override
                         sampleClaw.setGrabPosition(1);
-                    else if (config.inputMap.getClawBigOpenButton())
+                    else if (config.inputMap.getClawOpenButton())
                         sampleClaw.setGrabPosition(0);
                     else
                         sampleClaw.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
 
-                    clawTargetPosition = GrabPosition.closed;
+                    grabOpen = false;
                     lastGroundSlam = true;
 
                     break;
@@ -251,15 +248,10 @@ public class SampleArm {
                 }
 
             default:
-                switch (clawTargetPosition){
-                    case closed:
-                        sampleClaw.setGrabPosition(0);
-                    case bigOpen:
-                        sampleClaw.setGrabPosition(1);
-                    case smolOpen:
-                        sampleClaw.setGrabPosition(a_ClawSmolOpenPosition);
-                }
-
+                if (grabOpen)
+                    sampleClaw.setGrabPosition(0);
+                else
+                    sampleClaw.setGrabPosition(1);
         }
     }
 
