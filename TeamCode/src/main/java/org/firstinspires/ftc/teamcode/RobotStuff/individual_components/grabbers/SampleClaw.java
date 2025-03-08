@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.AngleServo;
-import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.ButtonEdgeDetector;
 import org.firstinspires.ftc.teamcode.RobotStuff.stuffAndThings.MathStuff;
 
 @Config
@@ -18,9 +17,6 @@ public class SampleClaw {
     Servo bigWristServo;
     AngleServo smolWristServo;
     RobotConfig config;
-
-    public static double maxLittleTwistAngle = 75;
-    public static double minLittleTwistAngle = -75;
 
     public static double openPos = .4, closePos = 0.69, rTwist = 0.58, lTwist = 0.35, mTwist = 0.58;
 
@@ -36,7 +32,7 @@ public class SampleClaw {
 
         harpoonServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawGrabServo);
         bigWristServo = opMode.hardwareMap.get(Servo.class, config.deviceConfig.sampleClawDepositWristServo);
-        smolWristServo = new AngleServo(config.deviceConfig.sampleClawBlockAlignmentWristServo, opMode.hardwareMap, 0.58, 0, 0.38, -90);
+        smolWristServo = new AngleServo(config.deviceConfig.sampleClawBlockAlignmentWristServo, opMode.hardwareMap, 0, -100, 1, 100);
     }
 
     /**
@@ -68,25 +64,22 @@ public class SampleClaw {
         }
     }
 
-    ButtonEdgeDetector leftBAbutton = new ButtonEdgeDetector();
-    ButtonEdgeDetector rightBAbutton = new ButtonEdgeDetector();
-
-    public void blockAlignmentUpdate() {
-        if (rightBAbutton.getButtonDown(config.inputMap.getIntakeTwistRight()))
+    public void blockAlignmentUpdate(){
+        if(config.inputMap.getIntakeTwistRight())
             blockAlignmentIncrement(config.sensitivities.getBlockAlignmentIncrementAngle());
 
-        if (leftBAbutton.getButtonDown(config.inputMap.getIntakeTwistLeft()))
+        if(config.inputMap.getIntakeTwistLeft())
             blockAlignmentIncrement(-config.sensitivities.getBlockAlignmentIncrementAngle());
     }
 
     public void blockAlignmentIncrement(double incrementAmount) {
         double newTargetAngle = smolWristServo.getAngle();
-        newTargetAngle += incrementAmount;
         newTargetAngle = newTargetAngle - (newTargetAngle % Math.abs(incrementAmount));
-        newTargetAngle = MathUtils.clamp(newTargetAngle, minLittleTwistAngle, maxLittleTwistAngle);
+        newTargetAngle += incrementAmount;
 
         smolWristServo.setAngle(newTargetAngle);
     }
 
+    
 
 }
