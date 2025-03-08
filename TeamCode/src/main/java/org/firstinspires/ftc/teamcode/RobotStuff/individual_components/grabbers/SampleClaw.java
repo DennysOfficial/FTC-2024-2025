@@ -18,7 +18,7 @@ public class SampleClaw {
     AngleServo smolWristServo;
     RobotConfig config;
 
-    public static double openPos = .4, closePos = 0.69, rTwist = 0.58, lTwist = 0.35, mTwist = 0.58;
+    public static double bigOpenPos = .4, middleOpenPos = .4, closePos = 0.69, rTwist = 0.58, lTwist = 0.35, mTwist = 0.58;
 
 
     // public static double frontPos = 0.5, SidePos = 0.5, backPos = 0.5;
@@ -40,7 +40,7 @@ public class SampleClaw {
      */
     public void setGrabPosition(double position) {
         position = MathUtils.clamp(position, 0, 1);
-        position = MathStuff.map(position, 0, 1, openPos, closePos);
+        position = MathStuff.map(position, 0, 1, bigOpenPos, closePos);
         harpoonServo.setPosition(position);
     }
 

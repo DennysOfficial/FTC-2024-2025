@@ -9,7 +9,7 @@ public class EpicPoints {
 
 
 
-    public static double aaa_hangX = 25;//30;
+    public static double aaa_hangX = 20;//30;
 
     //public static double initalWait = .5;
     public static double AAA_initialArmSettleWait = .2;
@@ -28,8 +28,8 @@ public class EpicPoints {
     public static DashboardPoint cb_scorePathControlPoint2 = new DashboardPoint(15, 50, Point.CARTESIAN);
 
     public static DashboardPoint da_pickupPointApproach = new DashboardPoint(14, 26, Point.CARTESIAN);
-    public static DashboardPoint db_pickupPointAtWallDefault = new DashboardPoint(9, 26, Point.CARTESIAN);
-    public static DashboardPoint dc_pickupPointFirstWallPickup = new DashboardPoint(9, 22, Point.CARTESIAN);
+    public static DashboardPoint db_pickupPointAtWallDefault = new DashboardPoint(10, 26, Point.CARTESIAN);
+    public static DashboardPoint dc_pickupPointFirstWallPickup = new DashboardPoint(10, 26, Point.CARTESIAN);
 
 
     public static DashboardPoint sampleCurvePoint1 = new DashboardPoint(17, 20, Point.CARTESIAN);

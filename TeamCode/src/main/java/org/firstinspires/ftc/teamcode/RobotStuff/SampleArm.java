@@ -66,7 +66,6 @@ public class SampleArm {
     public static double maxIntakeTorque = 0.4;
 
 
-
     public static SampleArmPose IntakeInitialPose = new SampleArmPose(0, .420, 0, Double.NaN);
     public static double intakeHeightOffset = -2;
 
@@ -76,6 +75,7 @@ public class SampleArm {
 
 
     double interpolationExtendedLiftDistance = 20;
+
     double clawTriggerHeightOffset() {
         return MathStuff.lerp(clawTriggerHeightOffsetRetracted, clawTriggerHeightOffsetExtended, rightLift.getPosition() / interpolationExtendedLiftDistance);
     }
@@ -137,7 +137,13 @@ public class SampleArm {
             opMode.telemetry.addData("Harpoon Arm State: ", armState.toString());
     }
 
-    boolean grabOpen = true;
+    enum GrabPosition {
+        bigOpen,
+        lilOpen,
+        close
+    }
+
+    GrabPosition targetGrabPosition = GrabPosition.bigOpen;
     boolean lastGroundSlam = false;
 
     void updateTargetState() {
@@ -165,10 +171,13 @@ public class SampleArm {
         }
         sampleClaw.twistServo(grabPosition);
 
+
         if (config.inputMap.getClawCloseButton())
-            grabOpen = false;
-        if (config.inputMap.getClawOpenButton())
-            grabOpen = true;
+            targetGrabPosition = GrabPosition.close;
+        if (config.inputMap.getClawBigOpenButton())
+            targetGrabPosition = GrabPosition.bigOpen;
+        if (config.inputMap.getClawSmolOpenButton())
+            targetGrabPosition = GrabPosition.lilOpen;
 
 
         if (armState != previousArmState)
@@ -226,12 +235,12 @@ public class SampleArm {
 
                     if (config.inputMap.getClawCloseButton()) // emergency override
                         sampleClaw.setGrabPosition(1);
-                    else if (config.inputMap.getClawOpenButton())
+                    else if (config.inputMap.getClawBigOpenButton())
                         sampleClaw.setGrabPosition(0);
                     else
                         sampleClaw.setGrabPosition((calculateIntakeHeight() + clawTriggerHeightOffset()) * clawTriggerScale);
 
-                    grabOpen = false;
+                    targetGrabPosition = GrabPosition.close;
                     lastGroundSlam = true;
 
                     break;
@@ -239,7 +248,7 @@ public class SampleArm {
 
                 if (lastGroundSlam) { // if the last update was a ground slam go back to intake height less violently
                     lastGroundSlam = false;
-                    rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), 0.420);
+                    rightPivot.fancyMoveToPosition(calculateIntakePivotAngle(), .69);
                 }
 
                 if (!rightPivot.isBusy()) {
@@ -248,6 +257,17 @@ public class SampleArm {
                 }
 
             default:
+                switch (targetGrabPosition){
+                    case close:
+                        sampleClaw.setGrabPosition(1);
+                        break;
+                    case bigOpen:
+                        sampleClaw.setGrabPosition(0);
+                        break;
+                    case lilOpen:
+                        sampleClaw.setGrabPosition();
+                        break;
+                }
                 if (grabOpen)
                     sampleClaw.setGrabPosition(0);
                 else

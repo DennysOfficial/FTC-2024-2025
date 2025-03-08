@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.RobotStuff.Config.SubConfigs;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class InputMap {
 
@@ -118,12 +117,16 @@ public class InputMap {
         return gamepad2.dpad_up;
     }
 
-    public boolean getClawOpenButton() {
+    public boolean getClawSmolOpenButton() {
+        return gamepad1.y;
+    }
+    public boolean getClawBigOpenButton() {
         return gamepad1.a;
     }
     public boolean getClawCloseButton() {
         return gamepad1.x;
     }
+
 
     /// testing / misc ##################################################################################################################################################
 
