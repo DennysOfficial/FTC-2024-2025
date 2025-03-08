@@ -21,7 +21,7 @@ public class LeftLift extends ControlAxis {
 
     DigitalChannel limitSwitch;
     public static double homingPosition = 0;
-    public static double homingRetractPower = -0.5;
+    public static double homingRetractPower = -1;
     public static double homingDwellPower = -0.2;
     public static double homingDwellPeriod = 0.3;
 

@@ -407,6 +407,7 @@ public class Auto_Test_05Z extends OpMode {
         telemetry.addData("Path State", pathState);
         telemetry.addData("busy", follower.isBusy());
         telemetry.addData("parametric time", follower.getCurrentTValue());
+        telemetry.addData("isGrabbing", isGrabbing);
         telemetry.update();
 
         follower.drawOnDashBoard();
