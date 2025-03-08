@@ -169,9 +169,16 @@ public class RightPivot extends ControlAxis {
     @Override
     void miscUpdate() {
         double thing = (analogOverDegrees * (getPosition())) % getAnalogRange();
-        encoderCalculatedAnalogValue = initialAnalogPosition + ((thing > 0) ? thing : getAnalogRange() - thing);
+
+        if (getPosition() < 0)
+            encoderCalculatedAnalogValue = getAnalogRange() + thing;
+        else
+            encoderCalculatedAnalogValue = initialAnalogPosition + ((thing > 0) ? thing : getAnalogRange() - thing);
+
 
         analogPosition = analogEncoder.getVoltage();
+        analogPosition = MathUtils.clamp(analogPosition,0,getAnalogRange());
+
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
 
@@ -190,13 +197,14 @@ public class RightPivot extends ControlAxis {
         if (config.debugConfig.getAnalogEncoderDebug()) {
             opMode.telemetry.addLine();
             opMode.telemetry.addLine();
-            opMode.telemetry.addData(axisName + "thing", analogPosition);
-            opMode.telemetry.addData(axisName + "analog value", analogPosition);
-            opMode.telemetry.addData(axisName + "analog error", analogError);
+            opMode.telemetry.addData(axisName + " predicted analog value", encoderCalculatedAnalogValue);
+            opMode.telemetry.addData(axisName + " thing", thing);
+            opMode.telemetry.addData(axisName + " analog value", analogPosition);
+            opMode.telemetry.addData(axisName + " analog error", analogError);
 
             opMode.telemetry.addLine();
-            opMode.telemetry.addData(axisName + "angle correction", angleCorrection);
-            opMode.telemetry.addData(axisName + "correctedAngle", correctedAngle);
+            opMode.telemetry.addData(axisName + " angle correction", angleCorrection);
+            opMode.telemetry.addData(axisName + " correctedAngle", correctedAngle);
         }
 
 //        opMode.telemetry.addLine();

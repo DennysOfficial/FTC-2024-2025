@@ -163,13 +163,16 @@ public class LeftPivot extends ControlAxis {
     @Override
     void miscUpdate() {
 
+        double thing = (analogOverDegrees * (getPosition())) % getAnalogRange();
 
-        encoderCalculatedAnalogValue = Math.abs(initialAnalogPosition + analogOverDegrees * (getPosition()) % getAnalogRange());
+        if (getPosition() < 0)
+            encoderCalculatedAnalogValue = getAnalogRange() + thing;
+        else
+            encoderCalculatedAnalogValue = initialAnalogPosition + ((thing > 0) ? thing : getAnalogRange() - thing);
 
-        if (getPosition() > 0)
-            encoderCalculatedAnalogValue = getAnalogRange() - encoderCalculatedAnalogValue;
 
         analogPosition = analogEncoder.getVoltage();
+        analogPosition = MathUtils.clamp(analogPosition,0,getAnalogRange());
 
 
         analogError = analogPosition - encoderCalculatedAnalogValue;
@@ -178,24 +181,24 @@ public class LeftPivot extends ControlAxis {
             double goodAnalogError = getAnalogRange() - Math.abs(analogError);
             analogError = Math.copySign(goodAnalogError, -analogError);
         }
-       // if (getPosition() > 10)
-            //angleCorrection += analogError * correctionFactor;
 
+        angleCorrection += analogError * correctionFactor;
 
-        correctedAngle = getPosition() + angleCorrection;
+        //correctedAngle = getPosition() + angleCorrection;
 
         positionOffset = angleCorrection;
 
         if (config.debugConfig.getAnalogEncoderDebug()) {
             opMode.telemetry.addLine();
             opMode.telemetry.addLine();
-            opMode.telemetry.addData(axisName + "predicted analog value", encoderCalculatedAnalogValue);
-            opMode.telemetry.addData(axisName + "analog value", analogPosition);
-            opMode.telemetry.addData(axisName + "analog error", analogError);
+            opMode.telemetry.addData(axisName + " predicted analog value", encoderCalculatedAnalogValue);
+            opMode.telemetry.addData(axisName + " thing", thing);
+            opMode.telemetry.addData(axisName + " analog value", analogPosition);
+            opMode.telemetry.addData(axisName + " analog error", analogError);
 
             opMode.telemetry.addLine();
-            opMode.telemetry.addData(axisName + "angle correction", angleCorrection);
-            opMode.telemetry.addData(axisName + "correctedAngle", correctedAngle);
+            opMode.telemetry.addData(axisName + " angle correction", angleCorrection);
+            opMode.telemetry.addData(axisName + " correctedAngle", correctedAngle);
         }
 
     }
