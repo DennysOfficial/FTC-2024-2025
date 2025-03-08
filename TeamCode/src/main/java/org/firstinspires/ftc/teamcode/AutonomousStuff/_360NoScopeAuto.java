@@ -78,10 +78,10 @@ public class _360NoScopeAuto extends OpMode {
     Point rungPoint2 = EpicPoints.ac_rungPoint2.convertToPoint();
     Point rungPoint1 = EpicPoints.aa_rungPoint1.convertToPoint();
 
-    Point rungPoint3a = EpicPoints.bc_rungControlPoint3.convertToPoint();
-    Point rungPoint4a = EpicPoints.bd_rungControlPoint4.convertToPoint();
-    Point rungPoint2a = EpicPoints.bb_rungControlPoint2.convertToPoint();
-    Point rungPoint1a = EpicPoints.ba_rungControlPoint1.convertToPoint();
+    Point rungPoint3Approach = EpicPoints.bc_rungApproachPoint3.convertToPoint();
+    Point rungPoint4Approach = EpicPoints.bd_rungApproachPoint4.convertToPoint();
+    Point rungPoint2Approach = EpicPoints.bb_rungApproachPoint2.convertToPoint();
+    Point rungPoint1Approach = EpicPoints.ba_rungApproachPoint1.convertToPoint();
 
     Point rungPointControl1 = new Point(20, 28, Point.CARTESIAN);
     Point rungPointControl2 = new Point(20, 66, Point.CARTESIAN);
@@ -99,8 +99,8 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPointApproach = EpicPoints.pickupPoint2.convertToPoint();
-    Point pickupPointAtWallLastFew = EpicPoints.pickupPoint3.convertToPoint();
+    Point pickupPointApproach = EpicPoints.pickupPointApproach.convertToPoint();
+    Point pickupPointAtWallLastFew = EpicPoints.pickupPointAtWallDefault.convertToPoint();
     Point pickupPointAtWallFirst = EpicPoints.pickupPointFirstWallPickup.convertToPoint();
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
@@ -130,7 +130,7 @@ public class _360NoScopeAuto extends OpMode {
 
         /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
         score1 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(new Point(startPose), rungPointControl2, rungPoint1a)))
+                .addPath(new Path(new BezierCurve(new Point(startPose), rungPointControl2, rungPoint1Approach)))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -147,10 +147,10 @@ public class _360NoScopeAuto extends OpMode {
         collect2 = new Path(new BezierLine(linepoint3, pickupPointApproach));
         collect2a = new Path(new BezierLine(pickupPointApproach, pickupPointAtWallFirst));
 
-        score1a = new Path(new BezierLine(rungPoint1a, rungPoint1));
+        score1a = new Path(new BezierLine(rungPoint1Approach, rungPoint1));
 
         score2a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
+                .addPath(new Path(new BezierLine(rungPoint2Approach, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierCurve(rungPoint2, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -166,7 +166,7 @@ public class _360NoScopeAuto extends OpMode {
                 .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .build();
         score3a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
+                .addPath(new Path(new BezierLine(rungPoint3Approach, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierCurve(rungPoint3, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -182,7 +182,7 @@ public class _360NoScopeAuto extends OpMode {
                 .addParametricCallback(0.95, () -> grabber.closeClawHard())
                 .build();
         score4a = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(rungPoint4a, rungPoint4)))
+                .addPath(new Path(new BezierLine(rungPoint4Approach, rungPoint4)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(rungPoint4, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
@@ -231,7 +231,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         score2 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint2a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint2Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
@@ -244,7 +244,7 @@ public class _360NoScopeAuto extends OpMode {
                 .setPathEndTimeoutConstraint(350)
                 .build();
         score3 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint3a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint3Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
@@ -258,7 +258,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         score4 = follower.pathBuilder()
-                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint4a)))
+                .addPath(new Path(new BezierCurve(pickupPointAtWallLastFew, rungPointControl1, rungPointControl2, rungPoint4Approach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(50)
                 .setPathEndVelocityConstraint(1)
@@ -281,16 +281,23 @@ public class _360NoScopeAuto extends OpMode {
         telemetry.addData("path state", pathState);
         switch (pathState) {
             case 0:
-                if (stateTimer.getElapsedTimeSeconds() < EpicPoints.initalWait)
-                    return;
-                setPathStateAndResetTimer(6969);
                 follower.followPath(score1);
-            case 6969:
-                if (follower.isBusy()) setPathStateAndResetTimer(1);
-                break;
+                setPathStateAndResetTimer(213);
+            case 213:
+                if (follower.isBusy())
+                    setPathStateAndResetTimer(124);
 
+            case 124:
+                if (!follower.isBusy())
+                    setPathStateAndResetTimer(43523);
+
+            case 43523:
+                if (stateTimer.getElapsedTimeSeconds() < EpicPoints.AAA_initialArmSettleWait)
+                    return;
+                setPathStateAndResetTimer(1);
+                break;
             case 1:
-                if (follower.isBusy() && spArm.isBusy())
+                if (follower.isBusy() || spArm.isBusy())
                     return;
                 follower.followPath(moveSamples);
                 setPathStateAndResetTimer(2);
@@ -500,7 +507,6 @@ public class _360NoScopeAuto extends OpMode {
     public void start() {
         setPathStateAndResetTimer(0);
         spArm.armState = SpecimenArm.SpecimenArmState.movingToScore;
-        follower.followPath(score1);
     }
 
     /**
