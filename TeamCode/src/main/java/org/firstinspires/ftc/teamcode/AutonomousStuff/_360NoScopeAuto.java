@@ -99,7 +99,7 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-    Point pickupPointAproach = EpicPoints.pickupPoint2.convertToPoint();
+    Point pickupPointApproach = EpicPoints.pickupPoint2.convertToPoint();
     Point pickupPointAtWallLastFew = EpicPoints.pickupPoint3.convertToPoint();
     Point pickupPointAtWallFirst = EpicPoints.pickupPointFirstWallPickup.convertToPoint();
 
@@ -144,15 +144,15 @@ public class _360NoScopeAuto extends OpMode {
         toline2 = new Path(new BezierLine(samplepoint2, linepoint2));
         toline3 = new Path(new BezierLine(samplepoint3, linepoint3));
 
-        collect2 = new Path(new BezierLine(linepoint3, pickupPointAproach));
-        collect2a = new Path(new BezierLine(pickupPointAproach, pickupPointAtWallFirst));
+        collect2 = new Path(new BezierLine(linepoint3, pickupPointApproach));
+        collect2a = new Path(new BezierLine(pickupPointApproach, pickupPointAtWallFirst));
 
         score1a = new Path(new BezierLine(rungPoint1a, rungPoint1));
 
         score2a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint2a, rungPoint2)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint2, pickupPointAproach)))
+                .addPath(new Path(new BezierCurve(rungPoint2, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -168,7 +168,7 @@ public class _360NoScopeAuto extends OpMode {
         score3a = follower.pathBuilder()
                 .addPath(new Path(new BezierLine(rungPoint3a, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointAproach)))
+                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -186,7 +186,7 @@ public class _360NoScopeAuto extends OpMode {
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .addPath(new Path(new BezierLine(rungPoint4, rungPoint3)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
-                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointAproach)))
+                .addPath(new Path(new BezierCurve(rungPoint3, pickupPointApproach)))
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(100)
                 .setPathEndVelocityConstraint(0.15)
@@ -238,7 +238,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         collect3 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
+                .addPath(new Path(new BezierLine(pickupPointApproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
@@ -251,7 +251,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         collect4 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
+                .addPath(new Path(new BezierLine(pickupPointApproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)
@@ -265,7 +265,7 @@ public class _360NoScopeAuto extends OpMode {
                 .build();
 
         collect5 = follower.pathBuilder()
-                .addPath(new Path(new BezierLine(pickupPointAproach, pickupPointAtWallLastFew)))
+                .addPath(new Path(new BezierLine(pickupPointApproach, pickupPointAtWallLastFew)))
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .setConstantHeadingInterpolation(Math.toRadians(0))
                 .setPathEndTimeoutConstraint(350)

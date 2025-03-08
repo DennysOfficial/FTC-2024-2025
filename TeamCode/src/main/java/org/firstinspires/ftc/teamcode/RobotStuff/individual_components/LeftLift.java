@@ -36,9 +36,9 @@ public class LeftLift extends ControlAxis {
 
     public static double gCompMultiplier = 0.069;
 
-    public static double Kp = 3;
+    public static double Kp = 1;
     public static double Ki = 0;
-    public static double Kd = 0.03;
+    public static double Kd = 0.02;
 
     public static double staticFrictionCoefficient = 0;
     public static double kineticFrictionCoefficient = 0;

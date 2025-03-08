@@ -11,7 +11,7 @@ public class EpicPoints {
 
     public static double aaa_hangX = 25;//30;
 
-    public static double initalWait = 0.5;//30;
+    public static double initalWait = 1;
 
     public static DashboardPoint aa_rungPoint1 = new DashboardPoint(aaa_hangX, 74.35, Point.CARTESIAN);
     public static DashboardPoint ab_rungPoint3 = new DashboardPoint(aaa_hangX, 71, Point.CARTESIAN);
@@ -41,10 +41,10 @@ public class EpicPoints {
     public static DashboardPoint linepoint2 = new DashboardPoint(30, 17.7, Point.CARTESIAN);
     public static DashboardPoint linepoint3 = new DashboardPoint(28, 11.85, Point.CARTESIAN);
 
-    public static DashboardPoint pickupPoint2 = new DashboardPoint(11, 26, Point.CARTESIAN);
-    public static DashboardPoint pickupPoint3 = new DashboardPoint(9.6, 26, Point.CARTESIAN);
+    public static DashboardPoint pickupPoint2 = new DashboardPoint(14, 26, Point.CARTESIAN);
+    public static DashboardPoint pickupPoint3 = new DashboardPoint(10, 26, Point.CARTESIAN);
 
-    public static DashboardPoint pickupPointFirstWallPickup = new DashboardPoint(9.6, 26, Point.CARTESIAN);
+    public static DashboardPoint pickupPointFirstWallPickup = new DashboardPoint(10, 22, Point.CARTESIAN);
 
 
 }
