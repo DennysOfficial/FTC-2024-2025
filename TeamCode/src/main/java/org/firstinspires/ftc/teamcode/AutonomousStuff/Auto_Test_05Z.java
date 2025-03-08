@@ -101,7 +101,7 @@ public class Auto_Test_05Z extends OpMode {
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
     Point pickupPoint2 = new Point(11, 26, Point.CARTESIAN);
-    Point pickupPoint3 = new Point(9.6, 26, Point.CARTESIAN);
+    Point pickupPoint3 = new Point(10, 26, Point.CARTESIAN);
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
 
