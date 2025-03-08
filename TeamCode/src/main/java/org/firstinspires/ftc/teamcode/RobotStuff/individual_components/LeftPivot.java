@@ -154,7 +154,7 @@ public class LeftPivot extends ControlAxis {
     static final double degreesOverAnalog = (360 / getAnalogRange()) * (15.0 / 150.0);
     static final double analogOverDegrees = 1.0 / degreesOverAnalog;
 
-    public static double correctionFactor = -0.05;
+    public static double correctionFactor = 0;
     double angleCorrection = 0;
     double correctedAngle;
 
