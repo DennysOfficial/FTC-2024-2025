@@ -42,7 +42,7 @@ import pedroPathing.constants.LConstants;
 //3rd-5th pickup: 28 from wall
 
 @Autonomous(name = "if don't work actually brain dead fr fr no cap skull emoji 5x")
-@Disabled
+//@Disabled
 public class _360NoScopeAuto extends OpMode {
 
     private Follower follower;
@@ -100,9 +100,8 @@ public class _360NoScopeAuto extends OpMode {
     Point linepoint2 = new Point(30, 17.7, Point.CARTESIAN);
     Point linepoint3 = new Point(28, 11.85, Point.CARTESIAN);
 
-
-    Point pickupPoint2 = EpicPoints.pickupDepartureControlPoint.convertToPoint();
-    Point pickupPoint3 = new Point(9.6, 26, Point.CARTESIAN);
+    Point pickupPoint2 = EpicPoints.pickupPoint2.convertToPoint();
+    Point pickupPoint3 = EpicPoints.pickupPoint3.convertToPoint();
 
     public Path toSample1, toSample2, toSample3, toline1, toline2, toline3, score1a, collect2, collect2a;
 
@@ -282,7 +281,7 @@ public class _360NoScopeAuto extends OpMode {
         telemetry.addData("path state", pathState);
         switch (pathState) {
             case 0:
-                if (stateTimer.getElapsedTimeSeconds() < 0.5)
+                if (stateTimer.getElapsedTimeSeconds() < EpicPoints.initalWait)
                     return;
                 setPathStateAndResetTimer(6969);
                 follower.followPath(score1);

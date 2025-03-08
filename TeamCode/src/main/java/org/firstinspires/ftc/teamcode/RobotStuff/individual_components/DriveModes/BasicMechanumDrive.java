@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotStuff.Config.RobotConfig;
 
-@Config
+//@Config
 public class BasicMechanumDrive extends DriveModeBase {
 
 

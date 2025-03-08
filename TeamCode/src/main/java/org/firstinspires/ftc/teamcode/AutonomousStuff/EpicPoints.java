@@ -7,12 +7,18 @@ import com.pedropathing.pathgen.Point;
 public class EpicPoints {
 
 
-    public static DashboardPoint aa_rungPoint1 = new DashboardPoint(30, 74.35, Point.CARTESIAN);
-    public static DashboardPoint ab_rungPoint3 = new DashboardPoint(30, 71, Point.CARTESIAN);
-    public static DashboardPoint ac_rungPoint2 = new DashboardPoint(30, 73, Point.CARTESIAN);
-    public static DashboardPoint ad_rungPoint4 = new DashboardPoint(30, 69, Point.CARTESIAN);
 
-    public static DashboardPoint ba_rungControlPoint1 = new DashboardPoint(20, 73, Point.CARTESIAN);
+
+    public static double aaa_hangX = 25;//30;
+
+    public static double initalWait = 0.5;//30;
+
+    public static DashboardPoint aa_rungPoint1 = new DashboardPoint(aaa_hangX, 74.35, Point.CARTESIAN);
+    public static DashboardPoint ab_rungPoint3 = new DashboardPoint(aaa_hangX, 71, Point.CARTESIAN);
+    public static DashboardPoint ac_rungPoint2 = new DashboardPoint(aaa_hangX, 73, Point.CARTESIAN);
+    public static DashboardPoint ad_rungPoint4 = new DashboardPoint(aaa_hangX, 69, Point.CARTESIAN);
+
+    public static DashboardPoint ba_rungControlPoint1 = new DashboardPoint(18, 73, Point.CARTESIAN);
     public static DashboardPoint bb_rungControlPoint2 = new DashboardPoint(20, 71, Point.CARTESIAN);
     public static DashboardPoint bc_rungControlPoint3 = new DashboardPoint(20, 69, Point.CARTESIAN);
     public static DashboardPoint bd_rungControlPoint4 = new DashboardPoint(20, 67, Point.CARTESIAN);

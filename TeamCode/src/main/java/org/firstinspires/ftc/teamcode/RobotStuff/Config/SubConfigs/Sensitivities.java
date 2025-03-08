@@ -74,7 +74,7 @@ public class Sensitivities {
         return pivotSensitivity;
     }
 
-    public static float slowDownModifier = 0.4f;
+    public static float slowDownModifier = 1f;
 
     public float getSlowDownModifier(){return slowDownModifier;}
 
